@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Studio Salary Database</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1234,7 +1234,7 @@ function getCurrentFiltered() { return _currentFiltered; }
 
 function applyFilters() {
   const query = document.getElementById('search-input').value.toLowerCase();
-  const isMobile = window.innerWidth <= 640;
+  const isMobile = document.documentElement.clientWidth <= 640;
   const format = isMobile
     ? document.getElementById('format-filter-mobile').value
     : document.getElementById('format-filter').value;
@@ -2224,7 +2224,7 @@ function setFiltersDisabled(disabled) {
   });
 }
 function checkMobile() {
-  const isMobile = window.innerWidth <= 640;
+  const isMobile = document.documentElement.clientWidth <= 640;
   const mobileFilters = document.getElementById('mobile-filters-always');
   if (mobileFilters) mobileFilters.style.display = isMobile ? 'flex' : 'none';
   document.querySelectorAll('.desktop-only').forEach(el => {
