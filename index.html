@@ -651,7 +651,10 @@
   /* ── Popup ── */
   .popup-overlay {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: rgba(46,45,41,0.45);
     z-index: 500;
     display: flex;
@@ -1349,9 +1352,14 @@ function toggleCard(btn) {
 let _popupScrollY = 0;
 
 function closePopup() {
-  document.getElementById('popup-overlay').classList.remove('open');
+  const overlay = document.getElementById('popup-overlay');
+  overlay.classList.remove('open');
+  overlay.style.position = '';
+  overlay.style.top = '';
+  overlay.style.height = '';
+  overlay.style.width = '';
+  overlay.style.left = '';
   document.body.style.overflow = '';
-  // Restore the scroll position the user was at before opening the popup
   window.scrollTo({ top: _popupScrollY, behavior: 'instant' });
 }
 
@@ -1397,8 +1405,16 @@ function openPopup(studioIndex) {
     ${negSection}
   `;
 
-  document.getElementById('popup-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  // Scroll to top of iframe first so position:fixed popup
+  // appears correctly inside Squarespace's iframe environment
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Small delay to let scroll complete before showing popup
+  setTimeout(() => {
+    document.getElementById('popup-overlay').classList.add('open');
+    positionPopupOverlay();
+    document.body.style.overflow = 'hidden';
+  }, 300);
 }
 
 // ── CSV ───────────────────────────────────────────────────────
@@ -2363,6 +2379,21 @@ async function init() {
   }
 }
 
+// ── Popup positioning (Squarespace iframe fix) ────────────────
+// Inside a Squarespace iframe, position:fixed anchors to the top of
+// the tall iframe. We can't access the parent scroll position without
+// Code Injection. Instead, scroll the iframe to the top first so
+// position:fixed always works correctly, then show the popup.
+function positionPopupOverlay() {
+  const overlay = document.getElementById('popup-overlay');
+  overlay.style.position = 'fixed';
+  overlay.style.top = '0';
+  overlay.style.left = '0';
+  overlay.style.width = '100%';
+  overlay.style.height = '100%';
+  overlay.style.bottom = '0';
+}
+
 init();
 </script>
 </div>
@@ -2398,6 +2429,12 @@ init();
   observer.observe(document.body, { childList: true, subtree: true, attributes: true });
   // Also send periodically for safety
   setInterval(sendHeight, 500);
+
+  // Broadcast this iframe's own scroll position to itself
+  // (for cases where the iframe itself scrolls rather than the parent)
+  window.addEventListener('scroll', function() {
+    window.parent.postMessage({ type: 'iframeScroll', scrollY: window.scrollY }, '*');
+  });
 </script>
 </body>
 </html>
