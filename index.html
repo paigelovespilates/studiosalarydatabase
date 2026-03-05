@@ -834,7 +834,6 @@
   #db-wrap[data-mobile] .contact-section { padding: 10px 16px !important; }
   #db-wrap[data-mobile] .differs-banner { margin: 0 16px 10px !important; }
   #db-wrap[data-mobile] .near-me-btn { width: 100% !important; justify-content: center !important; }
-  #db-wrap[data-mobile] .mobile-filter-toggle { display: flex !important; }
   #db-wrap[data-mobile] #mobile-filters-always { display: flex !important; flex-direction: column !important; gap: 8px !important; width: 100% !important; }
   #db-wrap[data-mobile] #mobile-filters-always select { width: 100% !important; }
   #db-wrap[data-mobile] .desktop-only { display: none !important; }
@@ -849,9 +848,23 @@
   #db-wrap[data-mobile] .pay-table tbody td.td-format { flex: 1 !important; font-size: 12px !important; color: var(--text) !important; font-weight: 500 !important; line-height: 1.3 !important; }
   #db-wrap[data-mobile] .pay-table tbody td.td-structure { display: none !important; }
   #db-wrap[data-mobile] .pay-table tbody td.td-pay { text-align: right !important; font-size: 13px !important; font-weight: 600 !important; color: var(--accent-deep) !important; flex-shrink: 0 !important; max-width: 45% !important; }
+
+  /* ── FIX: Popup mobile styles via data-mobile (replaces media query version) ── */
   #db-wrap[data-mobile] .popup-overlay { align-items: flex-end !important; padding: 0 !important; }
-  #db-wrap[data-mobile] .popup { border-radius: 20px 20px 0 0 !important; max-width: 100% !important; max-height: 90vh !important; width: 100% !important; }
-  #db-wrap[data-mobile] .popup-handle { display: block !important; }
+  #db-wrap[data-mobile] .popup {
+    border-radius: 20px 20px 0 0 !important;
+    max-width: 100% !important;
+    max-height: 90vh !important;
+    width: 100% !important;
+    transform: translateY(100%) !important;
+  }
+  #db-wrap[data-mobile] .popup-overlay.open .popup { transform: translateY(0) !important; }
+  #db-wrap[data-mobile] .popup-handle { display: block !important; width: 36px !important; height: 4px !important; background: var(--border) !important; border-radius: 2px !important; margin: 0 auto 16px !important; }
+  #db-wrap[data-mobile] .popup-header { padding: 12px 20px 14px !important; }
+  #db-wrap[data-mobile] .popup-header-main { align-items: center !important; }
+  #db-wrap[data-mobile] .popup-close { width: 40px !important; height: 40px !important; font-size: 18px !important; }
+  #db-wrap[data-mobile] .popup-body { padding: 16px 20px 32px !important; }
+
   #db-wrap[data-mobile] .legend { gap: 12px !important; }
   #db-wrap[data-mobile] .legend-item { font-size: 10px !important; }
 
@@ -926,8 +939,8 @@
       margin-top: 2px;
     }
 
+    /* Media query popup styles kept for non-iframe mobile browsers */
     .popup-overlay { align-items: flex-end; padding: 0; }
-
     .popup {
       border-radius: 20px 20px 0 0;
       max-width: 100%;
@@ -935,7 +948,6 @@
       width: 100%;
       transform: translateY(100%);
     }
-
     .popup-overlay.open .popup { transform: translateY(0); }
     .popup-header { padding: 12px 20px 14px; }
     .popup-header-main { align-items: center; }
@@ -948,7 +960,6 @@
       flex-shrink: 0;
     }
     .popup-body { padding: 16px 20px 32px; }
-
     .popup-handle {
       display: block;
       width: 36px;
@@ -1331,9 +1342,14 @@ function toggleCard(btn) {
   card.classList.toggle('expanded');
 }
 
+// ── FIX: Save scroll position so close button restores it ────
+let _popupScrollY = 0;
+
 function closePopup() {
   document.getElementById('popup-overlay').classList.remove('open');
   document.body.style.overflow = '';
+  // Restore the scroll position the user was at before opening the popup
+  window.scrollTo({ top: _popupScrollY, behavior: 'instant' });
 }
 
 function handleOverlayClick(e) {
@@ -1341,6 +1357,9 @@ function handleOverlayClick(e) {
 }
 
 function openPopup(studioIndex) {
+  // Save scroll position before locking body scroll
+  _popupScrollY = window.scrollY;
+
   const filtered = getCurrentFiltered();
   const s = filtered[studioIndex] || allStudios[studioIndex];
   if (!s) return;
@@ -1415,7 +1434,7 @@ function buildPay(row, colMap) {
   const summary = v(row, colMap.compSummary);
   if (summary) {
     const cleaned = summary.replace(/^[^:]+:\s*/i, '').trim();
-    if (cleaned && /^\d/.test(cleaned)) return cleaned; // return raw number string; symbol added at render time
+    if (cleaned && /^\d/.test(cleaned)) return cleaned;
     return cleaned || null;
   }
   const parts = [];
@@ -1427,7 +1446,7 @@ function buildPay(row, colMap) {
   else if (pcl) parts.push(pcl);
   else if (fr) parts.push(fr);
   else if (hp) parts.push(hp);
-  return parts.length ? parts[0] : null; // return raw number
+  return parts.length ? parts[0] : null;
 }
 
 function extractPayNum(payStr) {
@@ -1471,7 +1490,6 @@ function norm(name) { return name.toLowerCase().replace(/[^a-z0-9\s]/g, '').repl
 function toTitleCase(str) {
   if (!str) return str;
   return str.replace(/\w\S*/g, txt => {
-    // Preserve all-caps abbreviations (e.g. NY, CA, US)
     if (txt === txt.toUpperCase() && txt.length <= 3) return txt;
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
@@ -1554,7 +1572,6 @@ function buildStudioMap(studioRows, instructorRows) {
     const tierRows = [];
 
     if (!isPerClient && !isFlat && !isVariable && basePayRaw) {
-      // Per class — apply tier expansion
       const expNormBase = normalizeExpLevel(expLevel) || 'All levels';
       if (expNormBase === 'All levels') {
         tierRows.push({ payRaw: basePayRaw, expNorm: 'All levels' });
@@ -1566,7 +1583,6 @@ function buildStudioMap(studioRows, instructorRows) {
         if (payNewRaw) tierRows.push({ payRaw: payNewRaw, expNorm: 'New Instructors' });
       }
     } else {
-      // Per client, flat, variable, hourly — single row, no tier expansion
       let payRaw = null;
       if (basePayRaw) payRaw = basePayRaw;
       else if (pcl) payRaw = pcl;
@@ -1584,7 +1600,6 @@ function buildStudioMap(studioRows, instructorRows) {
     const maxEarningsNum = extractPayNum(maxEarningsRaw);
     const flatRateNum = extractPayNum(v(row, S.flatRate));
 
-    // For flat+variable: estimate midpoint between flat rate and max earnings
     let flatVariableMidpoint = null;
     if ((isFlat || isVariable) && flatRateNum && maxEarningsNum) {
       flatVariableMidpoint = Math.round((flatRateNum + maxEarningsNum) / 2);
@@ -1699,9 +1714,6 @@ function buildStudioMap(studioRows, instructorRows) {
 }
 
 // ── Gap calculation ───────────────────────────────────────────
-// Uses effective rate (50% occupancy for per-client) so the gap
-// reflects estimated earnings per class, not raw per-client rate.
-// Falls back to raw payNum if effective rate can't be computed.
 function computeGap(studio) {
   if (!studio.hasStudio || !studio.hasInstructor) return null;
   const sym = studio.currency.symbol;
@@ -1709,7 +1721,6 @@ function computeGap(studio) {
   const getRateOrFallback = (r) => {
     const effective = getEffectiveRate(r, studio.currency.code);
     if (effective !== null) return effective;
-    // Fall back to raw payNum (converted to USD for consistency, then back)
     return r.payNum !== null ? toUSD(r.payNum, studio.currency.code) : null;
   };
 
@@ -1726,7 +1737,6 @@ function computeGap(studio) {
   const sAvg = sRates.reduce((a,b) => a+b, 0) / sRates.length;
   const iAvg = iRates.reduce((a,b) => a+b, 0) / iRates.length;
   const gap = Math.abs(sAvg - iAvg);
-  // Convert gap back from USD to local currency for display
   const localRate = exchangeRates[studio.currency.code] || 1;
   const displayGap = studio.currency.code === 'USD' ? Math.round(gap) : Math.round(gap / localRate);
   return displayGap > 0 ? { amount: displayGap, symbol: sym } : null;
@@ -1754,16 +1764,12 @@ function getEffectiveRate(submission, currencyCode) {
   if (isPerClient && submission.payNum && submission.classCapacity) {
     localRate = submission.payNum * (parseFloat(submission.classCapacity) * 0.5);
   }
-  // Base + Variable: payNum is already the midpoint estimate
   if (isBaseVariable && submission.payNum) localRate = submission.payNum;
   if (localRate === null) return null;
-  // Convert to USD for cross-market comparison
   return toUSD(localRate, currencyCode || 'USD');
 }
 
 // ── Global city tier table ─────────────────────────────────────
-// Tier 1 = Global majors, Tier 2 = Large cities, Tier 3 = Suburban/small city, Tier 4 = Rural/small market
-// Unmatched cities default to Tier 4
 const CITY_TIERS = {
   // ── USA Tier 1 ──
   'new york': 1, 'manhattan': 1, 'brooklyn': 1, 'queens': 1, 'bronx': 1, 'staten island': 1,
@@ -1890,7 +1896,6 @@ function getCityTier(city, state, country) {
 
   if (CITY_TIERS[c] !== undefined) return CITY_TIERS[c];
 
-  // State-level fallbacks for known low-COL US states
   const lowColStates = new Set([
     'mississippi', 'ms', 'arkansas', 'ar', 'west virginia', 'wv',
     'alabama', 'al', 'oklahoma', 'ok', 'kentucky', 'ky',
@@ -1900,13 +1905,12 @@ function getCityTier(city, state, country) {
   ]);
   if (lowColStates.has(s)) return 4;
 
-  return 4; // Default to Tier 4 for unknown cities
+  return 4;
 }
 
 function computeRelativityScores(studios) {
-  // Group studios by tier
   const tierRates = { 1: [], 2: [], 3: [], 4: [] };
-  const MIN_TIER_SIZE = 3; // Minimum studios in tier to show badge
+  const MIN_TIER_SIZE = 3;
 
   studios.forEach(s => {
     const tier = getCityTier(s.city, s.state, s.country);
@@ -1921,7 +1925,6 @@ function computeRelativityScores(studios) {
     const tier = s.marketTier;
     const tierPool = tierRates[tier];
 
-    // Hide badge entirely if not enough studios in this tier
     const tierStudioCount = studios.filter(x => x.marketTier === tier).length;
     if (tierStudioCount < MIN_TIER_SIZE) {
       s.relativity = null;
@@ -1965,7 +1968,6 @@ function populateFormatFilter(studios) {
   document.getElementById('state-filter').innerHTML = stateOptions;
   document.getElementById('state-filter-mobile').innerHTML = stateOptions;
 
-  // Put United States first, then alphabetical
   const countrySorted = ['United States', ...Array.from(countries).filter(c => c !== 'United States').sort()];
   const countryOptions = '<option value="">All Countries</option>' +
     countrySorted.map(c => `<option value="${c}">${c}</option>`).join('');
@@ -2065,7 +2067,6 @@ function renderCards(studios) {
     el.className = 'studio-card';
     el.style.animationDelay = `${i * 0.05}s`;
 
-    // Strip any trailing ", ST" already embedded in city (e.g. "Babylon, NY" → "Babylon")
     const rawCity = (studio.city || '').trim().replace(/,\s*[A-Z]{2}$/, '');
     const city = toTitleCase(rawCity);
     const state = (studio.state || '').trim();
@@ -2142,8 +2143,6 @@ function renderCards(studios) {
 
     const distanceBadge = studio._distanceMiles !== null && studio._distanceMiles !== undefined
       ? `<span class="distance-badge">📍 ${studio._distanceMiles} mi away</span>` : '';
-
-    // Currency note removed - not needed on card display
 
     el.innerHTML = `
       <div class="card-header">
@@ -2329,7 +2328,6 @@ async function init() {
     const studioMap = buildStudioMap(studioRows, instructorRows);
     allStudios = Array.from(studioMap.values());
 
-    // Wait for exchange rates before computing relativity (should already be done)
     computeRelativityScores(allStudios);
 
     populateFormatFilter(allStudios);
@@ -2373,8 +2371,7 @@ init();
         'header, .filter-section, main { width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; }',
         '.cards-grid { width: 100% !important; min-width: 0 !important; }',
         '.studio-card { min-width: 0 !important; width: 100% !important; }',
-      ].join('
-');
+      ].join('\n');
       document.head.appendChild(style);
     }
   })();
