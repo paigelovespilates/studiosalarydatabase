@@ -863,10 +863,6 @@
     max-height: 90vh !important;
     width: 100% !important;
     transform: translateY(100%) !important;
-    /* Stick to bottom of viewport even when overlay is full document height */
-    position: sticky !important;
-    bottom: 0 !important;
-    align-self: flex-end !important;
   }
   body.db-mobile .popup-overlay.open .popup { transform: translateY(0) !important; }
   body.db-mobile .popup-handle { display: block !important; width: 36px !important; height: 4px !important; background: var(--border) !important; border-radius: 2px !important; margin: 0 auto 16px !important; }
@@ -2378,6 +2374,7 @@ function positionPopupOverlay() {
   const wrap = document.getElementById('db-wrap');
   const popup = document.getElementById('popup');
   
+  // Cover full document height so overlay backdrop shows everywhere
   const totalHeight = Math.max(
     document.body.scrollHeight,
     document.documentElement.scrollHeight,
@@ -2391,29 +2388,9 @@ function positionPopupOverlay() {
   overlay.style.width = '100%';
   overlay.style.height = totalHeight + 'px';
 
-  // Debug panel — shows live values on screen
-  let dbg = document.getElementById('_debug_panel');
-  if (!dbg) {
-    dbg = document.createElement('div');
-    dbg.id = '_debug_panel';
-    dbg.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,0.85);color:#0f0;font:12px monospace;padding:8px;z-index:99999;';
-    document.body.appendChild(dbg);
-  }
-  const popupRect = popup ? popup.getBoundingClientRect() : null;
-  const wrapRect = wrap ? wrap.getBoundingClientRect() : null;
-  dbg.innerHTML = 
-    'overlayH=' + totalHeight + '<br>' +
-    'innerH=' + window.innerHeight + '<br>' +
-    'scrollY=' + window.scrollY + '<br>' +
-    'wrapTop=' + (wrapRect ? Math.round(wrapRect.top) : 'n/a') + '<br>' +
-    'popupTop=' + (popupRect ? Math.round(popupRect.top) : 'n/a') + '<br>' +
-    'popupBottom=' + (popupRect ? Math.round(popupRect.bottom) : 'n/a') + '<br>' +
-    'popup.transform=' + (popup ? getComputedStyle(popup).transform : 'n/a') + '<br>' +
-    'db-mobile=' + document.body.classList.contains('db-mobile');
-
-  // Scroll popup into view
+  // Scroll the popup sheet into the visible viewport immediately
   setTimeout(() => {
-    if (popup) popup.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    if (popup) popup.scrollIntoView({ behavior: 'instant', block: 'end' });
   }, 50);
 }
 
