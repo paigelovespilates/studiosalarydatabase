@@ -1255,8 +1255,9 @@ let _currentFiltered = [];
 
 function applyFilters() {
   const query = document.getElementById('search-input').value.toLowerCase();
-  const screenWidth = window.screen ? window.screen.width : window.innerWidth;
-  const isMobile = screenWidth < 768;
+  const wrap = document.getElementById('db-wrap');
+  const containerWidth = wrap ? wrap.offsetWidth : window.innerWidth;
+  const isMobile = containerWidth < 600;
   const format = isMobile ? document.getElementById('format-filter-mobile').value : document.getElementById('format-filter').value;
   const state = isMobile ? document.getElementById('state-filter-mobile').value : document.getElementById('state-filter').value;
   const country = isMobile ? document.getElementById('country-filter-mobile').value : document.getElementById('country-filter').value;
@@ -2044,8 +2045,9 @@ function fetchJSONP(url) {
 
 function checkMobile() {
   const wrap = document.getElementById('db-wrap');
-  const screenWidth = window.screen ? window.screen.width : window.innerWidth;
-  const isMobile = screenWidth < 768;
+  // Use the actual rendered width of the container — works correctly inside Squarespace iframes
+  const containerWidth = wrap ? wrap.offsetWidth : window.innerWidth;
+  const isMobile = containerWidth < 600;
   if (isMobile) {
     wrap && wrap.setAttribute('data-mobile', 'true');
     document.body.classList.add('db-mobile');
@@ -2065,8 +2067,9 @@ let _lastMobileState = null;
 function checkMobileDebounced() {
   clearTimeout(_checkMobileTimer);
   _checkMobileTimer = setTimeout(() => {
-    const screenWidth = window.screen ? window.screen.width : window.innerWidth;
-    const isMobile = screenWidth < 768;
+    const wrap = document.getElementById('db-wrap');
+    const containerWidth = wrap ? wrap.offsetWidth : window.innerWidth;
+    const isMobile = containerWidth < 600;
     if (isMobile !== _lastMobileState) {
       _lastMobileState = isMobile;
       checkMobile();
@@ -2190,21 +2193,7 @@ init();
 
 </div><!-- end #db-wrap -->
 
-<script>
-  // If running inside an iframe, only fix overflow — do NOT override padding or layout
-  (function() {
-    if (window.self !== window.top) {
-      var style = document.createElement('style');
-      style.textContent = [
-        'html, body { width: 100% !important; min-width: 0 !important; overflow-x: hidden !important; }',
-        '#db-wrap { width: 100% !important; min-width: 0 !important; overflow-x: hidden !important; }',
-        '.cards-grid { min-width: 0 !important; box-sizing: border-box !important; }',
-        '.studio-card { min-width: 0 !important; }',
-      ].join('\n');
-      document.head.appendChild(style);
-    }
-  })();
-</script>
+
 
 <script>
   // Auto-height: broadcast page height to parent iframe
