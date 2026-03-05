@@ -987,33 +987,6 @@
 </head>
 <body>
 <div id="db-wrap">
-<script>
-// Use ResizeObserver to apply mobile styles based on ACTUAL rendered width
-(function() {
-  function applyResponsive(width) {
-    var el = document.getElementById('db-wrap');
-    if (!el) return;
-    if (width < 500) {
-      el.setAttribute('data-mobile', 'true');
-    } else {
-      el.removeAttribute('data-mobile');
-    }
-  }
-  
-  if (window.ResizeObserver) {
-    var ro = new ResizeObserver(function(entries) {
-      for (var entry of entries) {
-        applyResponsive(entry.contentRect.width);
-      }
-    });
-    document.addEventListener('DOMContentLoaded', function() {
-      var wrap = document.getElementById('db-wrap');
-      if (wrap) ro.observe(wrap);
-      applyResponsive(wrap ? wrap.offsetWidth : window.innerWidth);
-    });
-  }
-})();
-</script>
 
 <header>
   <div class="header-inner">
@@ -1309,7 +1282,7 @@ function getCurrentFiltered() { return _currentFiltered; }
 
 function applyFilters() {
   const query = document.getElementById('search-input').value.toLowerCase();
-  const isMobile = document.documentElement.clientWidth <= 640;
+  const wrap = document.getElementById('db-wrap'); const isMobile = (wrap ? wrap.offsetWidth : window.innerWidth) < 500;
   const format = isMobile
     ? document.getElementById('format-filter-mobile').value
     : document.getElementById('format-filter').value;
@@ -2226,6 +2199,8 @@ function renderCards(studios) {
 
     grid.appendChild(el);
   });
+  // Re-apply responsive state after cards render
+  checkMobile();
 }
 
 // ── Popup rows ────────────────────────────────────────────────
@@ -2299,11 +2274,30 @@ function setFiltersDisabled(disabled) {
   });
 }
 function checkMobile() {
-  const isMobile = document.documentElement.clientWidth <= 640;
+  const wrap = document.getElementById('db-wrap');
+  const width = wrap ? wrap.offsetWidth : window.innerWidth;
+  const isMobile = width < 500;
+  
+  // Set data-mobile attribute for CSS targeting
+  if (isMobile) {
+    wrap && wrap.setAttribute('data-mobile', 'true');
+  } else {
+    wrap && wrap.removeAttribute('data-mobile');
+  }
+  
   const mobileFilters = document.getElementById('mobile-filters-always');
   if (mobileFilters) mobileFilters.style.display = isMobile ? 'flex' : 'none';
   document.querySelectorAll('.desktop-only').forEach(el => {
     el.style.display = isMobile ? 'none' : '';
+  });
+}
+
+// Also observe db-wrap for size changes
+if (window.ResizeObserver) {
+  const ro = new ResizeObserver(() => checkMobile());
+  document.addEventListener('DOMContentLoaded', () => {
+    const wrap = document.getElementById('db-wrap');
+    if (wrap) ro.observe(wrap);
   });
 }
 
