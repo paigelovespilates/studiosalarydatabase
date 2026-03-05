@@ -35,6 +35,7 @@
 
   body {
     font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    font-weight: 300 !important;
     background: #f5f4f2 !important;
     color: #2e2d29 !important;
     min-height: 100vh;
@@ -61,14 +62,34 @@
   }
 
   .logo-area h1 {
-    font-family: 'Cormorant Garamond', 'Palatino Linotype', Palatino, Georgia, serif !important;
-    font-size: 28px !important;
+    font-size: 32px !important;
     font-weight: 400 !important;
     color: #2e2d29 !important;
-    letter-spacing: 0.02em !important;
+    letter-spacing: 0 !important;
+    font-family: 'DM Sans', sans-serif !important;
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
   }
 
-  .logo-area h1 span { color: var(--accent-deep); font-style: italic; }
+  .h1-studio {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-weight: 300 !important;
+    font-style: normal !important;
+    color: #2e2d29 !important;
+    letter-spacing: 0.04em !important;
+    font-size: 32px !important;
+  }
+
+  .h1-db {
+    font-family: 'Cormorant Garamond', 'Palatino Linotype', Palatino, Georgia, serif !important;
+    font-weight: 400 !important;
+    font-style: italic !important;
+    color: #575648 !important;
+    letter-spacing: 0.01em !important;
+    font-size: 36px !important;
+  }
 
   .logo-area p {
     font-size: 12px;
@@ -254,10 +275,11 @@
 
   .studio-name {
     font-family: 'Cormorant Garamond', 'Palatino Linotype', Palatino, Georgia, serif !important;
-    font-size: 21px !important;
-    font-weight: 500 !important;
+    font-size: 22px !important;
+    font-weight: 400 !important;
     color: #2e2d29 !important;
     line-height: 1.2 !important;
+    letter-spacing: 0.01em !important;
   }
 
   .studio-location {
@@ -315,15 +337,16 @@
 
   .format-pill {
     font-size: 11px !important;
-    padding: 3px 10px !important;
+    padding: 3px 12px !important;
     border-radius: 20px !important;
     background: #eeedeb !important;
     background-color: #eeedeb !important;
-    color: #757263 !important;
-    -webkit-text-fill-color: #757263 !important;
-    border: 1px solid #dddbd6 !important;
+    color: #9e9c8f !important;
+    -webkit-text-fill-color: #9e9c8f !important;
+    border: 1px solid #e0deda !important;
     display: inline-block !important;
     font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    font-weight: 300 !important;
     text-decoration: none !important;
     box-shadow: none !important;
   }
@@ -332,11 +355,12 @@
   .pay-section { border-top: 1px solid var(--border-light); padding: 12px 22px; }
 
   .section-label {
-    font-size: 10px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 8px;
+    font-size: 10px !important;
+    color: #9e9c8f !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.12em !important;
+    margin-bottom: 8px !important;
+    font-weight: 400 !important;
   }
 
   .pay-table { width: 100%; border-collapse: collapse; }
@@ -483,8 +507,8 @@
     list-style: none !important;
   }
 
-  .benefit-chip { display: flex !important; align-items: center !important; gap: 5px !important; font-size: 11px !important; color: #757263 !important; -webkit-text-fill-color: #757263 !important; font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important; text-decoration: none !important; list-style: none !important; padding-left: 0 !important; margin: 0 !important; }
-  .benefit-chip .dot { width: 6px !important; height: 6px !important; border-radius: 50% !important; background: #575648 !important; background-color: #575648 !important; flex-shrink: 0 !important; display: inline-block !important; }
+  .benefit-chip { display: flex !important; align-items: center !important; gap: 6px !important; font-size: 11px !important; font-weight: 300 !important; color: #757263 !important; -webkit-text-fill-color: #757263 !important; font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important; text-decoration: none !important; list-style: none !important; padding-left: 0 !important; margin: 0 !important; }
+  .benefit-chip .dot { width: 4px !important; height: 4px !important; border-radius: 50% !important; background: #b0aea4 !important; background-color: #b0aea4 !important; flex-shrink: 0 !important; display: inline-block !important; }
   .benefits-section ul, .benefits-section ol, #db-wrap ul, #db-wrap ol { list-style: none !important; padding-left: 0 !important; margin: 0 !important; }
   #db-wrap li { list-style: none !important; padding-left: 0 !important; margin: 0 !important; }
   #db-wrap li::before { display: none !important; content: none !important; }
@@ -523,9 +547,9 @@
     flex-shrink: 0;
   }
 
-  .relativity-badge.above { background: #e0efe0 !important; background-color: #e0efe0 !important; color: #2d6a2d !important; -webkit-text-fill-color: #2d6a2d !important; }
+  .relativity-badge.above { background: #e4ede4 !important; background-color: #e4ede4 !important; color: #3a6b3a !important; -webkit-text-fill-color: #3a6b3a !important; }
   .relativity-badge.average { background: #eeedeb !important; background-color: #eeedeb !important; color: #757263 !important; -webkit-text-fill-color: #757263 !important; }
-  .relativity-badge.below { background: #f5eaea !important; background-color: #f5eaea !important; color: #7a3a3a !important; -webkit-text-fill-color: #7a3a3a !important; }
+  .relativity-badge.below { background: #ede8ea !important; background-color: #ede8ea !important; color: #7a5058 !important; -webkit-text-fill-color: #7a5058 !important; }
 
   /* Distance badge */
   .distance-badge {
@@ -879,7 +903,7 @@
 <header>
   <div class="header-inner">
     <div class="logo-area">
-      <h1>Studio <span>Salary Database</span></h1>
+      <h1><span class="h1-studio">Studio</span> <span class="h1-db">Salary Database</span></h1>
       <p>Transparency that empowers</p>
     </div>
     <div class="data-badge">
