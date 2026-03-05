@@ -2364,6 +2364,18 @@ async function init() {
 // the tall iframe. We can't access the parent scroll position without
 // Code Injection. Instead, scroll the iframe to the top first so
 // position:fixed always works correctly, then show the popup.
+// ── Parent scroll tracking (Squarespace iframe fix) ──────────
+// Squarespace scrolls the parent page, not the iframe, so window.scrollY
+// inside the iframe is always 0. The Squarespace page header injection
+// sends us the real scroll position via postMessage.
+let _parentScrollY = 0;
+
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.type === 'parentScroll') {
+    _parentScrollY = e.data.scrollY || 0;
+  }
+});
+
 function positionPopupOverlay() {
   const overlay = document.getElementById('popup-overlay');
   const scrollY = _parentScrollY > 0 ? _parentScrollY : (window.scrollY || document.documentElement.scrollTop || 0);
@@ -2424,16 +2436,20 @@ init();
   // Send on load
   window.addEventListener('load', sendHeight);
   // Send whenever content changes (cards load, filters apply, cards expand)
-  const observer = new MutationObserver(sendHeight);
-  observer.observe(document.body, { childList: true, subtree: true, attributes: true });
-  // Also send periodically for safety
-  setInterval(sendHeight, 500);
-
-  // Broadcast this iframe's own scroll position to itself
-  // (for cases where the iframe itself scrolls rather than the parent)
-  window.addEventListener('scroll', function() {
-    window.parent.postMessage({ type: 'iframeScroll', scrollY: window.scrollY }, '*');
+  // Use a debounced observer to avoid blocking mobile interaction
+  let _sendHeightTimer = null;
+  const observer = new MutationObserver(() => {
+    clearTimeout(_sendHeightTimer);
+    _sendHeightTimer = setTimeout(sendHeight, 100);
   });
+  observer.observe(document.body, { childList: true, subtree: true });
+  // Send a few times after load then stop — avoids constant 500ms repaint on mobile
+  let _heightIntervalCount = 0;
+  const _heightInterval = setInterval(() => {
+    sendHeight();
+    _heightIntervalCount++;
+    if (_heightIntervalCount >= 10) clearInterval(_heightInterval);
+  }, 500);
 </script>
 </body>
 </html>
