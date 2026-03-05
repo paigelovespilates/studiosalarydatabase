@@ -648,6 +648,30 @@
 
   .see-less-btn:hover { background: var(--sand); }
 
+  /* ── Inline submissions expansion ── */
+  .all-submissions-inline {
+    border-top: 1px solid var(--border);
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+  .inline-submissions-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .inline-close-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .inline-close-btn:hover { background: var(--sand); }
+
   /* ── Popup ── */
   .popup-overlay {
     position: absolute;
@@ -1334,68 +1358,7 @@ function toggleCard(btn) {
   card.classList.toggle('expanded');
 }
 
-// ── FIX: Save scroll position so close button restores it ────
-let _popupScrollY = 0;
 
-function closePopup() {
-  const overlay = document.getElementById('popup-overlay');
-  overlay.classList.remove('open');
-  overlay.style.position = '';
-  overlay.style.top = '';
-  overlay.style.height = '';
-  overlay.style.width = '';
-  overlay.style.left = '';
-  overlay.style.right = '';
-  document.body.style.overflow = '';
-  window.scrollTo({ top: _popupScrollY, behavior: 'instant' });
-}
-
-function handleOverlayClick(e) {
-  if (e.target === document.getElementById('popup-overlay')) closePopup();
-}
-
-function openPopup(studioIndex) {
-  // Save scroll position before locking body scroll
-  _popupScrollY = window.scrollY;
-
-  const filtered = getCurrentFiltered();
-  const s = filtered[studioIndex] || allStudios[studioIndex];
-  if (!s) return;
-
-  document.getElementById('popup-title').textContent = s.name;
-  const popupCity = toTitleCase((s.city || '').trim().replace(/,\s*[A-Z]{2}$/, ''));
-  document.getElementById('popup-subtitle').textContent =
-    [popupCity, (s.state || '').trim()].filter(Boolean).join(', ') + ` · ${s.submissions.length} submissions`;
-
-  const tableRows = renderPopupRows(s.submissions, s.currency);
-  const negSection = s.negNotes.length
-    ? `<div class="popup-section">
-         <div class="popup-section-label">How instructors describe negotiating rates</div>
-         ${[...new Set(s.negNotes)].map(n => `<p style="font-size:13px;font-style:italic;color:var(--text-muted);line-height:1.6;margin-bottom:6px;">"${n}"</p>`).join('')}
-       </div>` : '';
-
-  document.getElementById('popup-body').innerHTML = `
-    <div class="popup-section">
-      <div class="popup-section-label">All Compensation Submissions</div>
-      <table class="popup-table">
-        <thead>
-          <tr>
-            <th class="th-source"></th>
-            <th>Format</th>
-            <th>Pay</th>
-            <th>Negotiation</th>
-          </tr>
-        </thead>
-        <tbody>${tableRows}</tbody>
-      </table>
-    </div>
-    ${negSection}
-  `;
-
-  document.getElementById('popup-overlay').classList.add('open');
-  positionPopupOverlay();
-  document.body.style.overflow = 'hidden';
-}
 
 // ── CSV ───────────────────────────────────────────────────────
 function parseCSV(text) {
@@ -2089,8 +2052,24 @@ function renderCards(studios) {
     const showViewAll = studio.submissions.length > DEFAULT_ROWS;
     const tableRows = renderPayRows(studio.submissions, DEFAULT_ROWS, studio.currency);
 
+    const allTableRows = showViewAll ? renderPayRows(studio.submissions, 999, studio.currency) : '';
     const viewAllBtn = showViewAll
-      ? `<button class="view-all-btn" onclick="openPopup(${i})">View all ${studio.submissions.length} submissions ↓</button>`
+      ? `<button class="view-all-btn" onclick="toggleAllSubmissions(this)">View all ${studio.submissions.length} submissions ↓</button>
+         <div class="all-submissions-inline" style="display:none;">
+           <div class="inline-submissions-header">
+             <span class="section-label" style="margin:0;">All Compensation Submissions</span>
+             <button class="inline-close-btn" onclick="toggleAllSubmissions(this.closest('.card-expanded').querySelector('.view-all-btn'))">✕ Close</button>
+           </div>
+           <table class="pay-table" style="width:100%;margin-top:8px;">
+             <thead><tr>
+               <th class="th-source"></th>
+               <th>Format</th>
+               <th>Pay</th>
+               <th>Negotiation</th>
+             </tr></thead>
+             <tbody>${allTableRows}</tbody>
+           </table>
+         </div>`
       : '';
 
     const expBadges = studio.hasStudio
@@ -2230,7 +2209,7 @@ function renderPopupRows(submissions, currency) {
   }).join('');
 }
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
+
 
 // ── JSONP fetch ───────────────────────────────────────────────
 function fetchJSONP(url) {
@@ -2357,64 +2336,26 @@ async function init() {
   }
 }
 
-// ── Parent scroll tracking (Squarespace iframe fix) ──────────
-// Squarespace scrolls the parent page, not the iframe, so window.scrollY
-// inside the iframe is always 0. The Squarespace page header injection
-// sends us the real scroll position via postMessage.
-let _parentScrollY = 0;
-
-window.addEventListener('message', function(e) {
-  if (e.data && e.data.type === 'parentScroll') {
-    _parentScrollY = e.data.scrollY || 0;
+// ── Inline submissions toggle ─────────────────────────────────
+function toggleAllSubmissions(btn) {
+  const cardExpanded = btn.closest('.card-expanded');
+  const inlineDiv = cardExpanded.querySelector('.all-submissions-inline');
+  const isOpen = inlineDiv.style.display !== 'none';
+  if (isOpen) {
+    inlineDiv.style.display = 'none';
+    btn.textContent = btn.textContent.replace('Hide', 'View all').replace('↑', '↓');
+  } else {
+    inlineDiv.style.display = 'block';
+    btn.textContent = btn.textContent.replace('View all', 'Hide').replace('↓', '↑');
+    // Scroll the inline section into view smoothly
+    setTimeout(() => inlineDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
   }
-});
-
-function positionPopupOverlay() {
-  const overlay = document.getElementById('popup-overlay');
-  const wrap = document.getElementById('db-wrap');
-  const popup = document.getElementById('popup');
-  
-  // Cover full document height so overlay backdrop shows everywhere
-  const totalHeight = Math.max(
-    document.body.scrollHeight,
-    document.documentElement.scrollHeight,
-    wrap ? wrap.scrollHeight : 0
-  );
-  
-  overlay.style.position = 'absolute';
-  overlay.style.top = '0';
-  overlay.style.left = '0';
-  overlay.style.right = '0';
-  overlay.style.width = '100%';
-  overlay.style.height = totalHeight + 'px';
-
-  // Tell the parent Squarespace page to scroll to the bottom of the iframe
-  // so the popup (which sits at bottom of iframe) becomes visible
-  setTimeout(() => {
-    const iframeBottom = document.body.scrollHeight;
-    window.parent.postMessage({ type: 'scrollToBottom', iframeHeight: iframeBottom }, '*');
-  }, 50);
 }
+
+
 
 init();
 </script>
-
-<!-- Popup -->
-<div class="popup-overlay" id="popup-overlay" onclick="handleOverlayClick(event)">
-  <div class="popup" id="popup">
-    <div class="popup-header">
-      <span class="popup-handle"></span>
-      <div class="popup-header-main">
-        <div>
-          <div class="popup-title" id="popup-title"></div>
-          <div class="popup-subtitle" id="popup-subtitle"></div>
-        </div>
-        <button class="popup-close" onclick="closePopup()">✕</button>
-      </div>
-    </div>
-    <div class="popup-body" id="popup-body"></div>
-  </div>
-</div>
 
 </div><!-- end #db-wrap -->
 
