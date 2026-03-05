@@ -1086,7 +1086,7 @@
     </div>
 
     <div class="filter-bottom-row">
-      <div class="result-count">Showing <span id="result-num">—</span> studios</div>
+      <div class="result-count">Showing <span id="result-num">—</span> studios <span id="sort-indicator" style="display:none;font-size:11px;color:var(--accent);margin-left:6px;">· sorted by distance</span></div>
       <button class="clear-filters-btn" id="clear-filters-btn" onclick="clearFilters()">✕ Clear</button>
     </div>
   </div>
@@ -1213,6 +1213,9 @@ async function fetchExchangeRates() {
 // ── Geocoding / Near Me ───────────────────────────────────────
 let userCoords = null;        // { lat, lng } of the user
 let nearMeActive = false;
+const PAGE_SIZE = 10;
+let _currentPage = 1;
+let _allFiltered = [];
 const geocodeCache = new Map(); // city+state → { lat, lng }
 
 function haversineDistance(lat1, lng1, lat2, lng2) {
@@ -1276,6 +1279,8 @@ function toggleNearMe() {
   if (nearMeActive) {
     nearMeActive = false;
     document.getElementById('near-me-btn').classList.remove('active');
+    const si = document.getElementById('sort-indicator');
+    if (si) si.style.display = 'none';
     document.getElementById('radius-select').classList.remove('visible');
     userCoords = null;
     applyFilters();
@@ -1291,6 +1296,8 @@ function toggleNearMe() {
     pos => {
       userCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
       nearMeActive = true;
+      const si = document.getElementById('sort-indicator');
+      if (si) si.style.display = 'inline';
       document.getElementById('near-me-btn').classList.add('active');
       document.getElementById('radius-select').classList.add('visible');
       applyFilters();
@@ -1345,8 +1352,10 @@ function applyFilters() {
   }
 
   _currentFiltered = filtered;
+  _allFiltered = filtered;
+  _currentPage = 1;
   document.getElementById('result-num').textContent = filtered.length;
-  renderCards(filtered);
+  renderCards(filtered.slice(0, PAGE_SIZE), filtered.length);
 
   // Show clear button if any filter is active
   const hasFilters = query || format || state || country || nearMeActive;
@@ -2015,7 +2024,7 @@ function renderPayRows(submissions, limit, currency) {
 }
 
 // ── Render cards ──────────────────────────────────────────────
-function renderCards(studios) {
+function renderCards(studios, totalCount) {
   const grid = document.getElementById('cards-grid');
   grid.innerHTML = '';
 
@@ -2176,8 +2185,32 @@ function renderCards(studios) {
 
     grid.appendChild(el);
   });
+
+  // Load More button
+  const shown = studios.length;
+  const total = totalCount !== undefined ? totalCount : shown;
+  if (shown < total) {
+    const loadMore = document.createElement('div');
+    loadMore.style.cssText = 'grid-column:1/-1;display:flex;justify-content:center;padding:16px 0 8px;';
+    loadMore.innerHTML = `<button class="see-more-btn" style="padding:12px 32px;" onclick="loadMoreCards()">
+      Load more studios (${total - shown} remaining) ↓
+    </button>`;
+    grid.appendChild(loadMore);
+  }
+
   // Re-apply responsive state after cards render
   checkMobile();
+}
+
+function loadMoreCards() {
+  _currentPage++;
+  const end = _currentPage * PAGE_SIZE;
+  const toShow = _allFiltered.slice(0, end);
+  renderCards(toShow, _allFiltered.length);
+  // Scroll to first new card
+  const cards = document.querySelectorAll('.studio-card');
+  const firstNew = cards[(_currentPage - 1) * PAGE_SIZE];
+  if (firstNew) setTimeout(() => firstNew.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
 }
 
 // ── Popup rows ────────────────────────────────────────────────
@@ -2322,7 +2355,9 @@ async function init() {
     updateStats(allStudios);
     _currentFiltered = allStudios;
     document.getElementById('result-num').textContent = allStudios.length;
-    renderCards(allStudios);
+    _allFiltered = allStudios;
+    _currentPage = 1;
+    renderCards(allStudios.slice(0, PAGE_SIZE), allStudios.length);
 
     // Geocode studio locations in the background (for Near Me)
     geocodeAllStudios(allStudios);
