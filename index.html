@@ -2388,9 +2388,11 @@ function positionPopupOverlay() {
   overlay.style.width = '100%';
   overlay.style.height = totalHeight + 'px';
 
-  // Scroll the popup sheet into the visible viewport immediately
+  // Tell the parent Squarespace page to scroll to the bottom of the iframe
+  // so the popup (which sits at bottom of iframe) becomes visible
   setTimeout(() => {
-    if (popup) popup.scrollIntoView({ behavior: 'instant', block: 'end' });
+    const iframeBottom = document.body.scrollHeight;
+    window.parent.postMessage({ type: 'scrollToBottom', iframeHeight: iframeBottom }, '*');
   }, 50);
 }
 
