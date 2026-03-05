@@ -260,6 +260,7 @@
     display: grid !important;
     grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)) !important;
     gap: 20px !important;
+    padding: 0 !important;
   }
 
   .studio-card {
@@ -1064,12 +1065,12 @@
     <span class="filter-label desktop-only">Format</span>
     <select id="format-filter" class="desktop-only" onchange="applyFilters()"><option value="">All Formats</option></select>
 
-    <!-- Near Me button -->
+    <!-- Near Me / Sort by Distance button -->
     <button class="near-me-btn" id="near-me-btn" onclick="toggleNearMe()">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
       </svg>
-      Near Me
+      Sort by Distance
     </button>
     <select class="radius-select" id="radius-select" onchange="applyFilters()">
       <option value="10">Within 10 mi</option>
@@ -1086,7 +1087,7 @@
     </div>
 
     <div class="filter-bottom-row">
-      <div class="result-count">Showing <span id="result-num">—</span> studios <span id="sort-indicator" style="display:none;font-size:11px;color:var(--accent);margin-left:6px;">· sorted by distance</span></div>
+      <div class="result-count">Showing <span id="result-num">—</span> studios <span id="sort-indicator" style="display:none;font-size:11px;color:var(--accent);margin-left:6px;">📍 sorted by distance</span></div>
       <button class="clear-filters-btn" id="clear-filters-btn" onclick="clearFilters()">✕ Clear</button>
     </div>
   </div>
@@ -1355,7 +1356,7 @@ function applyFilters() {
   _allFiltered = filtered;
   _currentPage = 1;
   document.getElementById('result-num').textContent = filtered.length;
-  renderCards(filtered.slice(0, PAGE_SIZE), filtered.length);
+  renderCards(filtered.slice(0, PAGE_SIZE), filtered.length, 1);
 
   // Show clear button if any filter is active
   const hasFilters = query || format || state || country || nearMeActive;
@@ -2024,7 +2025,8 @@ function renderPayRows(submissions, limit, currency) {
 }
 
 // ── Render cards ──────────────────────────────────────────────
-function renderCards(studios, totalCount) {
+function renderCards(studios, totalCount, page) {
+  page = page || 1;
   const grid = document.getElementById('cards-grid');
   grid.innerHTML = '';
 
@@ -2061,24 +2063,14 @@ function renderCards(studios, totalCount) {
     const showViewAll = studio.submissions.length > DEFAULT_ROWS;
     const tableRows = renderPayRows(studio.submissions, DEFAULT_ROWS, studio.currency);
 
-    const allTableRows = showViewAll ? renderPayRows(studio.submissions, 999, studio.currency) : '';
+    // Only show submissions beyond the first DEFAULT_ROWS to avoid duplication
+    const extraSubmissions = showViewAll ? studio.submissions.slice(DEFAULT_ROWS) : [];
+    const extraTableRows = showViewAll ? renderPayRows(extraSubmissions, 999, studio.currency) : '';
     const viewAllBtn = showViewAll
-      ? `<button class="view-all-btn" onclick="toggleAllSubmissions(this)">View all ${studio.submissions.length} submissions ↓</button>
-         <div class="all-submissions-inline" style="display:none;">
-           <div class="inline-submissions-header">
-             <span class="section-label" style="margin:0;">All Compensation Submissions</span>
-             <button class="inline-close-btn" onclick="toggleAllSubmissions(this.closest('.card-expanded').querySelector('.view-all-btn'))">✕ Close</button>
-           </div>
-           <table class="pay-table" style="width:100%;margin-top:8px;">
-             <thead><tr>
-               <th class="th-source"></th>
-               <th>Format</th>
-               <th>Pay</th>
-               <th>Negotiation</th>
-             </tr></thead>
-             <tbody>${allTableRows}</tbody>
-           </table>
-         </div>`
+      ? `<div class="all-submissions-inline" style="display:none;">
+           <tbody id="extra-rows-inline">${extraTableRows}</tbody>
+         </div>
+         <button class="view-all-btn" onclick="toggleAllSubmissions(this)">View ${studio.submissions.length - DEFAULT_ROWS} more submission${studio.submissions.length - DEFAULT_ROWS > 1 ? 's' : ''} ↓</button>`
       : '';
 
     const expBadges = studio.hasStudio
@@ -2186,31 +2178,42 @@ function renderCards(studios, totalCount) {
     grid.appendChild(el);
   });
 
-  // Load More button
-  const shown = studios.length;
-  const total = totalCount !== undefined ? totalCount : shown;
-  if (shown < total) {
-    const loadMore = document.createElement('div');
-    loadMore.style.cssText = 'grid-column:1/-1;display:flex;justify-content:center;padding:16px 0 8px;';
-    loadMore.innerHTML = `<button class="see-more-btn" style="padding:12px 32px;" onclick="loadMoreCards()">
-      Load more studios (${total - shown} remaining) ↓
-    </button>`;
-    grid.appendChild(loadMore);
+  // Pagination controls
+  const total = totalCount !== undefined ? totalCount : studios.length;
+  const totalPages = Math.ceil(total / PAGE_SIZE);
+  if (totalPages > 1) {
+    const nav = document.createElement('div');
+    nav.style.cssText = 'grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:12px;padding:20px 0 8px;';
+    const hasPrev = page > 1;
+    const hasNext = page < totalPages;
+    nav.innerHTML = `
+      <button class="see-more-btn" style="padding:10px 20px;${!hasPrev ? 'opacity:0.35;pointer-events:none;' : ''}" onclick="goToPage(${page - 1})">← Previous</button>
+      <span style="font-size:13px;color:var(--text-muted);font-family:'DM Sans',sans-serif;">Page ${page} of ${totalPages}</span>
+      <button class="see-more-btn" style="padding:10px 20px;${!hasNext ? 'opacity:0.35;pointer-events:none;' : ''}" onclick="goToPage(${page + 1})">Next →</button>
+    `;
+    grid.appendChild(nav);
   }
 
   // Re-apply responsive state after cards render
   checkMobile();
 }
 
+function goToPage(page) {
+  _currentPage = page;
+  const start = (page - 1) * PAGE_SIZE;
+  const end = page * PAGE_SIZE;
+  renderCards(_allFiltered.slice(start, end), _allFiltered.length, page);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function loadMoreCards() {
   _currentPage++;
+  const start = (_currentPage - 1) * PAGE_SIZE;
   const end = _currentPage * PAGE_SIZE;
-  const toShow = _allFiltered.slice(0, end);
-  renderCards(toShow, _allFiltered.length);
-  // Scroll to first new card
-  const cards = document.querySelectorAll('.studio-card');
-  const firstNew = cards[(_currentPage - 1) * PAGE_SIZE];
-  if (firstNew) setTimeout(() => firstNew.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  const toShow = _allFiltered.slice(start, end);
+  renderCards(toShow, _allFiltered.length, _currentPage);
+  // Scroll to top of new page
+  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
 }
 
 // ── Popup rows ────────────────────────────────────────────────
@@ -2357,7 +2360,7 @@ async function init() {
     document.getElementById('result-num').textContent = allStudios.length;
     _allFiltered = allStudios;
     _currentPage = 1;
-    renderCards(allStudios.slice(0, PAGE_SIZE), allStudios.length);
+    renderCards(allStudios.slice(0, PAGE_SIZE), allStudios.length, 1);
 
     // Geocode studio locations in the background (for Near Me)
     geocodeAllStudios(allStudios);
@@ -2375,15 +2378,31 @@ async function init() {
 function toggleAllSubmissions(btn) {
   const cardExpanded = btn.closest('.card-expanded');
   const inlineDiv = cardExpanded.querySelector('.all-submissions-inline');
-  const isOpen = inlineDiv.style.display !== 'none';
+  const payTable = cardExpanded.querySelector('.pay-table tbody');
+  const extraRows = inlineDiv ? inlineDiv.querySelector('tbody') : null;
+  const isOpen = inlineDiv && inlineDiv.dataset.injected === 'true';
+
   if (isOpen) {
-    inlineDiv.style.display = 'none';
-    btn.textContent = btn.textContent.replace('Hide', 'View all').replace('↑', '↓');
+    // Remove injected rows from main table
+    if (payTable && extraRows) {
+      Array.from(extraRows.querySelectorAll('tr')).forEach(tr => {
+        const existing = payTable.querySelector(`tr[data-extra="${tr.dataset.extra}"]`);
+        if (existing) existing.remove();
+      });
+    }
+    inlineDiv.dataset.injected = 'false';
+    btn.textContent = btn.textContent.replace('Hide', 'View').replace('↑', '↓');
   } else {
-    inlineDiv.style.display = 'block';
-    btn.textContent = btn.textContent.replace('View all', 'Hide').replace('↓', '↑');
-    // Scroll the inline section into view smoothly
-    setTimeout(() => inlineDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    // Inject extra rows into main pay table
+    if (payTable && extraRows) {
+      const rows = Array.from(extraRows.querySelectorAll('tr'));
+      rows.forEach((tr, i) => {
+        tr.dataset.extra = 'extra-' + i;
+        payTable.appendChild(tr.cloneNode(true));
+      });
+    }
+    inlineDiv.dataset.injected = 'true';
+    btn.textContent = btn.textContent.replace('View', 'Hide').replace('↓', '↑');
   }
 }
 
@@ -2427,7 +2446,8 @@ init();
     clearTimeout(_sendHeightTimer);
     _sendHeightTimer = setTimeout(sendHeight, 100);
   });
-  observer.observe(document.body, { childList: true, subtree: true });
+  const gridEl = document.getElementById('cards-grid');
+  observer.observe(gridEl || document.body, { childList: true, subtree: false });
   // Send a few times after load then stop — avoids constant 500ms repaint on mobile
   let _heightIntervalCount = 0;
   const _heightInterval = setInterval(() => {
