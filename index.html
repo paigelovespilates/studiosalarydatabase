@@ -849,21 +849,23 @@
   #db-wrap[data-mobile] .pay-table tbody td.td-structure { display: none !important; }
   #db-wrap[data-mobile] .pay-table tbody td.td-pay { text-align: right !important; font-size: 13px !important; font-weight: 600 !important; color: var(--accent-deep) !important; flex-shrink: 0 !important; max-width: 45% !important; }
 
-  /* ── FIX: Popup mobile styles via data-mobile (replaces media query version) ── */
-  #db-wrap[data-mobile] .popup-overlay { align-items: flex-end !important; padding: 0 !important; }
-  #db-wrap[data-mobile] .popup {
+  /* ── FIX: Popup mobile styles via body.db-mobile ──
+     The popup overlay is OUTSIDE #db-wrap so data-mobile on #db-wrap
+     can't target it. We use body.db-mobile instead. ── */
+  body.db-mobile .popup-overlay { align-items: flex-end !important; padding: 0 !important; }
+  body.db-mobile .popup {
     border-radius: 20px 20px 0 0 !important;
     max-width: 100% !important;
     max-height: 90vh !important;
     width: 100% !important;
     transform: translateY(100%) !important;
   }
-  #db-wrap[data-mobile] .popup-overlay.open .popup { transform: translateY(0) !important; }
-  #db-wrap[data-mobile] .popup-handle { display: block !important; width: 36px !important; height: 4px !important; background: var(--border) !important; border-radius: 2px !important; margin: 0 auto 16px !important; }
-  #db-wrap[data-mobile] .popup-header { padding: 12px 20px 14px !important; }
-  #db-wrap[data-mobile] .popup-header-main { align-items: center !important; }
-  #db-wrap[data-mobile] .popup-close { width: 40px !important; height: 40px !important; font-size: 18px !important; }
-  #db-wrap[data-mobile] .popup-body { padding: 16px 20px 32px !important; }
+  body.db-mobile .popup-overlay.open .popup { transform: translateY(0) !important; }
+  body.db-mobile .popup-handle { display: block !important; width: 36px !important; height: 4px !important; background: var(--border) !important; border-radius: 2px !important; margin: 0 auto 16px !important; }
+  body.db-mobile .popup-header { padding: 12px 20px 14px !important; }
+  body.db-mobile .popup-header-main { align-items: center !important; }
+  body.db-mobile .popup-close { width: 40px !important; height: 40px !important; font-size: 18px !important; }
+  body.db-mobile .popup-body { padding: 16px 20px 32px !important; }
 
   #db-wrap[data-mobile] .legend { gap: 12px !important; }
   #db-wrap[data-mobile] .legend-item { font-size: 10px !important; }
@@ -2277,11 +2279,13 @@ function checkMobile() {
   const width = wrap ? wrap.offsetWidth : window.innerWidth;
   const isMobile = width < 500;
   
-  // Set data-mobile attribute for CSS targeting
+  // Set data-mobile attribute on wrap for card/filter CSS
   if (isMobile) {
     wrap && wrap.setAttribute('data-mobile', 'true');
+    document.body.classList.add('db-mobile');
   } else {
     wrap && wrap.removeAttribute('data-mobile');
+    document.body.classList.remove('db-mobile');
   }
   
   const mobileFilters = document.getElementById('mobile-filters-always');
