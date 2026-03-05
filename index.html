@@ -863,6 +863,10 @@
     max-height: 90vh !important;
     width: 100% !important;
     transform: translateY(100%) !important;
+    /* Stick to bottom of viewport even when overlay is full document height */
+    position: sticky !important;
+    bottom: 0 !important;
+    align-self: flex-end !important;
   }
   body.db-mobile .popup-overlay.open .popup { transform: translateY(0) !important; }
   body.db-mobile .popup-handle { display: block !important; width: 36px !important; height: 4px !important; background: var(--border) !important; border-radius: 2px !important; margin: 0 auto 16px !important; }
@@ -2295,16 +2299,24 @@ function checkMobile() {
   });
 }
 
-// Also observe db-wrap for size changes
+// Debounced checkMobile to avoid blocking filter interaction
+// while cards are loading and layout is shifting
+let _checkMobileTimer = null;
+function checkMobileDebounced() {
+  clearTimeout(_checkMobileTimer);
+  _checkMobileTimer = setTimeout(checkMobile, 150);
+}
+
+// Only observe resize, not every DOM change
 if (window.ResizeObserver) {
-  const ro = new ResizeObserver(() => checkMobile());
+  const ro = new ResizeObserver(checkMobileDebounced);
   document.addEventListener('DOMContentLoaded', () => {
     const wrap = document.getElementById('db-wrap');
     if (wrap) ro.observe(wrap);
   });
 }
 
-window.addEventListener('resize', checkMobile);
+window.addEventListener('resize', checkMobileDebounced);
 checkMobile();
 
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6IjQ_PA67Zky5BsOZGObx8aXpEVl2gIbBlQkGdHxC7gkVbQwcX0oM9LezI2Zss0zv-w/exec';
@@ -2312,9 +2324,6 @@ const DEFAULT_ROWS = 3;
 
 // ── Init ──────────────────────────────────────────────────────
 async function init() {
-  // Lock filters while data is loading
-  setFiltersDisabled(true);
-
   // Kick off exchange rate fetch immediately (non-blocking)
   fetchExchangeRates();
 
@@ -2340,15 +2349,11 @@ async function init() {
     document.getElementById('result-num').textContent = allStudios.length;
     renderCards(allStudios);
 
-    // Unlock filters now that data is ready
-    setFiltersDisabled(false);
-
     // Geocode studio locations in the background (for Near Me)
     geocodeAllStudios(allStudios);
 
   } catch (err) {
     clearTimeout(timeout);
-    setFiltersDisabled(false);
     document.getElementById('clear-filters-btn').classList.remove('visible');
     document.getElementById('cards-grid').innerHTML =
       `<div class="state-msg"><p>Couldn't load data.</p><small>Please refresh or check back shortly.</small></div>`;
@@ -2370,21 +2375,28 @@ window.addEventListener('message', function(e) {
 
 function positionPopupOverlay() {
   const overlay = document.getElementById('popup-overlay');
-  // Use the db-wrap element's position relative to the viewport
-  // to figure out where we are on screen, even inside an iframe
   const wrap = document.getElementById('db-wrap');
-  const wrapRect = wrap ? wrap.getBoundingClientRect() : null;
   
-  // offsetFromTop = how far the wrap's top is above the current viewport top
-  // If wrap top is above viewport (user scrolled down), wrapRect.top is negative
-  const scrollY = wrapRect ? Math.max(0, -wrapRect.top) : 0;
+  // Cover the entire document so the popup is always visible
+  // regardless of where the user has scrolled in the iframe
+  const totalHeight = Math.max(
+    document.body.scrollHeight,
+    document.documentElement.scrollHeight,
+    wrap ? wrap.scrollHeight : 0
+  );
   
   overlay.style.position = 'absolute';
-  overlay.style.top = scrollY + 'px';
+  overlay.style.top = '0';
   overlay.style.left = '0';
   overlay.style.right = '0';
   overlay.style.width = '100%';
-  overlay.style.height = window.innerHeight + 'px';
+  overlay.style.height = totalHeight + 'px';
+  
+  // Scroll the popup sheet into view
+  setTimeout(() => {
+    const popup = document.getElementById('popup');
+    if (popup) popup.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }, 50);
 }
 
 init();
