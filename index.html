@@ -2365,12 +2365,8 @@ async function init() {
 // Code Injection. Instead, scroll the iframe to the top first so
 // position:fixed always works correctly, then show the popup.
 function positionPopupOverlay() {
-  // Use absolute positioning at current scroll position so the overlay
-  // covers the visible viewport regardless of how tall the iframe is.
-  // This fixes the Squarespace iframe issue where position:fixed
-  // anchors to the top of the full iframe, not the visible screen.
   const overlay = document.getElementById('popup-overlay');
-  const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+  const scrollY = _parentScrollY > 0 ? _parentScrollY : (window.scrollY || document.documentElement.scrollTop || 0);
   overlay.style.position = 'absolute';
   overlay.style.top = scrollY + 'px';
   overlay.style.left = '0';
