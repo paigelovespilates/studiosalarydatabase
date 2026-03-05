@@ -8,6 +8,20 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
+  /* Force font loading */
+  @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap");
+  
+  /* Font test elements — force browser to load fonts immediately */
+  body::before {
+    content: '';
+    font-family: 'Cormorant Garamond', serif;
+    font-family: 'DM Sans', sans-serif;
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+<style>
   /* Override Squarespace global styles */
   #db-wrap span, #db-wrap div, #db-wrap p, #db-wrap td, #db-wrap th, #db-wrap button, #db-wrap select, #db-wrap input {
     box-sizing: border-box;
@@ -32,6 +46,7 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { overflow-x: hidden !important; max-width: 100% !important; }
 
   body {
     font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
@@ -774,10 +789,13 @@
   }
 
   @media (max-width: 640px) {
-    header, .filter-section, main { padding-left: 16px; padding-right: 16px; }
+    header, .filter-section, main { padding-left: 16px !important; padding-right: 16px !important; }
+    header { padding-top: 16px !important; padding-bottom: 12px !important; }
     .cards-grid { grid-template-columns: 1fr; }
     .data-badge { display: none; }
-    .logo-area h1 { font-size: 24px; }
+    .logo-area h1 { font-size: 22px !important; gap: 4px !important; }
+    .h1-studio { font-size: 22px !important; }
+    .h1-db { font-size: 26px !important; }
     .filter-inner { flex-direction: column; align-items: stretch; gap: 8px; }
     .search-wrap { max-width: 100%; }
     .search-wrap input { width: 100%; }
