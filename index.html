@@ -1072,13 +1072,7 @@
       </svg>
       Near Me
     </button>
-    <!-- Sort by Distance button -->
-    <button class="near-me-btn" id="sort-distance-btn" onclick="toggleSortByDistance()" style="margin-left:4px;">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M3 9l4-4 4 4M7 5v14M21 15l-4 4-4-4M17 19V5"/>
-      </svg>
-      Sort by Distance
-    </button>
+
     <select class="radius-select" id="radius-select" onchange="applyFilters()">
       <option value="10">Within 10 mi</option>
       <option value="25" selected>Within 25 mi</option>
@@ -1092,6 +1086,14 @@
       <select id="state-filter-mobile" onchange="applyFilters()"><option value="">All States</option></select>
       <select id="format-filter-mobile" onchange="applyFilters()"><option value="">All Formats</option></select>
     </div>
+
+    <!-- Sort by Distance — full width at bottom of filters -->
+    <button class="near-me-btn" id="sort-distance-btn" onclick="toggleSortByDistance()" style="width:100%;justify-content:center;margin-bottom:4px;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l4-4 4 4M7 5v14M21 15l-4 4-4-4M17 19V5"/>
+      </svg>
+      Sort by Distance
+    </button>
 
     <div class="filter-bottom-row">
       <div class="result-count">Showing <span id="result-num">—</span> studios <span id="sort-indicator" style="display:none;font-size:11px;color:var(--accent);margin-left:6px;">📍 sorted by distance</span></div>
@@ -2217,7 +2219,13 @@ function goToPage(page) {
   const start = (page - 1) * PAGE_SIZE;
   const end = page * PAGE_SIZE;
   renderCards(_allFiltered.slice(start, end), _allFiltered.length, page);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Scroll to top of cards grid
+  setTimeout(() => {
+    const grid = document.getElementById('cards-grid');
+    if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Also tell parent Squarespace page to scroll to the iframe top
+    window.parent.postMessage({ type: 'scrollToTop' }, '*');
+  }, 50);
 }
 
 function loadMoreCards() {
@@ -2327,12 +2335,21 @@ function checkMobile() {
 // Debounced checkMobile to avoid blocking filter interaction
 // while cards are loading and layout is shifting
 let _checkMobileTimer = null;
+let _lastMobileState = null;
 function checkMobileDebounced() {
   clearTimeout(_checkMobileTimer);
-  _checkMobileTimer = setTimeout(checkMobile, 150);
+  _checkMobileTimer = setTimeout(() => {
+    const screenWidth = window.screen ? window.screen.width : window.innerWidth;
+    const isMobile = screenWidth < 768;
+    // Only run checkMobile if state actually changed — prevents
+    // Squarespace iframe resize loop from constantly wiping styles
+    if (isMobile !== _lastMobileState) {
+      _lastMobileState = isMobile;
+      checkMobile();
+    }
+  }, 150);
 }
 
-// Only observe resize, not every DOM change
 if (window.ResizeObserver) {
   const ro = new ResizeObserver(checkMobileDebounced);
   document.addEventListener('DOMContentLoaded', () => {
@@ -2472,8 +2489,8 @@ init();
       style.textContent = [
         'html, body { width: 100% !important; min-width: 0 !important; overflow-x: hidden !important; }',
         '#db-wrap { width: 100% !important; min-width: 0 !important; overflow-x: hidden !important; }',
-        'header, .filter-section, main { width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; }',
-        '.cards-grid { width: 100% !important; min-width: 0 !important; }',
+        'header, .filter-section, main { width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; padding-left: 16px !important; padding-right: 16px !important; }',
+        '.cards-grid { width: 100% !important; min-width: 0 !important; padding: 0 !important; box-sizing: border-box !important; }',
         '.studio-card { min-width: 0 !important; width: 100% !important; }',
       ].join('\n');
       document.head.appendChild(style);
