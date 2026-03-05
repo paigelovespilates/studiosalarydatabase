@@ -808,6 +808,54 @@
     margin-left: 4px;
   }
 
+  /* Actual-width responsive styles using ResizeObserver */
+  #db-wrap[data-mobile] header,
+  #db-wrap[data-mobile] .filter-section,
+  #db-wrap[data-mobile] main { padding-left: 16px !important; padding-right: 16px !important; }
+  #db-wrap[data-mobile] header { padding-top: 16px !important; padding-bottom: 12px !important; }
+  #db-wrap[data-mobile] .cards-grid { grid-template-columns: 1fr !important; width: 100% !important; }
+  #db-wrap[data-mobile] .data-badge { display: none !important; }
+  #db-wrap[data-mobile] .logo-area h1 { font-size: 22px !important; gap: 4px !important; }
+  #db-wrap[data-mobile] .h1-studio { font-size: 22px !important; }
+  #db-wrap[data-mobile] .h1-db { font-size: 26px !important; }
+  #db-wrap[data-mobile] .filter-inner { flex-direction: column !important; align-items: stretch !important; gap: 8px !important; }
+  #db-wrap[data-mobile] .search-wrap { max-width: 100% !important; }
+  #db-wrap[data-mobile] .search-wrap input { width: 100% !important; }
+  #db-wrap[data-mobile] .result-count { text-align: center !important; width: 100% !important; margin-left: 0 !important; }
+  #db-wrap[data-mobile] .card-header { padding: 16px 12px 10px 16px !important; }
+  #db-wrap[data-mobile] .source-tag { font-size: 9px !important; padding: 2px 6px !important; }
+  #db-wrap[data-mobile] .source-tags { max-width: 90px !important; }
+  #db-wrap[data-mobile] .formats-row { padding: 0 16px 10px !important; }
+  #db-wrap[data-mobile] .pay-section { padding: 10px 16px !important; }
+  #db-wrap[data-mobile] .meta-section { padding: 10px 16px !important; }
+  #db-wrap[data-mobile] .benefits-section { padding: 10px 16px !important; }
+  #db-wrap[data-mobile] .notes-section { padding: 10px 16px !important; }
+  #db-wrap[data-mobile] .neg-notes-section { padding: 10px 16px !important; }
+  #db-wrap[data-mobile] .contact-section { padding: 10px 16px !important; }
+  #db-wrap[data-mobile] .differs-banner { margin: 0 16px 10px !important; }
+  #db-wrap[data-mobile] .near-me-btn { width: 100% !important; justify-content: center !important; }
+  #db-wrap[data-mobile] .mobile-filter-toggle { display: flex !important; }
+  #db-wrap[data-mobile] #mobile-filters-always { display: flex !important; flex-direction: column !important; gap: 8px !important; width: 100% !important; }
+  #db-wrap[data-mobile] #mobile-filters-always select { width: 100% !important; }
+  #db-wrap[data-mobile] .desktop-only { display: none !important; }
+  #db-wrap[data-mobile] .filter-bottom-row { display: flex !important; align-items: center !important; justify-content: space-between !important; width: 100% !important; }
+  #db-wrap[data-mobile] .see-more-btn { width: calc(100% - 32px) !important; margin-left: 16px !important; margin-right: 16px !important; }
+  #db-wrap[data-mobile] .see-less-btn { width: calc(100% - 32px) !important; margin-left: 16px !important; margin-right: 16px !important; }
+  #db-wrap[data-mobile] .pay-table thead { display: none !important; }
+  #db-wrap[data-mobile] .pay-table tbody tr { display: flex !important; align-items: flex-start !important; gap: 10px !important; padding: 8px 0 !important; border-bottom: 1px solid var(--border-light) !important; }
+  #db-wrap[data-mobile] .pay-table tbody tr.exp-note { display: none !important; }
+  #db-wrap[data-mobile] .pay-table tbody td { padding: 0 !important; border: none !important; }
+  #db-wrap[data-mobile] .pay-table tbody td.td-source { padding-top: 1px !important; flex-shrink: 0 !important; }
+  #db-wrap[data-mobile] .pay-table tbody td.td-format { flex: 1 !important; font-size: 12px !important; color: var(--text) !important; font-weight: 500 !important; line-height: 1.3 !important; }
+  #db-wrap[data-mobile] .pay-table tbody td.td-structure { display: none !important; }
+  #db-wrap[data-mobile] .pay-table tbody td.td-pay { text-align: right !important; font-size: 13px !important; font-weight: 600 !important; color: var(--accent-deep) !important; flex-shrink: 0 !important; max-width: 45% !important; }
+  #db-wrap[data-mobile] .popup-overlay { align-items: flex-end !important; padding: 0 !important; }
+  #db-wrap[data-mobile] .popup { border-radius: 20px 20px 0 0 !important; max-width: 100% !important; max-height: 90vh !important; width: 100% !important; }
+  #db-wrap[data-mobile] .popup-handle { display: block !important; }
+  #db-wrap[data-mobile] .legend { gap: 12px !important; }
+  #db-wrap[data-mobile] .legend-item { font-size: 10px !important; }
+
+
   @media (max-width: 640px) {
     header, .filter-section, main { padding-left: 16px !important; padding-right: 16px !important; }
     header { padding-top: 16px !important; padding-bottom: 12px !important; }
@@ -939,6 +987,33 @@
 </head>
 <body>
 <div id="db-wrap">
+<script>
+// Use ResizeObserver to apply mobile styles based on ACTUAL rendered width
+(function() {
+  function applyResponsive(width) {
+    var el = document.getElementById('db-wrap');
+    if (!el) return;
+    if (width < 500) {
+      el.setAttribute('data-mobile', 'true');
+    } else {
+      el.removeAttribute('data-mobile');
+    }
+  }
+  
+  if (window.ResizeObserver) {
+    var ro = new ResizeObserver(function(entries) {
+      for (var entry of entries) {
+        applyResponsive(entry.contentRect.width);
+      }
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+      var wrap = document.getElementById('db-wrap');
+      if (wrap) ro.observe(wrap);
+      applyResponsive(wrap ? wrap.offsetWidth : window.innerWidth);
+    });
+  }
+})();
+</script>
 
 <header>
   <div class="header-inner">
