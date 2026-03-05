@@ -650,11 +650,12 @@
 
   /* ── Popup ── */
   .popup-overlay {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
+    width: 100%;
+    height: 100vh;
     background: rgba(46,45,41,0.45);
     z-index: 500;
     display: flex;
@@ -1087,22 +1088,7 @@
   </div>
 </main>
 
-<!-- Popup -->
-<div class="popup-overlay" id="popup-overlay" onclick="handleOverlayClick(event)">
-  <div class="popup" id="popup">
-    <div class="popup-header">
-      <span class="popup-handle"></span>
-      <div class="popup-header-main">
-        <div>
-          <div class="popup-title" id="popup-title"></div>
-          <div class="popup-subtitle" id="popup-subtitle"></div>
-        </div>
-        <button class="popup-close" onclick="closePopup()">✕</button>
-      </div>
-    </div>
-    <div class="popup-body" id="popup-body"></div>
-  </div>
-</div>
+<!-- Popup moved to end of db-wrap so position:fixed works in Squarespace iframe -->
 
 <script>
 // ── Currency config ───────────────────────────────────────────
@@ -1359,6 +1345,7 @@ function closePopup() {
   overlay.style.height = '';
   overlay.style.width = '';
   overlay.style.left = '';
+  overlay.style.right = '';
   document.body.style.overflow = '';
   window.scrollTo({ top: _popupScrollY, behavior: 'instant' });
 }
@@ -1405,16 +1392,9 @@ function openPopup(studioIndex) {
     ${negSection}
   `;
 
-  // Scroll to top of iframe first so position:fixed popup
-  // appears correctly inside Squarespace's iframe environment
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  // Small delay to let scroll complete before showing popup
-  setTimeout(() => {
-    document.getElementById('popup-overlay').classList.add('open');
-    positionPopupOverlay();
-    document.body.style.overflow = 'hidden';
-  }, 300);
+  document.getElementById('popup-overlay').classList.add('open');
+  positionPopupOverlay();
+  document.body.style.overflow = 'hidden';
 }
 
 // ── CSV ───────────────────────────────────────────────────────
@@ -2385,18 +2365,41 @@ async function init() {
 // Code Injection. Instead, scroll the iframe to the top first so
 // position:fixed always works correctly, then show the popup.
 function positionPopupOverlay() {
+  // Use absolute positioning at current scroll position so the overlay
+  // covers the visible viewport regardless of how tall the iframe is.
+  // This fixes the Squarespace iframe issue where position:fixed
+  // anchors to the top of the full iframe, not the visible screen.
   const overlay = document.getElementById('popup-overlay');
-  overlay.style.position = 'fixed';
-  overlay.style.top = '0';
+  const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+  overlay.style.position = 'absolute';
+  overlay.style.top = scrollY + 'px';
   overlay.style.left = '0';
+  overlay.style.right = '0';
   overlay.style.width = '100%';
-  overlay.style.height = '100%';
-  overlay.style.bottom = '0';
+  overlay.style.height = window.innerHeight + 'px';
 }
 
 init();
 </script>
+
+<!-- Popup -->
+<div class="popup-overlay" id="popup-overlay" onclick="handleOverlayClick(event)">
+  <div class="popup" id="popup">
+    <div class="popup-header">
+      <span class="popup-handle"></span>
+      <div class="popup-header-main">
+        <div>
+          <div class="popup-title" id="popup-title"></div>
+          <div class="popup-subtitle" id="popup-subtitle"></div>
+        </div>
+        <button class="popup-close" onclick="closePopup()">✕</button>
+      </div>
+    </div>
+    <div class="popup-body" id="popup-body"></div>
+  </div>
 </div>
+
+</div><!-- end #db-wrap -->
 
 <script>
   // If running inside an iframe, force width to match actual container
