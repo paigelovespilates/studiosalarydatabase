@@ -1295,7 +1295,8 @@ function getCurrentFiltered() { return _currentFiltered; }
 
 function applyFilters() {
   const query = document.getElementById('search-input').value.toLowerCase();
-  const wrap = document.getElementById('db-wrap'); const isMobile = (wrap ? wrap.offsetWidth : window.innerWidth) < 500;
+  const screenWidth = window.screen ? window.screen.width : window.innerWidth;
+  const isMobile = screenWidth < 768;
   const format = isMobile
     ? document.getElementById('format-filter-mobile').value
     : document.getElementById('format-filter').value;
@@ -2276,8 +2277,11 @@ function setFiltersDisabled(disabled) {
 }
 function checkMobile() {
   const wrap = document.getElementById('db-wrap');
-  const width = wrap ? wrap.offsetWidth : window.innerWidth;
-  const isMobile = width < 500;
+  // Use screen.width to detect the actual device width,
+  // since inside a Squarespace iframe the container can be
+  // artificially wide even on a phone.
+  const screenWidth = window.screen ? window.screen.width : window.innerWidth;
+  const isMobile = screenWidth < 768;
   
   // Set data-mobile attribute on wrap for card/filter CSS
   if (isMobile) {
