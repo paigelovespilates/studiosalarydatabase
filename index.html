@@ -2376,9 +2376,8 @@ window.addEventListener('message', function(e) {
 function positionPopupOverlay() {
   const overlay = document.getElementById('popup-overlay');
   const wrap = document.getElementById('db-wrap');
+  const popup = document.getElementById('popup');
   
-  // Cover the entire document so the popup is always visible
-  // regardless of where the user has scrolled in the iframe
   const totalHeight = Math.max(
     document.body.scrollHeight,
     document.documentElement.scrollHeight,
@@ -2391,10 +2390,29 @@ function positionPopupOverlay() {
   overlay.style.right = '0';
   overlay.style.width = '100%';
   overlay.style.height = totalHeight + 'px';
-  
-  // Scroll the popup sheet into view
+
+  // Debug panel — shows live values on screen
+  let dbg = document.getElementById('_debug_panel');
+  if (!dbg) {
+    dbg = document.createElement('div');
+    dbg.id = '_debug_panel';
+    dbg.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,0.85);color:#0f0;font:12px monospace;padding:8px;z-index:99999;';
+    document.body.appendChild(dbg);
+  }
+  const popupRect = popup ? popup.getBoundingClientRect() : null;
+  const wrapRect = wrap ? wrap.getBoundingClientRect() : null;
+  dbg.innerHTML = 
+    'overlayH=' + totalHeight + '<br>' +
+    'innerH=' + window.innerHeight + '<br>' +
+    'scrollY=' + window.scrollY + '<br>' +
+    'wrapTop=' + (wrapRect ? Math.round(wrapRect.top) : 'n/a') + '<br>' +
+    'popupTop=' + (popupRect ? Math.round(popupRect.top) : 'n/a') + '<br>' +
+    'popupBottom=' + (popupRect ? Math.round(popupRect.bottom) : 'n/a') + '<br>' +
+    'popup.transform=' + (popup ? getComputedStyle(popup).transform : 'n/a') + '<br>' +
+    'db-mobile=' + document.body.classList.contains('db-mobile');
+
+  // Scroll popup into view
   setTimeout(() => {
-    const popup = document.getElementById('popup');
     if (popup) popup.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, 50);
 }
