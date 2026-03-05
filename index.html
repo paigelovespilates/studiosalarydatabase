@@ -2227,5 +2227,20 @@ async function init() {
 init();
 </script>
 </div>
+
+<script>
+  // Auto-height: broadcast page height to parent iframe
+  function sendHeight() {
+    const height = document.documentElement.scrollHeight;
+    window.parent.postMessage({ type: 'iframeHeight', height: height }, '*');
+  }
+  // Send on load
+  window.addEventListener('load', sendHeight);
+  // Send whenever content changes (cards load, filters apply, cards expand)
+  const observer = new MutationObserver(sendHeight);
+  observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+  // Also send periodically for safety
+  setInterval(sendHeight, 500);
+</script>
 </body>
 </html>
