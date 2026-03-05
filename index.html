@@ -2293,6 +2293,25 @@ init();
 </div>
 
 <script>
+  // If running inside an iframe, force width to match actual container
+  (function() {
+    if (window.self !== window.top) {
+      // We're in an iframe — use 100% of whatever we're given
+      var style = document.createElement('style');
+      style.textContent = [
+        'html, body { width: 100% !important; min-width: 0 !important; overflow-x: hidden !important; }',
+        '#db-wrap { width: 100% !important; min-width: 0 !important; overflow-x: hidden !important; }',
+        'header, .filter-section, main { width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; }',
+        '.cards-grid { width: 100% !important; min-width: 0 !important; }',
+        '.studio-card { min-width: 0 !important; width: 100% !important; }',
+      ].join('
+');
+      document.head.appendChild(style);
+    }
+  })();
+</script>
+
+<script>
   // Auto-height: broadcast page height to parent iframe
   function sendHeight() {
     const height = document.documentElement.scrollHeight;
