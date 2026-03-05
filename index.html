@@ -1065,10 +1065,17 @@
     <span class="filter-label desktop-only">Format</span>
     <select id="format-filter" class="desktop-only" onchange="applyFilters()"><option value="">All Formats</option></select>
 
-    <!-- Near Me / Sort by Distance button -->
+    <!-- Near Me button -->
     <button class="near-me-btn" id="near-me-btn" onclick="toggleNearMe()">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+      </svg>
+      Near Me
+    </button>
+    <!-- Sort by Distance button -->
+    <button class="near-me-btn" id="sort-distance-btn" onclick="toggleSortByDistance()" style="margin-left:4px;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l4-4 4 4M7 5v14M21 15l-4 4-4-4M17 19V5"/>
       </svg>
       Sort by Distance
     </button>
@@ -1265,6 +1272,11 @@ async function geocodeAllStudios(studios) {
 }
 
 function clearFilters() {
+  _sortByDistance = false;
+  const sdb = document.getElementById('sort-distance-btn');
+  if (sdb) sdb.classList.remove('active');
+  const si = document.getElementById('sort-indicator');
+  if (si) si.style.display = 'none';
   document.getElementById('search-input').value = '';
   document.getElementById('format-filter').value = '';
   document.getElementById('state-filter').value = '';
@@ -1280,8 +1292,6 @@ function toggleNearMe() {
   if (nearMeActive) {
     nearMeActive = false;
     document.getElementById('near-me-btn').classList.remove('active');
-    const si = document.getElementById('sort-indicator');
-    if (si) si.style.display = 'none';
     document.getElementById('radius-select').classList.remove('visible');
     userCoords = null;
     applyFilters();
@@ -1346,8 +1356,15 @@ function applyFilters() {
       s._distanceMiles = Math.round(dist);
       return dist <= radiusMiles;
     });
-    // Sort by distance
     filtered.sort((a, b) => (a._distanceMiles || 999) - (b._distanceMiles || 999));
+  } else if (_sortByDistance && userCoords) {
+    // Sort all results by distance without radius filtering
+    filtered.forEach(s => {
+      if (!s.coords) { s._distanceMiles = null; return; }
+      const dist = haversineDistance(userCoords.lat, userCoords.lng, s.coords.lat, s.coords.lng);
+      s._distanceMiles = Math.round(dist);
+    });
+    filtered.sort((a, b) => (a._distanceMiles || 9999) - (b._distanceMiles || 9999));
   } else {
     allStudios.forEach(s => { s._distanceMiles = null; });
   }
@@ -2067,10 +2084,7 @@ function renderCards(studios, totalCount, page) {
     const extraSubmissions = showViewAll ? studio.submissions.slice(DEFAULT_ROWS) : [];
     const extraTableRows = showViewAll ? renderPayRows(extraSubmissions, 999, studio.currency) : '';
     const viewAllBtn = showViewAll
-      ? `<div class="all-submissions-inline" style="display:none;">
-           <tbody id="extra-rows-inline">${extraTableRows}</tbody>
-         </div>
-         <button class="view-all-btn" onclick="toggleAllSubmissions(this)">View ${studio.submissions.length - DEFAULT_ROWS} more submission${studio.submissions.length - DEFAULT_ROWS > 1 ? 's' : ''} ↓</button>`
+      ? `<button class="view-all-btn" onclick="toggleAllSubmissions(this)" data-extra-rows="${extraTableRows.replace(/"/g, '&quot;')}">View ${studio.submissions.length - DEFAULT_ROWS} more submission${studio.submissions.length - DEFAULT_ROWS > 1 ? 's' : ''} ↓</button>`
       : '';
 
     const expBadges = studio.hasStudio
@@ -2374,34 +2388,70 @@ async function init() {
   }
 }
 
+// ── Sort by Distance ──────────────────────────────────────────
+let _sortByDistance = false;
+
+function toggleSortByDistance() {
+  const btn = document.getElementById('sort-distance-btn');
+  const si = document.getElementById('sort-indicator');
+
+  if (_sortByDistance) {
+    // Turn off sort
+    _sortByDistance = false;
+    btn.classList.remove('active');
+    if (si) si.style.display = 'none';
+    applyFilters();
+    return;
+  }
+
+  // Request location if needed
+  if (!userCoords) {
+    if (!navigator.geolocation) {
+      alert('Location is not supported by your browser.');
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        userCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        _sortByDistance = true;
+        btn.classList.add('active');
+        if (si) si.style.display = 'inline';
+        applyFilters();
+      },
+      () => {
+        alert('Please enable location access in your browser settings to sort by distance.');
+      }
+    );
+  } else {
+    _sortByDistance = true;
+    btn.classList.add('active');
+    if (si) si.style.display = 'inline';
+    applyFilters();
+  }
+}
+
 // ── Inline submissions toggle ─────────────────────────────────
 function toggleAllSubmissions(btn) {
-  const cardExpanded = btn.closest('.card-expanded');
-  const inlineDiv = cardExpanded.querySelector('.all-submissions-inline');
-  const payTable = cardExpanded.querySelector('.pay-table tbody');
-  const extraRows = inlineDiv ? inlineDiv.querySelector('tbody') : null;
-  const isOpen = inlineDiv && inlineDiv.dataset.injected === 'true';
+  const isOpen = btn.dataset.open === 'true';
+  const card = btn.closest('.studio-card');
+  const payTable = card ? card.querySelector('.pay-table tbody') : null;
+  if (!payTable) return;
 
   if (isOpen) {
-    // Remove injected rows from main table
-    if (payTable && extraRows) {
-      Array.from(extraRows.querySelectorAll('tr')).forEach(tr => {
-        const existing = payTable.querySelector(`tr[data-extra="${tr.dataset.extra}"]`);
-        if (existing) existing.remove();
-      });
-    }
-    inlineDiv.dataset.injected = 'false';
+    // Remove extra rows
+    card.querySelectorAll('tr.extra-row').forEach(tr => tr.remove());
+    btn.dataset.open = 'false';
     btn.textContent = btn.textContent.replace('Hide', 'View').replace('↑', '↓');
   } else {
-    // Inject extra rows into main pay table
-    if (payTable && extraRows) {
-      const rows = Array.from(extraRows.querySelectorAll('tr'));
-      rows.forEach((tr, i) => {
-        tr.dataset.extra = 'extra-' + i;
-        payTable.appendChild(tr.cloneNode(true));
-      });
-    }
-    inlineDiv.dataset.injected = 'true';
+    // Parse and inject extra rows into pay table
+    const extraHtml = btn.dataset.extraRows || '';
+    const tmp = document.createElement('tbody');
+    tmp.innerHTML = extraHtml;
+    Array.from(tmp.querySelectorAll('tr')).forEach(tr => {
+      tr.classList.add('extra-row');
+      payTable.appendChild(tr);
+    });
+    btn.dataset.open = 'true';
     btn.textContent = btn.textContent.replace('View', 'Hide').replace('↓', '↑');
   }
 }
