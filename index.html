@@ -1518,6 +1518,8 @@ function buildStudioMap(studioRows, instructorRows) {
       const c = parseCoords(latRaw, lngRaw);
       if (c) studio.coords = c;
     }
+
+    const fmt = v(row, S.classFormat);
     const payStructure = v(row, S.payStructure);
     const structureNorm = normalizeStructure(payStructure);
     const isPerClient = structureNorm.toLowerCase().includes('client');
