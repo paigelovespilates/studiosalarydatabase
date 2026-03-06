@@ -165,7 +165,7 @@ pointer-events: none;
     flex-wrap: wrap;
   }
 
-  .search-wrap { position: relative; width: 100%; max-width: 100%; }
+  .search-wrap { position: relative; width: 100%; max-width: 600px; }
 
   .search-wrap svg {
     position: absolute;
@@ -916,7 +916,7 @@ pointer-events: none;
   #db-wrap[data-mobile] .near-me-btn { width: 100% !important; justify-content: center !important; }
   #db-wrap[data-mobile] #mobile-filters-always { display: flex !important; flex-direction: column !important; gap: 8px !important; width: 100% !important; }
   #db-wrap[data-mobile] #mobile-filters-always select { width: 100% !important; }
-  #db-wrap[data-mobile] .desktop-only { display: none !important; }
+  #db-wrap[data-mobile] .search-wrap { max-width: 100% !important; }
   #db-wrap[data-mobile] .filter-bottom-row { display: flex !important; align-items: center !important; justify-content: space-between !important; width: 100% !important; }
   #db-wrap[data-mobile] .see-more-btn { width: calc(100% - 32px) !important; margin-left: 16px !important; margin-right: 16px !important; }
   #db-wrap[data-mobile] .see-less-btn { width: calc(100% - 32px) !important; margin-left: 16px !important; margin-right: 16px !important; }
@@ -1112,20 +1112,15 @@ pointer-events: none;
       </div>
     </div>
 
-    <!-- Row 2: Dropdowns + Near Me -->
+    <!-- Row 2: Dropdowns + Near Me + Sort by Distance -->
     <div class="filter-row-dropdowns">
 
-      <!-- Desktop filters -->
-      <span class="filter-label desktop-only">Country</span>
+      <!-- Desktop filters (no labels — dropdowns are self-explanatory) -->
       <select id="country-filter" class="desktop-only" onchange="applyFilters()"><option value="">All Countries</option></select>
-
-      <span class="filter-label desktop-only">State</span>
       <select id="state-filter" class="desktop-only" onchange="applyFilters()"><option value="">All States</option></select>
-
-      <span class="filter-label desktop-only">Format</span>
       <select id="format-filter" class="desktop-only" onchange="applyFilters()"><option value="">All Formats</option></select>
 
-      <!-- Near Me — radius select appears inline inside the same pill when active -->
+      <!-- Near Me -->
       <div class="near-me-wrap" id="near-me-wrap">
         <button class="near-me-btn" id="near-me-btn" onclick="toggleNearMe()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1139,7 +1134,15 @@ pointer-events: none;
           <option value="50">50 mi</option>
           <option value="100">100 mi</option>
         </select>
-      </div><!-- /filter-row-dropdowns -->
+      </div>
+
+      <!-- Sort by Distance — inline with other filters -->
+      <button class="near-me-btn" id="sort-distance-btn" onclick="toggleSortByDistance()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l4-4 4 4M7 5v14M21 15l-4 4-4-4M17 19V5"/>
+        </svg>
+        Sort by Distance
+      </button><!-- /filter-row-dropdowns -->
 
     <!-- Mobile filters — always visible, stacked -->
     <div class="mobile-filters-always" id="mobile-filters-always" style="display:none;">
@@ -1147,14 +1150,6 @@ pointer-events: none;
       <select id="state-filter-mobile" onchange="applyFilters()"><option value="">All States</option></select>
       <select id="format-filter-mobile" onchange="applyFilters()"><option value="">All Formats</option></select>
     </div>
-
-    <!-- Sort by Distance — full width at bottom of filters -->
-    <button class="near-me-btn" id="sort-distance-btn" onclick="toggleSortByDistance()" style="width:100%;justify-content:center;margin-bottom:4px;">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M3 9l4-4 4 4M7 5v14M21 15l-4 4-4-4M17 19V5"/>
-      </svg>
-      Sort by Distance
-    </button>
 
     <div class="filter-bottom-row">
       <div class="result-count">Showing <span id="result-num">—</span> studios <span id="sort-indicator" style="display:none;font-size:11px;color:var(--accent);margin-left:6px;">📍 sorted by distance</span></div>
