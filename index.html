@@ -73,7 +73,7 @@ pointer-events: none;
   header {
     background: linear-gradient(135deg, #eeedeb 0%, #e4e3df 100%) !important;
     border-bottom: 1px solid #dddbd6 !important;
-    padding: 28px 40px 20px !important;
+    padding: 32px 40px 28px !important;
     position: sticky !important;
     top: 0 !important;
     z-index: 100 !important;
@@ -1267,19 +1267,37 @@ function clearFilters() {
   applyFilters();
 }
 
+async function getCityFromCoords(lat, lng) {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
+      { headers: { 'Accept-Language': 'en' } }
+    );
+    const data = await res.json();
+    const addr = data.address || {};
+    return addr.city || addr.town || addr.village || addr.county || null;
+  } catch (e) {
+    return null;
+  }
+}
+
 function toggleNearMe() {
   if (nearMeActive) {
     nearMeActive = false;
     document.getElementById('near-me-btn').classList.remove('active');
     document.getElementById('near-me-wrap').classList.remove('active');
     document.getElementById('radius-select').classList.remove('visible');
+    // Reset button text
+    const btn = document.getElementById('near-me-btn');
+    const textNode = btn ? btn.childNodes[btn.childNodes.length - 1] : null;
+    if (textNode) textNode.textContent = ' Near Me';
     userCoords = null;
     applyFilters();
     return;
   }
   if (!navigator.geolocation) { alert('Geolocation is not supported by your browser.'); return; }
   navigator.geolocation.getCurrentPosition(
-    pos => {
+    async pos => {
       userCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
       nearMeActive = true;
       const si = document.getElementById('sort-indicator');
@@ -1288,6 +1306,13 @@ function toggleNearMe() {
       document.getElementById('near-me-wrap').classList.add('active');
       document.getElementById('radius-select').classList.add('visible');
       applyFilters();
+      // Show detected city in button
+      const city = await getCityFromCoords(userCoords.lat, userCoords.lng);
+      if (city) {
+        const btn = document.getElementById('near-me-btn');
+        const textNode = btn ? btn.childNodes[btn.childNodes.length - 1] : null;
+        if (textNode) textNode.textContent = ` Near ${city}`;
+      }
     },
     () => { alert('Could not get your location. Please check your browser permissions.'); }
   );
@@ -2169,6 +2194,10 @@ function toggleSortByDistance() {
         btn.classList.add('active');
         if (si) si.style.display = 'inline';
         applyFilters();
+        // Show detected city
+        getCityFromCoords(userCoords.lat, userCoords.lng).then(city => {
+          if (city && si) si.textContent = `📍 sorted by distance from ${city}`;
+        });
       },
       () => { alert('Please enable location access in your browser settings to sort by distance.'); }
     );
