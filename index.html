@@ -57,7 +57,7 @@ pointer-events: none;
     font-family: 'Cormorant Garamond', Georgia, serif !important;
     font-size: 15px !important;
     font-weight: 300 !important;
-    background: transparent !important;
+    background: #eeedeb !important;
     color: #2e2d29 !important;
     min-height: 100vh;
   }
@@ -72,7 +72,7 @@ pointer-events: none;
   /* ── Header ── */
   /* FIX 1: removed gradient bg + bottom border so header flows into page */
   header {
-    background: transparent !important;
+    background: #eeedeb !important;
     border-bottom: none !important;
     padding: 40px 40px 20px !important;
     position: sticky !important;
@@ -137,7 +137,7 @@ pointer-events: none;
 
   /* ── Filters ── */
   .filter-section {
-    background: transparent;
+    background: #eeedeb;
     padding: 16px 40px;
     border-bottom: 1px solid var(--border-light);
     width: 100% !important;
@@ -1348,9 +1348,10 @@ function applyFilters() {
       return dist <= radiusMiles;
     });
     filtered.sort((a, b) => (a._distanceMiles ?? 999999) - (b._distanceMiles ?? 999999));
-    // Debug: log what's within 50 miles for troubleshooting
+    // Debug: log nearby studios
     const nearby50 = allStudios.filter(s => s.coords && haversineDistance(userCoords.lat, userCoords.lng, s.coords.lat, s.coords.lng) <= 50);
-    console.log(`[NearMe] ${filtered.length} within ${radiusMiles}mi. Coords: ${JSON.stringify(userCoords)}. Within 50mi: ${nearby50.map(s => s.name + ' (' + Math.round(haversineDistance(userCoords.lat, userCoords.lng, s.coords.lat, s.coords.lng)) + 'mi)').join(', ')}`);
+    const nearbyNames = nearby50.map(s => s.name + ' (' + Math.round(haversineDistance(userCoords.lat, userCoords.lng, s.coords.lat, s.coords.lng)) + 'mi)').join(', ');
+    console.log('[NearMe] ' + filtered.length + ' within ' + radiusMiles + 'mi. Coords: ' + JSON.stringify(userCoords) + '. Within 50mi: ' + nearbyNames);
   } else if (_sortByDistance && userCoords) {
     // Separate studios with and without coords
     const withCoords = filtered.filter(s => s.coords);
