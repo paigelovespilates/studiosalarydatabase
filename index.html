@@ -57,7 +57,7 @@ pointer-events: none;
     font-family: 'Cormorant Garamond', Georgia, serif !important;
     font-size: 15px !important;
     font-weight: 300 !important;
-    background: #f5f4f2 !important;
+    background: transparent !important;
     color: #2e2d29 !important;
     min-height: 100vh;
   }
@@ -72,7 +72,7 @@ pointer-events: none;
   /* ── Header ── */
   /* FIX 1: removed gradient bg + bottom border so header flows into page */
   header {
-    background: #f5f4f2 !important;
+    background: transparent !important;
     border-bottom: none !important;
     padding: 40px 40px 20px !important;
     position: sticky !important;
@@ -137,7 +137,7 @@ pointer-events: none;
 
   /* ── Filters ── */
   .filter-section {
-    background: var(--warm-white);
+    background: transparent;
     padding: 16px 40px;
     border-bottom: 1px solid var(--border-light);
     width: 100% !important;
@@ -574,6 +574,14 @@ pointer-events: none;
   }
 
   .benefit-chip { display: flex !important; align-items: center !important; gap: 6px !important; font-size: 12px !important; font-weight: 400 !important; color: #575648 !important; -webkit-text-fill-color: #575648 !important; font-family: 'Cormorant Garamond', Georgia, serif !important; text-decoration: none !important; list-style: none !important; padding-left: 0 !important; margin: 0 !important; }
+  /* Belt-and-suspenders: every selector path Squarespace might win through */
+  #db-wrap .benefit-chip,
+  #db-wrap .benefits-section .benefit-chip,
+  #db-wrap .benefits-section div.benefit-chip,
+  #db-wrap .studio-card .benefit-chip,
+  #db-wrap .card-collapsed .benefit-chip,
+  #db-wrap .card-expanded .benefit-chip,
+  div#db-wrap .benefit-chip { color: #575648 !important; -webkit-text-fill-color: #575648 !important; }
   .benefit-chip .dot { width: 4px !important; height: 4px !important; border-radius: 50% !important; background: #b0aea4 !important; background-color: #b0aea4 !important; flex-shrink: 0 !important; display: inline-block !important; }
   .benefits-section ul, .benefits-section ol, #db-wrap ul, #db-wrap ol { list-style: none !important; padding-left: 0 !important; margin: 0 !important; }
   #db-wrap li { list-style: none !important; padding-left: 0 !important; margin: 0 !important; }
@@ -1339,14 +1347,21 @@ function applyFilters() {
       s._distanceMiles = Math.round(dist);
       return dist <= radiusMiles;
     });
-    filtered.sort((a, b) => (a._distanceMiles || 999) - (b._distanceMiles || 999));
+    filtered.sort((a, b) => (a._distanceMiles ?? 999999) - (b._distanceMiles ?? 999999));
+    // Debug: log what's within 50 miles for troubleshooting
+    const nearby50 = allStudios.filter(s => s.coords && haversineDistance(userCoords.lat, userCoords.lng, s.coords.lat, s.coords.lng) <= 50);
+    console.log(`[NearMe] ${filtered.length} within ${radiusMiles}mi. Coords: ${JSON.stringify(userCoords)}. Within 50mi: ${nearby50.map(s => s.name + ' (' + Math.round(haversineDistance(userCoords.lat, userCoords.lng, s.coords.lat, s.coords.lng)) + 'mi)').join(', ')}`);
   } else if (_sortByDistance && userCoords) {
-    filtered.forEach(s => {
-      if (!s.coords) { s._distanceMiles = null; return; }
+    // Separate studios with and without coords
+    const withCoords = filtered.filter(s => s.coords);
+    const withoutCoords = filtered.filter(s => !s.coords);
+    withCoords.forEach(s => {
       const dist = haversineDistance(userCoords.lat, userCoords.lng, s.coords.lat, s.coords.lng);
       s._distanceMiles = Math.round(dist);
     });
-    filtered.sort((a, b) => (a._distanceMiles || 9999) - (b._distanceMiles || 9999));
+    withoutCoords.forEach(s => { s._distanceMiles = null; });
+    withCoords.sort((a, b) => a._distanceMiles - b._distanceMiles);
+    filtered = [...withCoords, ...withoutCoords];
   } else {
     allStudios.forEach(s => { s._distanceMiles = null; });
   }
@@ -1439,6 +1454,23 @@ function findFuzzyKey(map, name) {
   return null;
 }
 
+// ── Safe coords parser ────────────────────────────────────────
+// Guards against empty strings, whitespace, "NOT_FOUND", and NaN
+function parseCoords(latRaw, lngRaw) {
+  if (!latRaw || !lngRaw) return null;
+  const ls = String(latRaw).trim();
+  const lns = String(lngRaw).trim();
+  if (!ls || !lns || ls === 'NOT_FOUND' || lns === 'NOT_FOUND') return null;
+  const lat = parseFloat(ls);
+  const lng = parseFloat(lns);
+  if (isNaN(lat) || isNaN(lng)) return null;
+  // Sanity-check: valid lat/lng ranges
+  if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return null;
+  // A coord of exactly 0,0 is almost certainly a missing value
+  if (lat === 0 && lng === 0) return null;
+  return { lat, lng };
+}
+
 // ── Build studio map ──────────────────────────────────────────
 function buildStudioMap(studioRows, instructorRows) {
   const map = new Map();
@@ -1453,9 +1485,7 @@ function buildStudioMap(studioRows, instructorRows) {
       const country = v(row, S.country) || 'United States';
       const latRaw = v(row, S.lat);
       const lngRaw = v(row, S.lng);
-      const coords = (latRaw && lngRaw && latRaw !== 'NOT_FOUND')
-        ? { lat: parseFloat(latRaw), lng: parseFloat(lngRaw) }
-        : null;
+      const coords = parseCoords(latRaw, lngRaw);
       map.set(key, {
         name,
         city: v(row, S.city),
@@ -1484,12 +1514,9 @@ function buildStudioMap(studioRows, instructorRows) {
     if (!studio.coords) {
       const latRaw = v(row, S.lat);
       const lngRaw = v(row, S.lng);
-      if (latRaw && lngRaw && latRaw !== 'NOT_FOUND') {
-        studio.coords = { lat: parseFloat(latRaw), lng: parseFloat(lngRaw) };
-      }
+      const c = parseCoords(latRaw, lngRaw);
+      if (c) studio.coords = c;
     }
-
-    const fmt = v(row, S.classFormat);
     const payStructure = v(row, S.payStructure);
     const structureNorm = normalizeStructure(payStructure);
     const isPerClient = structureNorm.toLowerCase().includes('client');
@@ -1576,9 +1603,7 @@ function buildStudioMap(studioRows, instructorRows) {
       const country = v(row, I.country) || 'United States';
       const latRaw = v(row, I.lat);
       const lngRaw = v(row, I.lng);
-      const coords = (latRaw && lngRaw && latRaw !== 'NOT_FOUND')
-        ? { lat: parseFloat(latRaw), lng: parseFloat(lngRaw) }
-        : null;
+      const coords = parseCoords(latRaw, lngRaw);
       map.set(key, {
         name,
         city: v(row, I.city),
@@ -1607,9 +1632,8 @@ function buildStudioMap(studioRows, instructorRows) {
     if (!studio.coords) {
       const latRaw = v(row, I.lat);
       const lngRaw = v(row, I.lng);
-      if (latRaw && lngRaw && latRaw !== 'NOT_FOUND') {
-        studio.coords = { lat: parseFloat(latRaw), lng: parseFloat(lngRaw) };
-      }
+      const c = parseCoords(latRaw, lngRaw);
+      if (c) studio.coords = c;
     }
 
     const fmt = v(row, I.classFormat);
@@ -1975,7 +1999,7 @@ function renderCards(studios, totalCount, page) {
     const metaSection = negBadge
       ? `<div class="meta-section">${negBadge}</div>` : '';
 
-    const benefitChips = Array.from(studio.benefits).map(b => `<div class="benefit-chip"><div class="dot"></div>${b}</div>`).join('');
+    const benefitChips = Array.from(studio.benefits).map(b => `<div class="benefit-chip" style="color:#575648!important;-webkit-text-fill-color:#575648!important;"><div class="dot"></div>${b}</div>`).join('');
     const otherPerksText = [...new Set(studio.otherPerks)].filter(Boolean);
     const otherPerksRow = otherPerksText.length
       ? `<div style="width:100%;margin-top:4px;"><span style="font-size:11px;color:var(--text-muted);"><strong>Other:</strong> <em>${otherPerksText.join(' · ')}</em></span></div>` : '';
