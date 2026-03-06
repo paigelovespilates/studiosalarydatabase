@@ -59,7 +59,7 @@ pointer-events: none;
     font-weight: 300 !important;
     background: #eeedeb !important;
     color: #2e2d29 !important;
-    min-height: 100vh;
+    padding-bottom: 40px;
   }
   
   #db-wrap {
@@ -1988,11 +1988,22 @@ function renderPayRows(submissions, limit, currency) {
     const tierLabel = (r.source === 'S' && r.submitterExp && normalizeExpLevel(r.submitterExp) !== 'All levels')
       ? `<span class="td-exp-note">For ${normalizeExpLevel(r.submitterExp)}</span>` : '';
 
-    const expInline = (r.source === 'I' && r.submitterExp)
-      ? `<span class="td-exp-note">${r.submitterExp} experience</span>` : '';
+    const expInline = ''; // removed — shown in expNote line below instead
 
     const expNote = (r.source === 'I' && r.submitterExp)
-      ? `<tr class="exp-note"><td colspan="4" style="padding:0 0 5px 26px;font-size:10px;color:var(--stone);font-style:italic;">Reported by instructor with ${r.submitterExp} experience</td></tr>` : '';
+      ? (() => {
+          const neg = r.negotiated ? r.negotiated.toLowerCase() : null;
+          const negText = neg === 'yes' ? ' · Rate was negotiated'
+                        : neg === 'no'  ? ' · Rate was not negotiated'
+                        : '';
+          return `<tr class="exp-note"><td colspan="4" style="padding:0 0 5px 26px;font-size:10px;color:var(--stone);font-style:italic;">Reported by instructor with ${r.submitterExp} experience${negText}</td></tr>`;
+        })()
+      : (r.source === 'I' && r.negotiated)
+        ? (() => {
+            const neg = r.negotiated.toLowerCase();
+            return `<tr class="exp-note"><td colspan="4" style="padding:0 0 5px 26px;font-size:10px;color:var(--stone);font-style:italic;">${neg === 'yes' ? 'Rate was negotiated' : 'Rate was not negotiated'}</td></tr>`;
+          })()
+        : '';
 
     const capacityNote = (isVariable && r.classCapacity && !r.maxEarningsNum)
       ? `<tr class="exp-note"><td colspan="4" style="padding:0 0 5px 26px;font-size:10px;color:var(--stone);font-style:italic;">Class capacity: ${r.classCapacity}</td></tr>` : '';
@@ -2050,11 +2061,7 @@ function renderCards(studios, totalCount, page) {
       ? `<button class="view-all-btn" onclick="toggleAllSubmissions(this)" data-extra-rows="${extraTableRows.replace(/"/g, '&quot;')}">View ${studio.submissions.length - DEFAULT_ROWS} more submission${studio.submissions.length - DEFAULT_ROWS > 1 ? 's' : ''} ↓</button>` : '';
 
     const negResult = computeNegotiable(studio);
-    const negBadge = negResult
-      ? `<span class="meta-badge ${negResult === 'yes' ? 'neg-yes' : 'neg-no'} has-tooltip">
-           ${negResult === 'yes' ? '✓ Pay Negotiable' : '✗ Not Negotiable'}
-           <span class="tooltip">Based on ${studio.submissions.filter(r => r.source === 'I' && r.negotiated).length} instructor submissions — more than half reported this studio's pay as ${negResult === 'yes' ? 'negotiable' : 'not negotiable'}.</span>
-         </span>` : '';
+    const negBadge = ''; // removed — negotiation shown inline per instructor row instead
 
     const metaSection = negBadge
       ? `<div class="meta-section">${negBadge}</div>` : '';
@@ -2072,7 +2079,15 @@ function renderCards(studios, totalCount, page) {
 
     const uniqueNegNotes = [...new Set(studio.negNotes)].filter(Boolean);
     const negNotesSection = uniqueNegNotes.length
-      ? `<div class="neg-notes-section"><div class="neg-notes-label">What instructors say about negotiating here</div>${uniqueNegNotes.map(n => `<p class="neg-notes-text" style="margin:0 0 6px 0;">"${n}"</p>`).join('')}</div>` : '';
+      ? `<div class="neg-notes-section"><div class="neg-notes-label">What instructors say about negotiating here</div>${
+          studio.submissions
+            .filter(r => r.negNote)
+            .filter((r, i, arr) => arr.findIndex(x => x.negNote === r.negNote) === i) // dedupe
+            .map(r => {
+              const attr = r.submitterExp ? ` <span style="font-style:normal;font-size:10px;color:var(--stone);"> — ${r.submitterExp} experience</span>` : '';
+              return `<p class="neg-notes-text" style="margin:0 0 6px 0;">"${r.negNote}"${attr}</p>`;
+            }).join('')
+        }</div>` : '';
 
     const contactSection = studio.contact
       ? `<div class="contact-section"><div class="notes-label" style="margin-bottom:6px;">Best way to contact this studio about teaching opportunities</div><a href="mailto:${studio.contact}">${studio.contact}</a></div>` : '';
