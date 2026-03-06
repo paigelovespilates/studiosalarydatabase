@@ -1442,8 +1442,8 @@ function toggleCard(btn) {
 function v(row, idx) { return (idx >= 0 && row[idx] !== undefined) ? row[idx].trim() : ''; }
 
 // ── Column maps ───────────────────────────────────────────────
-const S = { studioName:2, country:3, city:4, cityOld:5, state:6, classFormat:7, payStructure:8, compSummary:9, payPerClass:10, expLevel:11, payNew:12, payExp:13, payPerClient:14, classCapacityPerClient:15, flatRate:16, variableDetails:17, maxEarnings:18, hourlyPay:19, experience:20, benefits:21, otherPerks:22, contact:23, notes:24, source:25, lat:29, lng:30 };
-const I = { studioName:2, country:3, city:4, state:5, classFormat:6, payStructure:7, compSummary:8, payPerClass:9, payPerClient:10, flatRate:11, variableDetails:12, experience:13, perks:14, negotiated:15, negNotes:16, source:17, classCapacity:18, otherPerks:19, lat:21, lng:22 };
+const S = { studioName:2, country:3, city:4, cityOld:5, state:6, classFormat:7, payStructure:8, compSummary:9, payPerClass:10, expLevel:11, payNew:12, payExp:13, payPerClient:14, classCapacityPerClient:15, flatRate:16, variableDetails:17, maxEarnings:18, hourlyPay:19, experience:20, benefits:21, otherPerks:22, contact:23, notes:24, source:25, lat:29, lng:30, cleanName:31 };
+const I = { studioName:2, country:3, city:4, state:5, classFormat:6, payStructure:7, compSummary:8, payPerClass:9, payPerClient:10, flatRate:11, variableDetails:12, experience:13, perks:14, negotiated:15, negNotes:16, source:17, classCapacity:18, otherPerks:19, cleanName:23, lat:21, lng:22 };
 
 // ── Pay helpers ───────────────────────────────────────────────
 function extractPayNum(payStr) {
@@ -1532,8 +1532,9 @@ function buildStudioMap(studioRows, instructorRows) {
   const map = new Map();
 
   studioRows.forEach(row => {
-    const name = v(row, S.studioName);
-    if (!name) return;
+    const rawName = v(row, S.studioName);
+    if (!rawName) return;
+    const name = v(row, S.cleanName) || rawName;  // use Clean Studio Name if set
     const exactKey = norm(name);
     const key = findFuzzyKey(map, name) || exactKey;
 
@@ -1652,8 +1653,9 @@ function buildStudioMap(studioRows, instructorRows) {
   });
 
   instructorRows.forEach(row => {
-    const name = v(row, I.studioName);
-    if (!name) return;
+    const rawName = v(row, I.studioName);
+    if (!rawName) return;
+    const name = v(row, I.cleanName) || rawName;  // use Clean Studio Name if set
     const exactKey = norm(name);
     const key = findFuzzyKey(map, name) || exactKey;
 
@@ -2138,9 +2140,10 @@ function renderCards(studios, totalCount, page) {
     const hasNext = page < totalPages;
     nav.innerHTML = `
       <button class="see-more-btn" style="padding:10px 20px;${!hasPrev ? 'opacity:0.35;pointer-events:none;' : ''}" onclick="goToPage(${page - 1})">← Previous</button>
-      <span style="font-size:13px;color:var(--text-muted);font-family:'DM Sans',sans-serif;">Page ${page} of ${totalPages}</span>
+      <span style="font-size:13px;color:var(--text-muted);font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;">Page ${page} of ${totalPages}</span>
       <button class="see-more-btn" style="padding:10px 20px;${!hasNext ? 'opacity:0.35;pointer-events:none;' : ''}" onclick="goToPage(${page + 1})">Next →</button>
     `;
+    nav.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:24px;';
     grid.appendChild(nav);
   }
 
