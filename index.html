@@ -895,9 +895,9 @@ pointer-events: none;
   #db-wrap[data-mobile] .filter-section,
   #db-wrap[data-mobile] main { padding-left: 16px !important; padding-right: 16px !important; }
   #db-wrap[data-mobile] header { padding-top: 20px !important; padding-bottom: 8px !important; }
-  #db-wrap[data-mobile] .cards-grid { grid-template-columns: 1fr !important; width: 100% !important; }
-  #db-wrap[data-mobile] .data-badge { display: none !important; }
-  #db-wrap[data-mobile] .logo-area h1 { font-size: 26px !important; gap: 4px !important; }
+  #db-wrap[data-mobile] .cards-grid { grid-template-columns: 1fr !important; width: 100% !important; padding: 16px 0 !important; max-width: 100% !important; }
+  #db-wrap[data-mobile] .legend { padding: 0 !important; max-width: 100% !important; gap: 10px !important; margin: 12px 0 0 !important; }
+  #db-wrap[data-mobile] .legend-item { font-size: 11px !important; }
   #db-wrap[data-mobile] .h1-studio { font-size: 26px !important; }
   #db-wrap[data-mobile] .h1-db { font-size: 28px !important; }
   #db-wrap[data-mobile] .filter-inner { flex-direction: column !important; align-items: stretch !important; gap: 8px !important; }
@@ -915,9 +915,12 @@ pointer-events: none;
   #db-wrap[data-mobile] .neg-notes-section { padding: 10px 16px !important; }
   #db-wrap[data-mobile] .contact-section { padding: 10px 16px !important; }
   #db-wrap[data-mobile] .differs-banner { margin: 0 16px 10px !important; }
-  #db-wrap[data-mobile] .near-me-wrap { width: 100% !important; }
+  #db-wrap[data-mobile] .near-me-wrap { width: auto !important; flex: 1 !important; }
   #db-wrap[data-mobile] .near-me-btn { width: 100% !important; justify-content: center !important; }
-  #db-wrap[data-mobile] #mobile-filters-always { display: flex !important; flex-direction: column !important; gap: 8px !important; width: 100% !important; }
+  #db-wrap[data-mobile] .filter-row-dropdowns { flex-wrap: wrap !important; gap: 8px !important; }
+  #db-wrap[data-mobile] #sort-distance-btn { flex: 1 !important; justify-content: center !important; }
+  #db-wrap[data-mobile] #mobile-filters-always { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 8px !important; width: 100% !important; }
+  #db-wrap[data-mobile] #mobile-filters-always select:last-child { grid-column: 1 / -1 !important; }
   #db-wrap[data-mobile] #mobile-filters-always select { width: 100% !important; }
   #db-wrap[data-mobile] .search-wrap { max-width: 100% !important; }
   #db-wrap[data-mobile] .filter-bottom-row { display: flex !important; align-items: center !important; justify-content: space-between !important; width: 100% !important; }
@@ -931,9 +934,6 @@ pointer-events: none;
   #db-wrap[data-mobile] .pay-table tbody td.td-format { flex: 1 !important; font-size: 12px !important; color: var(--text) !important; font-weight: 500 !important; line-height: 1.3 !important; }
   #db-wrap[data-mobile] .pay-table tbody td.td-structure { display: none !important; }
   #db-wrap[data-mobile] .pay-table tbody td.td-pay { text-align: right !important; font-size: 13px !important; font-weight: 600 !important; color: var(--accent-deep) !important; flex-shrink: 0 !important; max-width: 45% !important; }
-  #db-wrap[data-mobile] .legend { gap: 12px !important; }
-  #db-wrap[data-mobile] .legend-item { font-size: 11px !important; }
-
   /* ── FIX: Popup mobile styles via body.db-mobile ── */
   body.db-mobile .popup-overlay { align-items: flex-end !important; padding: 0 !important; }
   body.db-mobile .popup {
