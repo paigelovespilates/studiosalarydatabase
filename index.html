@@ -148,12 +148,24 @@ pointer-events: none;
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
-    gap: 12px;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .filter-row-search {
+    display: flex;
     align-items: center;
+    width: 100%;
+  }
+
+  .filter-row-dropdowns {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     flex-wrap: wrap;
   }
 
-  .search-wrap { position: relative; flex: 1; min-width: 0; max-width: 300px; }
+  .search-wrap { position: relative; width: 100%; max-width: 100%; }
 
   .search-wrap svg {
     position: absolute;
@@ -1089,38 +1101,45 @@ pointer-events: none;
 
 <div class="filter-section">
   <div class="filter-inner">
-    <div class="search-wrap">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-      </svg>
-      <input type="text" id="search-input" placeholder="Search studio or city…" oninput="applyFilters()">
-    </div>
 
-    <!-- Desktop filters -->
-    <span class="filter-label desktop-only">Country</span>
-    <select id="country-filter" class="desktop-only" onchange="applyFilters()"><option value="">All Countries</option></select>
-
-    <span class="filter-label desktop-only">State</span>
-    <select id="state-filter" class="desktop-only" onchange="applyFilters()"><option value="">All States</option></select>
-
-    <span class="filter-label desktop-only">Format</span>
-    <select id="format-filter" class="desktop-only" onchange="applyFilters()"><option value="">All Formats</option></select>
-
-    <!-- Near Me — radius select appears inline inside the same pill when active -->
-    <div class="near-me-wrap" id="near-me-wrap">
-      <button class="near-me-btn" id="near-me-btn" onclick="toggleNearMe()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+    <!-- Row 1: Search bar -->
+    <div class="filter-row-search">
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
         </svg>
-        Near Me
-      </button>
-      <select class="radius-select-inline" id="radius-select" onchange="applyFilters()" onclick="event.stopPropagation()">
-        <option value="10">10 mi</option>
-        <option value="25" selected>25 mi</option>
-        <option value="50">50 mi</option>
-        <option value="100">100 mi</option>
-      </select>
+        <input type="text" id="search-input" placeholder="Search studio or city…" oninput="applyFilters()">
+      </div>
     </div>
+
+    <!-- Row 2: Dropdowns + Near Me -->
+    <div class="filter-row-dropdowns">
+
+      <!-- Desktop filters -->
+      <span class="filter-label desktop-only">Country</span>
+      <select id="country-filter" class="desktop-only" onchange="applyFilters()"><option value="">All Countries</option></select>
+
+      <span class="filter-label desktop-only">State</span>
+      <select id="state-filter" class="desktop-only" onchange="applyFilters()"><option value="">All States</option></select>
+
+      <span class="filter-label desktop-only">Format</span>
+      <select id="format-filter" class="desktop-only" onchange="applyFilters()"><option value="">All Formats</option></select>
+
+      <!-- Near Me — radius select appears inline inside the same pill when active -->
+      <div class="near-me-wrap" id="near-me-wrap">
+        <button class="near-me-btn" id="near-me-btn" onclick="toggleNearMe()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+          </svg>
+          Near Me
+        </button>
+        <select class="radius-select-inline" id="radius-select" onchange="applyFilters()" onclick="event.stopPropagation()">
+          <option value="10">10 mi</option>
+          <option value="25" selected>25 mi</option>
+          <option value="50">50 mi</option>
+          <option value="100">100 mi</option>
+        </select>
+      </div><!-- /filter-row-dropdowns -->
 
     <!-- Mobile filters — always visible, stacked -->
     <div class="mobile-filters-always" id="mobile-filters-always" style="display:none;">
@@ -1234,6 +1253,25 @@ async function fetchExchangeRates() {
 }
 
 // ── Geocoding / Near Me ───────────────────────────────────────
+const _geocodeCache = {};  // city+state+country → {lat,lng} | null
+
+async function geocodeCityAsync(city, state, country) {
+  const key = [city, state, country].filter(Boolean).join('|').toLowerCase();
+  if (_geocodeCache[key] !== undefined) return _geocodeCache[key];
+  try {
+    const q = encodeURIComponent([city, state, country].filter(Boolean).join(', '));
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${q}&format=json&limit=1`, {
+      headers: { 'Accept-Language': 'en', 'User-Agent': 'PaigesPilatesDB/1.0' }
+    });
+    const data = await res.json();
+    const result = (data && data[0]) ? { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) } : null;
+    _geocodeCache[key] = result;
+    return result;
+  } catch (e) {
+    _geocodeCache[key] = null;
+    return null;
+  }
+}
 let userCoords = null;
 let nearMeActive = false;
 const PAGE_SIZE = 10;
@@ -1321,7 +1359,7 @@ function toggleNearMe() {
 let allStudios = [];
 let _currentFiltered = [];
 
-function applyFilters() {
+async function applyFilters() {
   const query = document.getElementById('search-input').value.toLowerCase();
   const wrap = document.getElementById('db-wrap');
   const containerWidth = wrap ? wrap.offsetWidth : window.innerWidth;
@@ -1340,7 +1378,34 @@ function applyFilters() {
     (!country || (s.country || 'United States') === country)
   );
 
+  if ((nearMeActive || _sortByDistance) && userCoords) {
+    // Safety net: geocode any studios still missing coords (should be rare after background geocoding at load)
+    const missing = allStudios.filter(s => !s.coords && s.city && s.city.trim());
+    if (missing.length > 0) {
+      console.log('[Geocode] On-demand geocoding', missing.length, 'remaining studios...');
+      await Promise.all(missing.map(async s => {
+        const coords = await geocodeCityAsync(s.city, s.state, s.country);
+        if (coords) s.coords = coords;
+      }));
+    }
+  }
+
   if (nearMeActive && userCoords) {
+    // Debug: log ALL studios and their coord status before filtering
+    console.log('[NearMe DEBUG] User at:', JSON.stringify(userCoords));
+    console.log('[NearMe DEBUG] Total studios:', allStudios.length);
+    const withCoords = allStudios.filter(s => s.coords);
+    const withoutCoords = allStudios.filter(s => !s.coords);
+    console.log('[NearMe DEBUG] Studios WITH coords:', withCoords.length);
+    console.log('[NearMe DEBUG] Studios WITHOUT coords:', withoutCoords.length);
+    if (withCoords.length > 0) {
+      const distances = withCoords.map(s => ({
+        name: s.name,
+        coords: s.coords,
+        dist: Math.round(haversineDistance(userCoords.lat, userCoords.lng, s.coords.lat, s.coords.lng))
+      })).sort((a,b) => a.dist - b.dist);
+      console.log('[NearMe DEBUG] 10 closest studios:', JSON.stringify(distances.slice(0,10)));
+    }
     filtered = filtered.filter(s => {
       if (!s.coords) return false;
       const dist = haversineDistance(userCoords.lat, userCoords.lng, s.coords.lat, s.coords.lng);
@@ -1348,10 +1413,7 @@ function applyFilters() {
       return dist <= radiusMiles;
     });
     filtered.sort((a, b) => (a._distanceMiles ?? 999999) - (b._distanceMiles ?? 999999));
-    // Debug: log nearby studios
-    const nearby50 = allStudios.filter(s => s.coords && haversineDistance(userCoords.lat, userCoords.lng, s.coords.lat, s.coords.lng) <= 50);
-    const nearbyNames = nearby50.map(s => s.name + ' (' + Math.round(haversineDistance(userCoords.lat, userCoords.lng, s.coords.lat, s.coords.lng)) + 'mi)').join(', ');
-    console.log('[NearMe] ' + filtered.length + ' within ' + radiusMiles + 'mi. Coords: ' + JSON.stringify(userCoords) + '. Within 50mi: ' + nearbyNames);
+    console.log('[NearMe DEBUG] Studios within', radiusMiles, 'mi:', filtered.length);
   } else if (_sortByDistance && userCoords) {
     // Separate studios with and without coords
     const withCoords = filtered.filter(s => s.coords);
@@ -1459,16 +1521,14 @@ function findFuzzyKey(map, name) {
 // Guards against empty strings, whitespace, "NOT_FOUND", and NaN
 function parseCoords(latRaw, lngRaw) {
   if (!latRaw || !lngRaw) return null;
-  const ls = String(latRaw).trim();
-  const lns = String(lngRaw).trim();
+  const ls = String(latRaw).trim().replace(/[^\d.\-]/g, '');
+  const lns = String(lngRaw).trim().replace(/[^\d.\-]/g, '');
   if (!ls || !lns || ls === 'NOT_FOUND' || lns === 'NOT_FOUND') return null;
   const lat = parseFloat(ls);
   const lng = parseFloat(lns);
   if (isNaN(lat) || isNaN(lng)) return null;
-  // Sanity-check: valid lat/lng ranges
+  // Only reject clearly invalid ranges
   if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return null;
-  // A coord of exactly 0,0 is almost certainly a missing value
-  if (lat === 0 && lng === 0) return null;
   return { lat, lng };
 }
 
@@ -2266,6 +2326,15 @@ async function init() {
     const studioMap = buildStudioMap(studioRows, instructorRows);
     allStudios = Array.from(studioMap.values());
 
+    // Debug: report coord coverage
+    const withC = allStudios.filter(s => s.coords).length;
+    console.log('[Init] Studios loaded:', allStudios.length, '| With coords:', withC, '| Without coords:', allStudios.length - withC);
+    // Log raw lat/lng values from first few studios so we can see what the sheet is sending
+    const rawSample = studioRows.slice(0, 5).map(row => 'lat=' + JSON.stringify(row[29]) + ' lng=' + JSON.stringify(row[30]));
+    console.log('[Init] Raw coord sample (studio rows 0-4):', rawSample.join(' | '));
+    const rawISample = instructorRows.slice(0, 5).map(row => 'lat=' + JSON.stringify(row[21]) + ' lng=' + JSON.stringify(row[22]));
+    console.log('[Init] Raw coord sample (instructor rows 0-4):', rawISample.join(' | '));
+
     computeRelativityScores(allStudios);
     populateFormatFilter(allStudios);
     updateStats(allStudios);
@@ -2274,6 +2343,20 @@ async function init() {
     _currentPage = 1;
     document.getElementById('result-num').textContent = allStudios.length;
     renderCards(allStudios.slice(0, PAGE_SIZE), allStudios.length, 1);
+
+    // Background: geocode any studios missing coords (new rows since last backfill)
+    // Only geocode studios that have a city but no coords — skip training-only submissions
+    const needsGeocode = allStudios.filter(s => !s.coords && s.city && s.city.trim());
+    if (needsGeocode.length > 0) {
+      console.log('[Geocode] Background geocoding', needsGeocode.length, 'new studios...');
+      Promise.all(needsGeocode.map(async s => {
+        const coords = await geocodeCityAsync(s.city, s.state, s.country);
+        if (coords) {
+          s.coords = coords;
+          console.log('[Geocode]', s.name, '→', coords.lat.toFixed(4), coords.lng.toFixed(4));
+        }
+      })).then(() => console.log('[Geocode] Background geocoding complete.'));
+    }
 
   } catch (err) {
     clearTimeout(timeout);
