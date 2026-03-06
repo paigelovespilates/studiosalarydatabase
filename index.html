@@ -902,6 +902,15 @@ pointer-events: none;
   #db-wrap[data-mobile] .legend-item { font-size: 10px !important; }
 
 
+  /* ── iOS zoom prevention ──
+     iOS Safari zooms in when tapping inputs/selects with font-size < 16px.
+     Force 16px on mobile to prevent this. ── */
+  @media (max-width: 768px) {
+    select, input, textarea {
+      font-size: 16px !important;
+    }
+  }
+
   @media (max-width: 640px) {
     header, .filter-section, main { padding-left: 16px !important; padding-right: 16px !important; }
     header { padding-top: 16px !important; padding-bottom: 12px !important; }
