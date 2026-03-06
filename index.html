@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -10,17 +11,18 @@
 <style>
   /* Force font loading */
   @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap");
-  
-  /* Font test elements — force browser to load fonts immediately */
-  body::before {
-    content: '';
-    font-family: 'Cormorant Garamond', serif;
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
+
+/* Font test elements — force browser to load fonts immediately */
+body::before {
+content: ‘’;
+font-family: ‘Cormorant Garamond’, serif;
+font-family: ‘Cormorant Garamond’, Georgia, serif;
+position: absolute;
+opacity: 0;
+pointer-events: none;
+}
 </style>
+
 <style>
   /* Override Squarespace global styles */
   #db-wrap span, #db-wrap div, #db-wrap p, #db-wrap td, #db-wrap th, #db-wrap button, #db-wrap select, #db-wrap input {
@@ -1026,6 +1028,7 @@
     .radius-select.visible { width: 100%; }
   }
 </style>
+
 </head>
 <body>
 <div id="db-wrap">
@@ -1055,50 +1058,53 @@
       <input type="text" id="search-input" placeholder="Search studio or city…" oninput="applyFilters()">
     </div>
 
-    <!-- Desktop filters -->
-    <span class="filter-label desktop-only">Country</span>
-    <select id="country-filter" class="desktop-only" onchange="applyFilters()"><option value="">All Countries</option></select>
+```
+<!-- Desktop filters -->
+<span class="filter-label desktop-only">Country</span>
+<select id="country-filter" class="desktop-only" onchange="applyFilters()"><option value="">All Countries</option></select>
 
-    <span class="filter-label desktop-only">State</span>
-    <select id="state-filter" class="desktop-only" onchange="applyFilters()"><option value="">All States</option></select>
+<span class="filter-label desktop-only">State</span>
+<select id="state-filter" class="desktop-only" onchange="applyFilters()"><option value="">All States</option></select>
 
-    <span class="filter-label desktop-only">Format</span>
-    <select id="format-filter" class="desktop-only" onchange="applyFilters()"><option value="">All Formats</option></select>
+<span class="filter-label desktop-only">Format</span>
+<select id="format-filter" class="desktop-only" onchange="applyFilters()"><option value="">All Formats</option></select>
 
-    <!-- Near Me button -->
-    <button class="near-me-btn" id="near-me-btn" onclick="toggleNearMe()">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
-      </svg>
-      Near Me
-    </button>
+<!-- Near Me button -->
+<button class="near-me-btn" id="near-me-btn" onclick="toggleNearMe()">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+  </svg>
+  Near Me
+</button>
 
-    <select class="radius-select" id="radius-select" onchange="applyFilters()">
-      <option value="10">Within 10 mi</option>
-      <option value="25" selected>Within 25 mi</option>
-      <option value="50">Within 50 mi</option>
-      <option value="100">Within 100 mi</option>
-    </select>
+<select class="radius-select" id="radius-select" onchange="applyFilters()">
+  <option value="10">Within 10 mi</option>
+  <option value="25" selected>Within 25 mi</option>
+  <option value="50">Within 50 mi</option>
+  <option value="100">Within 100 mi</option>
+</select>
 
-    <!-- Mobile filters — always visible, stacked -->
-    <div class="mobile-filters-always" id="mobile-filters-always" style="display:none;">
-      <select id="country-filter-mobile" onchange="applyFilters()"><option value="">All Countries</option></select>
-      <select id="state-filter-mobile" onchange="applyFilters()"><option value="">All States</option></select>
-      <select id="format-filter-mobile" onchange="applyFilters()"><option value="">All Formats</option></select>
-    </div>
+<!-- Mobile filters — always visible, stacked -->
+<div class="mobile-filters-always" id="mobile-filters-always" style="display:none;">
+  <select id="country-filter-mobile" onchange="applyFilters()"><option value="">All Countries</option></select>
+  <select id="state-filter-mobile" onchange="applyFilters()"><option value="">All States</option></select>
+  <select id="format-filter-mobile" onchange="applyFilters()"><option value="">All Formats</option></select>
+</div>
 
-    <!-- Sort by Distance — full width at bottom of filters -->
-    <button class="near-me-btn" id="sort-distance-btn" onclick="toggleSortByDistance()" style="width:100%;justify-content:center;margin-bottom:4px;">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M3 9l4-4 4 4M7 5v14M21 15l-4 4-4-4M17 19V5"/>
-      </svg>
-      Sort by Distance
-    </button>
+<!-- Sort by Distance — full width at bottom of filters -->
+<button class="near-me-btn" id="sort-distance-btn" onclick="toggleSortByDistance()" style="width:100%;justify-content:center;margin-bottom:4px;">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M3 9l4-4 4 4M7 5v14M21 15l-4 4-4-4M17 19V5"/>
+  </svg>
+  Sort by Distance
+</button>
 
-    <div class="filter-bottom-row">
-      <div class="result-count">Showing <span id="result-num">—</span> studios <span id="sort-indicator" style="display:none;font-size:11px;color:var(--accent);margin-left:6px;">📍 sorted by distance</span></div>
-      <button class="clear-filters-btn" id="clear-filters-btn" onclick="clearFilters()">✕ Clear</button>
-    </div>
+<div class="filter-bottom-row">
+  <div class="result-count">Showing <span id="result-num">—</span> studios <span id="sort-indicator" style="display:none;font-size:11px;color:var(--accent);margin-left:6px;">📍 sorted by distance</span></div>
+  <button class="clear-filters-btn" id="clear-filters-btn" onclick="clearFilters()">✕ Clear</button>
+</div>
+```
+
   </div>
 </div>
 
@@ -2064,9 +2070,19 @@ function checkMobile() {
 
 let _checkMobileTimer = null;
 let _lastMobileState = null;
+let _selectFocused = false;
+
+// Track when any select is open — iOS expands viewport when dropdown opens,
+// which would incorrectly trigger a layout recalculation
+document.addEventListener('focus', e => { if (e.target && e.target.tagName === 'SELECT') _selectFocused = true; }, true);
+document.addEventListener('blur', e => { if (e.target && e.target.tagName === 'SELECT') { setTimeout(() => { _selectFocused = false; }, 300); } }, true);
+
 function checkMobileDebounced() {
+  // Never recalculate layout while a select dropdown is open
+  if (_selectFocused) return;
   clearTimeout(_checkMobileTimer);
   _checkMobileTimer = setTimeout(() => {
+    if (_selectFocused) return;
     const wrap = document.getElementById('db-wrap');
     const containerWidth = wrap ? wrap.offsetWidth : window.innerWidth;
     const isMobile = containerWidth < 600;
@@ -2193,8 +2209,6 @@ init();
 
 </div><!-- end #db-wrap -->
 
-
-
 <script>
   // Auto-height: broadcast page height to parent iframe
   function sendHeight() {
@@ -2216,5 +2230,6 @@ init();
     if (_heightIntervalCount >= 10) clearInterval(_heightInterval);
   }, 500);
 </script>
+
 </body>
 </html>
