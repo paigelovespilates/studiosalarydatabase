@@ -227,28 +227,53 @@ pointer-events: none;
   .clear-filters-btn:hover { border-color: var(--accent); color: var(--accent); }
   .clear-filters-btn.visible { display: flex; }
 
+  /* Near Me — wrapper holds button + inline radius select together */
+  .near-me-wrap {
+    display: flex;
+    align-items: stretch;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--sand);
+    transition: border-color 0.2s;
+  }
+  .near-me-wrap.active { border-color: var(--accent-deep); }
+
   .near-me-btn {
     display: flex;
     align-items: center;
     gap: 6px;
     padding: 9px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    background: var(--sand);
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
     font-family: 'Cormorant Garamond', Georgia, serif !important;
     font-size: 13px;
     color: var(--text);
     cursor: pointer;
     white-space: nowrap;
-    transition: border-color 0.2s, background 0.2s;
+    transition: background 0.2s, color 0.2s;
     margin-left: 0;
   }
-  .near-me-btn:hover { border-color: var(--accent); background: var(--warm-white); }
-  .near-me-btn.active { border-color: var(--accent-deep); background: var(--accent-deep); color: white; }
+  .near-me-btn:hover { background: var(--warm-white) !important; }
+  .near-me-btn.active { background: var(--accent-deep) !important; color: white !important; }
   .near-me-btn svg { flex-shrink: 0; }
 
-  .radius-select { display: none; }
-  .radius-select.visible { display: block; }
+  .radius-select-inline {
+    display: none;
+    border: none !important;
+    border-left: 1.5px solid var(--border) !important;
+    border-radius: 0 !important;
+    background: var(--warm-white) !important;
+    padding: 9px 28px 9px 10px !important;
+    font-size: 16px !important;
+    color: var(--accent-deep) !important;
+    -webkit-text-fill-color: var(--accent-deep) !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    min-width: 80px;
+  }
+  .radius-select-inline.visible { display: block; }
 
   /* ── Main ── */
   main { max-width: 1200px !important; margin: 0 auto !important; padding: 28px 40px 60px !important; }
@@ -313,16 +338,16 @@ pointer-events: none;
 
   .studio-name {
     font-family: 'Cormorant Garamond', 'Palatino Linotype', Palatino, Georgia, serif !important;
-    font-size: 22px !important;
-    font-weight: 400 !important;
+    font-size: 24px !important;
+    font-weight: 500 !important;
     color: #2e2d29 !important;
     line-height: 1.2 !important;
     letter-spacing: 0.01em !important;
   }
 
   .studio-location {
-    font-size: 12px;
-    color: var(--text-muted);
+    font-size: 13px;
+    color: #575648;
     margin-top: 10px;
     display: flex;
     align-items: center;
@@ -374,17 +399,17 @@ pointer-events: none;
   }
 
   .format-pill {
-    font-size: 11px !important;
-    padding: 3px 12px !important;
+    font-size: 12px !important;
+    padding: 4px 14px !important;
     border-radius: 20px !important;
     background: #eeedeb !important;
     background-color: #eeedeb !important;
-    color: #9e9c8f !important;
-    -webkit-text-fill-color: #9e9c8f !important;
-    border: 1px solid #e0deda !important;
+    color: #757263 !important;
+    -webkit-text-fill-color: #757263 !important;
+    border: 1px solid #dddbd6 !important;
     display: inline-block !important;
     font-family: 'Cormorant Garamond', Georgia, serif !important;
-    font-weight: 300 !important;
+    font-weight: 400 !important;
     text-decoration: none !important;
     box-shadow: none !important;
   }
@@ -421,21 +446,21 @@ pointer-events: none;
   .pay-table tbody tr:last-child { border-bottom: none !important; }
 
   .pay-table tbody td {
-    padding: 6px 4px 6px 0 !important;
-    font-size: 12px !important;
+    padding: 7px 4px 7px 0 !important;
+    font-size: 13px !important;
     color: #757263 !important;
     vertical-align: middle !important;
     border: none !important;
   }
 
   .pay-table tbody td.td-source { text-align: center; padding-right: 4px; }
-  .pay-table tbody td.td-format { color: var(--text); }
-  .pay-table tbody td.td-structure { font-style: italic; font-size: 11px; color: var(--stone); }
-  .pay-table tbody td.td-pay { text-align: right; font-weight: 600; font-size: 13px; color: var(--accent-deep); white-space: nowrap; }
-  .pay-table tbody td.td-pay.not-disclosed { font-weight: 400; font-style: italic; color: var(--stone); font-size: 11px; }
+  .pay-table tbody td.td-format { color: #2e2d29 !important; font-weight: 500 !important; }
+  .pay-table tbody td.td-structure { font-style: italic; font-size: 12px; color: var(--stone); }
+  .pay-table tbody td.td-pay { text-align: right; font-weight: 600; font-size: 14px; color: var(--accent-deep); white-space: nowrap; }
+  .pay-table tbody td.td-pay.not-disclosed { font-weight: 400; font-style: italic; color: var(--stone); font-size: 12px; }
 
-  .pay-hero { display: block; font-weight: 600; font-size: 13px; color: var(--accent-deep); }
-  .pay-sub { display: block; font-size: 11px; color: var(--text-muted); font-weight: 400; margin-top: 3px; font-style: italic; line-height: 1.4; white-space: normal; max-width: 160px; text-align: right; }
+  .pay-hero { display: block; font-weight: 600; font-size: 14px; color: var(--accent-deep); }
+  .pay-sub { display: block; font-size: 12px; color: var(--text-muted); font-weight: 400; margin-top: 3px; font-style: italic; line-height: 1.4; white-space: normal; max-width: 160px; text-align: right; }
 
   .pay-table .exp-note td { padding-top: 0; padding-bottom: 5px; color: var(--stone); font-size: 10px; font-style: italic; }
 
@@ -545,7 +570,7 @@ pointer-events: none;
     list-style: none !important;
   }
 
-  .benefit-chip { display: flex !important; align-items: center !important; gap: 6px !important; font-size: 11px !important; font-weight: 300 !important; color: #757263 !important; -webkit-text-fill-color: #757263 !important; font-family: 'Cormorant Garamond', Georgia, serif !important; text-decoration: none !important; list-style: none !important; padding-left: 0 !important; margin: 0 !important; }
+  .benefit-chip { display: flex !important; align-items: center !important; gap: 6px !important; font-size: 12px !important; font-weight: 400 !important; color: #575648 !important; -webkit-text-fill-color: #575648 !important; font-family: 'Cormorant Garamond', Georgia, serif !important; text-decoration: none !important; list-style: none !important; padding-left: 0 !important; margin: 0 !important; }
   .benefit-chip .dot { width: 4px !important; height: 4px !important; border-radius: 50% !important; background: #b0aea4 !important; background-color: #b0aea4 !important; flex-shrink: 0 !important; display: inline-block !important; }
   .benefits-section ul, .benefits-section ol, #db-wrap ul, #db-wrap ol { list-style: none !important; padding-left: 0 !important; margin: 0 !important; }
   #db-wrap li { list-style: none !important; padding-left: 0 !important; margin: 0 !important; }
@@ -864,6 +889,7 @@ pointer-events: none;
   #db-wrap[data-mobile] .neg-notes-section { padding: 10px 16px !important; }
   #db-wrap[data-mobile] .contact-section { padding: 10px 16px !important; }
   #db-wrap[data-mobile] .differs-banner { margin: 0 16px 10px !important; }
+  #db-wrap[data-mobile] .near-me-wrap { width: 100% !important; }
   #db-wrap[data-mobile] .near-me-btn { width: 100% !important; justify-content: center !important; }
   #db-wrap[data-mobile] #mobile-filters-always { display: flex !important; flex-direction: column !important; gap: 8px !important; width: 100% !important; }
   #db-wrap[data-mobile] #mobile-filters-always select { width: 100% !important; }
@@ -1033,8 +1059,8 @@ pointer-events: none;
     .contact-section { padding: 10px 16px; }
     .differs-banner { margin: 0 16px 10px; }
 
+    .near-me-wrap { width: 100%; }
     .near-me-btn { width: 100%; justify-content: center; }
-    .radius-select.visible { width: 100%; }
   }
 </style>
 
@@ -1078,20 +1104,21 @@ pointer-events: none;
 <span class="filter-label desktop-only">Format</span>
 <select id="format-filter" class="desktop-only" onchange="applyFilters()"><option value="">All Formats</option></select>
 
-<!-- Near Me button -->
-<button class="near-me-btn" id="near-me-btn" onclick="toggleNearMe()">
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
-  </svg>
-  Near Me
-</button>
-
-<select class="radius-select" id="radius-select" onchange="applyFilters()">
-  <option value="10">Within 10 mi</option>
-  <option value="25" selected>Within 25 mi</option>
-  <option value="50">Within 50 mi</option>
-  <option value="100">Within 100 mi</option>
-</select>
+<!-- Near Me — radius select appears inline inside the same pill when active -->
+<div class="near-me-wrap" id="near-me-wrap">
+  <button class="near-me-btn" id="near-me-btn" onclick="toggleNearMe()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+    </svg>
+    Near Me
+  </button>
+  <select class="radius-select-inline" id="radius-select" onchange="applyFilters()" onclick="event.stopPropagation()">
+    <option value="10">10 mi</option>
+    <option value="25" selected>25 mi</option>
+    <option value="50">50 mi</option>
+    <option value="100">100 mi</option>
+  </select>
+</div>
 
 <!-- Mobile filters — always visible, stacked -->
 <div class="mobile-filters-always" id="mobile-filters-always" style="display:none;">
@@ -1244,6 +1271,7 @@ function toggleNearMe() {
   if (nearMeActive) {
     nearMeActive = false;
     document.getElementById('near-me-btn').classList.remove('active');
+    document.getElementById('near-me-wrap').classList.remove('active');
     document.getElementById('radius-select').classList.remove('visible');
     userCoords = null;
     applyFilters();
@@ -1257,6 +1285,7 @@ function toggleNearMe() {
       const si = document.getElementById('sort-indicator');
       if (si) si.style.display = 'inline';
       document.getElementById('near-me-btn').classList.add('active');
+      document.getElementById('near-me-wrap').classList.add('active');
       document.getElementById('radius-select').classList.add('visible');
       applyFilters();
     },
