@@ -933,8 +933,10 @@ pointer-events: none;
   #db-wrap[data-mobile] .neg-notes-section { padding: 10px 16px !important; }
   #db-wrap[data-mobile] .contact-section { padding: 10px 16px !important; }
   #db-wrap[data-mobile] .differs-banner { margin: 0 16px 10px !important; }
-  #db-wrap[data-mobile] .near-me-wrap { width: 100% !important; flex: none !important; }
-  #db-wrap[data-mobile] .near-me-btn { width: 100% !important; justify-content: center !important; }
+  #db-wrap[data-mobile] .near-me-wrap { width: 100% !important; flex: none !important; max-width: 100% !important; box-sizing: border-box !important; }
+  #db-wrap[data-mobile] .near-me-btn { width: 100% !important; justify-content: center !important; box-sizing: border-box !important; }
+  #db-wrap[data-mobile] .filter-row-dropdowns { max-width: 100% !important; box-sizing: border-box !important; overflow: hidden !important; }
+  #db-wrap[data-mobile] .filter-inner { max-width: 100% !important; box-sizing: border-box !important; overflow: hidden !important; }
   #db-wrap[data-mobile] .filter-row-dropdowns { flex-wrap: wrap !important; gap: 8px !important; }
   #db-wrap[data-mobile] #sort-distance-btn { display: none !important; }
   #db-wrap[data-mobile] .mobile-sort-row { display: flex !important; width: 100% !important; }
@@ -995,8 +997,10 @@ pointer-events: none;
     #mobile-filters-always select { width: 100% !important; }
     #sort-distance-btn { display: none !important; }
     .result-count { text-align: center !important; width: 100% !important; margin-left: 0 !important; }
-    .near-me-wrap { width: 100% !important; }
-    .near-me-btn { width: 100% !important; justify-content: center !important; }
+    .near-me-wrap { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; }
+    .near-me-btn { width: 100% !important; justify-content: center !important; box-sizing: border-box !important; }
+    .filter-inner { max-width: 100% !important; box-sizing: border-box !important; overflow: hidden !important; }
+    .filter-row-dropdowns { max-width: 100% !important; box-sizing: border-box !important; overflow: hidden !important; }
 
     .mobile-filter-toggle {
       display: flex;
