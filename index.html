@@ -931,7 +931,8 @@ pointer-events: none;
   #db-wrap[data-mobile] .see-less-btn { width: calc(100% - 32px) !important; margin-left: 16px !important; margin-right: 16px !important; }
   #db-wrap[data-mobile] .pay-table thead { display: none !important; }
   #db-wrap[data-mobile] .pay-table tbody tr { display: flex !important; align-items: flex-start !important; gap: 10px !important; padding: 8px 0 !important; border-bottom: 1px solid var(--border-light) !important; }
-  #db-wrap[data-mobile] .pay-table tbody tr.exp-note { display: none !important; }
+  #db-wrap[data-mobile] .pay-table tbody tr.exp-note { display: block !important; padding: 0 0 6px 26px !important; border-bottom: none !important; }
+  #db-wrap[data-mobile] .pay-table tbody tr.exp-note td { font-size: 10px !important; color: var(--stone) !important; font-style: italic !important; display: block !important; padding: 0 !important; }
   #db-wrap[data-mobile] .pay-table tbody td { padding: 0 !important; border: none !important; }
   #db-wrap[data-mobile] .pay-table tbody td.td-source { padding-top: 1px !important; flex-shrink: 0 !important; }
   #db-wrap[data-mobile] .pay-table tbody td.td-format { flex: 1 !important; font-size: 12px !important; color: var(--text) !important; font-weight: 500 !important; line-height: 1.3 !important; }
@@ -2035,7 +2036,7 @@ function renderPayRows(submissions, limit, currency) {
     return `
       <tr>
         <td class="td-source"><span class="src-badge ${r.source}">${r.source}</span></td>
-        <td class="td-format" data-structure="${r.structure || ''}">${r.format}${tierLabel}${expInline}</td>
+        <td class="td-format" data-structure="${(r.structure === 'Per class') ? '' : (r.structure || '')}">${r.format}${tierLabel}${expInline}</td>
         ${structureCell}
         ${payCell}
       </tr>${expNote}${capacityNote}`;
