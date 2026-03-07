@@ -47,7 +47,7 @@ pointer-events: none;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; }
-  html, body { overflow-x: hidden !important; max-width: 100% !important; }
+  html, body { overflow-x: hidden !important; max-width: 100% !important; width: 100% !important; }
 
   html {
     font-family: 'Cormorant Garamond', Georgia, serif !important;
@@ -67,6 +67,14 @@ pointer-events: none;
     width: 100% !important;
     max-width: 100% !important;
     overflow-x: hidden !important;
+    container-type: inline-size;
+  }
+
+  @container (max-width: 900px) {
+    .cards-grid {
+      grid-template-columns: 1fr !important;
+      padding: 12px 16px !important;
+    }
   }
 
   /* ── Header ── */
@@ -303,7 +311,7 @@ pointer-events: none;
   /* ── Cards ── */
   .cards-grid {
     display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)) !important;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
     gap: 20px !important;
     padding: 20px 40px !important;
     max-width: 100% !important;
