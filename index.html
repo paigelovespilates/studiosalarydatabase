@@ -1098,6 +1098,24 @@ pointer-events: none;
 </head>
 <body>
 <div id="db-wrap">
+<div id="debug-banner" style="background:red;color:white;font-size:13px;padding:6px 12px;font-family:monospace;position:sticky;top:0;z-index:9999;"></div>
+<script>
+(function() {
+  function updateDebug() {
+    const wrap = document.getElementById('db-wrap');
+    const banner = document.getElementById('debug-banner');
+    const grid = document.getElementById('cards-grid');
+    if (banner && wrap) {
+      const cols = grid ? getComputedStyle(grid).gridTemplateColumns : '?';
+      banner.textContent = 'wrap:' + wrap.offsetWidth + 'px | win:' + window.innerWidth + 'px | data-mobile:' + (wrap.getAttribute('data-mobile') || 'null') + ' | cols:' + cols.substring(0,40);
+    }
+  }
+  setTimeout(updateDebug, 500);
+  setTimeout(updateDebug, 2000);
+  window.addEventListener('resize', updateDebug);
+  document.addEventListener('DOMContentLoaded', updateDebug);
+})();
+</script>
 
 <header>
   <div class="header-inner">
