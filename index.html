@@ -1107,6 +1107,10 @@ pointer-events: none;
 </head>
 <body>
 <div id="db-wrap">
+<div id="dbg" style="background:#333;color:#fff;font-size:10px;padding:3px 8px;font-family:monospace;position:fixed;bottom:0;left:0;z-index:9999;opacity:0.85;max-width:100%;word-break:break-all;"></div>
+<script>
+(function(){function u(){var w=document.getElementById('db-wrap'),g=document.getElementById('cards-grid'),d=document.getElementById('dbg');if(d&&w)d.textContent='w:'+w.offsetWidth+'|win:'+window.innerWidth+'|mob:'+(w.getAttribute('data-mobile')||'0')+'|col:'+(g?getComputedStyle(g).gridTemplateColumns.substring(0,15):'?');}setTimeout(u,500);setTimeout(u,2000);window.addEventListener('resize',u);})();
+</script>
 
 <header>
   <div class="header-inner">
