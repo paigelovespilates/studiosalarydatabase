@@ -311,10 +311,10 @@ pointer-events: none;
   /* ── Cards ── */
   .cards-grid {
     display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)) !important;
     gap: 20px !important;
     padding: 20px 40px !important;
-    max-width: 100% !important;
+    max-width: min(1280px, 100%) !important;
     box-sizing: border-box !important;
     overflow-x: hidden !important;
   }
@@ -594,15 +594,17 @@ pointer-events: none;
   }
   .has-tooltip:hover .tooltip { display: block; }
 
+
   /* Benefits */
   .benefits-section {
     border-top: 1px solid #e8e7e3 !important;
     padding: 12px 22px !important;
     display: flex !important;
-    gap: 8px !important;
     flex-wrap: wrap !important;
+    gap: 8px !important;
     list-style: none !important;
   }
+
 
   .benefit-chip { display: flex !important; align-items: center !important; gap: 6px !important; font-size: 12px !important; font-weight: 400 !important; color: #575648 !important; -webkit-text-fill-color: #575648 !important; font-family: 'Cormorant Garamond', Georgia, serif !important; text-decoration: none !important; list-style: none !important; padding-left: 0 !important; margin: 0 !important; word-break: break-word !important; overflow-wrap: anywhere !important; min-width: 0 !important; }
   /* Belt-and-suspenders: every selector path Squarespace might win through */
