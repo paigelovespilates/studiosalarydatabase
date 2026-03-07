@@ -1456,8 +1456,8 @@ function toggleCard(btn) {
 function v(row, idx) { return (idx >= 0 && row[idx] !== undefined) ? row[idx].trim() : ''; }
 
 // ── Column maps ───────────────────────────────────────────────
-const S = { studioName:2, country:3, city:4, cityOld:5, state:6, classFormat:7, payStructure:8, compSummary:9, payPerClass:10, expLevel:11, payNew:12, payExp:13, payPerClient:14, classCapacityPerClient:15, flatRate:16, variableDetails:17, maxEarnings:18, hourlyPay:19, experience:20, benefits:21, otherPerks:22, contact:23, notes:24, source:25, lat:29, lng:30, cleanName:31 };
-const I = { studioName:2, country:3, city:4, state:5, classFormat:6, payStructure:7, compSummary:8, payPerClass:9, payPerClient:10, flatRate:11, variableDetails:12, experience:13, perks:14, negotiated:15, negNotes:16, source:17, classCapacity:18, otherPerks:19, cleanName:23, lat:21, lng:22 };
+const S = { studioName:2, country:3, city:4, cityOld:5, state:6, classFormat:7, payStructure:8, compSummary:9, payPerClass:10, expLevel:11, payNew:12, payExp:13, payPerClient:14, classCapacityPerClient:15, flatRate:16, variableDetails:17, maxEarnings:18, hourlyPay:19, experience:20, benefits:21, otherPerks:22, contact:23, notes:24, source:25, lat:29, lng:30, cleanName:31, cleanCity:32 };
+const I = { studioName:2, country:3, city:4, state:5, classFormat:6, payStructure:7, compSummary:8, payPerClass:9, payPerClient:10, flatRate:11, variableDetails:12, experience:13, perks:14, negotiated:15, negNotes:16, source:17, classCapacity:18, otherPerks:19, cleanName:23, lat:21, lng:22, cleanCity:24 };
 
 // ── Pay helpers ───────────────────────────────────────────────
 function extractPayNum(payStr) {
@@ -1558,7 +1558,7 @@ function buildStudioMap(studioRows, instructorRows) {
     const rawName = v(row, S.studioName);
     if (!rawName) return;
     const name = v(row, S.cleanName) || rawName;
-    const city = v(row, S.city);
+    const city = v(row, S.cleanCity) || v(row, S.city);
     const cityKey = city.toLowerCase().trim().replace(/\s+/g, '-');
     const exactKey = norm(name) + (cityKey ? '|' + cityKey : '');
     const key = findFuzzyKey(map, name, cityKey) || exactKey;
@@ -1678,7 +1678,7 @@ function buildStudioMap(studioRows, instructorRows) {
     const rawName = v(row, I.studioName);
     if (!rawName) return;
     const name = v(row, I.cleanName) || rawName;
-    const city = v(row, I.city);
+    const city = v(row, I.cleanCity) || v(row, I.city);
     const cityKey = city.toLowerCase().trim().replace(/\s+/g, '-');
     const exactKey = norm(name) + (cityKey ? '|' + cityKey : '');
     const key = findFuzzyKey(map, name, cityKey) || exactKey;
