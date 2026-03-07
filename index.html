@@ -1400,7 +1400,7 @@ let _currentFiltered = [];
 async function applyFilters() {
   const query = document.getElementById('search-input').value.toLowerCase();
   const wrap = document.getElementById('db-wrap');
-  const containerWidth = wrap ? wrap.offsetWidth : window.innerWidth;
+  const containerWidth = Math.min(wrap ? wrap.offsetWidth : window.innerWidth, window.innerWidth);
   const isMobile = containerWidth < 900;
   const format = isMobile ? document.getElementById('format-filter-mobile').value : document.getElementById('format-filter').value;
   const state = isMobile ? document.getElementById('state-filter-mobile').value : document.getElementById('state-filter').value;
@@ -2256,7 +2256,7 @@ function fetchJSONP(url) {
 
 function checkMobile() {
   const wrap = document.getElementById('db-wrap');
-  const containerWidth = wrap ? wrap.offsetWidth : window.innerWidth;
+  const containerWidth = Math.min(wrap ? wrap.offsetWidth : window.innerWidth, window.innerWidth);
   const isMobile = containerWidth < 900;
   if (isMobile) {
     wrap && wrap.setAttribute('data-mobile', 'true');
@@ -2285,7 +2285,7 @@ function checkMobileDebounced() {
   _checkMobileTimer = setTimeout(() => {
     if (_selectFocused) return;
     const wrap = document.getElementById('db-wrap');
-    const containerWidth = wrap ? wrap.offsetWidth : window.innerWidth;
+    const containerWidth = Math.min(wrap ? wrap.offsetWidth : window.innerWidth, window.innerWidth);
     const isMobile = containerWidth < 900;
     if (isMobile !== _lastMobileState) {
       _lastMobileState = isMobile;
