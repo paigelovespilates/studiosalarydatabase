@@ -974,13 +974,22 @@ pointer-events: none;
     header, .filter-section, main { padding-left: 16px !important; padding-right: 16px !important; }
     header { padding-top: 20px !important; padding-bottom: 8px !important; }
     .cards-grid { grid-template-columns: 1fr !important; width: 100% !important; max-width: 100% !important; padding: 12px 16px !important; box-sizing: border-box !important; }
-    .data-badge { display: none; }
+    .data-badge { display: none !important; }
     .logo-area h1 { font-size: 26px !important; gap: 4px !important; }
     .h1-studio { font-size: 26px !important; }
     .h1-db { font-size: 28px !important; }
-    .filter-inner { flex-direction: column; align-items: stretch; gap: 8px; }
-    .search-wrap { max-width: 100%; }
-    .search-wrap input { width: 100%; }
+    .filter-inner { flex-direction: column !important; align-items: stretch !important; gap: 8px !important; }
+    .search-wrap { max-width: 100% !important; }
+    .search-wrap input { width: 100% !important; }
+    /* Hide desktop-only elements, show mobile filters purely via CSS */
+    .desktop-only { display: none !important; }
+    #mobile-filters-always { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 8px !important; width: 100% !important; }
+    #mobile-filters-always select:last-child { grid-column: 1 / -1 !important; }
+    #mobile-filters-always select { width: 100% !important; }
+    #sort-distance-btn { display: none !important; }
+    .result-count { text-align: center !important; width: 100% !important; margin-left: 0 !important; }
+    .near-me-wrap { width: 100% !important; }
+    .near-me-btn { width: 100% !important; justify-content: center !important; }
 
     .mobile-filter-toggle {
       display: flex;
@@ -1098,24 +1107,6 @@ pointer-events: none;
 </head>
 <body>
 <div id="db-wrap">
-<div id="debug-banner" style="background:red;color:white;font-size:13px;padding:6px 12px;font-family:monospace;position:sticky;top:0;z-index:9999;"></div>
-<script>
-(function() {
-  function updateDebug() {
-    const wrap = document.getElementById('db-wrap');
-    const banner = document.getElementById('debug-banner');
-    const grid = document.getElementById('cards-grid');
-    if (banner && wrap) {
-      const cols = grid ? getComputedStyle(grid).gridTemplateColumns : '?';
-      banner.textContent = 'wrap:' + wrap.offsetWidth + 'px | win:' + window.innerWidth + 'px | data-mobile:' + (wrap.getAttribute('data-mobile') || 'null') + ' | cols:' + cols.substring(0,40);
-    }
-  }
-  setTimeout(updateDebug, 500);
-  setTimeout(updateDebug, 2000);
-  window.addEventListener('resize', updateDebug);
-  document.addEventListener('DOMContentLoaded', updateDebug);
-})();
-</script>
 
 <header>
   <div class="header-inner">
