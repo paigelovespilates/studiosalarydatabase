@@ -47,7 +47,7 @@ pointer-events: none;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; }
-  html, body { overflow-x: hidden !important; max-width: 100% !important; width: 100% !important; }
+  html, body { overflow-x: hidden !important; max-width: 100% !important; }
 
   html {
     font-family: 'Cormorant Garamond', Georgia, serif !important;
@@ -67,15 +67,6 @@ pointer-events: none;
     width: 100% !important;
     max-width: 100% !important;
     overflow-x: hidden !important;
-    container-type: inline-size;
-    position: relative !important;
-  }
-
-  @container (max-width: 900px) {
-    .cards-grid {
-      grid-template-columns: 1fr !important;
-      padding: 12px 16px !important;
-    }
   }
 
   /* ── Header ── */
@@ -312,12 +303,11 @@ pointer-events: none;
   /* ── Cards ── */
   .cards-grid {
     display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr)) !important;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)) !important;
     gap: 20px !important;
     padding: 20px 40px !important;
-    max-width: min(1280px, 100%) !important;
+    max-width: 100% !important;
     box-sizing: border-box !important;
-    overflow-x: hidden !important;
   }
 
   .studio-card {
@@ -334,7 +324,6 @@ pointer-events: none;
     width: 100% !important;
     box-sizing: border-box !important;
     max-width: 100% !important;
-    min-width: 0 !important;
   }
 
   .studio-card:hover {
@@ -419,10 +408,6 @@ pointer-events: none;
     display: flex;
     align-items: center;
     gap: 7px;
-    flex-wrap: wrap;
-    word-break: break-word;
-    box-sizing: border-box;
-    width: calc(100% - 44px);
   }
 
   /* Format pills */
@@ -595,19 +580,17 @@ pointer-events: none;
   }
   .has-tooltip:hover .tooltip { display: block; }
 
-
   /* Benefits */
   .benefits-section {
     border-top: 1px solid #e8e7e3 !important;
     padding: 12px 22px !important;
     display: flex !important;
-    flex-wrap: wrap !important;
     gap: 8px !important;
+    flex-wrap: wrap !important;
     list-style: none !important;
   }
 
-
-  .benefit-chip { display: flex !important; align-items: center !important; gap: 6px !important; font-size: 12px !important; font-weight: 400 !important; color: #575648 !important; -webkit-text-fill-color: #575648 !important; font-family: 'Cormorant Garamond', Georgia, serif !important; text-decoration: none !important; list-style: none !important; padding-left: 0 !important; margin: 0 !important; word-break: break-word !important; overflow-wrap: anywhere !important; min-width: 0 !important; }
+  .benefit-chip { display: flex !important; align-items: center !important; gap: 6px !important; font-size: 12px !important; font-weight: 400 !important; color: #575648 !important; -webkit-text-fill-color: #575648 !important; font-family: 'Cormorant Garamond', Georgia, serif !important; text-decoration: none !important; list-style: none !important; padding-left: 0 !important; margin: 0 !important; }
   /* Belt-and-suspenders: every selector path Squarespace might win through */
   #db-wrap .benefit-chip,
   #db-wrap .benefits-section .benefit-chip,
@@ -934,12 +917,9 @@ pointer-events: none;
   #db-wrap[data-mobile] .neg-notes-section { padding: 10px 16px !important; }
   #db-wrap[data-mobile] .contact-section { padding: 10px 16px !important; }
   #db-wrap[data-mobile] .differs-banner { margin: 0 16px 10px !important; }
-  #db-wrap[data-mobile] .near-me-wrap { width: 100% !important; flex: none !important; max-width: 100% !important; box-sizing: border-box !important; }
-  #db-wrap[data-mobile] .near-me-btn { width: 100% !important; justify-content: center !important; box-sizing: border-box !important; }
-  #db-wrap[data-mobile] .filter-row-dropdowns { max-width: 100% !important; box-sizing: border-box !important; overflow: hidden !important; }
-  #db-wrap[data-mobile] .filter-inner { max-width: 100% !important; box-sizing: border-box !important; overflow: hidden !important; }
+  #db-wrap[data-mobile] .near-me-wrap { width: 100% !important; flex: none !important; }
+  #db-wrap[data-mobile] .near-me-btn { width: 100% !important; justify-content: center !important; }
   #db-wrap[data-mobile] .filter-row-dropdowns { flex-wrap: wrap !important; gap: 8px !important; }
-  #db-wrap[data-mobile] .desktop-only { display: none !important; }
   #db-wrap[data-mobile] #sort-distance-btn { display: none !important; }
   #db-wrap[data-mobile] .mobile-sort-row { display: flex !important; width: 100% !important; }
   #db-wrap[data-mobile] #mobile-filters-always { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 8px !important; width: 100% !important; }
@@ -981,28 +961,17 @@ pointer-events: none;
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 640px) {
     header, .filter-section, main { padding-left: 16px !important; padding-right: 16px !important; }
     header { padding-top: 20px !important; padding-bottom: 8px !important; }
-    .cards-grid { grid-template-columns: 1fr !important; width: 100% !important; max-width: 100% !important; padding: 12px 16px !important; box-sizing: border-box !important; }
-    .data-badge { display: none !important; }
+    .cards-grid { grid-template-columns: 1fr; width: 100% !important; max-width: 100% !important; }
+    .data-badge { display: none; }
     .logo-area h1 { font-size: 26px !important; gap: 4px !important; }
     .h1-studio { font-size: 26px !important; }
     .h1-db { font-size: 28px !important; }
-    .filter-inner { flex-direction: column !important; align-items: stretch !important; gap: 8px !important; }
-    .search-wrap { max-width: 100% !important; }
-    .search-wrap input { width: 100% !important; }
-    /* Hide desktop-only elements, show mobile filters purely via CSS */
-    .desktop-only { display: none !important; }
-    #mobile-filters-always { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 8px !important; width: 100% !important; }
-    #mobile-filters-always select:last-child { grid-column: 1 / -1 !important; }
-    #mobile-filters-always select { width: 100% !important; }
-    #sort-distance-btn { display: none !important; }
-    .result-count { text-align: center !important; width: 100% !important; margin-left: 0 !important; }
-    .near-me-wrap { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; }
-    .near-me-btn { width: 100% !important; justify-content: center !important; box-sizing: border-box !important; }
-    .filter-inner { max-width: 100% !important; box-sizing: border-box !important; overflow: hidden !important; }
-    .filter-row-dropdowns { max-width: 100% !important; box-sizing: border-box !important; overflow: hidden !important; }
+    .filter-inner { flex-direction: column; align-items: stretch; gap: 8px; }
+    .search-wrap { max-width: 100%; }
+    .search-wrap input { width: 100%; }
 
     .mobile-filter-toggle {
       display: flex;
@@ -1406,8 +1375,8 @@ let _currentFiltered = [];
 async function applyFilters() {
   const query = document.getElementById('search-input').value.toLowerCase();
   const wrap = document.getElementById('db-wrap');
-  const containerWidth = Math.min(wrap ? wrap.offsetWidth : window.innerWidth, window.innerWidth);
-  const isMobile = containerWidth < 900;
+  const containerWidth = wrap ? wrap.offsetWidth : window.innerWidth;
+  const isMobile = containerWidth < 600;
   const format = isMobile ? document.getElementById('format-filter-mobile').value : document.getElementById('format-filter').value;
   const state = isMobile ? document.getElementById('state-filter-mobile').value : document.getElementById('state-filter').value;
   const country = isMobile ? document.getElementById('country-filter-mobile').value : document.getElementById('country-filter').value;
@@ -2206,6 +2175,7 @@ function renderCards(studios, totalCount, page) {
   const totalPages = Math.ceil(total / PAGE_SIZE);
   if (totalPages > 1) {
     const nav = document.createElement('div');
+    nav.style.cssText = 'grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:12px;padding:20px 0 8px;';
     const hasPrev = page > 1;
     const hasNext = page < totalPages;
     nav.innerHTML = `
@@ -2213,7 +2183,7 @@ function renderCards(studios, totalCount, page) {
       <span style="font-size:13px;color:var(--text-muted);font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;">Page ${page} of ${totalPages}</span>
       <button class="see-more-btn" style="padding:10px 20px;${!hasNext ? 'opacity:0.35;pointer-events:none;' : ''}" onclick="goToPage(${page + 1})">Next →</button>
     `;
-    nav.style.cssText = 'grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;margin-bottom:4px;padding:0 40px;';
+    nav.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;margin-bottom:4px;';
     grid.appendChild(nav);
   }
 
@@ -2262,8 +2232,8 @@ function fetchJSONP(url) {
 
 function checkMobile() {
   const wrap = document.getElementById('db-wrap');
-  const containerWidth = Math.min(wrap ? wrap.offsetWidth : window.innerWidth, window.innerWidth);
-  const isMobile = containerWidth < 900;
+  const containerWidth = wrap ? wrap.offsetWidth : window.innerWidth;
+  const isMobile = containerWidth < 600;
   if (isMobile) {
     wrap && wrap.setAttribute('data-mobile', 'true');
     document.body.classList.add('db-mobile');
@@ -2291,8 +2261,8 @@ function checkMobileDebounced() {
   _checkMobileTimer = setTimeout(() => {
     if (_selectFocused) return;
     const wrap = document.getElementById('db-wrap');
-    const containerWidth = Math.min(wrap ? wrap.offsetWidth : window.innerWidth, window.innerWidth);
-    const isMobile = containerWidth < 900;
+    const containerWidth = wrap ? wrap.offsetWidth : window.innerWidth;
+    const isMobile = containerWidth < 600;
     if (isMobile !== _lastMobileState) {
       _lastMobileState = isMobile;
       checkMobile();
