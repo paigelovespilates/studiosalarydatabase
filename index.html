@@ -59,7 +59,7 @@ pointer-events: none;
     font-weight: 300 !important;
     background: #eeedeb !important;
     color: #2e2d29 !important;
-    padding-bottom: 40px;
+    padding-bottom: 4px;
   }
   
   #db-wrap {
@@ -293,7 +293,7 @@ pointer-events: none;
   .radius-select-inline.visible { display: block; }
 
   /* ── Main ── */
-  main { max-width: 100% !important; margin: 0 !important; padding: 28px 0 60px !important; }
+  main { max-width: 100% !important; margin: 0 !important; padding: 28px 0 12px !important; }
 
   /* FIX 2: legend text darker and larger */
   .legend { display: flex; gap: 20px; margin: 16px 0 0; flex-wrap: wrap; align-items: center; padding: 0 40px; max-width: 100%; box-sizing: border-box; row-gap: 6px; justify-content: flex-start; }
@@ -2183,7 +2183,7 @@ function renderCards(studios, totalCount, page) {
       <span style="font-size:13px;color:var(--text-muted);font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;">Page ${page} of ${totalPages}</span>
       <button class="see-more-btn" style="padding:10px 20px;${!hasNext ? 'opacity:0.35;pointer-events:none;' : ''}" onclick="goToPage(${page + 1})">Next →</button>
     `;
-    nav.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:24px;';
+    nav.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;margin-bottom:4px;';
     grid.appendChild(nav);
   }
 
