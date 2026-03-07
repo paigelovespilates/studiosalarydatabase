@@ -2175,7 +2175,6 @@ function renderCards(studios, totalCount, page) {
   const totalPages = Math.ceil(total / PAGE_SIZE);
   if (totalPages > 1) {
     const nav = document.createElement('div');
-    nav.style.cssText = 'grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:12px;padding:20px 0 8px;';
     const hasPrev = page > 1;
     const hasNext = page < totalPages;
     nav.innerHTML = `
@@ -2183,7 +2182,7 @@ function renderCards(studios, totalCount, page) {
       <span style="font-size:13px;color:var(--text-muted);font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;">Page ${page} of ${totalPages}</span>
       <button class="see-more-btn" style="padding:10px 20px;${!hasNext ? 'opacity:0.35;pointer-events:none;' : ''}" onclick="goToPage(${page + 1})">Next →</button>
     `;
-    nav.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;margin-bottom:4px;';
+    nav.style.cssText = 'grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;margin-bottom:4px;padding:0 40px;';
     grid.appendChild(nav);
   }
 
