@@ -333,6 +333,7 @@ pointer-events: none;
     width: 100% !important;
     box-sizing: border-box !important;
     max-width: 100% !important;
+    min-width: 0 !important;
   }
 
   .studio-card:hover {
@@ -417,6 +418,10 @@ pointer-events: none;
     display: flex;
     align-items: center;
     gap: 7px;
+    flex-wrap: wrap;
+    word-break: break-word;
+    box-sizing: border-box;
+    width: calc(100% - 44px);
   }
 
   /* Format pills */
@@ -599,7 +604,7 @@ pointer-events: none;
     list-style: none !important;
   }
 
-  .benefit-chip { display: flex !important; align-items: center !important; gap: 6px !important; font-size: 12px !important; font-weight: 400 !important; color: #575648 !important; -webkit-text-fill-color: #575648 !important; font-family: 'Cormorant Garamond', Georgia, serif !important; text-decoration: none !important; list-style: none !important; padding-left: 0 !important; margin: 0 !important; }
+  .benefit-chip { display: flex !important; align-items: center !important; gap: 6px !important; font-size: 12px !important; font-weight: 400 !important; color: #575648 !important; -webkit-text-fill-color: #575648 !important; font-family: 'Cormorant Garamond', Georgia, serif !important; text-decoration: none !important; list-style: none !important; padding-left: 0 !important; margin: 0 !important; word-break: break-word !important; overflow-wrap: anywhere !important; min-width: 0 !important; }
   /* Belt-and-suspenders: every selector path Squarespace might win through */
   #db-wrap .benefit-chip,
   #db-wrap .benefits-section .benefit-chip,
@@ -1107,10 +1112,6 @@ pointer-events: none;
 </head>
 <body>
 <div id="db-wrap">
-<div id="dbg" style="background:#333;color:#fff;font-size:10px;padding:3px 8px;font-family:monospace;position:fixed;bottom:0;left:0;z-index:9999;opacity:0.85;max-width:100%;word-break:break-all;"></div>
-<script>
-(function(){function u(){var w=document.getElementById('db-wrap'),g=document.getElementById('cards-grid'),d=document.getElementById('dbg');if(d&&w)d.textContent='w:'+w.offsetWidth+'|win:'+window.innerWidth+'|mob:'+(w.getAttribute('data-mobile')||'0')+'|col:'+(g?getComputedStyle(g).gridTemplateColumns.substring(0,15):'?');}setTimeout(u,500);setTimeout(u,2000);window.addEventListener('resize',u);})();
-</script>
 
 <header>
   <div class="header-inner">
