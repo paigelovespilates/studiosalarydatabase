@@ -1518,10 +1518,19 @@ function fuzzyMatch(a, b) {
   return (shared / Math.max(tokA.length, tokB.length)) >= 0.8;
 }
 
-function findFuzzyKey(map, name) {
+// ── UPDATED: city-aware fuzzy key lookup ──────────────────────
+// Skips a fuzzy name match if both sides have a city and they differ.
+// This prevents chain studios (e.g. Club Pilates) collapsing into one card.
+function findFuzzyKey(map, name, cityKey) {
   const na = norm(name);
-  for (const [key] of map) {
-    if (fuzzyMatch(key, na)) return key;
+  for (const [key, studio] of map) {
+    if (fuzzyMatch(key.split('|')[0], na)) {
+      // If both the candidate and the incoming row have a city, only match if cities agree
+      const existingCity = studio._cityKey || '';
+      const incomingCity = cityKey || '';
+      if (existingCity && incomingCity && existingCity !== incomingCity) continue;
+      return key;
+    }
   }
   return null;
 }
@@ -1541,25 +1550,25 @@ function parseCoords(latRaw, lngRaw) {
   return { lat, lng };
 }
 
-// ── Build studio map ──────────────────────────────────────────
+// ── UPDATED: Build studio map with city-keyed deduplication ──
 function buildStudioMap(studioRows, instructorRows) {
   const map = new Map();
 
   studioRows.forEach(row => {
     const rawName = v(row, S.studioName);
     if (!rawName) return;
-    const name = v(row, S.cleanName) || rawName;  // use Clean Studio Name if set
-    const exactKey = norm(name);
-    const key = findFuzzyKey(map, name) || exactKey;
+    const name = v(row, S.cleanName) || rawName;
+    const city = v(row, S.city);
+    const cityKey = city.toLowerCase().trim().replace(/\s+/g, '-');
+    const exactKey = norm(name) + (cityKey ? '|' + cityKey : '');
+    const key = findFuzzyKey(map, name, cityKey) || exactKey;
 
     if (!map.has(key)) {
       const country = v(row, S.country) || 'United States';
-      const latRaw = v(row, S.lat);
-      const lngRaw = v(row, S.lng);
-      const coords = parseCoords(latRaw, lngRaw);
+      const coords = parseCoords(v(row, S.lat), v(row, S.lng));
       map.set(key, {
         name,
-        city: v(row, S.city),
+        city,
         state: v(row, S.state),
         country,
         currency: getCurrencyForCountry(country),
@@ -1574,18 +1583,17 @@ function buildStudioMap(studioRows, instructorRows) {
         negNotes: [],
         negotiated: null,
         coords,
+        _cityKey: cityKey,  // stored for city comparison in findFuzzyKey
       });
     }
 
     const studio = map.get(key);
     studio.hasStudio = true;
-    if (!studio.city && v(row, S.city)) studio.city = v(row, S.city);
+    if (!studio.city && city) studio.city = city;
     if (!studio.state && v(row, S.state)) studio.state = v(row, S.state);
     if (!studio.contact && v(row, S.contact)) studio.contact = v(row, S.contact);
     if (!studio.coords) {
-      const latRaw = v(row, S.lat);
-      const lngRaw = v(row, S.lng);
-      const c = parseCoords(latRaw, lngRaw);
+      const c = parseCoords(v(row, S.lat), v(row, S.lng));
       if (c) studio.coords = c;
     }
 
@@ -1669,18 +1677,18 @@ function buildStudioMap(studioRows, instructorRows) {
   instructorRows.forEach(row => {
     const rawName = v(row, I.studioName);
     if (!rawName) return;
-    const name = v(row, I.cleanName) || rawName;  // use Clean Studio Name if set
-    const exactKey = norm(name);
-    const key = findFuzzyKey(map, name) || exactKey;
+    const name = v(row, I.cleanName) || rawName;
+    const city = v(row, I.city);
+    const cityKey = city.toLowerCase().trim().replace(/\s+/g, '-');
+    const exactKey = norm(name) + (cityKey ? '|' + cityKey : '');
+    const key = findFuzzyKey(map, name, cityKey) || exactKey;
 
     if (!map.has(key)) {
       const country = v(row, I.country) || 'United States';
-      const latRaw = v(row, I.lat);
-      const lngRaw = v(row, I.lng);
-      const coords = parseCoords(latRaw, lngRaw);
+      const coords = parseCoords(v(row, I.lat), v(row, I.lng));
       map.set(key, {
         name,
-        city: v(row, I.city),
+        city,
         state: v(row, I.state),
         country,
         currency: getCurrencyForCountry(country),
@@ -1695,18 +1703,17 @@ function buildStudioMap(studioRows, instructorRows) {
         negNotes: [],
         negotiated: null,
         coords,
+        _cityKey: cityKey,
       });
     }
 
     const studio = map.get(key);
     studio.hasInstructor = true;
-    if (!studio.city && v(row, I.city)) studio.city = v(row, I.city);
+    if (!studio.city && city) studio.city = city;
     if (!studio.country && v(row, I.country)) studio.country = v(row, I.country) || 'United States';
     if (!studio.state && v(row, I.state)) studio.state = v(row, I.state);
     if (!studio.coords) {
-      const latRaw = v(row, I.lat);
-      const lngRaw = v(row, I.lng);
-      const c = parseCoords(latRaw, lngRaw);
+      const c = parseCoords(v(row, I.lat), v(row, I.lng));
       if (c) studio.coords = c;
     }
 
@@ -2357,6 +2364,26 @@ async function init() {
     const instructorRows = json.instructor.slice(1).map(row => row.map(cell => String(cell)));
     const studioMap = buildStudioMap(studioRows, instructorRows);
     allStudios = Array.from(studioMap.values());
+
+    // Two-pass city disambiguation:
+    // Find studios that share a normalized name but have different cities,
+    // then append the city to their display name only in those cases.
+    const nameGroups = new Map();
+    allStudios.forEach(s => {
+      const n = norm(s.name);
+      if (!nameGroups.has(n)) nameGroups.set(n, []);
+      nameGroups.get(n).push(s);
+    });
+    nameGroups.forEach(group => {
+      if (group.length > 1) {
+        group.forEach(s => {
+          const city = (s.city || '').trim();
+          if (city && !norm(s.name).includes(norm(city))) {
+            s.name = s.name + ' ' + toTitleCase(city);
+          }
+        });
+      }
+    });
 
     // Debug: report coord coverage
     const withC = allStudios.filter(s => s.coords).length;
