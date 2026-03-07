@@ -68,6 +68,7 @@ pointer-events: none;
     max-width: 100% !important;
     overflow-x: hidden !important;
     container-type: inline-size;
+    position: relative !important;
   }
 
   @container (max-width: 900px) {
@@ -311,7 +312,7 @@ pointer-events: none;
   /* ── Cards ── */
   .cards-grid {
     display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)) !important;
+    grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr)) !important;
     gap: 20px !important;
     padding: 20px 40px !important;
     max-width: min(1280px, 100%) !important;
