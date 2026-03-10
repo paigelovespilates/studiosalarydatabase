@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -8,16 +10,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   /* Force font loading */
-  @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap");/* Font test elements — force browser to load fonts immediately */
+  @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap");
+
+/* Font test elements — force browser to load fonts immediately */
 body::before {
-content: ‘’;
-font-family: ‘Cormorant Garamond’, serif;
-font-family: ‘Cormorant Garamond’, Georgia, serif;
+content: '';
+font-family: 'Cormorant Garamond', serif;
+font-family: 'Cormorant Garamond', Georgia, serif;
 position: absolute;
 opacity: 0;
 pointer-events: none;
 }
 </style>
+
 <style>
   /* Override Squarespace global styles */
   #db-wrap span, #db-wrap div, #db-wrap p, #db-wrap td, #db-wrap th, #db-wrap button, #db-wrap select, #db-wrap input {
@@ -1079,9 +1084,13 @@ pointer-events: none;
     .near-me-wrap { width: 100%; }
     .near-me-btn { width: 100%; justify-content: center; }
   }
-</style></head>
+</style>
+
+</head>
 <body>
-<div id="db-wrap"><header>
+<div id="db-wrap">
+
+<header>
   <div class="header-inner">
     <div class="logo-area">
       <h1><span class="h1-studio">Studio</span> <span class="h1-db">Salary Database</span></h1>
@@ -1095,77 +1104,80 @@ pointer-events: none;
       <div class="badge"><div class="num" id="stat-formats">—</div><div class="label">Formats</div></div>
     </div>
   </div>
-</header><div class="filter-section">
+</header>
+
+<div class="filter-section">
   <div class="filter-inner">
 
-<!-- Row 1: Search bar -->
-<div class="filter-row-search">
-  <div class="search-wrap">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-    </svg>
-    <input type="text" id="search-input" placeholder="Search studio or city…" oninput="applyFilters()">
+    <!-- Row 1: Search bar -->
+    <div class="filter-row-search">
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input type="text" id="search-input" placeholder="Search studio or city…" oninput="applyFilters()">
+      </div>
+    </div>
+
+    <!-- Row 2: Near Me + desktop dropdowns -->
+    <div class="filter-row-dropdowns">
+
+      <!-- Desktop filters -->
+      <select id="country-filter" class="desktop-only" onchange="applyFilters()"><option value="">All Countries</option></select>
+      <select id="state-filter" class="desktop-only" onchange="applyFilters()"><option value="">All States</option></select>
+      <select id="format-filter" class="desktop-only" onchange="applyFilters()"><option value="">All Formats</option></select>
+
+      <!-- Near Me -->
+      <div class="near-me-wrap" id="near-me-wrap">
+        <button class="near-me-btn" id="near-me-btn" onclick="toggleNearMe()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+          </svg>
+          Near Me
+        </button>
+        <select class="radius-select-inline" id="radius-select" onchange="applyFilters()" onclick="event.stopPropagation()">
+          <option value="10">10 mi</option>
+          <option value="25" selected>25 mi</option>
+          <option value="50">50 mi</option>
+          <option value="100">100 mi</option>
+        </select>
+      </div>
+
+      <!-- Sort by Distance — desktop inline -->
+      <button class="near-me-btn desktop-only" id="sort-distance-btn" onclick="toggleSortByDistance()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l4-4 4 4M7 5v14M21 15l-4 4-4-4M17 19V5"/>
+        </svg>
+        Sort by Distance
+      </button>
+    </div>
+
+    <!-- Mobile filters — always visible, stacked -->
+    <div class="mobile-filters-always" id="mobile-filters-always" style="display:none;">
+      <select id="country-filter-mobile" onchange="applyFilters()"><option value="">All Countries</option></select>
+      <select id="state-filter-mobile" onchange="applyFilters()"><option value="">All States</option></select>
+      <select id="format-filter-mobile" onchange="applyFilters()"><option value="">All Formats</option></select>
+    </div>
+
+    <!-- Sort by Distance — mobile only, below dropdowns -->
+    <div class="mobile-sort-row" id="mobile-sort-row" style="display:none;">
+      <button class="near-me-btn" id="sort-distance-btn-mobile" onclick="toggleSortByDistance()" style="width:100%;justify-content:center;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l4-4 4 4M7 5v14M21 15l-4 4-4-4M17 19V5"/>
+        </svg>
+        Sort by Distance
+      </button>
+    </div>
+
+    <div class="filter-bottom-row">
+      <div class="result-count">Showing <span id="result-num">—</span> studios <span id="sort-indicator" style="display:none;font-size:11px;color:var(--accent);margin-left:6px;">📍 sorted by distance</span></div>
+      <button class="clear-filters-btn" id="clear-filters-btn" onclick="clearFilters()">✕ Clear</button>
+    </div>
+
   </div>
 </div>
 
-<!-- Row 2: Near Me + desktop dropdowns -->
-<div class="filter-row-dropdowns">
-
-  <!-- Desktop filters -->
-  <select id="country-filter" class="desktop-only" onchange="applyFilters()"><option value="">All Countries</option></select>
-  <select id="state-filter" class="desktop-only" onchange="applyFilters()"><option value="">All States</option></select>
-  <select id="format-filter" class="desktop-only" onchange="applyFilters()"><option value="">All Formats</option></select>
-
-  <!-- Near Me -->
-  <div class="near-me-wrap" id="near-me-wrap">
-    <button class="near-me-btn" id="near-me-btn" onclick="toggleNearMe()">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
-      </svg>
-      Near Me
-    </button>
-    <select class="radius-select-inline" id="radius-select" onchange="applyFilters()" onclick="event.stopPropagation()">
-      <option value="10">10 mi</option>
-      <option value="25" selected>25 mi</option>
-      <option value="50">50 mi</option>
-      <option value="100">100 mi</option>
-    </select>
-  </div>
-
-  <!-- Sort by Distance — desktop inline -->
-  <button class="near-me-btn desktop-only" id="sort-distance-btn" onclick="toggleSortByDistance()">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M3 9l4-4 4 4M7 5v14M21 15l-4 4-4-4M17 19V5"/>
-    </svg>
-    Sort by Distance
-  </button>
-</div>
-
-<!-- Mobile filters — always visible, stacked -->
-<div class="mobile-filters-always" id="mobile-filters-always" style="display:none;">
-  <select id="country-filter-mobile" onchange="applyFilters()"><option value="">All Countries</option></select>
-  <select id="state-filter-mobile" onchange="applyFilters()"><option value="">All States</option></select>
-  <select id="format-filter-mobile" onchange="applyFilters()"><option value="">All Formats</option></select>
-</div>
-
-<!-- Sort by Distance — mobile only, below dropdowns -->
-<div class="mobile-sort-row" id="mobile-sort-row" style="display:none;">
-  <button class="near-me-btn" id="sort-distance-btn-mobile" onclick="toggleSortByDistance()" style="width:100%;justify-content:center;">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M3 9l4-4 4 4M7 5v14M21 15l-4 4-4-4M17 19V5"/>
-    </svg>
-    Sort by Distance
-  </button>
-</div>
-
-<div class="filter-bottom-row">
-  <div class="result-count">Showing <span id="result-num">—</span> studios <span id="sort-indicator" style="display:none;font-size:11px;color:var(--accent);margin-left:6px;">📍 sorted by distance</span></div>
-  <button class="clear-filters-btn" id="clear-filters-btn" onclick="clearFilters()">✕ Clear</button>
-</div>
-
-
-</div>
-</div><main>
+<main>
   <div class="legend">
     <div class="legend-item">
       <span class="src-badge S">S</span>
@@ -1183,7 +1195,9 @@ pointer-events: none;
   <div class="cards-grid" id="cards-grid">
     <div class="state-msg"><div class="spinner"></div><p>Loading studios…</p></div>
   </div>
-</main><script>
+</main>
+
+<script>
 // ── Currency config ───────────────────────────────────────────
 const UK_REGIONS = new Set([
   'London', 'South East England', 'South West England', 'East of England',
@@ -2069,7 +2083,7 @@ function renderCards(studios, totalCount, page) {
     const extraSubmissions = showViewAll ? studio.submissions.slice(DEFAULT_ROWS) : [];
     const extraTableRows = showViewAll ? renderPayRows(extraSubmissions, 999, studio.currency) : '';
     const viewAllBtn = showViewAll
-      ? `<button class="view-all-btn" onclick="toggleAllSubmissions(this)" data-extra-rows="${extraTableRows.replace(/"/g, '&quot;')}">View ${studio.submissions.length - DEFAULT\_ROWS} more submission${studio.submissions.length - DEFAULT_ROWS > 1 ? 's' : ''} ↓</button>` : '';
+      ? `<button class="view-all-btn" onclick="toggleAllSubmissions(this)" data-extra-rows="${extraTableRows.replace(/"/g, '&quot;')}">View ${studio.submissions.length - DEFAULT_ROWS} more submission${studio.submissions.length - DEFAULT_ROWS > 1 ? 's' : ''} ↓</button>` : '';
 
     const negResult = computeNegotiable(studio);
     const negBadge = ''; // removed — negotiation shown inline per instructor row instead
@@ -2417,7 +2431,11 @@ async function init() {
 }
 
 init();
-</script></div><!-- end #db-wrap --><script>
+</script>
+
+</div><!-- end #db-wrap -->
+
+<script>
   // Auto-height: broadcast page height to parent iframe
   function sendHeight() {
     const height = document.documentElement.scrollHeight;
@@ -2437,5 +2455,7 @@ init();
     _heightIntervalCount++;
     if (_heightIntervalCount >= 10) clearInterval(_heightInterval);
   }, 500);
-</script></body>
+</script>
+
+</body>
 </html>
