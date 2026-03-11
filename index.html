@@ -738,9 +738,10 @@ function buildStudioMap(studioRows, instructorRows) {
     const neg=v(row,I.negotiated), nn=v(row,I.negNotes);
     if (fmt) {
       const capacity=v(row,I.classCapacity), perClientRaw=v(row,I.payPerClient), variableDetails=v(row,I.variableDetails)||null;
+      const iFlatRateNum=extractPayNum(v(row,I.flatRate))||null;
       let maxEarningsNum=null;
       if (capacity&&perClientRaw&&!isNaN(parseFloat(capacity))&&!isNaN(parseFloat(perClientRaw))) maxEarningsNum=Math.round(parseFloat(capacity)*parseFloat(perClientRaw));
-      studio.submissions.push({source:'I',format:normalizeFormat(fmt),payRaw,payNum,structure:normalizeStructure(v(row,I.payStructure)),submitterExp:v(row,I.experience)||null,classCapacity:capacity||null,maxEarningsNum,variableDetails,negotiated:neg||null,negNote:(nn&&nn.toLowerCase()!=='n/a'&&nn.trim())?nn:null});
+      studio.submissions.push({source:'I',format:normalizeFormat(fmt),payRaw,payNum,structure:normalizeStructure(v(row,I.payStructure)),submitterExp:v(row,I.experience)||null,classCapacity:capacity||null,maxEarningsNum,flatRateNum:iFlatRateNum,variableDetails,negotiated:neg||null,negNote:(nn&&nn.toLowerCase()!=='n/a'&&nn.trim())?nn:null});
     }
     if (neg&&!studio.negotiated) studio.negotiated=neg;
     if (nn&&nn.toLowerCase()!=='n/a'&&nn.trim()) studio.negNotes.push(nn);
