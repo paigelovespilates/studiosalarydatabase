@@ -906,7 +906,8 @@ function renderPayRows(submissions, limit, currency) {
       heroAmount=`Up to ${sym}${r.maxEarningsNum}/class`;
       heroSub=`${sym}${r.payNum}/client × ${r.classCapacity} students`;
     } else if (isBaseFlex) {
-      heroAmount=r.flatRateNum?`${sym}${r.flatRateNum} base`:(heroAmount?`${heroAmount} base`:null);
+      const baseNum=r.flatRateNum||r.payNum;
+      heroAmount=baseNum?`${sym}${baseNum} base`:null;
       const flexParts=[];
       if (r.maxEarningsNum) flexParts.push(`Max: ${sym}${r.maxEarningsNum}`);
       const detailLine=r.variableDetails?`<br>Variable rate details: ${r.variableDetails}`:'';
