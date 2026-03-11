@@ -909,8 +909,8 @@ function renderPayRows(submissions, limit, currency) {
       const flexParts=[];
       if (r.flatRateNum) flexParts.push(`Base: ${sym}${r.flatRateNum}`);
       if (r.maxEarningsNum) flexParts.push(`Max: ${sym}${r.maxEarningsNum}`);
-      if (r.variableDetails) flexParts.push(`Variable rate details: ${r.variableDetails}`);
-      heroSub=flexParts.length?flexParts.join(' · '):null;
+      const detailLine=r.variableDetails?`<br>Variable rate details: ${r.variableDetails}`:'';
+      heroSub=(flexParts.length||r.variableDetails)?(flexParts.join(' · ')+detailLine):null;
     } else if (isFlat&&r.variableDetails) {
       heroAmount=heroAmount?`${heroAmount}+`:null;
       heroSub=r.variableDetails;
