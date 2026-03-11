@@ -604,12 +604,13 @@ function extractPayNum(payStr) {
 function normalizeStructure(str) {
   if (!str) return '';
   const s = str.toLowerCase().trim();
-  if (s.includes('class')) return 'Per class';
+  if ((s.includes('flat')||s.includes('base')||s.includes('hybrid'))&&(s.includes('variable')||s.includes('flex')||s.includes('commission')||s.includes('bonus')||s.includes('attendance')||s.includes('class size')||s.includes('additional'))) return 'Base + Variable';
+  if (s.includes('per class')) return 'Per class';
   if (s.includes('client')||s.includes('head')||s.includes('person')||s.includes('student')) return 'Per client';
   if (s.includes('hour')) return 'Hourly';
-  if ((s.includes('flat')||s.includes('base'))&&(s.includes('variable')||s.includes('flex')||s.includes('commission')||s.includes('bonus')||s.includes('attendance'))) return 'Base + Variable';
   if (s.includes('flat')) return 'Flat rate';
   if (s.includes('variable')||s.includes('revenue')||s.includes('commission')) return 'Variable';
+  if (s.includes('class')) return 'Per class';
   return str.trim();
 }
 function normalizeExpLevel(exp) {
