@@ -1842,10 +1842,12 @@ function renderPayRows(submissions, limit, currency) {
       heroAmount = `Up to ${sym}${r.maxEarningsNum}/class`;
       heroSub = `${sym}${r.payNum}/client × ${r.classCapacity} students`;
     } else if (isBaseFlex) {
-      heroAmount = heroAmount ? `${heroAmount}/class` : null;
-      heroSub = r.flatRateNum && r.maxEarningsNum
-        ? `(average, considering base pay and max pay)<br>Base: ${sym}${r.flatRateNum} · Max: ${sym}${r.maxEarningsNum} · Variable rate details: ${r.variableDetails || 'as submitted'}`
-        : r.variableDetails || null;
+  heroAmount = heroAmount ? `${heroAmount}/class` : null;
+  const flexParts = [];
+  if (r.flatRateNum) flexParts.push(`Base: ${sym}${r.flatRateNum}`);
+  if (r.maxEarningsNum) flexParts.push(`Max: ${sym}${r.maxEarningsNum}`);
+  if (r.variableDetails) flexParts.push(`Variable rate details: ${r.variableDetails}`);
+  heroSub = flexParts.length ? flexParts.join(' · ') : null;
     } else if (isFlat && r.variableDetails) {
       heroAmount = heroAmount ? `${heroAmount}+` : null;
       heroSub = r.variableDetails;
