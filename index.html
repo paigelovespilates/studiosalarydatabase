@@ -758,7 +758,6 @@ function getEffectiveRate(submission, currencyCode) {
   let localRate=null;
   if (structure.includes('class')&&submission.payNum) localRate=submission.payNum;
   if (structure.includes('client')&&submission.payNum&&submission.classCapacity) localRate=submission.payNum*(parseFloat(submission.classCapacity)*0.5);
-  if (submission.structure==='Base + Variable'&&submission.payNum) localRate=submission.payNum;
   if (localRate===null) return null;
   return toUSD(localRate,currencyCode||'USD');
 }
