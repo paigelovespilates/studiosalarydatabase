@@ -1264,10 +1264,7 @@ async function init() {
     computeRelativityScores(allStudios);
     populateFormatFilter(allStudios);
     updateStats(allStudios);
-    _allFiltered=allStudios;
-    _currentPage=1;
-    document.getElementById('result-num').textContent=allStudios.length;
-    renderCards(allStudios.slice(0,PAGE_SIZE),allStudios.length,1);
+    applyFilters();
 
     // Background geocoding for studios missing coords
     const needsGeocode=allStudios.filter(s=>!s.coords&&s.city&&s.city.trim());
