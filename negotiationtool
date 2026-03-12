@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Negotiation Brief — Studio Salary Database</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --olive:   #373930;
+  --linen:   #EDEBE4;
+  --linen2:  #E4E1D8;
+  --muted:   #8C8C78;
+  --ink:     #2A2A22;
+  --sand:    #B8B49A;
+  --gold:    #9A9270;
+  --green:   #4A7C59;
+  --red:     #8B3A3A;
+  --white:   #FAFAF7;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--linen);
+  color: var(--ink);
+  min-height: 100vh;
+  padding: 48px 20px 80px;
+}
+
+.wrap {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* HEADER */
+.hdr {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.hdr-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.hdr h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--olive);
+  margin-bottom: 10px;
+}
+.hdr h1 em {
+  font-style: italic;
+  font-weight: 400;
+}
+.hdr p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+/* PROGRESS */
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 32px;
+}
+.p-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.p-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--sand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  background: var(--linen);
+  transition: all 0.25s;
+  position: relative;
+  z-index: 1;
+}
+.p-step.active .p-circle {
+  background: var(--olive);
+  border-color: var(--olive);
+  color: var(--linen);
+}
+.p-step.done .p-circle {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--linen);
+}
+.p-label {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  text-align: center;
+}
+.p-step.active .p-label { color: var(--olive); font-weight: 500; }
+.p-line {
+  flex: 1;
+  height: 1px;
+  background: var(--sand);
+  margin-bottom: 18px;
+  opacity: 0.5;
+}
+
+/* CARD */
+.card {
+  background: var(--white);
+  border-radius: 4px;
+  padding: 36px 32px;
+  box-shadow: 0 2px 20px rgba(55,57,48,0.07), 0 1px 4px rgba(55,57,48,0.05);
+}
+
+.step { display: none; }
+.step.active { display: block; }
+
+.step-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--olive);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.step-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+/* FORM ELEMENTS */
+label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--linen2);
+  border-radius: 3px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--white);
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+input:focus, select:focus {
+  border-color: var(--olive);
+}
+
+.field { margin-bottom: 20px; }
+.field:last-of-type { margin-bottom: 0; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* FORMAT CHIPS */
+.chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+.chip {
+  padding: 8px 16px;
+  border: 1.5px solid var(--linen2);
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.18s;
+  background: var(--white);
+  user-select: none;
+}
+.chip:hover { border-color: var(--sand); color: var(--ink); }
+.chip.selected {
+  background: var(--olive);
+  border-color: var(--olive);
+  color: var(--linen);
+}
+
+/* STUDIO HINT */
+.studio-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--green);
+  min-height: 18px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.studio-hint.miss { color: var(--muted); }
+
+/* OPTIONAL TAG */
+.opt-tag {
+  font-size: 10px;
+  background: var(--linen2);
+  color: var(--muted);
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-left: 6px;
+  letter-spacing: 0.05em;
+  vertical-align: middle;
+  text-transform: none;
+}
+
+/* NAV BUTTONS */
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 28px;
+  align-items: center;
+}
+.btn-back {
+  padding: 12px 20px;
+  border: 1.5px solid var(--linen2);
+  border-radius: 3px;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.btn-back:hover { border-color: var(--sand); color: var(--ink); }
+.btn-next {
+  flex: 1;
+  padding: 13px 24px;
+  background: var(--olive);
+  border: none;
+  border-radius: 3px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--linen);
+  cursor: pointer;
+  transition: opacity 0.18s;
+  letter-spacing: 0.02em;
+}
+.btn-next:hover { opacity: 0.88; }
+.btn-next:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── RESULTS ── */
+#results { display: none; }
+
+.results-hdr {
+  text-align: center;
+  padding: 28px 32px 24px;
+  border-bottom: 1px solid var(--linen2);
+}
+.results-hdr .eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.results-hdr h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--olive);
+  line-height: 1.2;
+}
+.results-hdr h2 em { font-style: italic; font-weight: 400; }
+.results-hdr .sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+/* STUDIO FOUND BANNER */
+.studio-banner {
+  margin: 0 -32px;
+  padding: 18px 32px;
+  background: var(--olive);
+  color: var(--linen);
+  display: none;
+}
+.studio-banner .sb-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 4px;
+}
+.studio-banner .sb-name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.studio-banner .sb-stats {
+  display: flex;
+  gap: 24px;
+}
+.studio-banner .sb-stat .val {
+  font-size: 22px;
+  font-weight: 500;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+.studio-banner .sb-stat .lbl {
+  font-size: 10px;
+  opacity: 0.6;
+  margin-top: 1px;
+  letter-spacing: 0.08em;
+}
+
+/* ASK RANGE */
+.ask-section {
+  padding: 28px 32px 20px;
+  border-bottom: 1px solid var(--linen2);
+  text-align: center;
+}
+.ask-section .rlbl {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+.ask-range {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+.ask-num {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 52px;
+  font-weight: 600;
+  color: var(--olive);
+  line-height: 1;
+}
+.ask-dash {
+  font-size: 32px;
+  color: var(--sand);
+  font-weight: 300;
+}
+.ask-sub {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* CURRENT RATE BAR */
+.cr-bar {
+  display: none;
+  margin: 14px 0 0;
+  padding: 10px 16px;
+  background: var(--linen);
+  border-radius: 3px;
+  font-size: 13px;
+  color: var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cr-bar .cr-gap { font-weight: 500; }
+.cr-bar .cr-gap.pos { color: var(--green); }
+.cr-bar .cr-gap.neg { color: var(--red); }
+
+/* BENCHMARK BAR */
+.bench-section {
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--linen2);
+}
+.rlbl {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+  display: block;
+}
+.bench-ends {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.bench-track {
+  position: relative;
+  height: 6px;
+  background: var(--linen2);
+  border-radius: 3px;
+  margin-bottom: 8px;
+}
+.bfill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  background: var(--sand);
+  border-radius: 3px;
+  opacity: 0.4;
+}
+.bzone {
+  position: absolute;
+  top: -2px; bottom: -2px;
+  background: var(--olive);
+  border-radius: 3px;
+  opacity: 0.25;
+}
+.bcur {
+  position: absolute;
+  top: -4px;
+  width: 14px; height: 14px;
+  background: var(--gold);
+  border-radius: 50%;
+  border: 2px solid var(--white);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  transform: translateX(-50%);
+  display: none;
+}
+.bask {
+  position: absolute;
+  top: -4px;
+  width: 14px; height: 14px;
+  background: var(--olive);
+  border-radius: 50%;
+  border: 2px solid var(--white);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  transform: translateX(-50%);
+}
+.bench-cap {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  min-height: 16px;
+}
+.cc { color: var(--gold); }
+.ca { color: var(--olive); font-weight: 500; }
+
+/* STATS ROW */
+.r-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--linen2);
+  border-top: 1px solid var(--linen2);
+  border-bottom: 1px solid var(--linen2);
+}
+.r-stat {
+  padding: 18px 20px;
+  background: var(--white);
+}
+.r-stat:first-child { padding-left: 32px; }
+.r-stat:last-child { padding-right: 32px; }
+.rsval {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--olive);
+  line-height: 1.1;
+  margin: 6px 0 3px;
+}
+.rsdesc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+/* ANNUAL */
+.r-annual {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--linen2);
+  gap: 16px;
+}
+.ra-left { font-size: 13px; color: var(--ink); line-height: 1.5; }
+.ra-left strong { font-weight: 500; }
+.ra-right {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--olive);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* INSIGHT */
+.r-insight {
+  display: flex;
+  gap: 14px;
+  padding: 20px 32px;
+  background: var(--linen);
+  margin: 0 -32px -0px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  align-items: flex-start;
+}
+.ri-arr {
+  font-size: 18px;
+  color: var(--olive);
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+.ri-h {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--olive);
+  margin-bottom: 4px;
+}
+.ri-d { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+/* RESET */
+.btn-reset {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  background: transparent;
+  border: 1.5px solid var(--linen2);
+  border-radius: 3px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.18s;
+}
+.btn-reset:hover { border-color: var(--sand); color: var(--ink); }
+
+.divider { height: 1px; background: var(--linen2); margin: 0 -32px; }
+
+/* footer sig */
+.sig {
+  text-align: center;
+  margin-top: 28px;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+}
+.sig em {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--sand);
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hdr">
+    <div class="hdr-eyebrow">Studio Salary Database</div>
+    <h1>Know your worth.<br><em>Before you walk in.</em></h1>
+    <p>Get a personalized negotiation brief based on real pay data from instructors and studios in your market.</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-row" id="progress-row">
+    <div class="p-step active" id="ps1" onclick="tryGoStep(1)">
+      <div class="p-circle">1</div>
+      <div class="p-label">Format</div>
+    </div>
+    <div class="p-line"></div>
+    <div class="p-step" id="ps2" onclick="tryGoStep(2)">
+      <div class="p-circle">2</div>
+      <div class="p-label">Studio</div>
+    </div>
+    <div class="p-line"></div>
+    <div class="p-step" id="ps3" onclick="tryGoStep(3)">
+      <div class="p-circle">3</div>
+      <div class="p-label">You</div>
+    </div>
+    <div class="p-line"></div>
+    <div class="p-step" id="ps4" onclick="tryGoStep(4)">
+      <div class="p-circle">4</div>
+      <div class="p-label">Your Rate</div>
+    </div>
+  </div>
+
+  <!-- FORM CARD -->
+  <div class="card" id="form-card">
+
+    <!-- STEP 1: FORMAT -->
+    <div class="step active" id="step1">
+      <div class="step-title">What do you teach?</div>
+      <div class="step-sub">Select all formats that apply — we'll benchmark against instructors like you.</div>
+      <div class="chip-grid" id="format-chips">
+        <div class="chip" data-val="Reformer Pilates" onclick="toggleChip(this)">Reformer Pilates</div>
+        <div class="chip" data-val="Mat Pilates" onclick="toggleChip(this)">Mat Pilates</div>
+        <div class="chip" data-val="Pilates Sculpt" onclick="toggleChip(this)">Pilates Sculpt</div>
+        <div class="chip" data-val="Tower Pilates" onclick="toggleChip(this)">Tower Pilates</div>
+        <div class="chip" data-val="Chair Pilates" onclick="toggleChip(this)">Chair Pilates</div>
+        <div class="chip" data-val="Barre" onclick="toggleChip(this)">Barre</div>
+        <div class="chip" data-val="Yoga" onclick="toggleChip(this)">Yoga</div>
+        <div class="chip" data-val="HIIT / Circuit" onclick="toggleChip(this)">HIIT / Circuit</div>
+        <div class="chip" data-val="Stretch & Recovery" onclick="toggleChip(this)">Stretch & Recovery</div>
+        <div class="chip" data-val="Other" onclick="toggleChip(this)">Other</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-next" onclick="goStep(2)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: STUDIO -->
+    <div class="step" id="step2">
+      <div class="step-title">Where do you teach?</div>
+      <div class="step-sub">Enter your studio name to surface real data from that studio — or skip and we'll use your market.</div>
+      <div class="field">
+        <label>Studio Name <span class="opt-tag">optional</span></label>
+        <input type="text" id="studio-input" placeholder="e.g. Club Pilates, Solidcore…" oninput="checkStudio()">
+        <div class="studio-hint" id="studio-hint"></div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>City</label>
+          <input type="text" id="city-input" placeholder="e.g. Austin">
+        </div>
+        <div class="field">
+          <label>Country</label>
+          <select id="country-select">
+            <option value="US">United States</option>
+            <option value="CA">Canada</option>
+            <option value="UK">United Kingdom</option>
+            <option value="AU">Australia</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="goStep(1)">← Back</button>
+        <button class="btn-next" onclick="goStep(3)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: EXPERIENCE -->
+    <div class="step" id="step3">
+      <div class="step-title">Tell us about yourself.</div>
+      <div class="step-sub">We'll compare you to instructors at your stage — not everyone lumped together.</div>
+      <div class="field">
+        <label>Years of Teaching Experience</label>
+        <select id="exp-select">
+          <option value="">Select…</option>
+          <option value="new">Less than 1 year</option>
+          <option value="early">1–2 years</option>
+          <option value="mid">3–5 years</option>
+          <option value="senior">6–10 years</option>
+          <option value="expert">10+ years</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Employment Type</label>
+        <select id="type-select">
+          <option value="">Select…</option>
+          <option value="employee">Studio Employee (W-2 / PAYE)</option>
+          <option value="contractor">Independent Contractor (1099)</option>
+          <option value="either">Either / Not Sure</option>
+        </select>
+      </div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="goStep(2)">← Back</button>
+        <button class="btn-next" onclick="goStep(4)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: CURRENT RATE -->
+    <div class="step" id="step4">
+      <div class="step-title">What are you making now?</div>
+      <div class="step-sub">Optional — but seeing exactly where you sit against the market makes the brief much more powerful.</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Current Rate / Class <span class="opt-tag">optional</span></label>
+          <input type="number" id="rate-input" placeholder="e.g. 45" min="0" max="500">
+        </div>
+        <div class="field">
+          <label>Classes / Week <span class="opt-tag">optional</span></label>
+          <input type="number" id="classes-input" placeholder="e.g. 10" min="1" max="50">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-back" onclick="goStep(3)">← Back</button>
+        <button class="btn-next" onclick="generate()">Generate My Brief →</button>
+      </div>
+    </div>
+
+  </div><!-- /form-card -->
+
+  <!-- RESULTS CARD -->
+  <div class="card" id="results">
+
+    <div class="results-hdr">
+      <div class="eyebrow">Your Negotiation Brief</div>
+      <h2 id="r-headline">Know what to ask for.</h2>
+      <div class="sub" id="r-sub">Based on real data from your market</div>
+    </div>
+
+    <!-- Studio found banner -->
+    <div class="studio-banner" id="studio-banner">
+      <div class="sb-label">Studio Data Found</div>
+      <div class="sb-name" id="sb-name"></div>
+      <div class="sb-stats">
+        <div class="sb-stat">
+          <div class="val" id="sb-avg">—</div>
+          <div class="lbl">avg per class</div>
+        </div>
+        <div class="sb-stat">
+          <div class="val" id="sb-range">—</div>
+          <div class="lbl">reported range</div>
+        </div>
+        <div class="sb-stat">
+          <div class="val" id="sb-count">—</div>
+          <div class="lbl">submissions</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ASK RANGE -->
+    <div class="ask-section">
+      <div class="rlbl">Your suggested ask range</div>
+      <div class="ask-range">
+        <div class="ask-num" id="r-ask-lo">—</div>
+        <div class="ask-dash">—</div>
+        <div class="ask-num" id="r-ask-hi">—</div>
+      </div>
+      <div class="ask-sub">per class · based on your market, format & experience</div>
+      <div class="cr-bar" id="cr-bar" style="display:none">
+        <div class="cr-left" id="cr-left">Your current rate: —</div>
+        <div class="cr-gap" id="cr-gap"></div>
+      </div>
+    </div>
+
+    <!-- BENCHMARK BAR -->
+    <div class="bench-section">
+      <span class="rlbl">Where you stand in your market</span>
+      <div class="bench-ends"><span id="b-floor"></span><span id="b-ceil"></span></div>
+      <div class="bench-track">
+        <div class="bfill" id="bfill"></div>
+        <div class="bzone" id="bzone"></div>
+        <div class="bcur"  id="bcur"></div>
+        <div class="bask"  id="bask"></div>
+      </div>
+      <div class="bench-cap">
+        <span class="cc" id="bcap-cur"></span>
+        <span class="ca" id="bcap-ask"></span>
+      </div>
+    </div>
+
+    <!-- STATS ROW -->
+    <div class="r-stats">
+      <div class="r-stat">
+        <span class="rlbl" style="margin-bottom:2px">Market avg · your format</span>
+        <div class="rsval" id="rs-mkt">—</div>
+        <div class="rsdesc" id="rs-mkt-desc"></div>
+      </div>
+      <div class="r-stat">
+        <span class="rlbl" style="margin-bottom:2px">Instructors who negotiated</span>
+        <div class="rsval" id="rs-neg">—</div>
+        <div class="rsdesc" id="rs-neg-desc"></div>
+      </div>
+    </div>
+
+    <!-- ANNUAL IMPACT -->
+    <div class="r-annual" id="r-annual" style="display:none">
+      <div class="ra-left">
+        <strong>If you get the midpoint of your ask range</strong><br>
+        <span id="ra-sub" style="color:#9A9A84;font-size:11px;"></span>
+      </div>
+      <div class="ra-right" id="ra-val"></div>
+    </div>
+
+    <!-- INSIGHT -->
+    <div class="r-insight">
+      <div class="ri-arr">→</div>
+      <div>
+        <div class="ri-h">50% of instructors who asked got more.</div>
+        <div class="ri-d">In our database, instructors who negotiated earned an average of $8 more per class. The worst outcome? They heard no.</div>
+      </div>
+    </div>
+
+    <button class="btn-reset" onclick="reset()">← Start over</button>
+  </div><!-- /results -->
+
+  <div class="sig"><em>Paige Loves Pilates</em> · Studio Salary Database</div>
+
+</div><!-- /wrap -->
+
+<script>
+// ── BENCHMARK DATA (simplified market averages by format + experience) ──
+const MARKET = {
+  'Reformer Pilates': { new: 38, early: 44, mid: 52, senior: 58, expert: 65, floor: 28, ceil: 80 },
+  'Mat Pilates':      { new: 32, early: 38, mid: 45, senior: 52, expert: 58, floor: 22, ceil: 70 },
+  'Pilates Sculpt':   { new: 35, early: 40, mid: 48, senior: 54, expert: 60, floor: 25, ceil: 72 },
+  'Tower Pilates':    { new: 36, early: 42, mid: 50, senior: 56, expert: 62, floor: 26, ceil: 75 },
+  'Chair Pilates':    { new: 34, early: 40, mid: 47, senior: 53, expert: 60, floor: 24, ceil: 72 },
+  'Barre':            { new: 30, early: 36, mid: 43, senior: 50, expert: 56, floor: 22, ceil: 68 },
+  'Yoga':             { new: 28, early: 34, mid: 42, senior: 48, expert: 55, floor: 20, ceil: 70 },
+  'HIIT / Circuit':   { new: 30, early: 36, mid: 44, senior: 50, expert: 56, floor: 22, ceil: 65 },
+  'Stretch & Recovery':{ new: 28, early: 33, mid: 40, senior: 46, expert: 52, floor: 20, ceil: 62 },
+  'Other':            { new: 32, early: 38, mid: 46, senior: 52, expert: 58, floor: 22, ceil: 70 }
+};
+
+// Known studios (demo data — in production, pull from your Apps Script)
+const STUDIOS = {
+  'club pilates':      { avg: 44, min: 35, max: 58, count: 47 },
+  'solidcore':         { avg: 52, min: 42, max: 65, count: 23 },
+  'pure barre':        { avg: 38, min: 30, max: 50, count: 18 },
+  'equinox':           { avg: 68, min: 55, max: 85, count: 31 },
+  'y7 studio':         { avg: 45, min: 36, max: 58, count: 12 },
+  'form pilates':      { avg: 55, min: 45, max: 70, count: 8  },
+  'studio pilates':    { avg: 50, min: 40, max: 62, count: 14 },
+  'bodybar':           { avg: 40, min: 32, max: 52, count: 9  },
+  'fitness incentive': { avg: 48, min: 38, max: 60, count: 6  },
+};
+
+let state = { formats: [], studio: '', city: '', country: 'US', exp: '', type: '', rate: null, classes: null };
+let currentStep = 1;
+
+function goStep(n) {
+  document.getElementById('step' + currentStep).classList.remove('active');
+  document.getElementById('ps' + currentStep).classList.remove('active');
+  document.getElementById('ps' + currentStep).classList.add('done');
+  currentStep = n;
+  document.getElementById('step' + n).classList.add('active');
+  document.getElementById('ps' + n).classList.remove('done');
+  document.getElementById('ps' + n).classList.add('active');
+}
+
+function tryGoStep(n) {
+  if (n < currentStep) goStep(n);
+}
+
+function toggleChip(el) {
+  el.classList.toggle('selected');
+  state.formats = [...document.querySelectorAll('.chip.selected')].map(c => c.dataset.val);
+}
+
+function checkStudio() {
+  const val = document.getElementById('studio-input').value.trim().toLowerCase();
+  const hint = document.getElementById('studio-hint');
+  if (!val) { hint.textContent = ''; hint.className = 'studio-hint'; return; }
+  const found = STUDIOS[val] || Object.keys(STUDIOS).find(k => k.includes(val) || val.includes(k));
+  if (found) {
+    const d = STUDIOS[found] || STUDIOS[val];
+    hint.textContent = '✓ Found in database — ' + (d ? d.count + ' submissions' : '');
+    hint.className = 'studio-hint';
+  } else {
+    hint.textContent = 'Not in database yet — we'll use market averages.';
+    hint.className = 'studio-hint miss';
+  }
+}
+
+function generate() {
+  // Collect state
+  state.formats = [...document.querySelectorAll('.chip.selected')].map(c => c.dataset.val);
+  state.studio   = document.getElementById('studio-input').value.trim();
+  state.city     = document.getElementById('city-input').value.trim();
+  state.country  = document.getElementById('country-select').value;
+  state.exp      = document.getElementById('exp-select').value || 'mid';
+  state.type     = document.getElementById('type-select').value;
+  state.rate     = parseFloat(document.getElementById('rate-input').value) || null;
+  state.classes  = parseInt(document.getElementById('classes-input').value) || null;
+
+  const fmt = state.formats[0] || 'Reformer Pilates';
+  const mkt = MARKET[fmt] || MARKET['Reformer Pilates'];
+  const base = mkt[state.exp] || mkt.mid;
+  const askLo = Math.round(base * 1.08);
+  const askHi = Math.round(base * 1.22);
+  const mid   = Math.round((askLo + askHi) / 2);
+  const floor = mkt.floor;
+  const ceil  = mkt.ceil;
+  const range = ceil - floor;
+
+  // Studio lookup
+  const sKey = state.studio.toLowerCase();
+  const sData = STUDIOS[sKey] || Object.keys(STUDIOS).reduce((found, k) => {
+    if (!found && (k.includes(sKey) || sKey.includes(k))) return STUDIOS[k];
+    return found;
+  }, null);
+
+  // Headline
+  const city = state.city || 'your market';
+  document.getElementById('r-headline').textContent = 'Your brief for ' + city + '.';
+  document.getElementById('r-sub').textContent =
+    'Based on ' + (state.formats.length > 0 ? state.formats.join(', ') : 'Pilates') +
+    ' · ' + expLabel(state.exp);
+
+  // Studio banner
+  if (sData && state.studio) {
+    document.getElementById('studio-banner').style.display = 'block';
+    document.getElementById('sb-name').textContent = state.studio;
+    document.getElementById('sb-avg').textContent = '$' + sData.avg;
+    document.getElementById('sb-range').textContent = '$' + sData.min + '–$' + sData.max;
+    document.getElementById('sb-count').textContent = sData.count;
+  }
+
+  // Ask range
+  document.getElementById('r-ask-lo').textContent = '$' + askLo;
+  document.getElementById('r-ask-hi').textContent = '$' + askHi;
+
+  // Current rate bar
+  if (state.rate) {
+    const crBar = document.getElementById('cr-bar');
+    crBar.style.display = 'flex';
+    document.getElementById('cr-left').textContent = 'Your current rate: $' + state.rate + '/class';
+    const diff = mid - state.rate;
+    const gapEl = document.getElementById('cr-gap');
+    if (diff > 0) {
+      gapEl.textContent = '+$' + diff + ' potential gain';
+      gapEl.className = 'cr-gap pos';
+    } else if (diff < 0) {
+      gapEl.textContent = 'Already above midpoint';
+      gapEl.className = 'cr-gap pos';
+    } else {
+      gapEl.textContent = 'Right at the midpoint';
+      gapEl.className = 'cr-gap';
+    }
+  }
+
+  // Benchmark bar
+  document.getElementById('b-floor').textContent = '$' + floor;
+  document.getElementById('b-ceil').textContent  = '$' + ceil;
+
+  // Zone (ask range on bar)
+  const zoneLo = Math.max(0, Math.min(100, ((askLo - floor) / range) * 100));
+  const zoneHi = Math.max(0, Math.min(100, ((askHi - floor) / range) * 100));
+  document.getElementById('bzone').style.left  = zoneLo + '%';
+  document.getElementById('bzone').style.width = (zoneHi - zoneLo) + '%';
+
+  // Ask dot
+  const askPct = Math.max(2, Math.min(98, ((mid - floor) / range) * 100));
+  document.getElementById('bask').style.left = askPct + '%';
+  document.getElementById('bcap-ask').textContent = 'Your ask: $' + mid;
+
+  // Fill
+  document.getElementById('bfill').style.width = askPct + '%';
+
+  // Current dot
+  if (state.rate) {
+    const curPct = Math.max(2, Math.min(98, ((state.rate - floor) / range) * 100));
+    const curDot = document.getElementById('bcur');
+    curDot.style.display = 'block';
+    curDot.style.left = curPct + '%';
+    document.getElementById('bcap-cur').textContent = 'You: $' + state.rate;
+  }
+
+  // Stats
+  document.getElementById('rs-mkt').textContent = '$' + base + '/class';
+  document.getElementById('rs-mkt-desc').textContent = 'Average for ' + fmt + ' in your market at your experience level';
+  document.getElementById('rs-neg').textContent = '25%';
+  document.getElementById('rs-neg-desc').textContent = 'Only 1 in 4 instructors in our database has ever negotiated pay';
+
+  // Annual
+  if (state.rate && state.classes) {
+    const annDiv = document.getElementById('r-annual');
+    annDiv.style.display = 'flex';
+    const annualGain = (mid - state.rate) * state.classes * 52;
+    document.getElementById('ra-val').textContent = (annualGain >= 0 ? '+' : '') + '$' + Math.abs(annualGain).toLocaleString();
+    document.getElementById('ra-sub').textContent = 'at ' + state.classes + ' classes/week, that\'s';
+  }
+
+  // Show results
+  document.getElementById('form-card').style.display = 'none';
+  document.getElementById('progress-row').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function expLabel(e) {
+  const m = { new: 'Less than 1 year', early: '1–2 years', mid: '3–5 years', senior: '6–10 years', expert: '10+ years' };
+  return (m[e] || '3–5 years') + ' experience';
+}
+
+function reset() {
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('form-card').style.display = 'block';
+  document.getElementById('progress-row').style.display = 'flex';
+  // Reset studio banner
+  document.getElementById('studio-banner').style.display = 'none';
+  document.getElementById('cr-bar').style.display = 'none';
+  document.getElementById('bcur').style.display = 'none';
+  document.getElementById('r-annual').style.display = 'none';
+  document.getElementById('studio-hint').textContent = '';
+  // Reset to step 1
+  document.getElementById('step' + currentStep).classList.remove('active');
+  document.getElementById('ps' + currentStep).classList.remove('active');
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('ps' + i).classList.remove('done', 'active');
+  }
+  currentStep = 1;
+  document.getElementById('step1').classList.add('active');
+  document.getElementById('ps1').classList.add('active');
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  ['studio-input','city-input','rate-input','classes-input'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('exp-select').value = '';
+  document.getElementById('type-select').value = '';
+  document.getElementById('country-select').value = 'US';
+}
+</script>
+</body>
+</html>
