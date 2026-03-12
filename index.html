@@ -165,6 +165,12 @@
   .neg-avg-rating .stars { color:#b8a96a; font-size:14px; letter-spacing:1px; }
   .neg-avg-rating .score { font-weight:500; color:var(--accent-deep); }
   .neg-notes-label { font-size:10px; color:#575648; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; font-weight:500; }
+  .neg-rating-tile { border-top:1px solid var(--border-light); padding:10px 22px 12px; display:flex; flex-direction:column; gap:3px; }
+  .neg-rating-tile-stars { display:flex; align-items:center; gap:6px; }
+  .neg-rating-tile-stars .stars { color:#b8a96a; font-size:16px; letter-spacing:2px; line-height:1; }
+  .neg-rating-tile-stars .score { font-size:13px; font-weight:500; color:var(--accent-deep); }
+  .neg-rating-tile-count { font-size:11px; color:var(--stone); font-style:italic; }
+  #db-wrap[data-mobile] .neg-rating-tile { padding:10px 16px 12px !important; }
   .neg-notes-text { font-size:12px; color:var(--text-muted); font-style:italic; line-height:1.5; }
 
   .contact-section { border-top:1px solid var(--border-light); padding:12px 22px; margin-top:auto; }
@@ -780,8 +786,14 @@ function buildStudioMap(studioRows, instructorRows) {
 function getEffectiveRate(submission, currencyCode) {
   const structure=(submission.structure||'').toLowerCase();
   let localRate=null;
-  if (structure.includes('class')&&submission.payNum) localRate=submission.payNum;
-  if (structure.includes('client')&&submission.payNum&&submission.classCapacity) localRate=submission.payNum*(parseFloat(submission.classCapacity)*0.5);
+  // Base + Variable with both endpoints known: midpoint is the fairest comparison rate
+  if (submission.structure==='Base + Variable'&&submission.flatRateNum&&submission.maxEarningsNum) {
+    localRate=Math.round((submission.flatRateNum+submission.maxEarningsNum)/2);
+  } else if (structure.includes('class')&&submission.payNum) {
+    localRate=submission.payNum;
+  } else if (structure.includes('client')&&submission.payNum&&submission.classCapacity) {
+    localRate=submission.payNum*(parseFloat(submission.classCapacity)*0.5);
+  }
   if (localRate===null) return null;
   return toUSD(localRate,currencyCode||'USD');
 }
@@ -931,11 +943,18 @@ function renderPayRows(submissions, limit, currency) {
       heroSub=`${sym}${r.payNum}/client × ${r.classCapacity} students`;
     } else if (isBaseFlex) {
       const baseNum=r.flatRateNum||r.payNum;
-      heroAmount=baseNum?`${sym}${baseNum} base`:null;
-      const flexParts=[];
-      if (r.maxEarningsNum) flexParts.push(`Max: ${sym}${r.maxEarningsNum}`);
-      const detailLine=r.variableDetails?`<br>Variable rate details: ${r.variableDetails}`:'';
-      heroSub=(flexParts.length||r.variableDetails)?(flexParts.join(' · ')+detailLine):null;
+      if (baseNum&&r.maxEarningsNum) {
+        // Both endpoints known — show midpoint as hero
+        const midpoint=Math.round((baseNum+r.maxEarningsNum)/2);
+        heroAmount=`${sym}${midpoint}/class`;
+        const detailLine=r.variableDetails?`<br>${r.variableDetails}`:'';
+        heroSub=`Base: ${sym}${baseNum} · Max: ${sym}${r.maxEarningsNum}${detailLine}`;
+      } else {
+        // Max unknown — show base, note variable component
+        heroAmount=baseNum?`${sym}${baseNum} base`:null;
+        const detailLine=r.variableDetails?`Variable rate details: ${r.variableDetails}`:'';
+        heroSub=detailLine||null;
+      }
     } else if (isFlat&&r.variableDetails) {
       heroAmount=heroAmount?`${heroAmount}+`:null;
       heroSub=r.variableDetails;
@@ -1032,6 +1051,10 @@ function renderCards(studios, totalCount, page) {
     const avgRatingHtml=avgRating!==null
       ?`<div class="neg-avg-rating"><span class="stars">${renderStars(avgRating)}</span><span class="score">${avgRating.toFixed(1)}/5</span><span style="color:var(--stone);">(${studio.negRatings.length} rating${studio.negRatings.length>1?'s':''})</span></div>`
       :'';
+    // Compact tile widget — stars + count only, shown on collapsed card
+    const negRatingTile=avgRating!==null
+      ?`<div class="neg-rating-tile"><div class="neg-rating-tile-label" style="font-size:10px;color:#575648;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;margin-bottom:5px;">Negotiation Experience</div><div class="neg-rating-tile-stars"><span class="stars">${renderStars(avgRating)}</span><span class="score">${avgRating.toFixed(1)}/5</span></div><div class="neg-rating-tile-count">${studio.negRatings.length} instructor rating${studio.negRatings.length>1?'s':''}</div></div>`
+      :'';
     const negNotesSection=(uniqueNegNotes.length||avgRating!==null)?`<div class="neg-notes-section"><div class="neg-notes-label">What instructors say about negotiating here</div>${avgRatingHtml}${
       studio.submissions.filter(r=>r.negNote).filter((r,idx,arr)=>arr.findIndex(x=>x.negNote===r.negNote)===idx)
         .map(r=>{
@@ -1064,7 +1087,7 @@ function renderCards(studios, totalCount, page) {
         ${differsBanner}
         ${benefitsSection}
         ${notesSection}
-        ${negNotesSection}
+        ${negRatingTile}
         <div style="padding:12px 0;"><button class="see-more-btn" onclick="toggleCard(this)">See compensation details ↓</button></div>
       </div>
       <div class="card-expanded card-body">
