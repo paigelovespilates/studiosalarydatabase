@@ -611,7 +611,7 @@ const S = {studioName:2,country:3,city:4,cityOld:5,state:6,classFormat:7,payStru
 //   18 = Class Capacity, 19 = Other Perks, 20 = Exclude
 //   21 = lat, 22 = lng, 23 = Clean Studio Name, 24 = Clean City
 //   25 = Max Earnings (new), 26 = Negotiation Rating (new, 1-5 stars)
-const I = {studioName:2,country:3,city:4,state:5,classFormat:6,payStructure:7,compSummary:8,payPerClass:9,payPerClient:10,flatRate:11,variableDetails:12,experience:13,perks:14,negotiated:15,negNotes:16,source:17,classCapacity:18,otherPerks:19,lat:21,lng:22,cleanName:23,cleanCity:24,maxEarnings:25,negRating:26};
+const I = {studioName:2,country:3,city:4,state:5,classFormat:6,payStructure:7,compSummary:8,payPerClass:9,payPerClient:10,flatRate:11,variableDetails:12,experience:13,perks:14,negotiated:15,negNotes:16,source:17,classCapacity:18,otherPerks:19,lat:21,lng:22,cleanName:23,cleanCity:24,maxEarnings:26,negRating:27};
 
 // ── Pay helpers ───────────────────────────────────────────────
 function extractPayNum(payStr) {
@@ -947,7 +947,7 @@ function renderPayRows(submissions, limit, currency) {
         // Both endpoints known — show midpoint as hero
         const midpoint=Math.round((baseNum+r.maxEarningsNum)/2);
         heroAmount=`${sym}${midpoint}/class`;
-        const detailLine=r.variableDetails?`<br>${r.variableDetails}`:'';
+        const detailLine=r.variableDetails?` · Variable rate details: ${r.variableDetails}`:'';
         heroSub=`Base: ${sym}${baseNum} · Max: ${sym}${r.maxEarningsNum}${detailLine}`;
       } else {
         // Max unknown — show base, note variable component
@@ -968,7 +968,7 @@ function renderPayRows(submissions, limit, currency) {
       ?`<td class="td-pay"><span class="pay-hero">${heroAmount}</span>${heroSub?`<span class="pay-sub">${heroSub}</span>`:''}</td>`
       :`<td class="td-pay not-disclosed">Not disclosed</td>`;
 
-    const structureCell=r.payNum!==null
+    const structureCell=(r.payNum!==null||isBaseFlex)
       ?`<td class="td-structure">${r.structure==='Per class'?'':(r.structure||'')}</td>`
       :`<td class="td-structure"></td>`;
 
