@@ -944,10 +944,11 @@ function renderPayRows(submissions, limit, currency) {
     } else if (isBaseFlex) {
       const baseNum=r.flatRateNum||r.payNum;
       if (baseNum&&r.maxEarningsNum) {
-        // Both endpoints known — show midpoint as hero, sub-line goes in its own row
+        // Both endpoints known — show midpoint as hero
         const midpoint=Math.round((baseNum+r.maxEarningsNum)/2);
         heroAmount=`${sym}${midpoint}/class`;
-        heroSub=null; // rendered as a colspan row below instead
+        const detailLine=r.variableDetails?`<br><span style="font-style:normal;font-size:10px;color:var(--stone);">Variable rate details: ${r.variableDetails}</span>`:'';
+        heroSub=`Base: ${sym}${baseNum} · Max: ${sym}${r.maxEarningsNum}${detailLine}`;
       } else {
         // Max unknown — show base, note variable component
         heroAmount=baseNum?`${sym}${baseNum} base`:null;
@@ -983,20 +984,13 @@ function renderPayRows(submissions, limit, currency) {
     const capacityNote=(isVariable&&r.classCapacity&&!r.maxEarningsNum)
       ?`<tr class="exp-note"><td colspan="4" style="padding:0 0 5px 26px;font-size:10px;color:var(--stone);font-style:italic;">Class capacity: ${r.classCapacity}</td></tr>`:'';
 
-    // Base+Variable detail row (spans full width, sits below the main pay row)
-    const baseFlexDetailRow=(isBaseFlex&&(r.flatRateNum||r.payNum)&&r.maxEarningsNum)?(()=>{
-      const baseNum=r.flatRateNum||r.payNum;
-      const detailLine=r.variableDetails?` · Variable rate details: ${r.variableDetails}`:'';
-      return `<tr class="exp-note"><td colspan="4" style="padding:0 0 6px 26px;font-size:11px;color:var(--text-muted);font-style:italic;">Base: ${sym}${baseNum} · Max: ${sym}${r.maxEarningsNum}${detailLine}</td></tr>`;
-    })():'';
-
     return `
       <tr>
         <td class="td-source"><span class="src-badge ${r.source}">${r.source}</span></td>
         <td class="td-format" data-structure="${r.structure==='Per class'?'':(r.structure||'')}">${r.format}${tierLabel}</td>
         ${structureCell}
         ${payCell}
-      </tr>${baseFlexDetailRow}${expNote}${capacityNote}`;
+      </tr>${expNote}${capacityNote}`;
   }).join('');
 }
 
