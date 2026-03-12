@@ -609,10 +609,10 @@ function toggleCard(btn) { btn.closest('.studio-card').classList.toggle('expande
 function v(row, idx) { return (idx >= 0 && row[idx] !== undefined) ? row[idx].trim() : ''; }
 
 // ── Column maps ───────────────────────────────────────────────
-const S = {submitted:1,studioName:2,country:3,city:4,cityOld:5,state:6,classFormat:7,payStructure:8,compSummary:9,payPerClass:10,expLevel:11,payNew:12,payExp:13,payPerClient:14,classCapacityPerClient:15,flatRate:16,variableDetails:17,maxEarnings:18,hourlyPay:19,experience:20,benefits:21,otherPerks:22,contact:23,notes:24,source:25,lat:29,lng:30,cleanName:31,cleanCity:32};
+const S = {submitted:0,studioName:2,country:3,city:4,cityOld:5,state:6,classFormat:7,payStructure:8,compSummary:9,payPerClass:10,expLevel:11,payNew:12,payExp:13,payPerClient:14,classCapacityPerClient:15,flatRate:16,variableDetails:17,maxEarnings:18,hourlyPay:19,experience:20,benefits:21,otherPerks:22,contact:23,notes:24,source:25,lat:29,lng:30,cleanName:31,cleanCity:32};
 
 // ── Instructor column map ──
-const I = {submitted:1,studioName:2,country:3,city:4,state:5,classFormat:6,payStructure:7,compSummary:8,payPerClass:9,payPerClient:10,flatRate:11,variableDetails:12,experience:13,perks:14,negotiated:15,negNotes:16,source:17,classCapacity:18,otherPerks:19,lat:21,lng:22,cleanName:23,cleanCity:24,maxEarnings:25,negRating:26};
+const I = {submitted:0,studioName:2,country:3,city:4,state:5,classFormat:6,payStructure:7,compSummary:8,payPerClass:9,payPerClient:10,flatRate:11,variableDetails:12,experience:13,perks:14,negotiated:15,negNotes:16,source:17,classCapacity:18,otherPerks:19,lat:21,lng:22,cleanName:23,cleanCity:24,maxEarnings:25,negRating:26};
 
 // ── Pay helpers ───────────────────────────────────────────────
 function extractPayNum(payStr) {
