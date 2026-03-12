@@ -158,7 +158,12 @@
   .notes-label { font-size:10px; color:#575648; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; font-weight:500; }
   .notes-text { font-size:12px; color:var(--text-muted); font-style:italic; line-height:1.5; }
 
+  /* ── UPDATED: Negotiation notes section with star ratings ── */
   .neg-notes-section { border-top:1px solid var(--border-light); padding:12px 22px; background:#faf9f7; }
+  .neg-star-rating { display:inline-flex; align-items:center; gap:1px; margin-right:4px; vertical-align:middle; color:#b8a96a; font-size:13px; line-height:1; }
+  .neg-avg-rating { display:inline-flex; align-items:center; gap:6px; font-size:11px; color:var(--text-muted); margin-bottom:8px; padding:5px 8px; background:var(--warm-white); border-radius:6px; }
+  .neg-avg-rating .stars { color:#b8a96a; font-size:14px; letter-spacing:1px; }
+  .neg-avg-rating .score { font-weight:500; color:var(--accent-deep); }
   .neg-notes-label { font-size:10px; color:#575648; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; font-weight:500; }
   .neg-notes-text { font-size:12px; color:var(--text-muted); font-style:italic; line-height:1.5; }
 
@@ -593,7 +598,14 @@ function v(row, idx) { return (idx >= 0 && row[idx] !== undefined) ? row[idx].tr
 
 // ── Column maps ───────────────────────────────────────────────
 const S = {studioName:2,country:3,city:4,cityOld:5,state:6,classFormat:7,payStructure:8,compSummary:9,payPerClass:10,expLevel:11,payNew:12,payExp:13,payPerClient:14,classCapacityPerClient:15,flatRate:16,variableDetails:17,maxEarnings:18,hourlyPay:19,experience:20,benefits:21,otherPerks:22,contact:23,notes:24,source:25,lat:29,lng:30,cleanName:31,cleanCity:32};
-const I = {studioName:2,country:3,city:4,state:5,classFormat:6,payStructure:7,compSummary:8,payPerClass:9,payPerClient:10,flatRate:11,variableDetails:12,experience:13,perks:14,negotiated:15,negNotes:16,source:17,classCapacity:18,otherPerks:19,cleanName:23,lat:21,lng:22,cleanCity:24};
+
+// ── UPDATED: Instructor column map reflecting Instructor clean sheet (March 2026) ──
+// Clean sheet col positions (1-indexed):
+//   15 = Negotiated, 16 = Negotiation Notes, 17 = Source
+//   18 = Class Capacity, 19 = Other Perks, 20 = Exclude
+//   21 = lat, 22 = lng, 23 = Clean Studio Name, 24 = Clean City
+//   25 = Max Earnings (new), 26 = Negotiation Rating (new, 1-5 stars)
+const I = {studioName:2,country:3,city:4,state:5,classFormat:6,payStructure:7,compSummary:8,payPerClass:9,payPerClient:10,flatRate:11,variableDetails:12,experience:13,perks:14,negotiated:15,negNotes:16,source:17,classCapacity:18,otherPerks:19,lat:21,lng:22,cleanName:23,cleanCity:24,maxEarnings:25,negRating:26};
 
 // ── Pay helpers ───────────────────────────────────────────────
 function extractPayNum(payStr) {
@@ -672,7 +684,7 @@ function buildStudioMap(studioRows, instructorRows) {
 
     if (!map.has(key)) {
       const country = v(row, S.country) || 'United States';
-      map.set(key, {name,city,state:v(row,S.state),country,currency:getCurrencyForCountry(country),hasStudio:false,hasInstructor:false,submissions:[],experiences:new Set(),benefits:new Set(),otherPerks:[],notes:[],contact:'',negNotes:[],negotiated:null,coords:parseCoords(v(row,S.lat),v(row,S.lng)),_cityKey:cityKey});
+      map.set(key, {name,city,state:v(row,S.state),country,currency:getCurrencyForCountry(country),hasStudio:false,hasInstructor:false,submissions:[],experiences:new Set(),benefits:new Set(),otherPerks:[],notes:[],contact:'',negNotes:[],negRatings:[],negotiated:null,coords:parseCoords(v(row,S.lat),v(row,S.lng)),_cityKey:cityKey});
     }
     const studio = map.get(key);
     studio.hasStudio = true;
@@ -707,7 +719,7 @@ function buildStudioMap(studioRows, instructorRows) {
         const payNum=extractPayNum(payRaw);
         let effectiveMax=null;
         if (isPerClient&&capacity&&payNum&&!isNaN(parseFloat(capacity))) effectiveMax=Math.round(parseFloat(capacity)*payNum);
-        studio.submissions.push({source:'S',format:normalizeFormat(fmt),payRaw,payNum:flatVariableMidpoint||payNum,structure:structureNorm,submitterExp:expNorm,classCapacity:capacity||null,maxEarningsNum:effectiveMax||maxEarningsNum||null,flatRateNum:flatRateNum||null,variableDetails,negotiated:null,negNote:null});
+        studio.submissions.push({source:'S',format:normalizeFormat(fmt),payRaw,payNum:flatVariableMidpoint||payNum,structure:structureNorm,submitterExp:expNorm,classCapacity:capacity||null,maxEarningsNum:effectiveMax||maxEarningsNum||null,flatRateNum:flatRateNum||null,variableDetails,negotiated:null,negNote:null,negRating:null});
       });
     }
     parseBenefits(v(row,S.benefits)).forEach(b=>studio.benefits.add(b));
@@ -724,7 +736,7 @@ function buildStudioMap(studioRows, instructorRows) {
     const key=findFuzzyKey(map,name,cityKey)||(norm(name)+(cityKey?'|'+cityKey:''));
     if (!map.has(key)) {
       const country=v(row,I.country)||'United States';
-      map.set(key,{name,city,state:v(row,I.state),country,currency:getCurrencyForCountry(country),hasStudio:false,hasInstructor:false,submissions:[],experiences:new Set(),benefits:new Set(),otherPerks:[],notes:[],contact:'',negNotes:[],negotiated:null,coords:parseCoords(v(row,I.lat),v(row,I.lng)),_cityKey:cityKey});
+      map.set(key,{name,city,state:v(row,I.state),country,currency:getCurrencyForCountry(country),hasStudio:false,hasInstructor:false,submissions:[],experiences:new Set(),benefits:new Set(),otherPerks:[],notes:[],contact:'',negNotes:[],negRatings:[],negotiated:null,coords:parseCoords(v(row,I.lat),v(row,I.lng)),_cityKey:cityKey});
     }
     const studio=map.get(key);
     studio.hasInstructor=true;
@@ -732,19 +744,31 @@ function buildStudioMap(studioRows, instructorRows) {
     if (!studio.country&&v(row,I.country)) studio.country=v(row,I.country)||'United States';
     if (!studio.state&&v(row,I.state)) studio.state=v(row,I.state);
     if (!studio.coords) { const c=parseCoords(v(row,I.lat),v(row,I.lng)); if(c) studio.coords=c; }
+
     const fmt=v(row,I.classFormat);
     const payRaw=v(row,I.payPerClass)||v(row,I.payPerClient)||v(row,I.flatRate)||null;
     const payNum=extractPayNum(payRaw);
     const neg=v(row,I.negotiated), nn=v(row,I.negNotes);
+    // ── NEW: read negotiation rating and max earnings ──
+    const negRatingRaw=v(row,I.negRating);
+    const negRating=negRatingRaw&&!isNaN(parseFloat(negRatingRaw))?parseFloat(negRatingRaw):null;
     if (fmt) {
       const capacity=v(row,I.classCapacity), perClientRaw=v(row,I.payPerClient), variableDetails=v(row,I.variableDetails)||null;
       const iFlatRateNum=extractPayNum(v(row,I.flatRate))||null;
+      const iMaxEarningsRaw=v(row,I.maxEarnings);
       let maxEarningsNum=null;
-      if (capacity&&perClientRaw&&!isNaN(parseFloat(capacity))&&!isNaN(parseFloat(perClientRaw))) maxEarningsNum=Math.round(parseFloat(capacity)*parseFloat(perClientRaw));
-      studio.submissions.push({source:'I',format:normalizeFormat(fmt),payRaw,payNum,structure:normalizeStructure(v(row,I.payStructure)),submitterExp:v(row,I.experience)||null,classCapacity:capacity||null,maxEarningsNum,flatRateNum:iFlatRateNum,variableDetails,negotiated:neg||null,negNote:(nn&&nn.toLowerCase()!=='n/a'&&nn.trim())?nn:null});
+      // Prefer capacity * per-client calculation; fall back to explicit max earnings field
+      if (capacity&&perClientRaw&&!isNaN(parseFloat(capacity))&&!isNaN(parseFloat(perClientRaw))) {
+        maxEarningsNum=Math.round(parseFloat(capacity)*parseFloat(perClientRaw));
+      } else if (iMaxEarningsRaw&&!isNaN(parseFloat(iMaxEarningsRaw))) {
+        maxEarningsNum=parseFloat(iMaxEarningsRaw);
+      }
+      studio.submissions.push({source:'I',format:normalizeFormat(fmt),payRaw,payNum,structure:normalizeStructure(v(row,I.payStructure)),submitterExp:v(row,I.experience)||null,classCapacity:capacity||null,maxEarningsNum,flatRateNum:iFlatRateNum,variableDetails,negotiated:neg||null,negNote:(nn&&nn.toLowerCase()!=='n/a'&&nn.trim())?nn:null,negRating});
     }
     if (neg&&!studio.negotiated) studio.negotiated=neg;
     if (nn&&nn.toLowerCase()!=='n/a'&&nn.trim()) studio.negNotes.push(nn);
+    // ── NEW: aggregate negotiation ratings on the studio ──
+    if (negRating!==null) { if (!studio.negRatings) studio.negRatings=[]; studio.negRatings.push(negRating); }
     parseBenefits(v(row,I.perks)).forEach(b=>studio.benefits.add(b));
     const iop=v(row,I.otherPerks); if(iop&&iop.toLowerCase()!=='n/a'&&iop.trim()) studio.otherPerks.push(iop);
   });
@@ -951,6 +975,12 @@ function renderPayRows(submissions, limit, currency) {
   }).join('');
 }
 
+// ── Star rating helper ────────────────────────────────────────
+function renderStars(rating, max=5) {
+  const full=Math.round(rating);
+  return Array.from({length:max},(_,i)=>i<full?'★':'☆').join('');
+}
+
 // ── Render cards ──────────────────────────────────────────────
 function renderCards(studios, totalCount, page) {
   page=page||1;
@@ -996,11 +1026,20 @@ function renderCards(studios, totalCount, page) {
     const allNotes=[...new Set(studio.notes)].filter(Boolean);
     const notesSection=allNotes.length?`<div class="notes-section"><div class="notes-label">Additional notes from the Studio</div><p class="notes-text">${allNotes.join(' · ')}</p></div>`:'';
 
+    // ── UPDATED: Negotiation notes section with star ratings ──
     const uniqueNegNotes=[...new Set(studio.negNotes)].filter(Boolean);
-    const negNotesSection=uniqueNegNotes.length?`<div class="neg-notes-section"><div class="neg-notes-label">What instructors say about negotiating here</div>${
-      studio.submissions.filter(r=>r.negNote).filter((r,i,arr)=>arr.findIndex(x=>x.negNote===r.negNote)===i)
-        .map(r=>{const attr=r.submitterExp?` <span style="font-style:normal;font-size:10px;color:var(--stone);"> — ${r.submitterExp} experience</span>`:''; return `<p class="neg-notes-text" style="margin:0 0 6px 0;">"${r.negNote}"${attr}</p>`;}).join('')
-    }</div>`:'';
+    const avgRating=(studio.negRatings&&studio.negRatings.length)?(studio.negRatings.reduce((a,b)=>a+b,0)/studio.negRatings.length):null;
+    const avgRatingHtml=avgRating!==null
+      ?`<div class="neg-avg-rating"><span class="stars">${renderStars(avgRating)}</span><span class="score">${avgRating.toFixed(1)}/5</span><span style="color:var(--stone);">(${studio.negRatings.length} rating${studio.negRatings.length>1?'s':''})</span></div>`
+      :'';
+    const negNotesSection=(uniqueNegNotes.length||avgRating!==null)?`<div class="neg-notes-section"><div class="neg-notes-label">What instructors say about negotiating here</div>${avgRatingHtml}${
+      studio.submissions.filter(r=>r.negNote).filter((r,idx,arr)=>arr.findIndex(x=>x.negNote===r.negNote)===idx)
+        .map(r=>{
+          const starHtml=r.negRating!==null&&r.negRating!==undefined?`<span class="neg-star-rating" title="${r.negRating}/5">${renderStars(r.negRating)}</span>`:'';
+          const attr=r.submitterExp?` <span style="font-style:normal;font-size:10px;color:var(--stone);"> — ${r.submitterExp} experience</span>`:'';
+          return `<p class="neg-notes-text" style="margin:0 0 8px 0;">${starHtml}"${r.negNote}"${attr}</p>`;
+        }).join('')
+    }</div>`:''
 
     const contactSection=studio.contact?`<div class="contact-section"><div class="notes-label" style="margin-bottom:6px;">Best way to contact this studio about teaching opportunities</div><a href="mailto:${studio.contact}">${studio.contact}</a></div>`:'';
 
