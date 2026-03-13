@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Negotiation Brief — Studio Salary Database</title>
+<title>Negotiation Brief -- Studio Salary Database</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -609,7 +609,7 @@ input:focus, select:focus {
     <!-- STEP 1: FORMAT -->
     <div class="step active" id="step1">
       <div class="step-title">What do you teach?</div>
-      <div class="step-sub">Select all formats that apply — we'll benchmark against instructors like you.</div>
+      <div class="step-sub">Select all formats that apply -- we'll benchmark against instructors like you.</div>
       <div class="chip-grid" id="format-chips">
         <div class="chip" data-val="Reformer Pilates" onclick="toggleChip(this)">Reformer Pilates</div>
         <div class="chip" data-val="Mat Pilates" onclick="toggleChip(this)">Mat Pilates</div>
@@ -623,17 +623,17 @@ input:focus, select:focus {
         <div class="chip" data-val="Other" onclick="toggleChip(this)">Other</div>
       </div>
       <div class="btn-row">
-        <button class="btn-next" onclick="goStep(2)">Continue →</button>
+        <button class="btn-next" onclick="goStep(2)">Continue &rarr;</button>
       </div>
     </div>
 
     <!-- STEP 2: STUDIO -->
     <div class="step" id="step2">
       <div class="step-title">Where do you teach?</div>
-      <div class="step-sub">Enter your studio name to surface real data from that studio — or skip and we'll use your market.</div>
+      <div class="step-sub">Enter your studio name to surface real data from that studio -- or skip and we'll use your market.</div>
       <div class="field">
         <label>Studio Name <span class="opt-tag">optional</span></label>
-        <input type="text" id="studio-input" placeholder="e.g. Club Pilates, Solidcore…" oninput="checkStudio()">
+        <input type="text" id="studio-input" placeholder="e.g. Club Pilates, Solidcore..." oninput="checkStudio()">
         <div class="studio-hint" id="studio-hint"></div>
       </div>
       <div class="field-row">
@@ -653,19 +653,19 @@ input:focus, select:focus {
         </div>
       </div>
       <div class="btn-row">
-        <button class="btn-back" onclick="goStep(1)">← Back</button>
-        <button class="btn-next" onclick="goStep(3)">Continue →</button>
+        <button class="btn-back" onclick="goStep(1)">&larr; Back</button>
+        <button class="btn-next" onclick="goStep(3)">Continue &rarr;</button>
       </div>
     </div>
 
     <!-- STEP 3: EXPERIENCE -->
     <div class="step" id="step3">
       <div class="step-title">Tell us about yourself.</div>
-      <div class="step-sub">We'll compare you to instructors at your stage — not everyone lumped together.</div>
+      <div class="step-sub">We'll compare you to instructors at your stage -- not everyone lumped together.</div>
       <div class="field">
         <label>Years of Teaching Experience</label>
         <select id="exp-select">
-          <option value="">Select…</option>
+          <option value="">Select...</option>
           <option value="new">Less than 1 year</option>
           <option value="early">1–2 years</option>
           <option value="mid">3–5 years</option>
@@ -676,22 +676,22 @@ input:focus, select:focus {
       <div class="field">
         <label>Employment Type</label>
         <select id="type-select">
-          <option value="">Select…</option>
+          <option value="">Select...</option>
           <option value="employee">Studio Employee (W-2 / PAYE)</option>
           <option value="contractor">Independent Contractor (1099)</option>
           <option value="either">Either / Not Sure</option>
         </select>
       </div>
       <div class="btn-row">
-        <button class="btn-back" onclick="goStep(2)">← Back</button>
-        <button class="btn-next" onclick="goStep(4)">Continue →</button>
+        <button class="btn-back" onclick="goStep(2)">&larr; Back</button>
+        <button class="btn-next" onclick="goStep(4)">Continue &rarr;</button>
       </div>
     </div>
 
     <!-- STEP 4: CURRENT RATE -->
     <div class="step" id="step4">
       <div class="step-title">What are you making now?</div>
-      <div class="step-sub">Optional — but seeing exactly where you sit against the market makes the brief much more powerful.</div>
+      <div class="step-sub">Optional -- but seeing exactly where you sit against the market makes the brief much more powerful.</div>
       <div class="field-row">
         <div class="field">
           <label>Current Rate / Class <span class="opt-tag">optional</span></label>
@@ -703,7 +703,7 @@ input:focus, select:focus {
         </div>
       </div>
       <div class="btn-row">
-        <button class="btn-back" onclick="goStep(3)">← Back</button>
+        <button class="btn-back" onclick="goStep(3)">&larr; Back</button>
         <button class="btn-next" onclick="generate()">Generate My Brief →</button>
       </div>
     </div>
@@ -725,15 +725,15 @@ input:focus, select:focus {
       <div class="sb-name" id="sb-name"></div>
       <div class="sb-stats">
         <div class="sb-stat">
-          <div class="val" id="sb-avg">—</div>
+          <div class="val" id="sb-avg">--</div>
           <div class="lbl">avg per class</div>
         </div>
         <div class="sb-stat">
-          <div class="val" id="sb-range">—</div>
+          <div class="val" id="sb-range">--</div>
           <div class="lbl">reported range</div>
         </div>
         <div class="sb-stat">
-          <div class="val" id="sb-count">—</div>
+          <div class="val" id="sb-count">--</div>
           <div class="lbl">submissions</div>
         </div>
       </div>
@@ -743,13 +743,13 @@ input:focus, select:focus {
     <div class="ask-section">
       <div class="rlbl">Your suggested ask range</div>
       <div class="ask-range">
-        <div class="ask-num" id="r-ask-lo">—</div>
-        <div class="ask-dash">—</div>
-        <div class="ask-num" id="r-ask-hi">—</div>
+        <div class="ask-num" id="r-ask-lo">--</div>
+        <div class="ask-dash">--</div>
+        <div class="ask-num" id="r-ask-hi">--</div>
       </div>
       <div class="ask-sub">per class · based on your market, format & experience</div>
       <div class="cr-bar" id="cr-bar" style="display:none">
-        <div class="cr-left" id="cr-left">Your current rate: —</div>
+        <div class="cr-left" id="cr-left">Your current rate: --</div>
         <div class="cr-gap" id="cr-gap"></div>
       </div>
     </div>
@@ -774,12 +774,12 @@ input:focus, select:focus {
     <div class="r-stats">
       <div class="r-stat">
         <span class="rlbl" style="margin-bottom:2px">Market avg · your format</span>
-        <div class="rsval" id="rs-mkt">—</div>
+        <div class="rsval" id="rs-mkt">--</div>
         <div class="rsdesc" id="rs-mkt-desc"></div>
       </div>
       <div class="r-stat">
         <span class="rlbl" style="margin-bottom:2px">Instructors who negotiated</span>
-        <div class="rsval" id="rs-neg">—</div>
+        <div class="rsval" id="rs-neg">--</div>
         <div class="rsdesc" id="rs-neg-desc"></div>
       </div>
     </div>
@@ -802,7 +802,7 @@ input:focus, select:focus {
       </div>
     </div>
 
-    <button class="btn-reset" onclick="reset()">← Start over</button>
+    <button class="btn-reset" onclick="reset()">&larr; Start over</button>
   </div><!-- /results -->
 
   <div class="sig"><em>Paige Loves Pilates</em> · Studio Salary Database</div>
@@ -810,7 +810,7 @@ input:focus, select:focus {
 </div><!-- /wrap -->
 
 <script>
-// ── BENCHMARK DATA (simplified market averages by format + experience) ──
+// -- BENCHMARK DATA (simplified market averages by format + experience) --
 const MARKET = {
   'Reformer Pilates': { new: 38, early: 44, mid: 52, senior: 58, expert: 65, floor: 28, ceil: 80 },
   'Mat Pilates':      { new: 32, early: 38, mid: 45, senior: 52, expert: 58, floor: 22, ceil: 70 },
@@ -824,7 +824,7 @@ const MARKET = {
   'Other':            { new: 32, early: 38, mid: 46, senior: 52, expert: 58, floor: 22, ceil: 70 }
 };
 
-// Known studios (demo data — in production, pull from your Apps Script)
+// Known studios (demo data -- in production, pull from your Apps Script)
 const STUDIOS = {
   'club pilates':      { avg: 44, min: 35, max: 58, count: 47 },
   'solidcore':         { avg: 52, min: 42, max: 65, count: 23 },
@@ -866,10 +866,10 @@ function checkStudio() {
   const found = STUDIOS[val] || Object.keys(STUDIOS).find(k => k.includes(val) || val.includes(k));
   if (found) {
     const d = STUDIOS[found] || STUDIOS[val];
-    hint.textContent = '✓ Found in database — ' + (d ? d.count + ' submissions' : '');
+    hint.textContent = '\u2713 Found in database -- ' + (d ? d.count + ' submissions' : '');
     hint.className = 'studio-hint';
   } else {
-    hint.textContent = 'Not in database yet — we'll use market averages.';
+    hint.textContent = 'Not in database yet -- we'll use market averages.';
     hint.className = 'studio-hint miss';
   }
 }
@@ -907,14 +907,14 @@ function generate() {
   document.getElementById('r-headline').textContent = 'Your brief for ' + city + '.';
   document.getElementById('r-sub').textContent =
     'Based on ' + (state.formats.length > 0 ? state.formats.join(', ') : 'Pilates') +
-    ' · ' + expLabel(state.exp);
+    '  ·  ' + expLabel(state.exp);
 
   // Studio banner
   if (sData && state.studio) {
     document.getElementById('studio-banner').style.display = 'block';
     document.getElementById('sb-name').textContent = state.studio;
     document.getElementById('sb-avg').textContent = '$' + sData.avg;
-    document.getElementById('sb-range').textContent = '$' + sData.min + '–$' + sData.max;
+    document.getElementById('sb-range').textContent = '$' + sData.min + '-$' + sData.max;
     document.getElementById('sb-count').textContent = sData.count;
   }
 
@@ -991,8 +991,8 @@ function generate() {
 }
 
 function expLabel(e) {
-  const m = { new: 'Less than 1 year', early: '1–2 years', mid: '3–5 years', senior: '6–10 years', expert: '10+ years' };
-  return (m[e] || '3–5 years') + ' experience';
+  const m = { new: 'Less than 1 year', early: '1-2 years', mid: '3-5 years', senior: '6-10 years', expert: '10+ years' };
+  return (m[e] || '3-5 years') + ' experience';
 }
 
 function reset() {
