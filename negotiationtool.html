@@ -150,12 +150,13 @@ input:focus, select:focus { border-color: var(--olive); }
 
 /* STUDIO FOUND BANNER */
 .studio-banner {
-  display: none; padding: 20px 32px;
+  display: none; padding: 18px 32px 20px;
+  border-top: 1px solid var(--linen2);
   border-bottom: 1px solid var(--linen2);
 }
-.studio-banner .sb-left { width: 100%; }
 .studio-banner .sb-stats { display: flex; gap: 28px; margin-top: 8px; }
 .studio-banner .sb-stat { display: flex; flex-direction: column; }
+.studio-banner .rsval { font-size: 22px; }
 
 /* ── ASK RANGE - HERO ── */
 .ask-hero {
@@ -500,6 +501,25 @@ input:focus, select:focus { border-color: var(--olive); }
 
     </div>
 
+    <!-- STUDIO DATA -->
+    <div class="studio-banner" id="studio-banner">
+      <span class="rlbl">Studio data found &middot; <span id="sb-name"></span></span>
+      <div class="sb-stats">
+        <div class="sb-stat">
+          <div class="rsval" id="sb-avg">--</div>
+          <div class="rsdesc">avg per class</div>
+        </div>
+        <div class="sb-stat">
+          <div class="rsval" id="sb-range">--</div>
+          <div class="rsdesc">reported range</div>
+        </div>
+        <div class="sb-stat">
+          <div class="rsval" id="sb-count">--</div>
+          <div class="rsdesc">submissions</div>
+        </div>
+      </div>
+    </div>
+
     <!-- STATS ROW -->
     <div class="r-stats">
       <div class="r-stat">
@@ -521,27 +541,6 @@ input:focus, select:focus { border-color: var(--olive); }
         <span id="ra-sub" style="color:#9A9A84;font-size:11px;"></span>
       </div>
       <div class="ra-right" id="ra-val"></div>
-    </div>
-
-    <!-- STUDIO DATA -->
-    <div class="studio-banner" id="studio-banner">
-      <div class="sb-left">
-        <span class="rlbl">Studio data &middot; <span id="sb-name"></span></span>
-        <div class="sb-stats">
-          <div class="sb-stat">
-            <div class="rsval" id="sb-avg">--</div>
-            <div class="rsdesc">avg per class</div>
-          </div>
-          <div class="sb-stat">
-            <div class="rsval" id="sb-range">--</div>
-            <div class="rsdesc">reported range</div>
-          </div>
-          <div class="sb-stat">
-            <div class="rsval" id="sb-count">--</div>
-            <div class="rsdesc">submissions</div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- INSIGHT -->
@@ -602,17 +601,7 @@ const MARKET = {
   'Other':                { lt1: 38, '1-2': 42, '3-5': 47, '6-10': 49, '10+': 51, floor: 15, ceil: 90 }
 };
 
-const STUDIOS = {
-  'club pilates':      { avg: 44, min: 35, max: 58, count: 47 },
-  'solidcore':         { avg: 52, min: 42, max: 65, count: 23 },
-  'pure barre':        { avg: 38, min: 30, max: 50, count: 18 },
-  'equinox':           { avg: 68, min: 55, max: 85, count: 31 },
-  'y7 studio':         { avg: 45, min: 36, max: 58, count: 12 },
-  'form pilates':      { avg: 55, min: 45, max: 70, count: 8  },
-  'studio pilates':    { avg: 50, min: 40, max: 62, count: 14 },
-  'bodybar':           { avg: 40, min: 32, max: 52, count: 9  },
-  'fitness incentive': { avg: 48, min: 38, max: 60, count: 6  }
-};
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6IjQ_PA67Zky5BsOZGObx8aXpEVl2gIbBlQkGdHxC7gkVbQwcX0oM9LezI2Zss0zv-w/exec';
 
 let state = { formats: [], studio: '', city: '', state: '', country: 'US', exp: '', rate: null, classes: null };
 let currentStep = 1;
@@ -635,18 +624,36 @@ function toggleChip(el) {
 }
 
 function checkStudio() {
-  var val = document.getElementById('studio-input').value.trim().toLowerCase();
+  var val = document.getElementById('studio-input').value.trim();
+  var city = document.getElementById('city-input').value.trim();
   var hint = document.getElementById('studio-hint');
   if (!val) { hint.textContent = ''; hint.className = 'studio-hint'; return; }
-  var found = STUDIOS[val] || Object.keys(STUDIOS).find(function(k) { return k.includes(val) || val.includes(k); });
-  if (found) {
-    var d = STUDIOS[found] || STUDIOS[val];
-    hint.textContent = 'Found in database -- ' + (d ? d.count + ' submissions' : '');
-    hint.className = 'studio-hint';
-  } else {
-    hint.textContent = 'Not in database yet -- market averages will be used.';
-    hint.className = 'studio-hint miss';
-  }
+  // Use a short debounce so we don't fire on every keystroke
+  clearTimeout(checkStudio._t);
+  checkStudio._t = setTimeout(function() {
+    var cbName = 'hintCb_' + Date.now();
+    var script = document.createElement('script');
+    var params = '?action=studioStats&studio=' + encodeURIComponent(val) +
+                 '&city=' + encodeURIComponent(city) +
+                 '&callback=' + cbName;
+    window[cbName] = function(data) {
+      delete window[cbName];
+      document.head.removeChild(script);
+      if (data && data.found) {
+        hint.textContent = 'Found in database -- ' + data.count + ' submissions';
+        hint.className = 'studio-hint';
+      } else {
+        hint.textContent = 'Not in database yet -- market averages will be used.';
+        hint.className = 'studio-hint miss';
+      }
+    };
+    script.src = APPS_SCRIPT_URL + params;
+    script.onerror = function() {
+      delete window[cbName];
+      document.head.removeChild(script);
+    };
+    document.head.appendChild(script);
+  }, 600);
 }
 
 function generate() {
@@ -669,13 +676,31 @@ function generate() {
   var ceil  = mkt.ceil;
   var range = ceil - floor;
 
-  // Studio lookup
-  var sKey = state.studio.toLowerCase();
-  var sData = STUDIOS[sKey] || Object.keys(STUDIOS).reduce(function(found, k) {
-    if (!found && (k.includes(sKey) || sKey.includes(k))) return STUDIOS[k];
-    return found;
-  }, null);
+  // Studio lookup - fetch live from Apps Script then render
+  if (state.studio) {
+    var cbName = 'genCb_' + Date.now();
+    var script = document.createElement('script');
+    var params = '?action=studioStats&studio=' + encodeURIComponent(state.studio) +
+                 '&city=' + encodeURIComponent(state.city) +
+                 '&callback=' + cbName;
+    window[cbName] = function(sData) {
+      delete window[cbName];
+      document.head.removeChild(script);
+      renderBrief(sData && sData.found ? sData : null, fmt, mkt, base, askLo, askHi, mid, floor, ceil, range);
+    };
+    script.src = APPS_SCRIPT_URL + params;
+    script.onerror = function() {
+      delete window[cbName];
+      document.head.removeChild(script);
+      renderBrief(null, fmt, mkt, base, askLo, askHi, mid, floor, ceil, range);
+    };
+    document.head.appendChild(script);
+  } else {
+    renderBrief(null, fmt, mkt, base, askLo, askHi, mid, floor, ceil, range);
+  }
+}
 
+function renderBrief(sData, fmt, mkt, base, askLo, askHi, mid, floor, ceil, range) {
   // Location label
   var locParts = [];
   if (state.city) locParts.push(state.city.toLowerCase().replace(/(^|\s)\S/g, function(l){ return l.toUpperCase(); }));
@@ -691,7 +716,7 @@ function generate() {
   // Studio banner
   if (sData && state.studio) {
     document.getElementById('studio-banner').style.display = 'block';
-    document.getElementById('sb-name').textContent = state.studio;
+    document.getElementById('sb-name').textContent = sData.displayName || state.studio;
     document.getElementById('sb-avg').textContent = '$' + sData.avg;
     document.getElementById('sb-range').textContent = '$' + sData.min + '--$' + sData.max;
     document.getElementById('sb-count').textContent = sData.count;
