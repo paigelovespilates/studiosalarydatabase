@@ -149,12 +149,13 @@ input:focus, select:focus { border-color: var(--olive); }
 .results-hdr .sub { font-size: 12px; color: var(--muted); margin-top: 6px; }
 
 /* STUDIO FOUND BANNER */
-.studio-banner { margin: 0 -32px; padding: 18px 32px; background: var(--olive); color: var(--linen); display: none; }
-.studio-banner .sb-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.6; margin-bottom: 4px; }
-.studio-banner .sb-name { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 18px; font-weight: 600; margin-bottom: 10px; }
-.studio-banner .sb-stats { display: flex; gap: 24px; }
-.studio-banner .sb-stat .val { font-size: 22px; font-weight: 500; font-family: 'Cormorant Garamond', Georgia, serif; }
-.studio-banner .sb-stat .lbl { font-size: 10px; opacity: 0.6; margin-top: 1px; letter-spacing: 0.08em; }
+.studio-banner {
+  display: none; padding: 20px 32px;
+  border-bottom: 1px solid var(--linen2);
+}
+.studio-banner .sb-left { width: 100%; }
+.studio-banner .sb-stats { display: flex; gap: 28px; margin-top: 8px; }
+.studio-banner .sb-stat { display: flex; flex-direction: column; }
 
 /* ── ASK RANGE - HERO ── */
 .ask-hero {
@@ -468,16 +469,6 @@ input:focus, select:focus { border-color: var(--olive); }
     </div>
 
     <!-- Studio found banner -->
-    <div class="studio-banner" id="studio-banner">
-      <div class="sb-label">Studio Data Found</div>
-      <div class="sb-name" id="sb-name"></div>
-      <div class="sb-stats">
-        <div class="sb-stat"><div class="val" id="sb-avg">--</div><div class="lbl">avg per class</div></div>
-        <div class="sb-stat"><div class="val" id="sb-range">--</div><div class="lbl">reported range</div></div>
-        <div class="sb-stat"><div class="val" id="sb-count">--</div><div class="lbl">submissions</div></div>
-      </div>
-    </div>
-
     <!-- ASK RANGE HERO -->
     <div class="ask-hero" id="ask-hero">
       <div class="rlbl-light">Your suggested ask range</div>
@@ -530,6 +521,27 @@ input:focus, select:focus { border-color: var(--olive); }
         <span id="ra-sub" style="color:#9A9A84;font-size:11px;"></span>
       </div>
       <div class="ra-right" id="ra-val"></div>
+    </div>
+
+    <!-- STUDIO DATA -->
+    <div class="studio-banner" id="studio-banner">
+      <div class="sb-left">
+        <span class="rlbl">Studio data &middot; <span id="sb-name"></span></span>
+        <div class="sb-stats">
+          <div class="sb-stat">
+            <div class="rsval" id="sb-avg">--</div>
+            <div class="rsdesc">avg per class</div>
+          </div>
+          <div class="sb-stat">
+            <div class="rsval" id="sb-range">--</div>
+            <div class="rsdesc">reported range</div>
+          </div>
+          <div class="sb-stat">
+            <div class="rsval" id="sb-count">--</div>
+            <div class="rsdesc">submissions</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- INSIGHT -->
