@@ -201,11 +201,11 @@ input:focus, select:focus { border-color: var(--olive); }
 .bench-section { padding: 24px 32px; border-bottom: 1px solid var(--linen2); }
 .rlbl { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; display: block; }
 .bench-ends { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 6px; }
-.bench-track { position: relative; height: 6px; background: var(--linen2); border-radius: 3px; margin-bottom: 22px; }
+.bench-track { position: relative; height: 6px; background: var(--linen2); border-radius: 3px; margin-top: 28px; margin-bottom: 22px; }
 .bfill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--sand); border-radius: 3px; opacity: 0.4; }
 .bzone { position: absolute; top: -2px; bottom: -2px; background: var(--olive); border-radius: 3px; opacity: 0.2; }
 
-/* Current pay dot + label */
+/* Current pay dot */
 .bcur {
   position: absolute; top: -5px;
   width: 16px; height: 16px;
@@ -214,14 +214,8 @@ input:focus, select:focus { border-color: var(--olive); }
   box-shadow: 0 1px 4px rgba(0,0,0,0.15);
   transform: translateX(-50%); display: none;
 }
-.bcur-label {
-  position: absolute; top: -28px;
-  transform: translateX(-50%);
-  font-size: 10px; color: var(--gold); font-weight: 500;
-  white-space: nowrap; display: none;
-}
 
-/* Ask dot + label */
+/* Ask dot */
 .bask {
   position: absolute; top: -5px;
   width: 16px; height: 16px;
@@ -230,16 +224,24 @@ input:focus, select:focus { border-color: var(--olive); }
   box-shadow: 0 1px 4px rgba(0,0,0,0.15);
   transform: translateX(-50%);
 }
-.bask-label {
-  position: absolute; top: -28px;
-  transform: translateX(-50%);
-  font-size: 10px; color: var(--olive); font-weight: 500;
-  white-space: nowrap;
-}
 
-.bench-cap { display: flex; justify-content: space-between; font-size: 11px; min-height: 16px; }
+.bench-cap { display: flex; justify-content: space-between; font-size: 11px; min-height: 16px; margin-top: 6px; }
 .cc { color: var(--gold); }
 .ca { color: var(--olive); font-weight: 500; }
+
+/* Floating labels above dots */
+.bdot-label {
+  position: absolute;
+  bottom: 14px;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+  pointer-events: none;
+  display: none;
+}
+.bdot-label.cur { color: var(--gold); }
+.bdot-label.ask { color: var(--olive); font-weight: 500; }
 
 /* STATS ROW */
 .r-stats {
@@ -292,6 +294,13 @@ input:focus, select:focus { border-color: var(--olive); }
 /* footer sig */
 .sig { text-align: center; margin-top: 28px; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
 .sig em { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 13px; color: var(--sand); }
+
+.footnote {
+  padding: 10px 32px 0;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+}
 
 /* Print styles for export */
 @media print {
@@ -348,7 +357,6 @@ input:focus, select:focus { border-color: var(--olive); }
         <div class="chip" data-val="Mat Pilates" onclick="toggleChip(this)">Mat Pilates</div>
         <div class="chip" data-val="Sculpt" onclick="toggleChip(this)">Sculpt</div>
         <div class="chip" data-val="Yoga" onclick="toggleChip(this)">Yoga</div>
-        <div class="chip" data-val="Other" onclick="toggleChip(this)">Other</div>
       </div>
       <div class="btn-row">
         <button class="btn-next" onclick="goStep(2)">Continue &rarr;</button>
@@ -410,7 +418,7 @@ input:focus, select:focus { border-color: var(--olive); }
     <!-- STEP 3: EXPERIENCE -->
     <div class="step" id="step3">
       <div class="step-title">Tell us about yourself.</div>
-      <div class="step-sub">We'll compare you to instructors at your stage -- not everyone lumped together.</div>
+      <div class="step-sub">We'll compare you to instructors at your experience level.</div>
       <div class="field">
         <label>Years of Teaching Experience</label>
         <select id="exp-select">
@@ -492,9 +500,10 @@ input:focus, select:focus { border-color: var(--olive); }
       <div class="bench-track">
         <div class="bfill" id="bfill"></div>
         <div class="bzone" id="bzone"></div>
-        <div class="bcur-label" id="bcur-label"></div>
         <div class="bcur" id="bcur"></div>
-        <div class="bask-label" id="bask-label"></div>
+        <div class="bdot-label cur" id="bcur-label"></div>
+        <div class="bdot-label ask" id="bask-label"></div>
+        <div class="bcur" id="bcur"></div>
         <div class="bask" id="bask"></div>
       </div>
       <div class="bench-cap">
@@ -513,18 +522,21 @@ input:focus, select:focus { border-color: var(--olive); }
       <div class="r-stat">
         <span class="rlbl" style="margin-bottom:2px">Instructors who negotiated</span>
         <div class="rsval" id="rs-neg">--</div>
-        <div class="rsdesc" id="rs-neg-desc"></div>
+        <div class="rsdesc" id="rs-neg-desc" style="display:none"></div>
       </div>
     </div>
 
     <!-- ANNUAL IMPACT -->
     <div class="r-annual" id="r-annual">
       <div class="ra-left">
-        <strong>If you get the midpoint of your ask range</strong><br>
+        <strong id="ra-title">Additional annual earnings at ask midpoint</strong><br>
         <span id="ra-sub" style="color:#9A9A84;font-size:11px;"></span>
       </div>
       <div class="ra-right" id="ra-val"></div>
     </div>
+
+    <!-- FOOTNOTE -->
+    <div class="footnote" id="footnote">* Across all database entries</div>
 
     <!-- INSIGHT -->
     <div class="r-insight">
@@ -659,7 +671,7 @@ function generate() {
 
   // Location label
   var locParts = [];
-  if (state.city) locParts.push(state.city);
+  if (state.city) locParts.push(state.city.charAt(0).toUpperCase() + state.city.slice(1).toLowerCase().replace(/(^|\s)\S/g, function(l){ return l.toUpperCase(); }));
   if (state.state && state.state !== 'non-us') locParts.push(state.state);
   var locLabel = locParts.length > 0 ? locParts.join(', ') : 'your market';
 
@@ -710,29 +722,22 @@ function generate() {
 
   var askPct = Math.max(2, Math.min(98, ((mid - floor) / range) * 100));
   document.getElementById('bask').style.left = askPct + '%';
-  document.getElementById('bask-label').style.left = askPct + '%';
-  document.getElementById('bask-label').textContent = 'Your ask';
-  document.getElementById('bask-label').style.display = 'block';
   document.getElementById('bcap-ask').textContent = 'Ask midpoint: $' + mid;
   document.getElementById('bfill').style.width = askPct + '%';
 
   if (state.rate) {
     var curPct = Math.max(2, Math.min(98, ((state.rate - floor) / range) * 100));
     var curDot = document.getElementById('bcur');
-    var curLabel = document.getElementById('bcur-label');
-    curDot.style.display = 'block';
+      curDot.style.display = 'block';
     curDot.style.left = curPct + '%';
-    curLabel.style.display = 'block';
-    curLabel.style.left = curPct + '%';
-    curLabel.textContent = 'You: $' + state.rate;
-    document.getElementById('bcap-cur').textContent = 'You: $' + state.rate;
+          document.getElementById('bcap-cur').textContent = 'You: $' + state.rate;
   }
 
   // Stats
   document.getElementById('rs-mkt').textContent = '$' + base + '/class';
   document.getElementById('rs-mkt-desc').textContent = 'Average for ' + fmt + ' at your experience level';
-  document.getElementById('rs-neg').textContent = '25%';
-  document.getElementById('rs-neg-desc').textContent = 'Across all database entries -- only 1 in 4 instructors has ever negotiated pay';
+  document.getElementById('rs-neg').textContent = '25%*';
+
 
   // Annual
   if (state.rate && state.classes) {
@@ -740,7 +745,7 @@ function generate() {
     annDiv.style.display = 'flex';
     var annualGain = (mid - state.rate) * state.classes * 52;
     document.getElementById('ra-val').textContent = (annualGain >= 0 ? '+' : '') + '$' + Math.abs(annualGain).toLocaleString();
-    document.getElementById('ra-sub').textContent = 'at ' + state.classes + ' classes/week, that\'s';
+    document.getElementById('ra-sub').textContent = 'vs. your current rate, at ' + state.classes + ' classes/week';
   }
 
   document.getElementById('form-card').style.display = 'none';
