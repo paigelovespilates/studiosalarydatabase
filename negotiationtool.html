@@ -269,6 +269,7 @@ input:focus, select:focus { border-color: var(--olive); }
   display: flex; gap: 14px; padding: 20px 32px;
   background: var(--linen); margin: 0 -32px;
   border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; align-items: flex-start;
+  border-top: none; margin-top: -1px;
 }
 .ri-arr { font-size: 18px; color: var(--olive); margin-top: 1px; flex-shrink: 0; }
 .ri-h { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 15px; font-weight: 600; color: var(--olive); margin-bottom: 4px; }
@@ -631,6 +632,13 @@ function checkStudio() {
   // Use a short debounce so we don't fire on every keystroke
   clearTimeout(checkStudio._t);
   checkStudio._t = setTimeout(function() {
+    // Wait for city too before querying - city is needed for chain disambiguation
+    var city = document.getElementById('city-input').value.trim();
+    if (!city) {
+      hint.textContent = 'Add your city below to check database.';
+      hint.className = 'studio-hint';
+      return;
+    }
     var cbName = 'hintCb_' + Date.now();
     var script = document.createElement('script');
     var params = '?action=studioStats&studio=' + encodeURIComponent(val) +
