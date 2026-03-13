@@ -869,7 +869,7 @@ function checkStudio() {
     hint.textContent = '\u2713 Found in database -- ' + (d ? d.count + ' submissions' : '');
     hint.className = 'studio-hint';
   } else {
-    hint.textContent = 'Not in database yet -- we'll use market averages.';
+    hint.textContent = 'Not in database yet -- we\'ll use market averages.';
     hint.className = 'studio-hint miss';
   }
 }
@@ -907,7 +907,7 @@ function generate() {
   document.getElementById('r-headline').textContent = 'Your brief for ' + city + '.';
   document.getElementById('r-sub').textContent =
     'Based on ' + (state.formats.length > 0 ? state.formats.join(', ') : 'Pilates') +
-    '  ·  ' + expLabel(state.exp);
+    ' - ' + expLabel(state.exp);
 
   // Studio banner
   if (sData && state.studio) {
