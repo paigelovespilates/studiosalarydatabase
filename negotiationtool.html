@@ -148,16 +148,32 @@ input:focus, select:focus { border-color: var(--olive); }
 .results-hdr h2 em { font-style: italic; font-weight: 400; }
 .results-hdr .sub { font-size: 12px; color: var(--muted); margin-top: 6px; }
 
-/* STUDIO FOUND BANNER */
-.studio-banner {
-  display: none; padding: 18px 32px 20px;
+/* STUDIO FOUND FLAG */
+.studio-flag {
+  display: none;
+  padding: 14px 32px;
   border-top: 1px solid var(--linen2);
   border-bottom: 1px solid var(--linen2);
+  background: var(--linen);
+  font-size: 13px;
+  color: var(--ink);
+  display: none;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
-.studio-banner .sb-stats { display: flex; gap: 28px; margin-top: 8px; }
-.studio-banner .sb-stat { display: flex; flex-direction: column; }
-.studio-banner .sb-variable { font-size: 11px; color: rgba(237,235,228,0.65); margin-top: 12px; font-style: italic; }
-.studio-banner .rsval { font-size: 22px; }
+.studio-flag .sf-check { color: var(--green); font-size: 14px; flex-shrink: 0; }
+.studio-flag .sf-link {
+  margin-left: auto;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--olive);
+  text-decoration: none;
+  border-bottom: 1px solid var(--sand);
+  padding-bottom: 1px;
+}
+.studio-flag .sf-link:hover { color: var(--gold); border-color: var(--gold); }
 
 /* ── ASK RANGE - HERO ── */
 .ask-hero {
@@ -503,24 +519,11 @@ input:focus, select:focus { border-color: var(--olive); }
 
     </div>
 
-    <!-- STUDIO DATA -->
-    <div class="studio-banner" id="studio-banner">
-      <span class="rlbl">Studio data found &middot; <span id="sb-name"></span></span>
-      <div class="sb-stats">
-        <div class="sb-stat">
-          <div class="rsval" id="sb-avg">--</div>
-          <div class="rsdesc" id="sb-avg-lbl">avg per class</div>
-        </div>
-        <div class="sb-stat">
-          <div class="rsval" id="sb-range">--</div>
-          <div class="rsdesc">reported range</div>
-        </div>
-        <div class="sb-stat">
-          <div class="rsval" id="sb-count">--</div>
-          <div class="rsdesc">submissions</div>
-        </div>
-      </div>
-      <div class="sb-variable" id="sb-variable" style="display:none">&#8593; Base pay shown &middot; some submissions include variable earnings on top</div>
+    <!-- STUDIO FLAG -->
+    <div class="studio-flag" id="studio-flag">
+      <span class="sf-check">&#10003;</span>
+      <span id="sf-name"></span> is in our database
+      <a class="sf-link" id="sf-link" href="#" target="_blank">View in database &rarr;</a>
     </div>
 
     <!-- STATS ROW -->
@@ -723,17 +726,14 @@ function renderBrief(sData, fmt, mkt, base, askLo, askHi, mid, floor, ceil, rang
     (state.formats.length > 0 ? state.formats.join(', ') : 'Pilates') +
     ' -- ' + (expLabels[state.exp] || '3-5 years') + ' experience';
 
-  // Studio banner
-  if (sData && state.studio) {
-    document.getElementById('studio-banner').style.display = 'block';
-    document.getElementById('sb-name').textContent = sData.displayName || state.studio;
-    document.getElementById('sb-avg').textContent = '$' + sData.avg;
-    document.getElementById('sb-avg-lbl').textContent = sData.hasVariable ? 'avg base pay' : 'avg per class';
-    document.getElementById('sb-range').textContent = '$' + sData.min + '--$' + sData.max;
-    document.getElementById('sb-count').textContent = sData.count;
-    if (sData.hasVariable) {
-      document.getElementById('sb-variable').style.display = 'block';
-    }
+  // Studio flag
+  if (sData && sData.found && state.studio) {
+    var displayName = sData.displayName || state.studio;
+    var searchQ = encodeURIComponent(displayName);
+    var dbUrl = 'https://paigelovespilates.github.io/studiosalarydatabase/?search=' + searchQ;
+    document.getElementById('studio-flag').style.display = 'flex';
+    document.getElementById('sf-name').textContent = displayName;
+    document.getElementById('sf-link').href = dbUrl;
   }
 
   // Ask range hero
@@ -819,9 +819,7 @@ function reset() {
   document.getElementById('results').style.display = 'none';
   document.getElementById('form-card').style.display = 'block';
   document.getElementById('progress-row').style.display = 'flex';
-  document.getElementById('studio-banner').style.display = 'none';
-  document.getElementById('sb-variable').style.display = 'none';
-  document.getElementById('sb-avg-lbl').textContent = 'avg per class';
+  document.getElementById('studio-flag').style.display = 'none';
   document.getElementById('cr-pill').style.display = 'none';
   document.getElementById('bcur').style.display = 'none';
   document.getElementById('bcur-label').style.display = 'none';
