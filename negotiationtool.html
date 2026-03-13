@@ -313,14 +313,7 @@ input:focus, select:focus { border-color: var(--olive); }
 .sig { text-align: center; margin-top: 28px; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
 .sig em { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 13px; color: var(--sand); }
 
-.footnote {
-  padding: 16px 32px 0;
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 0.03em;
-  border-top: 1px solid var(--linen2);
-  margin-top: 4px;
-}
+
 
 /* Print styles for export */
 @media print {
@@ -522,7 +515,7 @@ input:focus, select:focus { border-color: var(--olive); }
     <!-- STUDIO FLAG -->
     <div class="studio-flag" id="studio-flag">
       <span class="sf-check">&#10003;</span>
-      <span id="sf-name"></span> is in our database
+      <span id="sf-name" style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:400;color:var(--ink)"></span> is in our database
       <a class="sf-link" id="sf-link" href="#" target="_blank">View in database &rarr;</a>
     </div>
 
@@ -562,7 +555,7 @@ input:focus, select:focus { border-color: var(--olive); }
       <button class="btn-reset" onclick="reset()">&larr; Start over</button>
       <button class="btn-export" onclick="exportBrief()">Save as PDF</button>
     </div>
-    <div class="footnote">* Across all database entries</div>
+
 
   </div><!-- /results -->
 
@@ -768,7 +761,7 @@ function renderBrief(sData, fmt, mkt, base, askLo, askHi, mid, floor, ceil, rang
   var askPct = Math.max(2, Math.min(98, ((mid - floor) / range) * 100));
   document.getElementById('bask').style.left = askPct + '%';
   var askLabel = document.getElementById('bask-label');
-  askLabel.textContent = 'Your ask';
+  askLabel.textContent = 'Your ask: $' + mid;
   askLabel.style.left = askPct + '%';
   askLabel.style.display = 'block';
   document.getElementById('bfill').style.width = askPct + '%';
