@@ -156,6 +156,7 @@ input:focus, select:focus { border-color: var(--olive); }
 }
 .studio-banner .sb-stats { display: flex; gap: 28px; margin-top: 8px; }
 .studio-banner .sb-stat { display: flex; flex-direction: column; }
+.studio-banner .sb-variable { font-size: 11px; color: rgba(237,235,228,0.65); margin-top: 12px; font-style: italic; }
 .studio-banner .rsval { font-size: 22px; }
 
 /* ── ASK RANGE - HERO ── */
@@ -508,7 +509,7 @@ input:focus, select:focus { border-color: var(--olive); }
       <div class="sb-stats">
         <div class="sb-stat">
           <div class="rsval" id="sb-avg">--</div>
-          <div class="rsdesc">avg per class</div>
+          <div class="rsdesc" id="sb-avg-lbl">avg per class</div>
         </div>
         <div class="sb-stat">
           <div class="rsval" id="sb-range">--</div>
@@ -519,6 +520,7 @@ input:focus, select:focus { border-color: var(--olive); }
           <div class="rsdesc">submissions</div>
         </div>
       </div>
+      <div class="sb-variable" id="sb-variable" style="display:none">&#8593; Base pay shown &middot; some submissions include variable earnings on top</div>
     </div>
 
     <!-- STATS ROW -->
@@ -726,8 +728,12 @@ function renderBrief(sData, fmt, mkt, base, askLo, askHi, mid, floor, ceil, rang
     document.getElementById('studio-banner').style.display = 'block';
     document.getElementById('sb-name').textContent = sData.displayName || state.studio;
     document.getElementById('sb-avg').textContent = '$' + sData.avg;
+    document.getElementById('sb-avg-lbl').textContent = sData.hasVariable ? 'avg base pay' : 'avg per class';
     document.getElementById('sb-range').textContent = '$' + sData.min + '--$' + sData.max;
     document.getElementById('sb-count').textContent = sData.count;
+    if (sData.hasVariable) {
+      document.getElementById('sb-variable').style.display = 'block';
+    }
   }
 
   // Ask range hero
@@ -814,6 +820,8 @@ function reset() {
   document.getElementById('form-card').style.display = 'block';
   document.getElementById('progress-row').style.display = 'flex';
   document.getElementById('studio-banner').style.display = 'none';
+  document.getElementById('sb-variable').style.display = 'none';
+  document.getElementById('sb-avg-lbl').textContent = 'avg per class';
   document.getElementById('cr-pill').style.display = 'none';
   document.getElementById('bcur').style.display = 'none';
   document.getElementById('bcur-label').style.display = 'none';
