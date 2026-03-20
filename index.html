@@ -1084,6 +1084,8 @@ function renderCards(studios, totalCount, page) {
 
     const contactSection=studio.contact?`<div class="contact-section"><div class="notes-label" style="margin-bottom:6px;">Best way to contact this studio about teaching opportunities</div><a href="mailto:${studio.contact}">${studio.contact}</a></div>`:'';
 
+    const postJobButton=`<div style="padding:12px 0;border-top:1px solid var(--border-light);margin-top:12px;"><a href="https://tally.so/r/dWPV7V?studioName=${encodeURIComponent(studio.name)}&studioCity=${encodeURIComponent(studio.city||'')}" target="_blank" style="display:inline-block;padding:10px 16px;background:#757263;color:white;text-decoration:none;border-radius:3px;font-size:13px;transition:background 0.2s;">+ Post a job</a></div>`;
+
     const relativityBadge=studio.relativity?`<span class="relativity-badge ${studio.relativity}">${studio.relativity==='above'?`↑ Above average for ${studio.relativityLabel||'their market'}`:studio.relativity==='below'?`↓ Below average for ${studio.relativityLabel||'their market'}`:`~ Average for ${studio.relativityLabel||'their market'}`}</span>`:'';
 
     const distanceBadge=studio._distanceMiles!==null&&studio._distanceMiles!==undefined?`<span class="distance-badge">📍 ${studio._distanceMiles} mi away</span>`:'';
@@ -1123,6 +1125,7 @@ function renderCards(studios, totalCount, page) {
         ${notesSection}
         ${negNotesSection}
         ${contactSection}
+        ${postJobButton}
         <div style="padding:12px 0;"><button class="see-less-btn" onclick="toggleCard(this)">See less ↑</button></div>
       </div>
     `;
