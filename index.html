@@ -158,7 +158,6 @@
   .notes-label { font-size:10px; color:#575648; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; font-weight:500; }
   .notes-text { font-size:12px; color:var(--text-muted); font-style:italic; line-height:1.5; }
 
-  /* ── UPDATED: Negotiation notes section with star ratings ── */
   .neg-notes-section { border-top:1px solid var(--border-light); padding:12px 22px; background:#faf9f7; }
   .neg-star-rating { display:inline-flex; align-items:center; gap:1px; margin-right:4px; vertical-align:middle; color:#b8a96a; font-size:13px; line-height:1; }
   .neg-avg-rating { display:inline-flex; align-items:center; gap:6px; font-size:11px; color:var(--text-muted); margin-bottom:8px; padding:5px 8px; background:var(--warm-white); border-radius:6px; }
@@ -589,7 +588,6 @@ async function applyFilters() {
     filtered = [...wc,...woc];
   } else {
     allStudios.forEach(s => { s._distanceMiles = null; });
-    // Default sort: most recently updated first
     filtered.sort((a,b) => {
       const dateA = a.lastUpdated ? a.lastUpdated.getTime() : 0;
       const dateB = b.lastUpdated ? b.lastUpdated.getTime() : 0;
@@ -1234,6 +1232,16 @@ function fetchJSONP(url) {
 }
 
 async function init() {
+  // ── Check for studio search parameter from Job Board ──
+  const urlParams = new URLSearchParams(window.location.search);
+  const studioParam = urlParams.get('studio');
+  if (studioParam) {
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+      searchInput.value = decodeURIComponent(studioParam);
+    }
+  }
+
   fetchExchangeRates();
   const timeout=setTimeout(()=>{
     document.getElementById('cards-grid').innerHTML=`<div class="state-msg"><p>Taking longer than expected.</p><small>Please refresh the page and try again.</small></div>`;
