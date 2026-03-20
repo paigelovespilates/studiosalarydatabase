@@ -1084,7 +1084,7 @@ function renderCards(studios, totalCount, page) {
 
     const contactSection=studio.contact?`<div class="contact-section"><div class="notes-label" style="margin-bottom:6px;">Best way to contact this studio about teaching opportunities</div><a href="mailto:${studio.contact}">${studio.contact}</a></div>`:'';
 
-    const postJobButton=`<div style="padding:12px 0;"><a href="https://tally.so/r/dWPV7V?studioName=${encodeURIComponent(studio.name)}&studioCity=${encodeURIComponent(studio.city||'')}" target="_blank" style="display:block;padding:10px 16px;background:transparent;color:#757263;text-decoration:none;border-radius:3px;font-size:13px;transition:all 0.2s;border:1px solid var(--border);text-align:center;">+ Post a job</a></div>`;
+    const postJobButton=`<div style="padding:12px 0;"><a href="https://tally.so/r/dWPV7V?studioName=${encodeURIComponent(studio.name)}&studioCity=${encodeURIComponent(studio.city||'')}" target="_blank" style="display:block;width:calc(100% - 44px);margin:0 22px;padding:8px 0;background:#f5f4f2;border:1.5px solid #757263;border-radius:8px;color:#757263;text-decoration:none;text-align:center;font-family:'Cormorant Garamond',Georgia,serif;font-size:11px;font-weight:600;letter-spacing:0.04em;transition:all 0.15s;">+ Post a job</a></div>`;
 
     const relativityBadge=studio.relativity?`<span class="relativity-badge ${studio.relativity}">${studio.relativity==='above'?`↑ Above average for ${studio.relativityLabel||'their market'}`:studio.relativity==='below'?`↓ Below average for ${studio.relativityLabel||'their market'}`:`~ Average for ${studio.relativityLabel||'their market'}`}</span>`:'';
 
