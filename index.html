@@ -1234,7 +1234,8 @@ function fetchJSONP(url) {
 async function init() {
   // ── Check for studio search parameter from Job Board ──
   const urlParams = new URLSearchParams(window.location.search);
-  const studioParam = urlParams.get('studio');
+  let studioParam = urlParams.get('studio');
+  
   let shouldApplyFilters = false;
   if (studioParam) {
     const searchInput = document.getElementById('search-input');
@@ -1275,12 +1276,8 @@ async function init() {
     populateFormatFilter(allStudios);
     updateStats(allStudios);
     
-    // If there was a studio parameter, apply filters to show results for that studio
-    if (shouldApplyFilters) {
-      applyFilters();
-    } else {
-      applyFilters();
-    }
+    // Apply filters - this will use the search parameter if it was found
+    applyFilters();
 
     // Background geocoding for studios missing coords
     const needsGeocode=allStudios.filter(s=>!s.coords&&s.city&&s.city.trim());
@@ -1298,6 +1295,23 @@ async function init() {
     console.error(err);
   }
 }
+
+// Listen for postMessage from parent Squarespace page with studio parameter
+window.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'studioParam') {
+    const studio = event.data.studio;
+    if (studio) {
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) {
+        searchInput.value = decodeURIComponent(studio);
+        // Re-apply filters with the new search term
+        if (window.applyFilters) {
+          applyFilters();
+        }
+      }
+    }
+  }
+}, false);
 
 init();
 
