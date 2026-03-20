@@ -1235,10 +1235,12 @@ async function init() {
   // ── Check for studio search parameter from Job Board ──
   const urlParams = new URLSearchParams(window.location.search);
   const studioParam = urlParams.get('studio');
+  let shouldApplyFilters = false;
   if (studioParam) {
     const searchInput = document.getElementById('search-input');
     if (searchInput) {
       searchInput.value = decodeURIComponent(studioParam);
+      shouldApplyFilters = true;
     }
   }
 
@@ -1272,7 +1274,13 @@ async function init() {
     computeRelativityScores(allStudios);
     populateFormatFilter(allStudios);
     updateStats(allStudios);
-    applyFilters();
+    
+    // If there was a studio parameter, apply filters to show results for that studio
+    if (shouldApplyFilters) {
+      applyFilters();
+    } else {
+      applyFilters();
+    }
 
     // Background geocoding for studios missing coords
     const needsGeocode=allStudios.filter(s=>!s.coords&&s.city&&s.city.trim());
