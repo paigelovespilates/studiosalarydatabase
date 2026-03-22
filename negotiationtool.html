@@ -157,7 +157,6 @@ input:focus, select:focus { border-color: var(--olive); }
   background: var(--linen);
   font-size: 13px;
   color: var(--ink);
-  display: none;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
@@ -245,8 +244,6 @@ input:focus, select:focus { border-color: var(--olive); }
   transform: translateX(-50%);
 }
 
-
-
 /* Floating labels near dots */
 .bdot-label {
   position: absolute;
@@ -314,8 +311,6 @@ input:focus, select:focus { border-color: var(--olive); }
 .sig { text-align: center; margin-top: 28px; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
 .sig em { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 13px; color: var(--sand); }
 
-
-
 /* Print styles for export */
 @media print {
   body { background: white; padding: 20px; }
@@ -365,12 +360,12 @@ input:focus, select:focus { border-color: var(--olive); }
     <!-- STEP 1: FORMAT -->
     <div class="step active" id="step1">
       <div class="step-title">What do you teach?</div>
-      <div class="step-sub">Select all formats that apply -- we'll benchmark against instructors like you.</div>
+      <div class="step-sub">Select your primary format -- we'll benchmark against instructors like you.</div>
       <div class="chip-grid" id="format-chips">
-        <div class="chip" data-val="Reformer / Apparatus" onclick="toggleChip(this)">Reformer / Apparatus</div>
-        <div class="chip" data-val="Mat Pilates" onclick="toggleChip(this)">Mat Pilates</div>
-        <div class="chip" data-val="Sculpt" onclick="toggleChip(this)">Sculpt</div>
-        <div class="chip" data-val="Yoga" onclick="toggleChip(this)">Yoga</div>
+        <div class="chip" data-val="Reformer / Apparatus" onclick="selectChip(this)">Reformer / Apparatus</div>
+        <div class="chip" data-val="Mat Pilates" onclick="selectChip(this)">Mat Pilates</div>
+        <div class="chip" data-val="Sculpt" onclick="selectChip(this)">Sculpt</div>
+        <div class="chip" data-val="Yoga" onclick="selectChip(this)">Yoga</div>
       </div>
       <div class="btn-row">
         <button class="btn-next" onclick="goStep(2)">Continue &rarr;</button>
@@ -481,7 +476,6 @@ input:focus, select:focus { border-color: var(--olive); }
       <div class="sub" id="r-sub">Based on real data from your market</div>
     </div>
 
-    <!-- Studio found banner -->
     <!-- ASK RANGE HERO -->
     <div class="ask-hero" id="ask-hero">
       <div class="rlbl-light">Your suggested ask range</div>
@@ -507,10 +501,8 @@ input:focus, select:focus { border-color: var(--olive); }
         <div class="bcur" id="bcur"></div>
         <div class="bdot-label cur" id="bcur-label"></div>
         <div class="bdot-label ask" id="bask-label"></div>
-        <div class="bcur" id="bcur"></div>
         <div class="bask" id="bask"></div>
       </div>
-
     </div>
 
     <!-- STUDIO FLAG -->
@@ -556,7 +548,6 @@ input:focus, select:focus { border-color: var(--olive); }
       <button class="btn-reset" onclick="reset()">&larr; Start over</button>
       <button class="btn-export" onclick="exportBrief()">Save as PDF</button>
     </div>
-
 
   </div><!-- /results -->
 
@@ -618,20 +609,21 @@ function goStep(n) {
 
 function tryGoStep(n) { if (n < currentStep) goStep(n); }
 
-function toggleChip(el) {
-  el.classList.toggle('selected');
-  state.formats = [...document.querySelectorAll('.chip.selected')].map(function(c) { return c.dataset.val; });
+// Single-select: deselect all chips, then select the clicked one
+function selectChip(el) {
+  document.querySelectorAll('#format-chips .chip').forEach(function(c) {
+    c.classList.remove('selected');
+  });
+  el.classList.add('selected');
+  state.formats = [el.dataset.val];
 }
 
 function checkStudio() {
   var val = document.getElementById('studio-input').value.trim();
-  var city = document.getElementById('city-input').value.trim();
   var hint = document.getElementById('studio-hint');
   if (!val) { hint.textContent = ''; hint.className = 'studio-hint'; return; }
-  // Use a short debounce so we don't fire on every keystroke
   clearTimeout(checkStudio._t);
   checkStudio._t = setTimeout(function() {
-    // Wait for city too before querying - city is needed for chain disambiguation
     var city = document.getElementById('city-input').value.trim();
     if (!city) {
       hint.textContent = 'Add your city below to check database.';
@@ -683,7 +675,6 @@ function generate() {
   var ceil  = mkt.ceil;
   var range = ceil - floor;
 
-  // Studio lookup - fetch live from Apps Script then render
   if (state.studio) {
     var cbName = 'genCb_' + Date.now();
     var script = document.createElement('script');
@@ -708,19 +699,16 @@ function generate() {
 }
 
 function renderBrief(sData, fmt, mkt, base, askLo, askHi, mid, floor, ceil, range) {
-  // Location label
   var locParts = [];
   if (state.city) locParts.push(state.city.toLowerCase().replace(/(^|\s)\S/g, function(l){ return l.toUpperCase(); }));
   var locLabel = locParts.length > 0 ? locParts.join(', ') : 'your market';
 
-  // Headline
   document.getElementById('r-headline').textContent = 'Your brief for ' + locLabel + '.';
   var expLabels = { lt1: 'Less than 1 year', '1-2': '1-2 years', '3-5': '3-5 years', '6-10': '6-10 years', '10+': '10+ years' };
   document.getElementById('r-sub').textContent =
     (state.formats.length > 0 ? state.formats.join(', ') : 'Pilates') +
     ' -- ' + (expLabels[state.exp] || '3-5 years') + ' experience';
 
-  // Studio flag
   if (sData && sData.found && state.studio) {
     var displayName = sData.displayName || state.studio;
     var searchQ = encodeURIComponent(displayName);
@@ -730,11 +718,9 @@ function renderBrief(sData, fmt, mkt, base, askLo, askHi, mid, floor, ceil, rang
     document.getElementById('sf-link').href = dbUrl;
   }
 
-  // Ask range hero
   document.getElementById('r-ask-lo').textContent = '$' + askLo;
   document.getElementById('r-ask-hi').textContent = '$' + askHi;
 
-  // Current rate pill inside hero
   if (state.rate) {
     var crPill = document.getElementById('cr-pill');
     crPill.style.display = 'flex';
@@ -750,7 +736,6 @@ function renderBrief(sData, fmt, mkt, base, askLo, askHi, mid, floor, ceil, rang
     }
   }
 
-  // Benchmark bar
   document.getElementById('b-floor').textContent = '$' + floor;
   document.getElementById('b-ceil').textContent  = '$' + ceil;
 
@@ -770,7 +755,7 @@ function renderBrief(sData, fmt, mkt, base, askLo, askHi, mid, floor, ceil, rang
   if (state.rate) {
     var curPct = Math.max(2, Math.min(98, ((state.rate - floor) / range) * 100));
     var curDot = document.getElementById('bcur');
-      curDot.style.display = 'block';
+    curDot.style.display = 'block';
     curDot.style.left = curPct + '%';
     var curLabel = document.getElementById('bcur-label');
     curLabel.textContent = 'You: $' + state.rate;
@@ -782,15 +767,12 @@ function renderBrief(sData, fmt, mkt, base, askLo, askHi, mid, floor, ceil, rang
       curLabel.style.left = curPct + '%';
       curLabel.style.transform = 'translateX(-50%)';
     }
-          }
+  }
 
-  // Stats
   document.getElementById('rs-mkt').textContent = '$' + base + '/class';
   document.getElementById('rs-mkt-desc').textContent = 'Average for ' + fmt + ' at your experience level. Think of this as your floor during negotiations.';
   document.getElementById('rs-neg').innerHTML = '25%<sup style="font-size:10px;vertical-align:super;line-height:0;">*</sup>';
 
-
-  // Annual
   if (state.rate && state.classes) {
     var annDiv = document.getElementById('r-annual');
     annDiv.style.display = 'flex';
