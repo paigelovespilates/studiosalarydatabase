@@ -57,17 +57,27 @@ input:focus, select:focus { border-color: var(--olive); }
 .btn-back:hover { border-color: var(--sand); color: var(--ink); }
 .btn-next { flex: 1; padding: 13px 24px; background: var(--olive); border: none; border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--linen); cursor: pointer; transition: opacity 0.18s; letter-spacing: 0.02em; }
 .btn-next:hover { opacity: 0.88; }
-#results { display: none; }
-.results-hdr { text-align: center; padding: 28px 32px 24px; border-bottom: 1px solid var(--linen2); }
+.btn-next.loading { opacity: 0.7; cursor: wait; pointer-events: none; }
+.btn-next.loading::after { content: ''; display: inline-block; width: 10px; height: 10px; border: 1.5px solid rgba(237,235,228,0.4); border-top-color: var(--linen); border-radius: 50%; animation: spin 0.7s linear infinite; margin-left: 10px; vertical-align: middle; }
+@keyframes spin { to { transform: rotate(360deg); } }
+/* ── RESULTS: full-bleed top, contained card below ──────────────────────── */
+#results { display: none; overflow: hidden; }
+#results.card { padding: 0; }
+
+:root { --rp: 32px; }
+
+.results-hdr { text-align: center; padding: 28px var(--rp) 24px; }
 .results-hdr .eyebrow { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
 .results-hdr h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 600; color: var(--olive); line-height: 1.2; }
 .results-hdr .sub { font-size: 12px; color: var(--muted); margin-top: 6px; }
-.studio-flag { display: none; padding: 14px 32px; border-top: 1px solid var(--linen2); border-bottom: 1px solid var(--linen2); background: var(--linen); font-size: 13px; color: var(--ink); align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.studio-flag { display: none; padding: 14px var(--rp); border-top: 1px solid var(--linen2); background: var(--linen); font-size: 13px; color: var(--ink); align-items: center; gap: 8px; flex-wrap: wrap; }
 .studio-flag .sf-check { color: var(--green); font-size: 14px; flex-shrink: 0; }
 .studio-flag #sf-name { font-weight: 500; text-transform: capitalize; }
 .studio-flag .sf-link { margin-left: auto; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--olive); text-decoration: none; border-bottom: 1px solid var(--sand); padding-bottom: 1px; }
 .studio-flag .sf-link:hover { color: var(--gold); border-color: var(--gold); }
-.ask-hero { padding: 32px 32px 28px; border-bottom: 1px solid var(--linen2); background: var(--olive); margin: 0 -32px; text-align: center; color: var(--linen); }
+
+.ask-hero { padding: 32px var(--rp) 28px; border-top: 1px solid var(--linen2); background: var(--olive); text-align: center; color: var(--linen); }
 .ask-hero .rlbl-light { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(237,235,228,0.55); margin-bottom: 16px; }
 .ask-range { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 10px; }
 .ask-num { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 68px; font-weight: 600; color: var(--linen); line-height: 1; }
@@ -76,7 +86,8 @@ input:focus, select:focus { border-color: var(--olive); }
 .cr-pill { display: none; margin: 16px auto 0; padding: 8px 18px; background: rgba(237,235,228,0.12); border: 1px solid rgba(237,235,228,0.25); border-radius: 20px; font-size: 13px; color: var(--linen); width: fit-content; gap: 10px; align-items: center; justify-content: center; }
 .cr-pill .cr-gap { font-weight: 500; margin-left: 8px; }
 .cr-pill .cr-gap.pos { color: #7EC99A; }
-.bench-section { padding: 24px 32px; border-bottom: 1px solid var(--linen2); }
+
+.bench-section { padding: 24px var(--rp) 8px; border-top: 1px solid var(--linen2); background: var(--white); }
 .rlbl { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; display: block; }
 .bench-ends { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 2px; }
 .bench-track { position: relative; height: 6px; background: var(--linen2); border-radius: 3px; margin-top: 10px; margin-bottom: 28px; }
@@ -86,26 +97,35 @@ input:focus, select:focus { border-color: var(--olive); }
 .bask { position: absolute; top: -5px; width: 16px; height: 16px; background: var(--olive); border-radius: 50%; border: 2px solid var(--white); box-shadow: 0 1px 4px rgba(0,0,0,0.15); transform: translateX(-50%); }
 .bdot-label { position: absolute; top: 14px; transform: translateX(-50%); font-size: 10px; color: var(--muted); white-space: nowrap; pointer-events: none; display: none; }
 .bdot-label.cur { color: var(--gold); }
-.r-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--linen2); border-top: 1px solid var(--linen2); border-bottom: 1px solid var(--linen2); }
-.r-stat { padding: 18px 20px; background: var(--white); }
-.r-stat:first-child { padding-left: 32px; }
-.r-stat:last-child { padding-right: 32px; }
+
+/* ── Summary card — contained, inset from full-bleed zones ─────────────── */
+.summary-card {
+  margin: 24px var(--rp) 0;
+  background: var(--white);
+  border-radius: 4px;
+  box-shadow: 0 2px 16px rgba(55,57,48,0.07), 0 1px 4px rgba(55,57,48,0.05);
+  overflow: hidden;
+}
+.r-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--linen2); }
+.r-stat { padding: 20px 24px; background: var(--white); }
 .rsval { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; font-weight: 600; color: var(--olive); line-height: 1.1; margin: 6px 0 3px; }
 .rsdesc { font-size: 11px; color: var(--muted); line-height: 1.4; }
-.r-annual { display: none; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 1px solid var(--linen2); gap: 16px; }
+.r-annual { display: none; align-items: center; justify-content: space-between; padding: 18px 24px; border-top: 1px solid var(--linen2); gap: 16px; background: var(--linen); }
 .ra-left { font-size: 13px; color: var(--ink); line-height: 1.5; }
 .ra-left strong { font-weight: 500; }
 .ra-right { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; font-weight: 600; color: var(--olive); white-space: nowrap; flex-shrink: 0; }
-.r-insight { display: flex; gap: 14px; padding: 20px 32px; background: var(--linen); margin: 0 -32px; align-items: flex-start; border-top: none; margin-top: -1px; }
+.r-insight { display: flex; gap: 14px; padding: 18px 24px; border-top: 1px solid var(--linen2); align-items: flex-start; background: var(--white); }
+.r-insight.sc-alt { background: var(--linen); }
 .ri-arr { font-size: 18px; color: var(--olive); margin-top: 1px; flex-shrink: 0; }
 .ri-h { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 15px; font-weight: 600; color: var(--olive); margin-bottom: 4px; }
 .ri-d { font-size: 12px; color: var(--muted); line-height: 1.5; }
-.action-row { display: flex; gap: 10px; margin-top: 20px; }
+.brief-footnote { font-size: 10px; color: var(--sand); line-height: 1.6; padding: 14px 24px 20px; border-top: 1px solid var(--linen2); letter-spacing: 0.01em; background: var(--white); }
+
+.action-row { display: flex; gap: 10px; padding: 20px var(--rp) 32px; }
 .btn-reset { flex: 1; padding: 12px; background: transparent; border: 1.5px solid var(--linen2); border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--muted); cursor: pointer; text-align: center; transition: all 0.18s; }
 .btn-reset:hover { border-color: var(--sand); color: var(--ink); }
 .btn-export { flex: 1; padding: 12px; background: var(--olive); border: none; border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--linen); cursor: pointer; text-align: center; transition: opacity 0.18s; }
 .btn-export:hover { opacity: 0.88; }
-.brief-footnote { font-size: 10px; color: var(--sand); line-height: 1.6; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--linen2); letter-spacing: 0.01em; }
 .sig { text-align: center; margin-top: 28px; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
 .sig em { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 13px; color: var(--sand); }
 @media print {
@@ -230,7 +250,7 @@ input:focus, select:focus { border-color: var(--olive); }
       </div>
       <div class="btn-row">
         <button class="btn-back" onclick="goStep(3)">&larr; Back</button>
-        <button class="btn-next" onclick="generate()">Generate My Brief &rarr;</button>
+        <button class="btn-next" id="btn-generate" onclick="generate()">Generate My Brief &rarr;</button>
       </div>
     </div>
   </div>
@@ -248,13 +268,13 @@ input:focus, select:focus { border-color: var(--olive); }
         <div class="ask-dash">--</div>
         <div class="ask-num" id="r-ask-hi">--</div>
       </div>
-      <div class="ask-sub">per class &middot; based on your market, format &amp; experience</div>
+      <div class="ask-sub" id="ask-sub">per class &middot; based on your market, format &amp; experience</div>
       <div class="cr-pill" id="cr-pill">
         <span id="cr-left">Your current rate: --</span>
         <span class="cr-gap" id="cr-gap"></span>
       </div>
     </div>
-    <div class="bench-section">
+    <div class="bench-section r-band white">
       <span class="rlbl">Where you stand in your market</span>
       <div class="bench-ends"><span id="b-floor"></span><span id="b-ceil"></span></div>
       <div class="bench-track">
@@ -271,51 +291,55 @@ input:focus, select:focus { border-color: var(--olive); }
       <span id="sf-name"></span> is in our database &mdash;
       <a class="sf-link" id="sf-link" href="#" target="_blank">view their pay data &rarr;</a>
     </div>
-    <div class="r-stats" id="r-stats">
-      <div class="r-stat">
-        <span class="rlbl" style="margin-bottom:2px">Market avg &middot; your format</span>
-        <div class="rsval" id="rs-mkt">--</div>
-        <div class="rsdesc" id="rs-mkt-desc"></div>
+
+    <!-- Contained summary card -->
+    <div class="summary-card">
+      <div class="r-stats" id="r-stats">
+        <div class="r-stat">
+          <span class="rlbl" style="margin-bottom:2px">Market avg</span>
+          <div class="rsval" id="rs-mkt">--</div>
+          <div class="rsdesc" id="rs-mkt-desc"></div>
+        </div>
+        <div class="r-stat">
+          <span class="rlbl" style="margin-bottom:2px">Instructors like you who negotiated</span>
+          <div class="rsval" id="rs-neg">--</div>
+          <div class="rsdesc" id="rs-neg-desc" style="display:none"></div>
+        </div>
       </div>
-      <div class="r-stat">
-        <span class="rlbl" style="margin-bottom:2px">Instructors who negotiated</span>
-        <div class="rsval" id="rs-neg">--</div>
-        <div class="rsdesc" id="rs-neg-desc" style="display:none"></div>
+      <div class="r-annual" id="r-annual">
+        <div class="ra-left"><strong id="ra-title">Additional annual earnings</strong></div>
+        <div class="ra-right" id="ra-val"></div>
+      </div>
+      <div class="r-insight" id="r-insight-stars">
+        <div class="ri-arr">&rarr;</div>
+        <div>
+          <div class="ri-h">They rated the experience <span id="neg-rating-val">--</span> / 5.</div>
+          <div class="ri-d">Even when the answer was no.</div>
+        </div>
+      </div>
+      <div class="r-insight sc-alt" id="r-insight-1">
+        <div class="ri-arr">&rarr;</div>
+        <div>
+          <div class="ri-h" id="neg-pay-heading">Instructors who negotiated earn more.</div>
+          <div class="ri-d" id="neg-pay-stat">Instructors who negotiated earned more per class on average than those who didn't.</div>
+        </div>
+      </div>
+      <div class="r-insight" id="r-insight-2">
+        <div class="ri-arr" style="color: var(--sand);">&#9432;</div>
+        <div>
+          <div class="ri-h">How we calculated your range.</div>
+          <div class="ri-d">Business negotiation experts — including researchers at Harvard and Cornell — recommend leading with 10–20% above market rate, adjusted for your experience level. More experienced instructors have greater leverage and can justify the higher end. Your range reflects this: the more years you have, the wider and higher your suggested ask.</div>
+        </div>
+      </div>
+      <div class="brief-footnote" id="brief-footnote">
+        * Market averages are calculated from Studio Salary Database submissions, filtered by class format, experience level, and market size. Instructors in major cities are benchmarked against other major city markets; smaller markets are compared locally. <span id="footnote-annual" style="display:none">Annual earnings estimate based on ask midpoint · <span id="footnote-annual-detail"></span>. </span><span id="footnote-neg-scope"></span>
       </div>
     </div>
-    <div class="r-annual" id="r-annual">
-      <div class="ra-left"><strong id="ra-title">Additional annual earnings</strong></div>
-      <div class="ra-right" id="ra-val"></div>
-    </div>
-    <div class="r-insight" id="r-insight-1">
-      <div class="ri-arr">&rarr;</div>
-      <div>
-        <div class="ri-h">50% of instructors who asked got more.</div>
-        <div class="ri-d" id="neg-pay-stat">Instructors who negotiated earned more per class on average than those who didn't.</div>
-      </div>
-    </div>
-    <div class="r-insight" id="r-insight-stars" style="border-top: 1px solid var(--linen2); margin-top: 0;">
-      <div class="ri-arr">&rarr;</div>
-      <div>
-        <div class="ri-h">They rated the experience <span id="neg-rating-val">--</span> / 5.</div>
-        <div class="ri-d">Even when the answer was no.</div>
-      </div>
-    </div>
-    <div class="r-insight" id="r-insight-2" style="border-top: 1px solid var(--linen2); margin-top: 0;">
-      <div class="ri-arr" style="color: var(--sand);">&#9432;</div>
-      <div>
-        <div class="ri-h">How we calculated your range.</div>
-        <div class="ri-d">Business negotiation experts — including researchers at Harvard and Cornell — recommend leading with 10–20% above market rate, adjusted for your experience level. More experienced instructors have greater leverage and can justify the higher end. Your range reflects this: the more years you have, the wider and higher your suggested ask.</div>
-      </div>
-    </div>
+
     <div class="action-row">
       <button class="btn-reset" onclick="reset()">&larr; Start over</button>
       <button class="btn-export" onclick="exportBrief()">Save as PDF</button>
     </div>
-    <div class="brief-footnote" id="brief-footnote">
-      * Market averages are calculated from Studio Salary Database submissions, filtered by class format, experience level, and market size. Instructors in major cities are benchmarked against other major city markets; smaller markets are compared locally. <span id="footnote-annual" style="display:none">Annual earnings estimate based on ask midpoint · <span id="footnote-annual-detail"></span>. </span>Negotiation stats reflect real submissions from instructors in our network.
-    </div>
-  </div>
 
   <div class="sig"><em>Paige Loves Pilates</em> &middot; Studio Salary Database</div>
 </div>
@@ -347,9 +371,7 @@ function updateRegions() {
 }
 
 // ── CITY TIER LOOKUP ─────────────────────────────────────────────────────────
-// Tier 1 = Global majors, 2 = Large cities, 3 = Suburban/mid-size, 4 = Rural/small (default)
 var CITY_TIERS = {
-  // USA Tier 1
   'new york':1,'manhattan':1,'brooklyn':1,'queens':1,'bronx':1,'staten island':1,
   'los angeles':1,'santa monica':1,'beverly hills':1,'west hollywood':1,'malibu':1,'bel air':1,
   'san francisco':1,'palo alto':1,'mountain view':1,'sunnyvale':1,'menlo park':1,'atherton':1,
@@ -360,7 +382,6 @@ var CITY_TIERS = {
   'miami':1,'miami beach':1,'coral gables':1,'brickell':1,'key biscayne':1,
   'honolulu':1,'aspen':1,'vail':1,'telluride':1,
   'hoboken':1,'jersey city':1,
-  // USA Tier 2
   'austin':2,'dallas':2,'houston':2,'fort worth':2,'san antonio':2,'plano':2,'frisco':2,'the woodlands':2,'sugar land':2,'katy':2,
   'denver':2,'boulder':2,'fort collins':2,'highlands ranch':2,'littleton':2,'centennial':2,
   'atlanta':2,'buckhead':2,'alpharetta':2,'sandy springs':2,'dunwoody':2,'roswell':2,'marietta':2,
@@ -371,7 +392,7 @@ var CITY_TIERS = {
   'san diego':2,'la jolla':2,'del mar':2,'encinitas':2,'carlsbad':2,
   'charlotte':2,'raleigh':2,'durham':2,'chapel hill':2,'cary':2,
   'philadelphia':2,'main line':2,'wayne':2,'ardmore':2,
-  'baltimore':2,'annapolis':2,'columbia md':2,'bethesda':2,
+  'baltimore':2,'annapolis':2,'columbia md':2,
   'salt lake city':2,'park city':2,'sandy':2,
   'new orleans':2,
   'kansas city':2,'leawood':2,'overland park':2,'olathe':2,
@@ -392,11 +413,10 @@ var CITY_TIERS = {
   'omaha':2,'lincoln':2,
   'indianapolis':2,'carmel in':2,'fishers':2,'zionsville':2,
   'louisville':2,'lexington':2,
-  'memphis':2,'nashville':2,
+  'memphis':2,
   'birmingham al':2,'huntsville':2,
   'greenville':2,'charleston sc':2,
   'tucson':2,
-  // USA Tier 3
   'long island':3,'garden city':3,'great neck':3,'manhasset':3,'roslyn':3,'huntington':3,'commack':3,'smithtown':3,'melville':3,'farmingdale':3,'babylon':3,'bay shore':3,'patchogue':3,'east hampton':3,'southampton':3,'montauk':3,
   'westchester':3,'white plains':3,'scarsdale':3,'greenwich':3,'stamford':3,'darien':3,'new canaan':3,'westport':3,'fairfield':3,'ridgefield':3,'norwalk':3,
   'summit':3,'short hills':3,'montclair':3,'morristown':3,'princeton':3,'red bank':3,
@@ -414,28 +434,17 @@ var CITY_TIERS = {
   'missoula':3,'billings':3,'fargo':3,'sioux falls':3,
   'topeka':3,'wichita':3,'tulsa':3,'little rock':3,
   'knoxville':3,'chattanooga':3,'des moines':3,
-  // UK Tier 1
   'london':1,'city of london':1,'westminster':1,'chelsea':1,'kensington':1,'notting hill':1,'mayfair':1,'marylebone':1,'islington':1,'shoreditch':1,'canary wharf':1,'wimbledon':1,'richmond upon thames':1,
-  // UK Tier 2
   'manchester':2,'edinburgh':2,'glasgow':2,'bristol':2,'leeds':2,'sheffield':2,'liverpool':2,'nottingham':2,'cardiff':2,'brighton':2,'oxford':2,'bath':2,'exeter':2,'reading':2,'guildford':2,'windsor':2,'st albans':2,'cambridge':2,
-  // UK Tier 3
   'coventry':3,'leicester':3,'hull':3,'newcastle':3,'sunderland':3,'portsmouth':3,'norwich':3,'ipswich':3,'southampton':3,
-  // Canada Tier 1
   'toronto':1,'north york':1,'etobicoke':1,'scarborough':1,'york':1,'vancouver':1,'west vancouver':1,'north vancouver':1,
-  // Canada Tier 2
   'montreal':2,'calgary':2,'ottawa':2,'edmonton':2,'winnipeg':2,'victoria':2,'burnaby':2,'surrey':2,'coquitlam':2,'mississauga':2,'brampton':2,'markham':2,'vaughan':2,'oakville':2,'hamilton':2,'kitchener':2,'waterloo':2,'halifax':2,'quebec city':2,'laval':2,
-  // Canada Tier 3
   'saskatoon':3,'regina':3,'kelowna':3,'abbotsford':3,'langley':3,'st johns':3,'moncton':3,'fredericton':3,
-  // Australia Tier 1
   'sydney':1,'bondi':1,'surry hills':1,'paddington':1,'newtown':1,'balmain':1,'mosman':1,'double bay':1,'melbourne':1,'fitzroy':1,'st kilda':1,'south yarra':1,'toorak':1,'prahran':1,'richmond vic':1,
-  // Australia Tier 2
   'brisbane':2,'perth':2,'adelaide':2,'gold coast':2,'canberra':2,'newcastle nsw':2,'wollongong':2,'geelong':2,'hobart':2,'darwin':2,'sunshine coast':2,'cairns':2,'townsville':2,
-  // Australia Tier 3
   'toowoomba':3,'ballarat':3,'bendigo':3,'launceston':3,
-  // Other international Tier 1
   'singapore':1,'hong kong':1,'dubai':1,'abu dhabi':1,'zurich':1,'geneva':1,'paris':1,'amsterdam':1,'stockholm':1,'oslo':1,'copenhagen':1,'dublin':1,'auckland':1,'tokyo':1,
-  // Other international Tier 2
-  'berlin':2,'munich':2,'hamburg':2,'frankfurt':2,'vienna':2,'brussels':2,'lisbon':2,'madrid':2,'barcelona':2,'rome':2,'milan':2,'sydney':1
+  'berlin':2,'munich':2,'hamburg':2,'frankfurt':2,'vienna':2,'brussels':2,'lisbon':2,'madrid':2,'barcelona':2,'rome':2,'milan':2
 };
 
 function getCityTier(city) {
@@ -444,8 +453,6 @@ function getCityTier(city) {
   return CITY_TIERS[c] || 4;
 }
 
-// ── HARDCODED MARKET FALLBACK (used when live data insufficient) ──────────────
-// Values are national averages — tier multipliers applied on top
 var MARKET_BASE = {
   'Reformer / Apparatus': { lt1: 39, '1-2': 44, '3-5': 49, '6-10': 51, '10+': 53, floor: 15, ceil: 90 },
   'Mat Pilates':          { lt1: 36, '1-2': 41, '3-5': 45, '6-10': 47, '10+': 49, floor: 20, ceil: 75 },
@@ -454,7 +461,6 @@ var MARKET_BASE = {
   'Other':                { lt1: 38, '1-2': 42, '3-5': 47, '6-10': 49, '10+': 51, floor: 15, ceil: 90 }
 };
 
-// Tier multipliers applied to base averages when using hardcoded fallback
 var TIER_MULTIPLIERS = { 1: 1.20, 2: 1.08, 3: 0.95, 4: 0.85 };
 
 var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6IjQ_PA67Zky5BsOZGObx8aXpEVl2gIbBlQkGdHxC7gkVbQwcX0oM9LezI2Zss0zv-w/exec';
@@ -508,20 +514,26 @@ function generate() {
   state.city    = document.getElementById('city-input').value.trim();
   state.state   = document.getElementById('state-select').value;
   state.country = document.getElementById('country-select').value;
-  state.exp     = document.getElementById('exp-select').value || '3-5';
+  state.exp     = document.getElementById('exp-select').value || '';
   state.rate    = parseFloat(document.getElementById('rate-input').value) || null;
   state.classes = parseInt(document.getElementById('classes-input').value) || null;
+
+  // Show loading state
+  var genBtn = document.getElementById('btn-generate');
+  genBtn.classList.add('loading');
+  genBtn.textContent = 'Building your brief';
+
+  function clearLoading() { genBtn.classList.remove('loading'); genBtn.textContent = 'Generate My Brief →'; }
 
   var fmt  = state.formats[0] || 'Reformer / Apparatus';
   var tier = getCityTier(state.city);
 
-  // Fetch full data — compute live averages + neg stats in one call
   var cbName = 'allDataCb_' + Date.now();
   var script = document.createElement('script');
   window[cbName] = function(data) {
     delete window[cbName]; document.head.removeChild(script);
     var liveBase = computeLiveBase(data.instructor || [], data.studio || [], fmt, state.exp, tier);
-    var negStats = computeNegStats(data.instructor || [], fmt);
+    var negStats = computeNegStats(data.instructor || [], fmt, state.exp);
     var base = liveBase !== null ? liveBase : applyTierToBase(fmt, state.exp, tier);
     var mkt  = MARKET_BASE[fmt] || MARKET_BASE['Other'];
 
@@ -540,19 +552,21 @@ function generate() {
       var params2 = '?action=studioStats&studio=' + encodeURIComponent(state.studio) + '&city=' + encodeURIComponent(state.city) + '&callback=' + cbName2;
       window[cbName2] = function(sData) {
         delete window[cbName2]; document.head.removeChild(script2);
+        clearLoading();
         renderBrief(sData && sData.found ? sData : null, fmt, base, askLo, askHi, mid, floor, ceil, range, negStats, liveBase !== null);
       };
       script2.src = APPS_SCRIPT_URL + params2;
-      script2.onerror = function() { delete window[cbName2]; document.head.removeChild(script2); renderBrief(null, fmt, base, askLo, askHi, mid, floor, ceil, range, negStats, liveBase !== null); };
+      script2.onerror = function() { delete window[cbName2]; document.head.removeChild(script2); clearLoading(); renderBrief(null, fmt, base, askLo, askHi, mid, floor, ceil, range, negStats, liveBase !== null); };
       document.head.appendChild(script2);
     } else {
+      clearLoading();
       renderBrief(null, fmt, base, askLo, askHi, mid, floor, ceil, range, negStats, liveBase !== null);
     }
   };
   script.src = APPS_SCRIPT_URL + '?callback=' + cbName;
   script.onerror = function() {
     delete window[cbName]; document.head.removeChild(script);
-    // Full fallback — no live data
+    clearLoading();
     var base = applyTierToBase(fmt, state.exp, tier);
     var mkt  = MARKET_BASE[fmt] || MARKET_BASE['Other'];
     var expMultipliers = { 'lt1':{lo:1.08,hi:1.15}, '1-2':{lo:1.10,hi:1.17}, '3-5':{lo:1.10,hi:1.20}, '6-10':{lo:1.12,hi:1.20}, '10+':{lo:1.15,hi:1.22} };
@@ -567,15 +581,12 @@ function generate() {
   document.head.appendChild(script);
 }
 
-// Apply tier multiplier to hardcoded base
 function applyTierToBase(fmt, exp, tier) {
   var mkt  = MARKET_BASE[fmt] || MARKET_BASE['Other'];
-  var base = mkt[exp] || mkt['3-5'];
+  var base = mkt[exp || '3-5'] || mkt['3-5'];
   return Math.round(base * (TIER_MULTIPLIERS[tier] || 1));
 }
 
-// Compute live average from real submissions, filtered by format + exp + tier
-// Falls back to null if fewer than MIN_SAMPLE_SIZE submissions match
 function computeLiveBase(instructorRows, studioRows, fmt, exp, userTier) {
   function parseNum(v) { var n=parseFloat(String(v||'').replace(/[^0-9.]/g,'')); return (!isNaN(n)&&n>0)?n:null; }
   function fmtMatch(rowFmt, f) {
@@ -592,10 +603,10 @@ function computeLiveBase(instructorRows, studioRows, fmt, exp, userTier) {
     return true;
   }
 
-  var iData = instructorRows.length && !Array.isArray(instructorRows[0]) ? instructorRows : instructorRows.slice(1);
-  var sData = studioRows.length && !Array.isArray(studioRows[0]) ? studioRows : studioRows.slice(1);
+  // Explicit header skip — doGet prepends header row to both arrays
+  var iData = instructorRows.slice(1);
+  var sData = studioRows.slice(1);
 
-  // Collect pays for a given format + tier combination
   function collectPays(f, tier) {
     var pays = [];
     iData.forEach(function(row) {
@@ -619,61 +630,112 @@ function computeLiveBase(instructorRows, studioRows, fmt, exp, userTier) {
 
   function avg(pays) { return Math.round(pays.reduce(function(a,b){return a+b;},0)/pays.length); }
 
-  // Formats that use Mat Pilates as a proxy before walking up tiers
   var matProxyFormats = ['Sculpt', 'Yoga'];
   var useMatProxy = matProxyFormats.indexOf(fmt) !== -1;
 
-  // Step 1: Try exact format + user's tier
   var pays = collectPays(fmt, userTier);
   if (pays.length >= MIN_SAMPLE_SIZE) return avg(pays);
 
-  // Step 2: For Sculpt/Yoga — try Mat Pilates in same tier before going up
   if (useMatProxy) {
     var matPays = collectPays('Mat Pilates', userTier);
     if (matPays.length >= MIN_SAMPLE_SIZE) return avg(matPays);
   }
 
-  // Step 3: Walk up tiers one at a time (never jump more than one tier)
   for (var t = userTier - 1; t >= 1; t--) {
     pays = collectPays(fmt, t);
     if (pays.length >= MIN_SAMPLE_SIZE) return avg(pays);
-
-    // For Sculpt/Yoga — also try Mat Pilates at this tier before going higher
     if (useMatProxy) {
       var matPaysUp = collectPays('Mat Pilates', t);
       if (matPaysUp.length >= MIN_SAMPLE_SIZE) return avg(matPaysUp);
     }
   }
 
-  // Step 4: Full fallback — no live data, return null → use hardcoded + tier multiplier
   return null;
 }
 
-// Compute negotiation pay gap % and avg rating from instructor rows
-function computeNegStats(rows, fmt) {
-  var data = rows.length && Array.isArray(rows[0]) && isNaN(parseFloat(String(rows[0][9]||''))) ? rows.slice(1) : rows;
+// ── computeNegStats: tiered fallback for pctGap, filtered negPct/rating ──────
+function computeNegStats(rows, fmt, exp) {
+  var data = rows.slice(1).filter(function(r) { return Array.isArray(r); });
+
   var fmtNorm = (fmt||'').toLowerCase();
   function parseNum(v) { var n=parseFloat(String(v||'').replace(/[^0-9.]/g,'')); return (!isNaN(n)&&n>0)?n:null; }
   function getPay(row) { return parseNum(row[9])||parseNum(row[11])||null; }
-  function fmtMatch(row) {
-    var r=String(row[6]||'').toLowerCase();
-    return !fmtNorm||!r||(r.indexOf(fmtNorm.split('/')[0].trim())!==-1||fmtNorm.indexOf(r.split('/')[0].trim())!==-1);
+
+  function fmtMatch(row, f) {
+    var ff = (f||'').toLowerCase();
+    var r  = String(row[6]||'').toLowerCase();
+    return !ff||!r||(r.indexOf(ff.split('/')[0].trim())!==-1||ff.indexOf(r.split('/')[0].trim())!==-1);
+  }
+  function expMatch(row) {
+    if (!exp) return true;
+    var r=String(row[13]||'').toLowerCase();
+    if (exp==='lt1') return r==='0'||r.indexOf('<1')!==-1||r.indexOf('less than 1')!==-1;
+    if (exp==='1-2') return r.indexOf('1')!==-1&&r.indexOf('2')!==-1;
+    if (exp==='3-5') return r.indexOf('3')!==-1||r.indexOf('4')!==-1||r.indexOf('5')!==-1;
+    if (exp==='6-10') return r.indexOf('6')!==-1||r.indexOf('7')!==-1||r.indexOf('8')!==-1||r.indexOf('9')!==-1||(r.indexOf('10')!==-1&&r.indexOf('10+')===-1);
+    if (exp==='10+') return r.indexOf('10+')!==-1||r.indexOf('more than 10')!==-1||r.indexOf('over 10')!==-1;
+    return true;
   }
   function didNeg(row) { var v=String(row[15]||'').toLowerCase().trim(); return v==='yes'||v==='true'||v==='1'; }
-  function getRating(row) { return parseNum(row[26]); } // AA = col 26 (0-indexed)
+  function getRating(row) { return parseNum(row[26]); }
 
-  var negPays=[],nonNegPays=[],ratings=[];
-  data.forEach(function(row) {
-    if (!fmtMatch(row)) return;
+  function computeGap(subset) {
+    var negPays=[], nonNegPays=[];
+    subset.forEach(function(row) {
+      var pay=getPay(row); if(!pay) return;
+      if (didNeg(row)) negPays.push(pay); else nonNegPays.push(pay);
+    });
+    function avg(a) { return a.length?a.reduce(function(x,y){return x+y;},0)/a.length:null; }
+    var na=avg(negPays), nna=avg(nonNegPays);
+    return (na&&nna&&nna>0) ? Math.round(((na-nna)/nna)*100) : null;
+  }
+
+  // ── pctGap waterfall: stop as soon as gap >= 10% ──────────────────────────
+  var ALL_FORMATS = ['Reformer / Apparatus','Mat Pilates','Sculpt','Yoga'];
+  var pctGap = null;
+  var gapScope = 'global';
+
+  // Tier 1: requested format + exp
+  var t1 = data.filter(function(r) { return fmtMatch(r, fmt) && expMatch(r); });
+  var g1 = computeGap(t1);
+  if (g1 !== null && g1 >= 8) { pctGap = g1; gapScope = 'filtered'; }
+
+  // Tier 2: other formats + same exp
+  if (pctGap === null) {
+    var otherFmts = ALL_FORMATS.filter(function(f) { return f !== fmt; });
+    var t2 = data.filter(function(r) { return otherFmts.some(function(f) { return fmtMatch(r,f); }) && expMatch(r); });
+    var g2 = computeGap(t2);
+    if (g2 !== null && g2 >= 8) { pctGap = g2; gapScope = 'other_fmt_exp'; }
+  }
+
+  // Tier 3: all formats + any exp
+  if (pctGap === null) {
+    var g3 = computeGap(data);
+    pctGap = g3; gapScope = 'global';
+  }
+
+  // ── negPct + rating: use format + exp filtered if sufficient, else all ────
+  var forCounts = t1.length >= MIN_SAMPLE_SIZE ? t1 : data;
+  var negPays2=[], nonNegPays2=[], ratings=[];
+  forCounts.forEach(function(row) {
     var pay=getPay(row); if(!pay) return;
-    if (didNeg(row)) { negPays.push(pay); var r=getRating(row); if(r) ratings.push(r); }
-    else { nonNegPays.push(pay); }
+    if (didNeg(row)) { negPays2.push(pay); var r=getRating(row); if(r) ratings.push(r); }
+    else { nonNegPays2.push(pay); }
   });
+  function avg2(a) { return a.length?a.reduce(function(x,y){return x+y;},0)/a.length:null; }
+  var totalWithPay = negPays2.length+nonNegPays2.length;
+  var negPct = totalWithPay>0 ? Math.round((negPays2.length/totalWithPay)*100) : null;
+  var ratingAvg = avg2(ratings);
 
-  function avg(arr) { return arr.length?arr.reduce(function(a,b){return a+b;},0)/arr.length:null; }
-  var negAvg=avg(negPays), nonNegAvg=avg(nonNegPays), ratingAvg=avg(ratings);
-  var pctGap=(negAvg&&nonNegAvg&&nonNegAvg>0)?Math.round(((negAvg-nonNegAvg)/nonNegAvg)*100):null;
-  return { pctGap:pctGap, negCount:negPays.length, ratingAvg:ratingAvg?Math.round(ratingAvg*10)/10:null };
+  var scope = t1.length >= MIN_SAMPLE_SIZE ? 'filtered' : (data.filter(function(r){return fmtMatch(r,fmt);}).length >= MIN_SAMPLE_SIZE ? 'format' : 'global');
+
+  return {
+    pctGap: pctGap,
+    gapScope: gapScope,
+    negPct: negPct,
+    ratingAvg: ratingAvg ? Math.round(ratingAvg*10)/10 : null,
+    scope: scope
+  };
 }
 
 function renderBrief(sData, fmt, base, askLo, askHi, mid, floor, ceil, range, negStats, usedLiveData) {
@@ -683,9 +745,9 @@ function renderBrief(sData, fmt, base, askLo, askHi, mid, floor, ceil, range, ne
 
   document.getElementById('r-headline').textContent = 'Your brief for ' + locLabel + '.';
   var expLabels = { lt1:'Less than 1 year','1-2':'1-2 years','3-5':'3-5 years','6-10':'6-10 years','10+':'10+ years' };
-  document.getElementById('r-sub').textContent =
-    (state.formats.length > 0 ? state.formats.join(', ') : 'Pilates') +
-    ' \u2014 ' + (expLabels[state.exp] || '3-5 years') + ' experience';
+  var subParts = [state.formats.length > 0 ? state.formats.join(', ') : 'Pilates'];
+  if (state.exp) subParts.push((expLabels[state.exp] || state.exp) + ' experience');
+  document.getElementById('r-sub').textContent = subParts.join(' \u2014 ');
 
   if (sData && sData.found && state.studio) {
     var displayName = sData.displayName || state.studio;
@@ -732,27 +794,36 @@ function renderBrief(sData, fmt, base, askLo, askHi, mid, floor, ceil, range, ne
     curLabel.style.transform = curPct < 15 ? 'translateX(0)' : 'translateX(-50%)';
   }
 
-  // Market avg stat — note if live or fallback
+  // ── Build context strings from only the levers that were provided ──────────
+  var hasCity = !!state.city;
+  var hasExp  = !!state.exp;
+  var expLabels2 = { lt1:'less than 1 year experience','1-2':'1–2 years experience','3-5':'3–5 years experience','6-10':'6–10 years experience','10+':'10+ years experience' };
+  var mktDescParts = ['Average for ' + fmt];
+  if (hasExp)  mktDescParts.push('at ' + (expLabels2[state.exp] || state.exp));
+  if (hasCity) mktDescParts.push('in your area');
   document.getElementById('rs-mkt').textContent = '$' + base + '/class';
-  document.getElementById('rs-mkt-desc').textContent = usedLiveData
-    ? 'Live average for ' + fmt + ' at your experience level in your market. Think of this as your floor.'
-    : 'Estimated average for ' + fmt + ' at your experience level in your market. Think of this as your floor.';
+  document.getElementById('rs-mkt-desc').textContent = mktDescParts.join(' ') + '. Think of this as your floor.';
 
-  // Negotiation pay gap
+  document.getElementById('ask-sub').textContent = 'per class · based on your ' + [hasCity ? 'market' : null, 'format', hasExp ? 'experience' : null].filter(Boolean).join(', ');
+
+  // ── FIX: show live negPct; fall back gracefully if unavailable ────────────
+  var displayNegPct = (negStats && negStats.negPct !== null) ? negStats.negPct : null;
+  if (displayNegPct !== null) {
+    document.getElementById('rs-neg').textContent = displayNegPct + '%';
+  } else {
+    document.getElementById('rs-neg').textContent = '--';
+  }
+
   if (negStats && negStats.pctGap !== null && negStats.pctGap > 0) {
-    document.getElementById('rs-neg').textContent = negStats.pctGap + '%';
     document.getElementById('neg-pay-stat').textContent =
       'Instructors in our database who negotiated earn ' + negStats.pctGap + '% more per class on average than those who didn\'t.';
   } else {
-    document.getElementById('rs-neg').innerHTML = '25%<sup style="font-size:10px;vertical-align:super;line-height:0;">*</sup>';
     document.getElementById('neg-pay-stat').textContent = 'Instructors who negotiated earned more per class on average than those who didn\'t.';
   }
 
-  // Star rating
   document.getElementById('neg-rating-val').textContent =
     (negStats && negStats.ratingAvg !== null) ? negStats.ratingAvg.toFixed(1) : '3.5';
 
-  // Annual
   if (state.rate && state.classes) {
     document.getElementById('r-annual').style.display = 'flex';
     var annualGain = (mid - state.rate) * state.classes * 52;
@@ -761,34 +832,23 @@ function renderBrief(sData, fmt, base, askLo, askHi, mid, floor, ceil, range, ne
     document.getElementById('footnote-annual-detail').textContent = 'ask midpoint $' + mid + '/class \xb7 ' + state.classes + ' classes/week';
   }
 
+  // ── Footnote — explain neg stat scope ────────────────────────────────────
+  var expLabels = { lt1:'less than 1 year','1-2':'1–2 years','3-5':'3–5 years','6-10':'6–10 years','10+':'10+ years' };
+  var negScopeNote = '';
+  if (negStats) {
+    if (negStats.scope === 'filtered') {
+      negScopeNote = 'Negotiation stats reflect ' + fmt + ' instructors with ' + (expLabels[state.exp] || state.exp) + ' of experience in our database.';
+    } else if (negStats.scope === 'format') {
+      negScopeNote = 'Negotiation stats reflect all ' + fmt + ' instructors in our database (not enough data yet to filter by experience level).';
+    } else {
+      negScopeNote = 'Negotiation stats reflect all instructors in our database (not enough data yet to filter by format or experience level).';
+    }
+  }
+  document.getElementById('footnote-neg-scope').textContent = negScopeNote;
   document.getElementById('form-card').style.display = 'none';
   document.getElementById('progress-row').style.display = 'none';
   document.getElementById('results').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  // Alternating colors
-  var hasStudio = !!(sData && sData.found && state.studio);
-  var hasAnnual = !!(state.rate && state.classes);
-  var sections = [
-    { id:'studio-flag',     show:hasStudio },
-    { id:'r-stats',         show:true },
-    { id:'r-annual',        show:hasAnnual },
-    { id:'r-insight-1',     show:true },
-    { id:'r-insight-stars', show:true },
-    { id:'r-insight-2',     show:true },
-  ];
-  var colorIndex = 1;
-  sections.forEach(function(s) {
-    var el = document.getElementById(s.id);
-    if (!s.show) return;
-    var isLinen = (colorIndex % 2 === 1);
-    el.style.background = isLinen ? 'var(--linen)' : 'var(--white)';
-    if (s.id === 'r-stats') {
-      el.querySelectorAll('.r-stat').forEach(function(cell) { cell.style.background = isLinen ? 'var(--linen)' : 'var(--white)'; });
-      el.style.background = 'var(--linen2)';
-    }
-    colorIndex++;
-  });
 }
 
 function exportBrief() { window.print(); }
