@@ -836,12 +836,13 @@ function renderBrief(sData, fmt, base, askLo, askHi, mid, floor, ceil, range, ne
   var expLabels = { lt1:'less than 1 year','1-2':'1–2 years','3-5':'3–5 years','6-10':'6–10 years','10+':'10+ years' };
   var negScopeNote = '';
   if (negStats) {
+    var expLabels3 = { lt1:'less than 1 year','1-2':'1–2 years','3-5':'3–5 years','6-10':'6–10 years','10+':'10+ years' };
     if (negStats.scope === 'filtered') {
-      negScopeNote = 'Negotiation stats reflect ' + fmt + ' instructors with ' + (expLabels[state.exp] || state.exp) + ' of experience in our database.';
+      negScopeNote = 'Negotiation stats reflect ' + fmt + ' instructors' + (hasExp ? ' with ' + (expLabels3[state.exp] || state.exp) + ' of experience' : '') + ' in our database.';
     } else if (negStats.scope === 'format') {
-      negScopeNote = 'Negotiation stats reflect all ' + fmt + ' instructors in our database (not enough data yet to filter by experience level).';
+      negScopeNote = 'Negotiation stats reflect all ' + fmt + ' instructors in our database' + (hasExp ? ' (not enough data to filter by experience level)' : '') + '.';
     } else {
-      negScopeNote = 'Negotiation stats reflect all instructors in our database (not enough data yet to filter by format or experience level).';
+      negScopeNote = 'Negotiation stats reflect all instructors in our database (not enough data to filter by format' + (hasExp ? ' or experience level' : '') + ').';
     }
   }
   document.getElementById('footnote-neg-scope').textContent = negScopeNote;
