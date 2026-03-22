@@ -577,54 +577,76 @@ function applyTierToBase(fmt, exp, tier) {
 // Compute live average from real submissions, filtered by format + exp + tier
 // Falls back to null if fewer than MIN_SAMPLE_SIZE submissions match
 function computeLiveBase(instructorRows, studioRows, fmt, exp, userTier) {
-  function parseNum(v) { var n = parseFloat(String(v||'').replace(/[^0-9.]/g,'')); return (!isNaN(n)&&n>0)?n:null; }
-  function fmtMatch(rowFmt, fmt) {
-    var r = (rowFmt||'').toLowerCase(); var f = (fmt||'').toLowerCase();
-    return r.indexOf(f.split('/')[0].trim())!==-1 || f.indexOf(r.split('/')[0].trim())!==-1;
+  function parseNum(v) { var n=parseFloat(String(v||'').replace(/[^0-9.]/g,'')); return (!isNaN(n)&&n>0)?n:null; }
+  function fmtMatch(rowFmt, f) {
+    var r=(rowFmt||'').toLowerCase(); var ff=(f||'').toLowerCase();
+    return r.indexOf(ff.split('/')[0].trim())!==-1||ff.indexOf(r.split('/')[0].trim())!==-1;
   }
   function expMatch(rowExp, exp) {
-    // Instructor clean col 13 (0-indexed) = Experience
-    var r = (rowExp||'').toLowerCase();
-    if (exp==='lt1') return r.indexOf('less')===-1 && (r==='0'||r.indexOf('<1')!==-1||r.indexOf('less than 1')!==-1);
+    var r=(rowExp||'').toLowerCase();
+    if (exp==='lt1') return r==='0'||r.indexOf('<1')!==-1||r.indexOf('less than 1')!==-1;
     if (exp==='1-2') return r.indexOf('1')!==-1&&r.indexOf('2')!==-1;
     if (exp==='3-5') return r.indexOf('3')!==-1||r.indexOf('4')!==-1||r.indexOf('5')!==-1;
-    if (exp==='6-10') return r.indexOf('6')!==-1||r.indexOf('7')!==-1||r.indexOf('8')!==-1||r.indexOf('9')!==-1||r.indexOf('10')!==-1;
+    if (exp==='6-10') return r.indexOf('6')!==-1||r.indexOf('7')!==-1||r.indexOf('8')!==-1||r.indexOf('9')!==-1||(r.indexOf('10')!==-1&&r.indexOf('10+')===-1);
     if (exp==='10+') return r.indexOf('10+')!==-1||r.indexOf('more than 10')!==-1||r.indexOf('over 10')!==-1;
     return true;
   }
 
-  var pays = [];
-
-  // Instructor rows: header is row[0], data starts at row[1] (the endpoint returns [header, ...rows])
   var iData = instructorRows.length && !Array.isArray(instructorRows[0]) ? instructorRows : instructorRows.slice(1);
-  iData.forEach(function(row) {
-    if (!Array.isArray(row)) return;
-    var rowCity = String(row[4]||'').trim();
-    var rowTier = getCityTier(rowCity);
-    if (rowTier !== userTier) return;
-    if (!fmtMatch(row[6], fmt)) return;
-    // experience col 13 (0-indexed)
-    if (exp && !expMatch(row[13], exp)) return;
-    var pay = parseNum(row[9]) || parseNum(row[11]);
-    if (pay) pays.push(pay);
-  });
-
-  // Also pull studio rows for same tier/format
   var sData = studioRows.length && !Array.isArray(studioRows[0]) ? studioRows : studioRows.slice(1);
-  sData.forEach(function(row) {
-    if (!Array.isArray(row)) return;
-    var rowCity = String(row[4]||'').trim();
-    var rowTier = getCityTier(rowCity);
-    if (rowTier !== userTier) return;
-    if (!fmtMatch(row[7], fmt)) return;
-    // Studio exp col 11 (0-indexed) = Experience Level
-    if (exp && !expMatch(row[11], exp)) return;
-    var pay = parseNum(row[10]) || parseNum(row[16]) || parseNum(row[12]) || parseNum(row[13]);
-    if (pay) pays.push(pay);
-  });
 
-  if (pays.length < MIN_SAMPLE_SIZE) return null;
-  return Math.round(pays.reduce(function(a,b){return a+b;},0) / pays.length);
+  // Collect pays for a given format + tier combination
+  function collectPays(f, tier) {
+    var pays = [];
+    iData.forEach(function(row) {
+      if (!Array.isArray(row)) return;
+      if (getCityTier(String(row[4]||'').trim()) !== tier) return;
+      if (!fmtMatch(row[6], f)) return;
+      if (exp && !expMatch(row[13], exp)) return;
+      var pay = parseNum(row[9]) || parseNum(row[11]);
+      if (pay) pays.push(pay);
+    });
+    sData.forEach(function(row) {
+      if (!Array.isArray(row)) return;
+      if (getCityTier(String(row[4]||'').trim()) !== tier) return;
+      if (!fmtMatch(row[7], f)) return;
+      if (exp && !expMatch(row[11], exp)) return;
+      var pay = parseNum(row[10]) || parseNum(row[16]) || parseNum(row[12]) || parseNum(row[13]);
+      if (pay) pays.push(pay);
+    });
+    return pays;
+  }
+
+  function avg(pays) { return Math.round(pays.reduce(function(a,b){return a+b;},0)/pays.length); }
+
+  // Formats that use Mat Pilates as a proxy before walking up tiers
+  var matProxyFormats = ['Sculpt', 'Yoga'];
+  var useMatProxy = matProxyFormats.indexOf(fmt) !== -1;
+
+  // Step 1: Try exact format + user's tier
+  var pays = collectPays(fmt, userTier);
+  if (pays.length >= MIN_SAMPLE_SIZE) return avg(pays);
+
+  // Step 2: For Sculpt/Yoga — try Mat Pilates in same tier before going up
+  if (useMatProxy) {
+    var matPays = collectPays('Mat Pilates', userTier);
+    if (matPays.length >= MIN_SAMPLE_SIZE) return avg(matPays);
+  }
+
+  // Step 3: Walk up tiers one at a time (never jump more than one tier)
+  for (var t = userTier - 1; t >= 1; t--) {
+    pays = collectPays(fmt, t);
+    if (pays.length >= MIN_SAMPLE_SIZE) return avg(pays);
+
+    // For Sculpt/Yoga — also try Mat Pilates at this tier before going higher
+    if (useMatProxy) {
+      var matPaysUp = collectPays('Mat Pilates', t);
+      if (matPaysUp.length >= MIN_SAMPLE_SIZE) return avg(matPaysUp);
+    }
+  }
+
+  // Step 4: Full fallback — no live data, return null → use hardcoded + tier multiplier
+  return null;
 }
 
 // Compute negotiation pay gap % and avg rating from instructor rows
