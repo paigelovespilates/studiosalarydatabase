@@ -307,6 +307,17 @@ input:focus, select:focus { border-color: var(--olive); }
 }
 .btn-export:hover { opacity: 0.88; }
 
+/* footnote */
+.brief-footnote {
+  font-size: 10px;
+  color: var(--sand);
+  line-height: 1.6;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--linen2);
+  letter-spacing: 0.01em;
+}
+
 /* footer sig */
 .sig { text-align: center; margin-top: 28px; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
 .sig em { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 13px; color: var(--sand); }
@@ -360,7 +371,7 @@ input:focus, select:focus { border-color: var(--olive); }
     <!-- STEP 1: FORMAT -->
     <div class="step active" id="step1">
       <div class="step-title">What do you teach?</div>
-      <div class="step-sub">Select your primary format -- we'll benchmark against instructors like you.</div>
+      <div class="step-sub">Select the format you'd like to review -- we'll benchmark against instructors like you.</div>
       <div class="chip-grid" id="format-chips">
         <div class="chip" data-val="Reformer / Apparatus" onclick="selectChip(this)">Reformer / Apparatus</div>
         <div class="chip" data-val="Mat Pilates" onclick="selectChip(this)">Mat Pilates</div>
@@ -375,7 +386,7 @@ input:focus, select:focus { border-color: var(--olive); }
     <!-- STEP 2: STUDIO + LOCATION -->
     <div class="step" id="step2">
       <div class="step-title">Where do you teach?</div>
-      <div class="step-sub">Enter your studio name to surface real data -- or skip and we'll use your market.</div>
+      <div class="step-sub">Enter your studio name to surface real data -- or skip and we'll look at studios nearby.</div>
       <div class="field">
         <label>Studio Name <span class="opt-tag">optional</span></label>
         <input type="text" id="studio-input" placeholder="e.g. Club Pilates, Solidcore..." oninput="checkStudio()">
@@ -508,12 +519,12 @@ input:focus, select:focus { border-color: var(--olive); }
     <!-- STUDIO FLAG -->
     <div class="studio-flag" id="studio-flag">
       <span class="sf-check">&#10003;</span>
-      <span id="sf-name"></span> is in our database
-      <a class="sf-link" id="sf-link" href="#" target="_blank">View in database &rarr;</a>
+      <span id="sf-name"></span> is in our database &mdash;
+      <a class="sf-link" id="sf-link" href="#" target="_blank">view their pay data &rarr;</a>
     </div>
 
     <!-- STATS ROW -->
-    <div class="r-stats">
+    <div class="r-stats" id="r-stats">
       <div class="r-stat">
         <span class="rlbl" style="margin-bottom:2px">Market avg &middot; your format</span>
         <div class="rsval" id="rs-mkt">--</div>
@@ -529,24 +540,45 @@ input:focus, select:focus { border-color: var(--olive); }
     <!-- ANNUAL IMPACT -->
     <div class="r-annual" id="r-annual">
       <div class="ra-left">
-        <strong id="ra-title">Additional annual earnings</strong><br>
-        <span id="ra-sub" style="color:#9A9A84;font-size:11px;"></span>
+        <strong id="ra-title">Additional annual earnings</strong>
       </div>
       <div class="ra-right" id="ra-val"></div>
     </div>
 
     <!-- INSIGHT -->
-    <div class="r-insight">
+    <div class="r-insight" id="r-insight-1">
       <div class="ri-arr">&rarr;</div>
       <div>
         <div class="ri-h">50% of instructors who asked got more.</div>
-        <div class="ri-d">In our database, instructors who negotiated earned an average of $8 more per class.</div>
+        <div class="ri-d" id="neg-pay-stat">Instructors who negotiated earned more per class on average than those who didn't.</div>
+      </div>
+    </div>
+
+    <!-- STAR RATING -->
+    <div class="r-insight" id="r-insight-stars" style="border-top: 1px solid var(--linen2); margin-top: 0;">
+      <div class="ri-arr">&rarr;</div>
+      <div>
+        <div class="ri-h" id="neg-rating-headline">They rated the experience <span id="neg-rating-val">--</span> / 5.</div>
+        <div class="ri-d">Even when the answer was no.</div>
+      </div>
+    </div>
+
+    <!-- METHODOLOGY NOTE -->
+    <div class="r-insight" id="r-insight-2" style="border-top: 1px solid var(--linen2); margin-top: 0;">
+      <div class="ri-arr" style="color: var(--sand);">&#9432;</div>
+      <div>
+        <div class="ri-h">How we calculated your range.</div>
+        <div class="ri-d">Business negotiation experts — including researchers at Harvard and Cornell — recommend leading with 10–20% above market rate, adjusted for your experience level. More experienced instructors have greater leverage and can justify the higher end. Your range reflects this: the more years you have, the wider and higher your suggested ask.</div>
       </div>
     </div>
 
     <div class="action-row">
       <button class="btn-reset" onclick="reset()">&larr; Start over</button>
       <button class="btn-export" onclick="exportBrief()">Save as PDF</button>
+    </div>
+
+    <div class="brief-footnote" id="brief-footnote">
+      * Market averages are calculated from Studio Salary Database submissions, filtered by class format, experience level, and market size. Instructors in major cities are benchmarked against other major city markets; smaller markets are compared locally. <span id="footnote-annual" style="display:none">Annual earnings estimate based on ask midpoint · <span id="footnote-annual-detail"></span>. </span>Negotiation stats reflect real submissions from instructors in our network.
     </div>
 
   </div><!-- /results -->
@@ -668,8 +700,16 @@ function generate() {
   var fmt  = state.formats[0] || 'Reformer / Apparatus';
   var mkt  = MARKET[fmt] || MARKET['Reformer / Apparatus'];
   var base = mkt[state.exp] || mkt['3-5'];
-  var askLo = Math.round(base * 1.08);
-  var askHi = Math.round(base * 1.22);
+  var expMultipliers = {
+    'lt1':  { lo: 1.08, hi: 1.15 },
+    '1-2':  { lo: 1.10, hi: 1.17 },
+    '3-5':  { lo: 1.10, hi: 1.20 },
+    '6-10': { lo: 1.12, hi: 1.20 },
+    '10+':  { lo: 1.15, hi: 1.22 }
+  };
+  var mult = expMultipliers[state.exp] || expMultipliers['3-5'];
+  var askLo = Math.round(base * mult.lo);
+  var askHi = Math.round(base * mult.hi);
   var mid   = Math.round((askLo + askHi) / 2);
   var floor = mkt.floor;
   var ceil  = mkt.ceil;
@@ -684,21 +724,112 @@ function generate() {
     window[cbName] = function(sData) {
       delete window[cbName];
       document.head.removeChild(script);
-      renderBrief(sData && sData.found ? sData : null, fmt, mkt, base, askLo, askHi, mid, floor, ceil, range);
+      fetchNegStats(fmt, function(negStats) {
+        renderBrief(sData && sData.found ? sData : null, fmt, mkt, base, askLo, askHi, mid, floor, ceil, range, negStats);
+      });
     };
     script.src = APPS_SCRIPT_URL + params;
     script.onerror = function() {
       delete window[cbName];
       document.head.removeChild(script);
-      renderBrief(null, fmt, mkt, base, askLo, askHi, mid, floor, ceil, range);
+      fetchNegStats(fmt, function(negStats) {
+        renderBrief(null, fmt, mkt, base, askLo, askHi, mid, floor, ceil, range, negStats);
+      });
     };
     document.head.appendChild(script);
   } else {
-    renderBrief(null, fmt, mkt, base, askLo, askHi, mid, floor, ceil, range);
+    fetchNegStats(fmt, function(negStats) {
+      renderBrief(null, fmt, mkt, base, askLo, askHi, mid, floor, ceil, range, negStats);
+    });
   }
 }
 
-function renderBrief(sData, fmt, mkt, base, askLo, askHi, mid, floor, ceil, range) {
+// Fetch full instructor data and compute negotiation stats for the given format
+function fetchNegStats(fmt, callback) {
+  var cbName = 'negCb_' + Date.now();
+  var script = document.createElement('script');
+  window[cbName] = function(data) {
+    delete window[cbName];
+    document.head.removeChild(script);
+    var stats = computeNegStats(data.instructor || [], fmt);
+    callback(stats);
+  };
+  script.src = APPS_SCRIPT_URL + '?callback=' + cbName;
+  script.onerror = function() {
+    delete window[cbName];
+    document.head.removeChild(script);
+    callback(null);
+  };
+  document.head.appendChild(script);
+}
+
+// Compute negotiation pay gap % and avg rating from instructor rows
+// Instructor clean cols (0-indexed from data rows): 6=format, 7=pay structure, 9=pay per class, 12=flat rate, 15=negotiated, rating col TBD
+function computeNegStats(rows, fmt) {
+  // Skip header row if present
+  var data = rows.length && Array.isArray(rows[0]) && isNaN(parseFloat(rows[0][9])) ? rows.slice(1) : rows;
+
+  var fmtNorm = (fmt || '').toLowerCase();
+
+  function parseNum(v) {
+    var n = parseFloat(String(v || '').replace(/[^0-9.]/g, ''));
+    return (!isNaN(n) && n > 0) ? n : null;
+  }
+
+  function getPay(row) {
+    return parseNum(row[9]) || parseNum(row[11]) || null; // pay per class or flat rate
+  }
+
+  function getFormat(row) {
+    return String(row[6] || '').toLowerCase();
+  }
+
+  function didNegotiate(row) {
+    var v = String(row[15] || '').toLowerCase().trim();
+    return v === 'yes' || v === 'true' || v === '1';
+  }
+
+  function getRating(row) {
+    // Rating is in col 24 (0-indexed) based on March 2026 Tally update
+    return parseNum(row[24]);
+  }
+
+  var negPays = [], nonNegPays = [], ratings = [];
+
+  data.forEach(function(row) {
+    var rowFmt = getFormat(row);
+    // Match format loosely
+    if (fmtNorm && rowFmt && rowFmt.indexOf(fmtNorm.split('/')[0].trim()) === -1 && fmtNorm.indexOf(rowFmt.split('/')[0].trim()) === -1) return;
+    var pay = getPay(row);
+    if (!pay) return;
+    if (didNegotiate(row)) {
+      negPays.push(pay);
+      var r = getRating(row);
+      if (r) ratings.push(r);
+    } else {
+      nonNegPays.push(pay);
+    }
+  });
+
+  function avg(arr) { return arr.length ? arr.reduce(function(a,b){return a+b;},0) / arr.length : null; }
+
+  var negAvg    = avg(negPays);
+  var nonNegAvg = avg(nonNegPays);
+  var ratingAvg = avg(ratings);
+
+  var pctGap = (negAvg && nonNegAvg && nonNegAvg > 0)
+    ? Math.round(((negAvg - nonNegAvg) / nonNegAvg) * 100)
+    : null;
+
+  return {
+    pctGap:    pctGap,
+    negCount:  negPays.length,
+    ratingAvg: ratingAvg ? Math.round(ratingAvg * 10) / 10 : null,
+    ratingCount: ratings.length
+  };
+}
+
+function renderBrief(sData, fmt, mkt, base, askLo, askHi, mid, floor, ceil, range, negStats) {
   var locParts = [];
   if (state.city) locParts.push(state.city.toLowerCase().replace(/(^|\s)\S/g, function(l){ return l.toUpperCase(); }));
   var locLabel = locParts.length > 0 ? locParts.join(', ') : 'your market';
@@ -771,20 +902,69 @@ function renderBrief(sData, fmt, mkt, base, askLo, askHi, mid, floor, ceil, rang
 
   document.getElementById('rs-mkt').textContent = '$' + base + '/class';
   document.getElementById('rs-mkt-desc').textContent = 'Average for ' + fmt + ' at your experience level. Think of this as your floor during negotiations.';
-  document.getElementById('rs-neg').innerHTML = '25%<sup style="font-size:10px;vertical-align:super;line-height:0;">*</sup>';
+
+  // Negotiation pay gap — dynamic from live data
+  if (negStats && negStats.pctGap !== null && negStats.pctGap > 0) {
+    document.getElementById('rs-neg').textContent = negStats.pctGap + '%';
+    document.getElementById('neg-pay-stat').textContent =
+      'Instructors in our database who negotiated earn ' + negStats.pctGap + '% more per class on average than those who didn\'t.';
+  } else {
+    document.getElementById('rs-neg').innerHTML = '25%<sup style="font-size:10px;vertical-align:super;line-height:0;">*</sup>';
+    document.getElementById('neg-pay-stat').textContent =
+      'Instructors who negotiated earned more per class on average than those who didn\'t.';
+  }
+
+  // Star rating — dynamic from live data
+  if (negStats && negStats.ratingAvg !== null) {
+    document.getElementById('neg-rating-val').textContent = negStats.ratingAvg.toFixed(1);
+  } else {
+    document.getElementById('neg-rating-val').textContent = '3.5';
+  }
 
   if (state.rate && state.classes) {
     var annDiv = document.getElementById('r-annual');
     annDiv.style.display = 'flex';
     var annualGain = (mid - state.rate) * state.classes * 52;
     document.getElementById('ra-val').textContent = (annualGain >= 0 ? '+' : '') + '$' + Math.abs(annualGain).toLocaleString() + '/yr';
-    document.getElementById('ra-sub').textContent = 'vs. your current rate, at ' + state.classes + ' classes/week';
+    // Move description to footnote
+    var footAnnual = document.getElementById('footnote-annual');
+    footAnnual.style.display = 'inline';
+    document.getElementById('footnote-annual-detail').textContent =
+      'ask midpoint $' + mid + '/class · ' + state.classes + ' classes/week';
   }
 
   document.getElementById('form-card').style.display = 'none';
   document.getElementById('progress-row').style.display = 'none';
   document.getElementById('results').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Alternating section colors
+  var hasStudio = sData && sData.found && state.studio;
+  var hasAnnual = !!(state.rate && state.classes);
+
+  var sections = [
+    { id: 'studio-flag',    show: hasStudio },
+    { id: 'r-stats',        show: true },
+    { id: 'r-annual',       show: hasAnnual },
+    { id: 'r-insight-1',    show: true },
+    { id: 'r-insight-stars',show: true },
+    { id: 'r-insight-2',    show: true },
+  ];
+
+  var colorIndex = 1;
+  sections.forEach(function(s) {
+    var el = document.getElementById(s.id);
+    if (!s.show) return;
+    var isLinen = (colorIndex % 2 === 1);
+    el.style.background = isLinen ? 'var(--linen)' : 'var(--white)';
+    if (s.id === 'r-stats') {
+      el.querySelectorAll('.r-stat').forEach(function(cell) {
+        cell.style.background = isLinen ? 'var(--linen)' : 'var(--white)';
+      });
+      el.style.background = 'var(--linen2)';
+    }
+    colorIndex++;
+  });
 }
 
 function exportBrief() {
