@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
   --olive:   #373930;
   --linen:   #EDEBE4;
@@ -20,309 +19,95 @@
   --red:     #8B3A3A;
   --white:   #FAFAF7;
 }
-
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--linen);
-  color: var(--ink);
-  min-height: 100vh;
-  padding: 48px 20px 80px;
-}
-
+body { font-family: 'DM Sans', sans-serif; background: var(--linen); color: var(--ink); min-height: 100vh; padding: 48px 20px 80px; }
 .wrap { max-width: 520px; margin: 0 auto; }
-
-/* HEADER */
 .hdr { text-align: center; margin-bottom: 40px; }
-.hdr-eyebrow {
-  font-size: 10px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 12px;
-}
-.hdr h1 {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 32px;
-  font-weight: 600;
-  line-height: 1.15;
-  color: var(--olive);
-  margin-bottom: 10px;
-}
+.hdr-eyebrow { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+.hdr h1 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; font-weight: 600; line-height: 1.15; color: var(--olive); margin-bottom: 10px; }
 .hdr h1 em { font-style: italic; font-weight: 400; }
 .hdr p { font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 360px; margin: 0 auto; }
-
-/* PROGRESS */
 .progress-row { display: flex; align-items: center; gap: 0; margin-bottom: 32px; }
 .p-step { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
-.p-circle {
-  width: 28px; height: 28px; border-radius: 50%;
-  border: 1.5px solid var(--sand);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 500; color: var(--muted);
-  background: var(--linen); transition: all 0.25s; position: relative; z-index: 1;
-}
+.p-circle { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--sand); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--muted); background: var(--linen); transition: all 0.25s; position: relative; z-index: 1; }
 .p-step.active .p-circle { background: var(--olive); border-color: var(--olive); color: var(--linen); }
 .p-step.done .p-circle { background: var(--gold); border-color: var(--gold); color: var(--linen); }
 .p-label { font-size: 10px; letter-spacing: 0.08em; color: var(--muted); text-align: center; }
 .p-step.active .p-label { color: var(--olive); font-weight: 500; }
 .p-line { flex: 1; height: 1px; background: var(--sand); margin-bottom: 18px; opacity: 0.5; }
-
-/* CARD */
-.card {
-  background: var(--white);
-  border-radius: 4px;
-  padding: 36px 32px;
-  box-shadow: 0 2px 20px rgba(55,57,48,0.07), 0 1px 4px rgba(55,57,48,0.05);
-}
+.card { background: var(--white); border-radius: 4px; padding: 36px 32px; box-shadow: 0 2px 20px rgba(55,57,48,0.07), 0 1px 4px rgba(55,57,48,0.05); }
 .step { display: none; }
 .step.active { display: block; }
-
-.step-title {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 22px; font-weight: 600; color: var(--olive); margin-bottom: 6px; line-height: 1.3;
-}
+.step-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 600; color: var(--olive); margin-bottom: 6px; line-height: 1.3; }
 .step-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; line-height: 1.5; }
-
-/* FORM ELEMENTS */
-label {
-  display: block; font-size: 11px; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
-}
-input[type="text"], input[type="number"], select {
-  width: 100%; padding: 12px 14px;
-  border: 1.5px solid var(--linen2); border-radius: 3px;
-  font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink);
-  background: var(--white); outline: none; transition: border-color 0.2s;
-  appearance: none; -webkit-appearance: none;
-}
+label { display: block; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+input[type="text"], input[type="number"], select { width: 100%; padding: 12px 14px; border: 1.5px solid var(--linen2); border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink); background: var(--white); outline: none; transition: border-color 0.2s; appearance: none; -webkit-appearance: none; }
 input:focus, select:focus { border-color: var(--olive); }
 .field { margin-bottom: 20px; }
 .field:last-of-type { margin-bottom: 0; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.field-row-3 { display: grid; grid-template-columns: 2fr 1.2fr 1.2fr; gap: 14px; }
-
-/* FORMAT CHIPS */
 .chip-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-.chip {
-  padding: 8px 16px; border: 1.5px solid var(--linen2); border-radius: 20px;
-  font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.18s;
-  background: var(--white); user-select: none;
-}
+.chip { padding: 8px 16px; border: 1.5px solid var(--linen2); border-radius: 20px; font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.18s; background: var(--white); user-select: none; }
 .chip:hover { border-color: var(--sand); color: var(--ink); }
 .chip.selected { background: var(--olive); border-color: var(--olive); color: var(--linen); }
-
-/* STUDIO HINT */
 .studio-hint { margin-top: 8px; font-size: 12px; color: var(--green); min-height: 18px; display: flex; align-items: center; gap: 6px; }
 .studio-hint.miss { color: var(--muted); }
-
-/* OPTIONAL TAG */
-.opt-tag {
-  font-size: 10px; background: var(--linen2); color: var(--muted);
-  padding: 2px 7px; border-radius: 10px; margin-left: 6px;
-  letter-spacing: 0.05em; vertical-align: middle; text-transform: none;
-}
-
-/* NAV BUTTONS */
+.opt-tag { font-size: 10px; background: var(--linen2); color: var(--muted); padding: 2px 7px; border-radius: 10px; margin-left: 6px; letter-spacing: 0.05em; vertical-align: middle; text-transform: none; }
 .btn-row { display: flex; gap: 10px; margin-top: 28px; align-items: center; }
-.btn-back {
-  padding: 12px 20px; border: 1.5px solid var(--linen2); border-radius: 3px;
-  background: transparent; font-family: 'DM Sans', sans-serif; font-size: 13px;
-  color: var(--muted); cursor: pointer; transition: all 0.18s;
-}
+.btn-back { padding: 12px 20px; border: 1.5px solid var(--linen2); border-radius: 3px; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.18s; }
 .btn-back:hover { border-color: var(--sand); color: var(--ink); }
-.btn-next {
-  flex: 1; padding: 13px 24px; background: var(--olive); border: none; border-radius: 3px;
-  font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--linen);
-  cursor: pointer; transition: opacity 0.18s; letter-spacing: 0.02em;
-}
+.btn-next { flex: 1; padding: 13px 24px; background: var(--olive); border: none; border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--linen); cursor: pointer; transition: opacity 0.18s; letter-spacing: 0.02em; }
 .btn-next:hover { opacity: 0.88; }
-
-/* ── RESULTS ── */
 #results { display: none; }
-
-.results-hdr {
-  text-align: center; padding: 28px 32px 24px; border-bottom: 1px solid var(--linen2);
-}
+.results-hdr { text-align: center; padding: 28px 32px 24px; border-bottom: 1px solid var(--linen2); }
 .results-hdr .eyebrow { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
 .results-hdr h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 600; color: var(--olive); line-height: 1.2; }
-.results-hdr h2 em { font-style: italic; font-weight: 400; }
 .results-hdr .sub { font-size: 12px; color: var(--muted); margin-top: 6px; }
-
-/* STUDIO FOUND FLAG */
-.studio-flag {
-  display: none;
-  padding: 14px 32px;
-  border-top: 1px solid var(--linen2);
-  border-bottom: 1px solid var(--linen2);
-  background: var(--linen);
-  font-size: 13px;
-  color: var(--ink);
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
+.studio-flag { display: none; padding: 14px 32px; border-top: 1px solid var(--linen2); border-bottom: 1px solid var(--linen2); background: var(--linen); font-size: 13px; color: var(--ink); align-items: center; gap: 8px; flex-wrap: wrap; }
 .studio-flag .sf-check { color: var(--green); font-size: 14px; flex-shrink: 0; }
 .studio-flag #sf-name { font-weight: 500; text-transform: capitalize; }
-.studio-flag .sf-link {
-  margin-left: auto;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--olive);
-  text-decoration: none;
-  border-bottom: 1px solid var(--sand);
-  padding-bottom: 1px;
-}
+.studio-flag .sf-link { margin-left: auto; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--olive); text-decoration: none; border-bottom: 1px solid var(--sand); padding-bottom: 1px; }
 .studio-flag .sf-link:hover { color: var(--gold); border-color: var(--gold); }
-
-/* ── ASK RANGE - HERO ── */
-.ask-hero {
-  padding: 32px 32px 28px;
-  border-bottom: 1px solid var(--linen2);
-  background: var(--olive);
-  margin: 0 -32px;
-  text-align: center;
-  color: var(--linen);
-}
-.ask-hero .rlbl-light {
-  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
-  color: rgba(237,235,228,0.55); margin-bottom: 16px;
-}
-.ask-range {
-  display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 10px;
-}
-.ask-num {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 68px; font-weight: 600; color: var(--linen); line-height: 1;
-}
+.ask-hero { padding: 32px 32px 28px; border-bottom: 1px solid var(--linen2); background: var(--olive); margin: 0 -32px; text-align: center; color: var(--linen); }
+.ask-hero .rlbl-light { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(237,235,228,0.55); margin-bottom: 16px; }
+.ask-range { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 10px; }
+.ask-num { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 68px; font-weight: 600; color: var(--linen); line-height: 1; }
 .ask-dash { font-size: 40px; color: rgba(237,235,228,0.4); font-weight: 300; }
 .ask-sub { font-size: 12px; color: rgba(237,235,228,0.55); letter-spacing: 0.04em; }
-
-/* Current rate pill inside hero */
-.cr-pill {
-  display: none;
-  margin: 16px auto 0;
-  padding: 8px 18px;
-  background: rgba(237,235,228,0.12);
-  border: 1px solid rgba(237,235,228,0.25);
-  border-radius: 20px;
-  font-size: 13px;
-  color: var(--linen);
-  width: fit-content;
-  gap: 10px;
-  align-items: center;
-  justify-content: center;
-}
+.cr-pill { display: none; margin: 16px auto 0; padding: 8px 18px; background: rgba(237,235,228,0.12); border: 1px solid rgba(237,235,228,0.25); border-radius: 20px; font-size: 13px; color: var(--linen); width: fit-content; gap: 10px; align-items: center; justify-content: center; }
 .cr-pill .cr-gap { font-weight: 500; margin-left: 8px; }
 .cr-pill .cr-gap.pos { color: #7EC99A; }
-
-/* BENCHMARK BAR */
 .bench-section { padding: 24px 32px; border-bottom: 1px solid var(--linen2); }
 .rlbl { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; display: block; }
 .bench-ends { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 2px; }
 .bench-track { position: relative; height: 6px; background: var(--linen2); border-radius: 3px; margin-top: 10px; margin-bottom: 28px; }
 .bfill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--sand); border-radius: 3px; opacity: 0.4; }
 .bzone { position: absolute; top: -2px; bottom: -2px; background: var(--olive); border-radius: 3px; opacity: 0.2; }
-
-/* Current pay dot */
-.bcur {
-  position: absolute; top: -5px;
-  width: 16px; height: 16px;
-  background: var(--gold); border-radius: 50%;
-  border: 2px solid var(--white);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-  transform: translateX(-50%); display: none;
-}
-
-/* Ask dot */
-.bask {
-  position: absolute; top: -5px;
-  width: 16px; height: 16px;
-  background: var(--olive); border-radius: 50%;
-  border: 2px solid var(--white);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-  transform: translateX(-50%);
-}
-
-/* Floating labels near dots */
-.bdot-label {
-  position: absolute;
-  top: 14px;
-  transform: translateX(-50%);
-  font-size: 10px;
-  color: var(--muted);
-  white-space: nowrap;
-  pointer-events: none;
-  display: none;
-}
+.bcur { position: absolute; top: -5px; width: 16px; height: 16px; background: var(--gold); border-radius: 50%; border: 2px solid var(--white); box-shadow: 0 1px 4px rgba(0,0,0,0.15); transform: translateX(-50%); display: none; }
+.bask { position: absolute; top: -5px; width: 16px; height: 16px; background: var(--olive); border-radius: 50%; border: 2px solid var(--white); box-shadow: 0 1px 4px rgba(0,0,0,0.15); transform: translateX(-50%); }
+.bdot-label { position: absolute; top: 14px; transform: translateX(-50%); font-size: 10px; color: var(--muted); white-space: nowrap; pointer-events: none; display: none; }
 .bdot-label.cur { color: var(--gold); }
-.bdot-label.ask { color: var(--muted); font-weight: 400; }
-
-/* STATS ROW */
-.r-stats {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 1px; background: var(--linen2);
-  border-top: 1px solid var(--linen2); border-bottom: 1px solid var(--linen2);
-}
+.r-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--linen2); border-top: 1px solid var(--linen2); border-bottom: 1px solid var(--linen2); }
 .r-stat { padding: 18px 20px; background: var(--white); }
 .r-stat:first-child { padding-left: 32px; }
 .r-stat:last-child { padding-right: 32px; }
 .rsval { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; font-weight: 600; color: var(--olive); line-height: 1.1; margin: 6px 0 3px; }
 .rsdesc { font-size: 11px; color: var(--muted); line-height: 1.4; }
-
-/* ANNUAL */
-.r-annual {
-  display: none; align-items: center; justify-content: space-between;
-  padding: 20px 32px; border-bottom: 1px solid var(--linen2); gap: 16px;
-}
+.r-annual { display: none; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 1px solid var(--linen2); gap: 16px; }
 .ra-left { font-size: 13px; color: var(--ink); line-height: 1.5; }
 .ra-left strong { font-weight: 500; }
 .ra-right { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; font-weight: 600; color: var(--olive); white-space: nowrap; flex-shrink: 0; }
-
-/* INSIGHT */
-.r-insight {
-  display: flex; gap: 14px; padding: 20px 32px;
-  background: var(--linen); margin: 0 -32px;
-  border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; align-items: flex-start;
-  border-top: none; margin-top: -1px;
-}
+.r-insight { display: flex; gap: 14px; padding: 20px 32px; background: var(--linen); margin: 0 -32px; align-items: flex-start; border-top: none; margin-top: -1px; }
 .ri-arr { font-size: 18px; color: var(--olive); margin-top: 1px; flex-shrink: 0; }
 .ri-h { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 15px; font-weight: 600; color: var(--olive); margin-bottom: 4px; }
 .ri-d { font-size: 12px; color: var(--muted); line-height: 1.5; }
-
-/* EXPORT + RESET */
 .action-row { display: flex; gap: 10px; margin-top: 20px; }
-.btn-reset {
-  flex: 1; padding: 12px; background: transparent;
-  border: 1.5px solid var(--linen2); border-radius: 3px;
-  font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--muted);
-  cursor: pointer; text-align: center; transition: all 0.18s;
-}
+.btn-reset { flex: 1; padding: 12px; background: transparent; border: 1.5px solid var(--linen2); border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--muted); cursor: pointer; text-align: center; transition: all 0.18s; }
 .btn-reset:hover { border-color: var(--sand); color: var(--ink); }
-.btn-export {
-  flex: 1; padding: 12px; background: var(--olive);
-  border: none; border-radius: 3px;
-  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--linen);
-  cursor: pointer; text-align: center; transition: opacity 0.18s;
-}
+.btn-export { flex: 1; padding: 12px; background: var(--olive); border: none; border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--linen); cursor: pointer; text-align: center; transition: opacity 0.18s; }
 .btn-export:hover { opacity: 0.88; }
-
-/* footnote */
-.brief-footnote {
-  font-size: 10px;
-  color: var(--sand);
-  line-height: 1.6;
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid var(--linen2);
-  letter-spacing: 0.01em;
-}
-
-/* footer sig */
+.brief-footnote { font-size: 10px; color: var(--sand); line-height: 1.6; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--linen2); letter-spacing: 0.01em; }
 .sig { text-align: center; margin-top: 28px; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
 .sig em { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 13px; color: var(--sand); }
-
-/* Print styles for export */
 @media print {
   body { background: white; padding: 20px; }
   .action-row, .progress-row, #form-card { display: none !important; }
@@ -335,40 +120,21 @@ input:focus, select:focus { border-color: var(--olive); }
 </head>
 <body>
 <div class="wrap">
-
   <div class="hdr">
     <div class="hdr-eyebrow">Studio Salary Database</div>
     <h1>Know your worth.<br><em>Before you walk in.</em></h1>
     <p>Get a personalized negotiation brief based on real pay data from instructors and studios in your market.</p>
   </div>
-
-  <!-- PROGRESS -->
   <div class="progress-row" id="progress-row">
-    <div class="p-step active" id="ps1" onclick="tryGoStep(1)">
-      <div class="p-circle">1</div>
-      <div class="p-label">Format</div>
-    </div>
+    <div class="p-step active" id="ps1" onclick="tryGoStep(1)"><div class="p-circle">1</div><div class="p-label">Format</div></div>
     <div class="p-line"></div>
-    <div class="p-step" id="ps2" onclick="tryGoStep(2)">
-      <div class="p-circle">2</div>
-      <div class="p-label">Studio</div>
-    </div>
+    <div class="p-step" id="ps2" onclick="tryGoStep(2)"><div class="p-circle">2</div><div class="p-label">Studio</div></div>
     <div class="p-line"></div>
-    <div class="p-step" id="ps3" onclick="tryGoStep(3)">
-      <div class="p-circle">3</div>
-      <div class="p-label">Experience</div>
-    </div>
+    <div class="p-step" id="ps3" onclick="tryGoStep(3)"><div class="p-circle">3</div><div class="p-label">Experience</div></div>
     <div class="p-line"></div>
-    <div class="p-step" id="ps4" onclick="tryGoStep(4)">
-      <div class="p-circle">4</div>
-      <div class="p-label">Your Rate</div>
-    </div>
+    <div class="p-step" id="ps4" onclick="tryGoStep(4)"><div class="p-circle">4</div><div class="p-label">Your Rate</div></div>
   </div>
-
-  <!-- FORM CARD -->
   <div class="card" id="form-card">
-
-    <!-- STEP 1: FORMAT -->
     <div class="step active" id="step1">
       <div class="step-title">What do you teach?</div>
       <div class="step-sub">Select the format you'd like to review -- we'll benchmark against instructors like you.</div>
@@ -378,12 +144,8 @@ input:focus, select:focus { border-color: var(--olive); }
         <div class="chip" data-val="Sculpt" onclick="selectChip(this)">Sculpt</div>
         <div class="chip" data-val="Yoga" onclick="selectChip(this)">Yoga</div>
       </div>
-      <div class="btn-row">
-        <button class="btn-next" onclick="goStep(2)">Continue &rarr;</button>
-      </div>
+      <div class="btn-row"><button class="btn-next" onclick="goStep(2)">Continue &rarr;</button></div>
     </div>
-
-    <!-- STEP 2: STUDIO + LOCATION -->
     <div class="step" id="step2">
       <div class="step-title">Where do you teach?</div>
       <div class="step-sub">Enter your studio name to surface real data -- or skip and we'll look at studios nearby.</div>
@@ -434,8 +196,6 @@ input:focus, select:focus { border-color: var(--olive); }
         <button class="btn-next" onclick="goStep(3)">Continue &rarr;</button>
       </div>
     </div>
-
-    <!-- STEP 3: EXPERIENCE -->
     <div class="step" id="step3">
       <div class="step-title">Tell us about yourself.</div>
       <div class="step-sub">We'll compare you to instructors at your experience level.</div>
@@ -455,8 +215,6 @@ input:focus, select:focus { border-color: var(--olive); }
         <button class="btn-next" onclick="goStep(4)">Continue &rarr;</button>
       </div>
     </div>
-
-    <!-- STEP 4: CURRENT RATE -->
     <div class="step" id="step4">
       <div class="step-title">What are you making now?</div>
       <div class="step-sub">Optional -- but seeing exactly where you sit makes the brief much more powerful.</div>
@@ -475,19 +233,14 @@ input:focus, select:focus { border-color: var(--olive); }
         <button class="btn-next" onclick="generate()">Generate My Brief &rarr;</button>
       </div>
     </div>
+  </div>
 
-  </div><!-- /form-card -->
-
-  <!-- RESULTS CARD -->
   <div class="card" id="results">
-
     <div class="results-hdr">
       <div class="eyebrow">Your Negotiation Brief</div>
       <h2 id="r-headline">Know what to ask for.</h2>
       <div class="sub" id="r-sub">Based on real data from your market</div>
     </div>
-
-    <!-- ASK RANGE HERO -->
     <div class="ask-hero" id="ask-hero">
       <div class="rlbl-light">Your suggested ask range</div>
       <div class="ask-range">
@@ -501,8 +254,6 @@ input:focus, select:focus { border-color: var(--olive); }
         <span class="cr-gap" id="cr-gap"></span>
       </div>
     </div>
-
-    <!-- BENCHMARK BAR -->
     <div class="bench-section">
       <span class="rlbl">Where you stand in your market</span>
       <div class="bench-ends"><span id="b-floor"></span><span id="b-ceil"></span></div>
@@ -515,15 +266,11 @@ input:focus, select:focus { border-color: var(--olive); }
         <div class="bask" id="bask"></div>
       </div>
     </div>
-
-    <!-- STUDIO FLAG -->
     <div class="studio-flag" id="studio-flag">
       <span class="sf-check">&#10003;</span>
       <span id="sf-name"></span> is in our database &mdash;
       <a class="sf-link" id="sf-link" href="#" target="_blank">view their pay data &rarr;</a>
     </div>
-
-    <!-- STATS ROW -->
     <div class="r-stats" id="r-stats">
       <div class="r-stat">
         <span class="rlbl" style="margin-bottom:2px">Market avg &middot; your format</span>
@@ -536,16 +283,10 @@ input:focus, select:focus { border-color: var(--olive); }
         <div class="rsdesc" id="rs-neg-desc" style="display:none"></div>
       </div>
     </div>
-
-    <!-- ANNUAL IMPACT -->
     <div class="r-annual" id="r-annual">
-      <div class="ra-left">
-        <strong id="ra-title">Additional annual earnings</strong>
-      </div>
+      <div class="ra-left"><strong id="ra-title">Additional annual earnings</strong></div>
       <div class="ra-right" id="ra-val"></div>
     </div>
-
-    <!-- INSIGHT -->
     <div class="r-insight" id="r-insight-1">
       <div class="ri-arr">&rarr;</div>
       <div>
@@ -553,17 +294,13 @@ input:focus, select:focus { border-color: var(--olive); }
         <div class="ri-d" id="neg-pay-stat">Instructors who negotiated earned more per class on average than those who didn't.</div>
       </div>
     </div>
-
-    <!-- STAR RATING -->
     <div class="r-insight" id="r-insight-stars" style="border-top: 1px solid var(--linen2); margin-top: 0;">
       <div class="ri-arr">&rarr;</div>
       <div>
-        <div class="ri-h" id="neg-rating-headline">They rated the experience <span id="neg-rating-val">--</span> / 5.</div>
+        <div class="ri-h">They rated the experience <span id="neg-rating-val">--</span> / 5.</div>
         <div class="ri-d">Even when the answer was no.</div>
       </div>
     </div>
-
-    <!-- METHODOLOGY NOTE -->
     <div class="r-insight" id="r-insight-2" style="border-top: 1px solid var(--linen2); margin-top: 0;">
       <div class="ri-arr" style="color: var(--sand);">&#9432;</div>
       <div>
@@ -571,25 +308,19 @@ input:focus, select:focus { border-color: var(--olive); }
         <div class="ri-d">Business negotiation experts — including researchers at Harvard and Cornell — recommend leading with 10–20% above market rate, adjusted for your experience level. More experienced instructors have greater leverage and can justify the higher end. Your range reflects this: the more years you have, the wider and higher your suggested ask.</div>
       </div>
     </div>
-
     <div class="action-row">
       <button class="btn-reset" onclick="reset()">&larr; Start over</button>
       <button class="btn-export" onclick="exportBrief()">Save as PDF</button>
     </div>
-
     <div class="brief-footnote" id="brief-footnote">
       * Market averages are calculated from Studio Salary Database submissions, filtered by class format, experience level, and market size. Instructors in major cities are benchmarked against other major city markets; smaller markets are compared locally. <span id="footnote-annual" style="display:none">Annual earnings estimate based on ask midpoint · <span id="footnote-annual-detail"></span>. </span>Negotiation stats reflect real submissions from instructors in our network.
     </div>
-
-  </div><!-- /results -->
+  </div>
 
   <div class="sig"><em>Paige Loves Pilates</em> &middot; Studio Salary Database</div>
-
-</div><!-- /wrap -->
+</div>
 
 <script>
-
-// -- REGIONS --
 var REGIONS = {
   US: { label: 'State', options: ['','Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming','Washington DC'] },
   CA: { label: 'Province / Territory', options: ['','Alberta','British Columbia','Manitoba','New Brunswick','Newfoundland and Labrador','Northwest Territories','Nova Scotia','Nunavut','Ontario','Prince Edward Island','Quebec','Saskatchewan','Yukon'] },
@@ -615,8 +346,107 @@ function updateRegions() {
   }
 }
 
-// -- MARKET DATA --
-const MARKET = {
+// ── CITY TIER LOOKUP ─────────────────────────────────────────────────────────
+// Tier 1 = Global majors, 2 = Large cities, 3 = Suburban/mid-size, 4 = Rural/small (default)
+var CITY_TIERS = {
+  // USA Tier 1
+  'new york':1,'manhattan':1,'brooklyn':1,'queens':1,'bronx':1,'staten island':1,
+  'los angeles':1,'santa monica':1,'beverly hills':1,'west hollywood':1,'malibu':1,'bel air':1,
+  'san francisco':1,'palo alto':1,'mountain view':1,'sunnyvale':1,'menlo park':1,'atherton':1,
+  'seattle':1,'bellevue':1,'redmond':1,
+  'boston':1,'cambridge':1,'somerville':1,'brookline':1,
+  'washington':1,'arlington va':1,'bethesda':1,'mclean':1,'chevy chase':1,
+  'chicago':1,'evanston':1,'wilmette':1,'winnetka':1,'lake forest':1,
+  'miami':1,'miami beach':1,'coral gables':1,'brickell':1,'key biscayne':1,
+  'honolulu':1,'aspen':1,'vail':1,'telluride':1,
+  'hoboken':1,'jersey city':1,
+  // USA Tier 2
+  'austin':2,'dallas':2,'houston':2,'fort worth':2,'san antonio':2,'plano':2,'frisco':2,'the woodlands':2,'sugar land':2,'katy':2,
+  'denver':2,'boulder':2,'fort collins':2,'highlands ranch':2,'littleton':2,'centennial':2,
+  'atlanta':2,'buckhead':2,'alpharetta':2,'sandy springs':2,'dunwoody':2,'roswell':2,'marietta':2,
+  'nashville':2,'brentwood':2,'franklin':2,
+  'portland':2,'lake oswego':2,'beaverton':2,
+  'phoenix':2,'scottsdale':2,'tempe':2,'chandler':2,'gilbert':2,'peoria az':2,'glendale az':2,
+  'minneapolis':2,'st paul':2,'edina':2,'minnetonka':2,
+  'san diego':2,'la jolla':2,'del mar':2,'encinitas':2,'carlsbad':2,
+  'charlotte':2,'raleigh':2,'durham':2,'chapel hill':2,'cary':2,
+  'philadelphia':2,'main line':2,'wayne':2,'ardmore':2,
+  'baltimore':2,'annapolis':2,'columbia md':2,'bethesda':2,
+  'salt lake city':2,'park city':2,'sandy':2,
+  'new orleans':2,
+  'kansas city':2,'leawood':2,'overland park':2,'olathe':2,
+  'columbus':2,'dublin oh':2,'worthington':2,'westerville':2,
+  'cleveland':2,'beachwood':2,'westlake':2,
+  'cincinnati':2,'mason':2,'blue ash':2,
+  'detroit':2,'ann arbor':2,'troy mi':2,'birmingham mi':2,'bloomfield hills':2,
+  'pittsburgh':2,'mt lebanon':2,
+  'st louis':2,'clayton':2,'chesterfield':2,
+  'milwaukee':2,'brookfield':2,
+  'richmond':2,'virginia beach':2,'norfolk':2,'chesapeake':2,
+  'tampa':2,'st petersburg':2,'sarasota':2,'naples':2,'west palm beach':2,'fort lauderdale':2,'boca raton':2,'palm beach':2,'delray beach':2,
+  'orlando':2,'winter park':2,'lake mary':2,
+  'jacksonville':2,'ponte vedra':2,
+  'sacramento':2,'santa barbara':2,'monterey':2,'carmel':2,
+  'las vegas':2,'henderson':2,'summerlin':2,
+  'albuquerque':2,'santa fe':2,
+  'omaha':2,'lincoln':2,
+  'indianapolis':2,'carmel in':2,'fishers':2,'zionsville':2,
+  'louisville':2,'lexington':2,
+  'memphis':2,'nashville':2,
+  'birmingham al':2,'huntsville':2,
+  'greenville':2,'charleston sc':2,
+  'tucson':2,
+  // USA Tier 3
+  'long island':3,'garden city':3,'great neck':3,'manhasset':3,'roslyn':3,'huntington':3,'commack':3,'smithtown':3,'melville':3,'farmingdale':3,'babylon':3,'bay shore':3,'patchogue':3,'east hampton':3,'southampton':3,'montauk':3,
+  'westchester':3,'white plains':3,'scarsdale':3,'greenwich':3,'stamford':3,'darien':3,'new canaan':3,'westport':3,'fairfield':3,'ridgefield':3,'norwalk':3,
+  'summit':3,'short hills':3,'montclair':3,'morristown':3,'princeton':3,'red bank':3,
+  'naperville':3,'oak park':3,
+  'pasadena':3,'glendale':3,'burbank':3,'manhattan beach':3,'hermosa beach':3,'redondo beach':3,'el segundo':3,'newport beach':3,'laguna beach':3,'irvine':3,'mission viejo':3,'dana point':3,'san clemente':3,
+  'walnut creek':3,'danville':3,'pleasanton':3,'fremont':3,'san mateo':3,'burlingame':3,'san rafael':3,'mill valley':3,'tiburon':3,'sausalito':3,
+  'kirkland':3,'mercer island':3,'issaquah':3,'sammamish':3,'woodinville':3,
+  'allen':3,'mckinney':3,'southlake':3,'flower mound':3,'colleyville':3,
+  'peachtree city':3,'johns creek':3,
+  'rochester hills':3,
+  'powell':3,'new albany':3,
+  'buffalo':3,'rochester':3,'albany':3,'syracuse':3,
+  'providence':3,'hartford':3,'new haven':3,
+  'spokane':3,'olympia':3,'tacoma':3,'boise':3,
+  'missoula':3,'billings':3,'fargo':3,'sioux falls':3,
+  'topeka':3,'wichita':3,'tulsa':3,'little rock':3,
+  'knoxville':3,'chattanooga':3,'des moines':3,
+  // UK Tier 1
+  'london':1,'city of london':1,'westminster':1,'chelsea':1,'kensington':1,'notting hill':1,'mayfair':1,'marylebone':1,'islington':1,'shoreditch':1,'canary wharf':1,'wimbledon':1,'richmond upon thames':1,
+  // UK Tier 2
+  'manchester':2,'edinburgh':2,'glasgow':2,'bristol':2,'leeds':2,'sheffield':2,'liverpool':2,'nottingham':2,'cardiff':2,'brighton':2,'oxford':2,'bath':2,'exeter':2,'reading':2,'guildford':2,'windsor':2,'st albans':2,'cambridge':2,
+  // UK Tier 3
+  'coventry':3,'leicester':3,'hull':3,'newcastle':3,'sunderland':3,'portsmouth':3,'norwich':3,'ipswich':3,'southampton':3,
+  // Canada Tier 1
+  'toronto':1,'north york':1,'etobicoke':1,'scarborough':1,'york':1,'vancouver':1,'west vancouver':1,'north vancouver':1,
+  // Canada Tier 2
+  'montreal':2,'calgary':2,'ottawa':2,'edmonton':2,'winnipeg':2,'victoria':2,'burnaby':2,'surrey':2,'coquitlam':2,'mississauga':2,'brampton':2,'markham':2,'vaughan':2,'oakville':2,'hamilton':2,'kitchener':2,'waterloo':2,'halifax':2,'quebec city':2,'laval':2,
+  // Canada Tier 3
+  'saskatoon':3,'regina':3,'kelowna':3,'abbotsford':3,'langley':3,'st johns':3,'moncton':3,'fredericton':3,
+  // Australia Tier 1
+  'sydney':1,'bondi':1,'surry hills':1,'paddington':1,'newtown':1,'balmain':1,'mosman':1,'double bay':1,'melbourne':1,'fitzroy':1,'st kilda':1,'south yarra':1,'toorak':1,'prahran':1,'richmond vic':1,
+  // Australia Tier 2
+  'brisbane':2,'perth':2,'adelaide':2,'gold coast':2,'canberra':2,'newcastle nsw':2,'wollongong':2,'geelong':2,'hobart':2,'darwin':2,'sunshine coast':2,'cairns':2,'townsville':2,
+  // Australia Tier 3
+  'toowoomba':3,'ballarat':3,'bendigo':3,'launceston':3,
+  // Other international Tier 1
+  'singapore':1,'hong kong':1,'dubai':1,'abu dhabi':1,'zurich':1,'geneva':1,'paris':1,'amsterdam':1,'stockholm':1,'oslo':1,'copenhagen':1,'dublin':1,'auckland':1,'tokyo':1,
+  // Other international Tier 2
+  'berlin':2,'munich':2,'hamburg':2,'frankfurt':2,'vienna':2,'brussels':2,'lisbon':2,'madrid':2,'barcelona':2,'rome':2,'milan':2,'sydney':1
+};
+
+function getCityTier(city) {
+  if (!city) return 4;
+  var c = city.toLowerCase().trim();
+  return CITY_TIERS[c] || 4;
+}
+
+// ── HARDCODED MARKET FALLBACK (used when live data insufficient) ──────────────
+// Values are national averages — tier multipliers applied on top
+var MARKET_BASE = {
   'Reformer / Apparatus': { lt1: 39, '1-2': 44, '3-5': 49, '6-10': 51, '10+': 53, floor: 15, ceil: 90 },
   'Mat Pilates':          { lt1: 36, '1-2': 41, '3-5': 45, '6-10': 47, '10+': 49, floor: 20, ceil: 75 },
   'Sculpt':               { lt1: 38, '1-2': 44, '3-5': 48, '6-10': 50, '10+': 52, floor: 35, ceil: 65 },
@@ -624,10 +454,14 @@ const MARKET = {
   'Other':                { lt1: 38, '1-2': 42, '3-5': 47, '6-10': 49, '10+': 51, floor: 15, ceil: 90 }
 };
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6IjQ_PA67Zky5BsOZGObx8aXpEVl2gIbBlQkGdHxC7gkVbQwcX0oM9LezI2Zss0zv-w/exec';
+// Tier multipliers applied to base averages when using hardcoded fallback
+var TIER_MULTIPLIERS = { 1: 1.20, 2: 1.08, 3: 0.95, 4: 0.85 };
 
-let state = { formats: [], studio: '', city: '', state: '', country: 'US', exp: '', rate: null, classes: null };
-let currentStep = 1;
+var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6IjQ_PA67Zky5BsOZGObx8aXpEVl2gIbBlQkGdHxC7gkVbQwcX0oM9LezI2Zss0zv-w/exec';
+var MIN_SAMPLE_SIZE = 5;
+
+var state = { formats: [], studio: '', city: '', state: '', country: 'US', exp: '', rate: null, classes: null };
+var currentStep = 1;
 
 function goStep(n) {
   document.getElementById('step' + currentStep).classList.remove('active');
@@ -638,14 +472,10 @@ function goStep(n) {
   document.getElementById('ps' + n).classList.remove('done');
   document.getElementById('ps' + n).classList.add('active');
 }
-
 function tryGoStep(n) { if (n < currentStep) goStep(n); }
 
-// Single-select: deselect all chips, then select the clicked one
 function selectChip(el) {
-  document.querySelectorAll('#format-chips .chip').forEach(function(c) {
-    c.classList.remove('selected');
-  });
+  document.querySelectorAll('#format-chips .chip').forEach(function(c) { c.classList.remove('selected'); });
   el.classList.add('selected');
   state.formats = [el.dataset.val];
 }
@@ -657,38 +487,23 @@ function checkStudio() {
   clearTimeout(checkStudio._t);
   checkStudio._t = setTimeout(function() {
     var city = document.getElementById('city-input').value.trim();
-    if (!city) {
-      hint.textContent = 'Add your city below to check database.';
-      hint.className = 'studio-hint';
-      return;
-    }
+    if (!city) { hint.textContent = 'Add your city below to check database.'; hint.className = 'studio-hint'; return; }
     var cbName = 'hintCb_' + Date.now();
     var script = document.createElement('script');
-    var params = '?action=studioStats&studio=' + encodeURIComponent(val) +
-                 '&city=' + encodeURIComponent(city) +
-                 '&callback=' + cbName;
+    var params = '?action=studioStats&studio=' + encodeURIComponent(val) + '&city=' + encodeURIComponent(city) + '&callback=' + cbName;
     window[cbName] = function(data) {
-      delete window[cbName];
-      document.head.removeChild(script);
-      if (data && data.found) {
-        hint.textContent = 'Found in database -- ' + data.count + ' submissions';
-        hint.className = 'studio-hint';
-      } else {
-        hint.textContent = 'Not in database yet -- market averages will be used.';
-        hint.className = 'studio-hint miss';
-      }
+      delete window[cbName]; document.head.removeChild(script);
+      if (data && data.found) { hint.textContent = 'Found in database -- ' + data.count + ' submissions'; hint.className = 'studio-hint'; }
+      else { hint.textContent = 'Not in database yet -- market averages will be used.'; hint.className = 'studio-hint miss'; }
     };
     script.src = APPS_SCRIPT_URL + params;
-    script.onerror = function() {
-      delete window[cbName];
-      document.head.removeChild(script);
-    };
+    script.onerror = function() { delete window[cbName]; document.head.removeChild(script); };
     document.head.appendChild(script);
   }, 600);
 }
 
 function generate() {
-  state.formats = [...document.querySelectorAll('.chip.selected')].map(function(c) { return c.dataset.val; });
+  state.formats = [].slice.call(document.querySelectorAll('.chip.selected')).map(function(c) { return c.dataset.val; });
   state.studio  = document.getElementById('studio-input').value.trim();
   state.city    = document.getElementById('city-input').value.trim();
   state.state   = document.getElementById('state-select').value;
@@ -698,152 +513,161 @@ function generate() {
   state.classes = parseInt(document.getElementById('classes-input').value) || null;
 
   var fmt  = state.formats[0] || 'Reformer / Apparatus';
-  var mkt  = MARKET[fmt] || MARKET['Reformer / Apparatus'];
-  var base = mkt[state.exp] || mkt['3-5'];
-  var expMultipliers = {
-    'lt1':  { lo: 1.08, hi: 1.15 },
-    '1-2':  { lo: 1.10, hi: 1.17 },
-    '3-5':  { lo: 1.10, hi: 1.20 },
-    '6-10': { lo: 1.12, hi: 1.20 },
-    '10+':  { lo: 1.15, hi: 1.22 }
-  };
-  var mult = expMultipliers[state.exp] || expMultipliers['3-5'];
-  var askLo = Math.round(base * mult.lo);
-  var askHi = Math.round(base * mult.hi);
-  var mid   = Math.round((askLo + askHi) / 2);
-  var floor = mkt.floor;
-  var ceil  = mkt.ceil;
-  var range = ceil - floor;
+  var tier = getCityTier(state.city);
 
-  if (state.studio) {
-    var cbName = 'genCb_' + Date.now();
-    var script = document.createElement('script');
-    var params = '?action=studioStats&studio=' + encodeURIComponent(state.studio) +
-                 '&city=' + encodeURIComponent(state.city) +
-                 '&callback=' + cbName;
-    window[cbName] = function(sData) {
-      delete window[cbName];
-      document.head.removeChild(script);
-      fetchNegStats(fmt, function(negStats) {
-        renderBrief(sData && sData.found ? sData : null, fmt, mkt, base, askLo, askHi, mid, floor, ceil, range, negStats);
-      });
-    };
-    script.src = APPS_SCRIPT_URL + params;
-    script.onerror = function() {
-      delete window[cbName];
-      document.head.removeChild(script);
-      fetchNegStats(fmt, function(negStats) {
-        renderBrief(null, fmt, mkt, base, askLo, askHi, mid, floor, ceil, range, negStats);
-      });
-    };
-    document.head.appendChild(script);
-  } else {
-    fetchNegStats(fmt, function(negStats) {
-      renderBrief(null, fmt, mkt, base, askLo, askHi, mid, floor, ceil, range, negStats);
-    });
-  }
-}
-
-// Fetch full instructor data and compute negotiation stats for the given format
-function fetchNegStats(fmt, callback) {
-  var cbName = 'negCb_' + Date.now();
+  // Fetch full data — compute live averages + neg stats in one call
+  var cbName = 'allDataCb_' + Date.now();
   var script = document.createElement('script');
   window[cbName] = function(data) {
-    delete window[cbName];
-    document.head.removeChild(script);
-    var stats = computeNegStats(data.instructor || [], fmt);
-    callback(stats);
+    delete window[cbName]; document.head.removeChild(script);
+    var liveBase = computeLiveBase(data.instructor || [], data.studio || [], fmt, state.exp, tier);
+    var negStats = computeNegStats(data.instructor || [], fmt);
+    var base = liveBase !== null ? liveBase : applyTierToBase(fmt, state.exp, tier);
+    var mkt  = MARKET_BASE[fmt] || MARKET_BASE['Other'];
+
+    var expMultipliers = { 'lt1':{lo:1.08,hi:1.15}, '1-2':{lo:1.10,hi:1.17}, '3-5':{lo:1.10,hi:1.20}, '6-10':{lo:1.12,hi:1.20}, '10+':{lo:1.15,hi:1.22} };
+    var mult = expMultipliers[state.exp] || expMultipliers['3-5'];
+    var askLo = Math.round(base * mult.lo);
+    var askHi = Math.round(base * mult.hi);
+    var mid   = Math.round((askLo + askHi) / 2);
+    var floor = Math.round(mkt.floor * (TIER_MULTIPLIERS[tier] || 1));
+    var ceil  = Math.round(mkt.ceil  * (TIER_MULTIPLIERS[tier] || 1));
+    var range = ceil - floor;
+
+    if (state.studio) {
+      var cbName2 = 'studioCb_' + Date.now();
+      var script2 = document.createElement('script');
+      var params2 = '?action=studioStats&studio=' + encodeURIComponent(state.studio) + '&city=' + encodeURIComponent(state.city) + '&callback=' + cbName2;
+      window[cbName2] = function(sData) {
+        delete window[cbName2]; document.head.removeChild(script2);
+        renderBrief(sData && sData.found ? sData : null, fmt, base, askLo, askHi, mid, floor, ceil, range, negStats, liveBase !== null);
+      };
+      script2.src = APPS_SCRIPT_URL + params2;
+      script2.onerror = function() { delete window[cbName2]; document.head.removeChild(script2); renderBrief(null, fmt, base, askLo, askHi, mid, floor, ceil, range, negStats, liveBase !== null); };
+      document.head.appendChild(script2);
+    } else {
+      renderBrief(null, fmt, base, askLo, askHi, mid, floor, ceil, range, negStats, liveBase !== null);
+    }
   };
   script.src = APPS_SCRIPT_URL + '?callback=' + cbName;
   script.onerror = function() {
-    delete window[cbName];
-    document.head.removeChild(script);
-    callback(null);
+    delete window[cbName]; document.head.removeChild(script);
+    // Full fallback — no live data
+    var base = applyTierToBase(fmt, state.exp, tier);
+    var mkt  = MARKET_BASE[fmt] || MARKET_BASE['Other'];
+    var expMultipliers = { 'lt1':{lo:1.08,hi:1.15}, '1-2':{lo:1.10,hi:1.17}, '3-5':{lo:1.10,hi:1.20}, '6-10':{lo:1.12,hi:1.20}, '10+':{lo:1.15,hi:1.22} };
+    var mult = expMultipliers[state.exp] || expMultipliers['3-5'];
+    var askLo = Math.round(base * mult.lo);
+    var askHi = Math.round(base * mult.hi);
+    var mid   = Math.round((askLo + askHi) / 2);
+    var floor = Math.round(mkt.floor * (TIER_MULTIPLIERS[tier] || 1));
+    var ceil  = Math.round(mkt.ceil  * (TIER_MULTIPLIERS[tier] || 1));
+    renderBrief(null, fmt, base, askLo, askHi, mid, floor, ceil, ceil - floor, null, false);
   };
   document.head.appendChild(script);
 }
 
-// Compute negotiation pay gap % and avg rating from instructor rows
-// Instructor clean cols (0-indexed from data rows): 6=format, 7=pay structure, 9=pay per class, 12=flat rate, 15=negotiated, rating col TBD
-function computeNegStats(rows, fmt) {
-  // Skip header row if present
-  var data = rows.length && Array.isArray(rows[0]) && isNaN(parseFloat(rows[0][9])) ? rows.slice(1) : rows;
-
-  var fmtNorm = (fmt || '').toLowerCase();
-
-  function parseNum(v) {
-    var n = parseFloat(String(v || '').replace(/[^0-9.]/g, ''));
-    return (!isNaN(n) && n > 0) ? n : null;
-  }
-
-  function getPay(row) {
-    return parseNum(row[9]) || parseNum(row[11]) || null; // pay per class or flat rate
-  }
-
-  function getFormat(row) {
-    return String(row[6] || '').toLowerCase();
-  }
-
-  function didNegotiate(row) {
-    var v = String(row[15] || '').toLowerCase().trim();
-    return v === 'yes' || v === 'true' || v === '1';
-  }
-
-  function getRating(row) {
-    // Rating is in col AA = 26 (0-indexed)
-    return parseNum(row[26]);
-  }
-
-  var negPays = [], nonNegPays = [], ratings = [];
-
-  data.forEach(function(row) {
-    var rowFmt = getFormat(row);
-    // Match format loosely
-    if (fmtNorm && rowFmt && rowFmt.indexOf(fmtNorm.split('/')[0].trim()) === -1 && fmtNorm.indexOf(rowFmt.split('/')[0].trim()) === -1) return;
-    var pay = getPay(row);
-    if (!pay) return;
-    if (didNegotiate(row)) {
-      negPays.push(pay);
-      var r = getRating(row);
-      if (r) ratings.push(r);
-    } else {
-      nonNegPays.push(pay);
-    }
-  });
-
-  function avg(arr) { return arr.length ? arr.reduce(function(a,b){return a+b;},0) / arr.length : null; }
-
-  var negAvg    = avg(negPays);
-  var nonNegAvg = avg(nonNegPays);
-  var ratingAvg = avg(ratings);
-
-  var pctGap = (negAvg && nonNegAvg && nonNegAvg > 0)
-    ? Math.round(((negAvg - nonNegAvg) / nonNegAvg) * 100)
-    : null;
-
-  return {
-    pctGap:    pctGap,
-    negCount:  negPays.length,
-    ratingAvg: ratingAvg ? Math.round(ratingAvg * 10) / 10 : null,
-    ratingCount: ratings.length
-  };
+// Apply tier multiplier to hardcoded base
+function applyTierToBase(fmt, exp, tier) {
+  var mkt  = MARKET_BASE[fmt] || MARKET_BASE['Other'];
+  var base = mkt[exp] || mkt['3-5'];
+  return Math.round(base * (TIER_MULTIPLIERS[tier] || 1));
 }
 
-function renderBrief(sData, fmt, mkt, base, askLo, askHi, mid, floor, ceil, range, negStats) {
+// Compute live average from real submissions, filtered by format + exp + tier
+// Falls back to null if fewer than MIN_SAMPLE_SIZE submissions match
+function computeLiveBase(instructorRows, studioRows, fmt, exp, userTier) {
+  function parseNum(v) { var n = parseFloat(String(v||'').replace(/[^0-9.]/g,'')); return (!isNaN(n)&&n>0)?n:null; }
+  function fmtMatch(rowFmt, fmt) {
+    var r = (rowFmt||'').toLowerCase(); var f = (fmt||'').toLowerCase();
+    return r.indexOf(f.split('/')[0].trim())!==-1 || f.indexOf(r.split('/')[0].trim())!==-1;
+  }
+  function expMatch(rowExp, exp) {
+    // Instructor clean col 13 (0-indexed) = Experience
+    var r = (rowExp||'').toLowerCase();
+    if (exp==='lt1') return r.indexOf('less')===-1 && (r==='0'||r.indexOf('<1')!==-1||r.indexOf('less than 1')!==-1);
+    if (exp==='1-2') return r.indexOf('1')!==-1&&r.indexOf('2')!==-1;
+    if (exp==='3-5') return r.indexOf('3')!==-1||r.indexOf('4')!==-1||r.indexOf('5')!==-1;
+    if (exp==='6-10') return r.indexOf('6')!==-1||r.indexOf('7')!==-1||r.indexOf('8')!==-1||r.indexOf('9')!==-1||r.indexOf('10')!==-1;
+    if (exp==='10+') return r.indexOf('10+')!==-1||r.indexOf('more than 10')!==-1||r.indexOf('over 10')!==-1;
+    return true;
+  }
+
+  var pays = [];
+
+  // Instructor rows: header is row[0], data starts at row[1] (the endpoint returns [header, ...rows])
+  var iData = instructorRows.length && !Array.isArray(instructorRows[0]) ? instructorRows : instructorRows.slice(1);
+  iData.forEach(function(row) {
+    if (!Array.isArray(row)) return;
+    var rowCity = String(row[4]||'').trim();
+    var rowTier = getCityTier(rowCity);
+    if (rowTier !== userTier) return;
+    if (!fmtMatch(row[6], fmt)) return;
+    // experience col 13 (0-indexed)
+    if (exp && !expMatch(row[13], exp)) return;
+    var pay = parseNum(row[9]) || parseNum(row[11]);
+    if (pay) pays.push(pay);
+  });
+
+  // Also pull studio rows for same tier/format
+  var sData = studioRows.length && !Array.isArray(studioRows[0]) ? studioRows : studioRows.slice(1);
+  sData.forEach(function(row) {
+    if (!Array.isArray(row)) return;
+    var rowCity = String(row[4]||'').trim();
+    var rowTier = getCityTier(rowCity);
+    if (rowTier !== userTier) return;
+    if (!fmtMatch(row[7], fmt)) return;
+    // Studio exp col 11 (0-indexed) = Experience Level
+    if (exp && !expMatch(row[11], exp)) return;
+    var pay = parseNum(row[10]) || parseNum(row[16]) || parseNum(row[12]) || parseNum(row[13]);
+    if (pay) pays.push(pay);
+  });
+
+  if (pays.length < MIN_SAMPLE_SIZE) return null;
+  return Math.round(pays.reduce(function(a,b){return a+b;},0) / pays.length);
+}
+
+// Compute negotiation pay gap % and avg rating from instructor rows
+function computeNegStats(rows, fmt) {
+  var data = rows.length && Array.isArray(rows[0]) && isNaN(parseFloat(String(rows[0][9]||''))) ? rows.slice(1) : rows;
+  var fmtNorm = (fmt||'').toLowerCase();
+  function parseNum(v) { var n=parseFloat(String(v||'').replace(/[^0-9.]/g,'')); return (!isNaN(n)&&n>0)?n:null; }
+  function getPay(row) { return parseNum(row[9])||parseNum(row[11])||null; }
+  function fmtMatch(row) {
+    var r=String(row[6]||'').toLowerCase();
+    return !fmtNorm||!r||(r.indexOf(fmtNorm.split('/')[0].trim())!==-1||fmtNorm.indexOf(r.split('/')[0].trim())!==-1);
+  }
+  function didNeg(row) { var v=String(row[15]||'').toLowerCase().trim(); return v==='yes'||v==='true'||v==='1'; }
+  function getRating(row) { return parseNum(row[26]); } // AA = col 26 (0-indexed)
+
+  var negPays=[],nonNegPays=[],ratings=[];
+  data.forEach(function(row) {
+    if (!fmtMatch(row)) return;
+    var pay=getPay(row); if(!pay) return;
+    if (didNeg(row)) { negPays.push(pay); var r=getRating(row); if(r) ratings.push(r); }
+    else { nonNegPays.push(pay); }
+  });
+
+  function avg(arr) { return arr.length?arr.reduce(function(a,b){return a+b;},0)/arr.length:null; }
+  var negAvg=avg(negPays), nonNegAvg=avg(nonNegPays), ratingAvg=avg(ratings);
+  var pctGap=(negAvg&&nonNegAvg&&nonNegAvg>0)?Math.round(((negAvg-nonNegAvg)/nonNegAvg)*100):null;
+  return { pctGap:pctGap, negCount:negPays.length, ratingAvg:ratingAvg?Math.round(ratingAvg*10)/10:null };
+}
+
+function renderBrief(sData, fmt, base, askLo, askHi, mid, floor, ceil, range, negStats, usedLiveData) {
   var locParts = [];
-  if (state.city) locParts.push(state.city.toLowerCase().replace(/(^|\s)\S/g, function(l){ return l.toUpperCase(); }));
+  if (state.city) locParts.push(state.city.toLowerCase().replace(/(^|\s)\S/g,function(l){return l.toUpperCase();}));
   var locLabel = locParts.length > 0 ? locParts.join(', ') : 'your market';
 
   document.getElementById('r-headline').textContent = 'Your brief for ' + locLabel + '.';
-  var expLabels = { lt1: 'Less than 1 year', '1-2': '1-2 years', '3-5': '3-5 years', '6-10': '6-10 years', '10+': '10+ years' };
+  var expLabels = { lt1:'Less than 1 year','1-2':'1-2 years','3-5':'3-5 years','6-10':'6-10 years','10+':'10+ years' };
   document.getElementById('r-sub').textContent =
     (state.formats.length > 0 ? state.formats.join(', ') : 'Pilates') +
-    ' -- ' + (expLabels[state.exp] || '3-5 years') + ' experience';
+    ' \u2014 ' + (expLabels[state.exp] || '3-5 years') + ' experience';
 
   if (sData && sData.found && state.studio) {
     var displayName = sData.displayName || state.studio;
-    var searchQ = encodeURIComponent(displayName);
-    var dbUrl = 'https://paigelovespilates.github.io/studiosalarydatabase/?search=' + searchQ;
+    var dbUrl = 'https://paigelovespilates.github.io/studiosalarydatabase/?search=' + encodeURIComponent(displayName);
     document.getElementById('studio-flag').style.display = 'flex';
     document.getElementById('sf-name').textContent = displayName;
     document.getElementById('sf-link').href = dbUrl;
@@ -858,24 +682,17 @@ function renderBrief(sData, fmt, mkt, base, askLo, askHi, mid, floor, ceil, rang
     document.getElementById('cr-left').textContent = 'Your current rate: $' + state.rate + '/class';
     var diff = mid - state.rate;
     var gapEl = document.getElementById('cr-gap');
-    if (diff > 0) {
-      gapEl.textContent = '+$' + diff + ' potential gain';
-      gapEl.className = 'cr-gap pos';
-    } else {
-      gapEl.textContent = 'Already at or above midpoint';
-      gapEl.className = 'cr-gap pos';
-    }
+    gapEl.textContent = diff > 0 ? '+$' + diff + ' potential gain' : 'Already at or above midpoint';
+    gapEl.className = 'cr-gap pos';
   }
 
   document.getElementById('b-floor').textContent = '$' + floor;
   document.getElementById('b-ceil').textContent  = '$' + ceil;
-
-  var zoneLo = Math.max(0, Math.min(100, ((askLo - floor) / range) * 100));
-  var zoneHi = Math.max(0, Math.min(100, ((askHi - floor) / range) * 100));
+  var zoneLo = Math.max(0,Math.min(100,((askLo-floor)/range)*100));
+  var zoneHi = Math.max(0,Math.min(100,((askHi-floor)/range)*100));
   document.getElementById('bzone').style.left  = zoneLo + '%';
-  document.getElementById('bzone').style.width = (zoneHi - zoneLo) + '%';
-
-  var askPct = Math.max(2, Math.min(98, ((mid - floor) / range) * 100));
+  document.getElementById('bzone').style.width = (zoneHi-zoneLo) + '%';
+  var askPct = Math.max(2,Math.min(98,((mid-floor)/range)*100));
   document.getElementById('bask').style.left = askPct + '%';
   var askLabel = document.getElementById('bask-label');
   askLabel.textContent = 'Your ask: $' + mid;
@@ -884,53 +701,42 @@ function renderBrief(sData, fmt, mkt, base, askLo, askHi, mid, floor, ceil, rang
   document.getElementById('bfill').style.width = askPct + '%';
 
   if (state.rate) {
-    var curPct = Math.max(2, Math.min(98, ((state.rate - floor) / range) * 100));
+    var curPct = Math.max(2,Math.min(98,((state.rate-floor)/range)*100));
     var curDot = document.getElementById('bcur');
-    curDot.style.display = 'block';
-    curDot.style.left = curPct + '%';
+    curDot.style.display = 'block'; curDot.style.left = curPct + '%';
     var curLabel = document.getElementById('bcur-label');
-    curLabel.textContent = 'You: $' + state.rate;
-    curLabel.style.display = 'block';
-    if (curPct < 15) {
-      curLabel.style.left = curPct + '%';
-      curLabel.style.transform = 'translateX(0)';
-    } else {
-      curLabel.style.left = curPct + '%';
-      curLabel.style.transform = 'translateX(-50%)';
-    }
+    curLabel.textContent = 'You: $' + state.rate; curLabel.style.display = 'block';
+    curLabel.style.left = curPct + '%';
+    curLabel.style.transform = curPct < 15 ? 'translateX(0)' : 'translateX(-50%)';
   }
 
+  // Market avg stat — note if live or fallback
   document.getElementById('rs-mkt').textContent = '$' + base + '/class';
-  document.getElementById('rs-mkt-desc').textContent = 'Average for ' + fmt + ' at your experience level. Think of this as your floor during negotiations.';
+  document.getElementById('rs-mkt-desc').textContent = usedLiveData
+    ? 'Live average for ' + fmt + ' at your experience level in your market. Think of this as your floor.'
+    : 'Estimated average for ' + fmt + ' at your experience level in your market. Think of this as your floor.';
 
-  // Negotiation pay gap — dynamic from live data
+  // Negotiation pay gap
   if (negStats && negStats.pctGap !== null && negStats.pctGap > 0) {
     document.getElementById('rs-neg').textContent = negStats.pctGap + '%';
     document.getElementById('neg-pay-stat').textContent =
       'Instructors in our database who negotiated earn ' + negStats.pctGap + '% more per class on average than those who didn\'t.';
   } else {
     document.getElementById('rs-neg').innerHTML = '25%<sup style="font-size:10px;vertical-align:super;line-height:0;">*</sup>';
-    document.getElementById('neg-pay-stat').textContent =
-      'Instructors who negotiated earned more per class on average than those who didn\'t.';
+    document.getElementById('neg-pay-stat').textContent = 'Instructors who negotiated earned more per class on average than those who didn\'t.';
   }
 
-  // Star rating — dynamic from live data
-  if (negStats && negStats.ratingAvg !== null) {
-    document.getElementById('neg-rating-val').textContent = negStats.ratingAvg.toFixed(1);
-  } else {
-    document.getElementById('neg-rating-val').textContent = '3.5';
-  }
+  // Star rating
+  document.getElementById('neg-rating-val').textContent =
+    (negStats && negStats.ratingAvg !== null) ? negStats.ratingAvg.toFixed(1) : '3.5';
 
+  // Annual
   if (state.rate && state.classes) {
-    var annDiv = document.getElementById('r-annual');
-    annDiv.style.display = 'flex';
+    document.getElementById('r-annual').style.display = 'flex';
     var annualGain = (mid - state.rate) * state.classes * 52;
     document.getElementById('ra-val').textContent = (annualGain >= 0 ? '+' : '') + '$' + Math.abs(annualGain).toLocaleString() + '/yr';
-    // Move description to footnote
-    var footAnnual = document.getElementById('footnote-annual');
-    footAnnual.style.display = 'inline';
-    document.getElementById('footnote-annual-detail').textContent =
-      'ask midpoint $' + mid + '/class · ' + state.classes + ' classes/week';
+    document.getElementById('footnote-annual').style.display = 'inline';
+    document.getElementById('footnote-annual-detail').textContent = 'ask midpoint $' + mid + '/class \xb7 ' + state.classes + ' classes/week';
   }
 
   document.getElementById('form-card').style.display = 'none';
@@ -938,19 +744,17 @@ function renderBrief(sData, fmt, mkt, base, askLo, askHi, mid, floor, ceil, rang
   document.getElementById('results').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  // Alternating section colors
-  var hasStudio = sData && sData.found && state.studio;
+  // Alternating colors
+  var hasStudio = !!(sData && sData.found && state.studio);
   var hasAnnual = !!(state.rate && state.classes);
-
   var sections = [
-    { id: 'studio-flag',    show: hasStudio },
-    { id: 'r-stats',        show: true },
-    { id: 'r-annual',       show: hasAnnual },
-    { id: 'r-insight-1',    show: true },
-    { id: 'r-insight-stars',show: true },
-    { id: 'r-insight-2',    show: true },
+    { id:'studio-flag',     show:hasStudio },
+    { id:'r-stats',         show:true },
+    { id:'r-annual',        show:hasAnnual },
+    { id:'r-insight-1',     show:true },
+    { id:'r-insight-stars', show:true },
+    { id:'r-insight-2',     show:true },
   ];
-
   var colorIndex = 1;
   sections.forEach(function(s) {
     var el = document.getElementById(s.id);
@@ -958,18 +762,14 @@ function renderBrief(sData, fmt, mkt, base, askLo, askHi, mid, floor, ceil, rang
     var isLinen = (colorIndex % 2 === 1);
     el.style.background = isLinen ? 'var(--linen)' : 'var(--white)';
     if (s.id === 'r-stats') {
-      el.querySelectorAll('.r-stat').forEach(function(cell) {
-        cell.style.background = isLinen ? 'var(--linen)' : 'var(--white)';
-      });
+      el.querySelectorAll('.r-stat').forEach(function(cell) { cell.style.background = isLinen ? 'var(--linen)' : 'var(--white)'; });
       el.style.background = 'var(--linen2)';
     }
     colorIndex++;
   });
 }
 
-function exportBrief() {
-  window.print();
-}
+function exportBrief() { window.print(); }
 
 function reset() {
   document.getElementById('results').style.display = 'none';
@@ -981,26 +781,22 @@ function reset() {
   document.getElementById('bcur-label').style.display = 'none';
   document.getElementById('bask-label').style.display = 'none';
   document.getElementById('r-annual').style.display = 'none';
+  document.getElementById('footnote-annual').style.display = 'none';
   document.getElementById('studio-hint').textContent = '';
   document.getElementById('step' + currentStep).classList.remove('active');
   document.getElementById('ps' + currentStep).classList.remove('active');
-  for (var i = 1; i <= 4; i++) {
-    document.getElementById('ps' + i).classList.remove('done', 'active');
-  }
+  for (var i=1;i<=4;i++) { document.getElementById('ps'+i).classList.remove('done','active'); }
   currentStep = 1;
   document.getElementById('step1').classList.add('active');
   document.getElementById('ps1').classList.add('active');
   document.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('selected'); });
-  ['studio-input','city-input','rate-input','classes-input'].forEach(function(id) {
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('exp-select').value = '';
-  document.getElementById('state-select').value = '';
-  document.getElementById('country-select').value = 'US';
+  ['studio-input','city-input','rate-input','classes-input'].forEach(function(id) { document.getElementById(id).value=''; });
+  document.getElementById('exp-select').value='';
+  document.getElementById('state-select').value='';
+  document.getElementById('country-select').value='US';
   updateRegions();
 }
 
-// Init regions on load
 updateRegions();
 </script>
 </body>
