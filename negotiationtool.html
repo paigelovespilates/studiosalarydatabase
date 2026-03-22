@@ -790,8 +790,8 @@ function computeNegStats(rows, fmt) {
   }
 
   function getRating(row) {
-    // Rating is in col 24 (0-indexed) based on March 2026 Tally update
-    return parseNum(row[24]);
+    // Rating is in col AA = 26 (0-indexed)
+    return parseNum(row[26]);
   }
 
   var negPays = [], nonNegPays = [], ratings = [];
