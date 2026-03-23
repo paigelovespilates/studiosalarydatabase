@@ -1084,7 +1084,7 @@ function renderCards(studios, totalCount, page) {
 
     const contactSection=studio.contact?`<div class="contact-section"><div class="notes-label" style="margin-bottom:6px;">Best way to contact this studio about teaching opportunities</div><a href="mailto:${studio.contact}">${studio.contact}</a></div>`:'';
 
-    const postJobButton=studio.hasStudio?`<div style="padding:12px 0;"><a href="https://tally.so/r/dWPV7V?studioName=${encodeURIComponent(studio.name)}&studioCity=${encodeURIComponent(studio.city||'')}" target="_blank" style="display:block;width:calc(100% - 44px);margin:0 22px;padding:8px 0;background:#f0ede8;border:1px solid var(--border);border-radius:8px;color:#757263;text-decoration:none;text-align:center;font-family:'Cormorant Garamond',Georgia,serif;font-size:11px;font-weight:500;letter-spacing:0.04em;transition:background 0.15s;">+ Post a job</a></div>`:'';
+    const postJobButton=studio.hasStudio?`<div style="padding:12px 0;"><a href="https://tally.so/r/dWPV7V?studioName=${encodeURIComponent(studio.name)}&studioCity=${encodeURIComponent(studio.city||'')}" target="_blank" style="display:block;width:calc(100% - 44px);margin:0 22px;padding:8px 0;background:#4a5220;border:1px solid #3a4118;border-radius:8px;color:#e6ead0;text-decoration:none;text-align:center;font-family:'Cormorant Garamond',Georgia,serif;font-size:11px;font-weight:500;letter-spacing:0.04em;transition:background 0.15s;">+ Post a job</a></div>`:'';
 
     const relativityBadge=studio.relativity?`<span class="relativity-badge ${studio.relativity}">${studio.relativity==='above'?`↑ Above average for ${studio.relativityLabel||'their market'}`:studio.relativity==='below'?`↓ Below average for ${studio.relativityLabel||'their market'}`:`~ Average for ${studio.relativityLabel||'their market'}`}</span>`:'';
 
@@ -1109,7 +1109,6 @@ function renderCards(studios, totalCount, page) {
         ${notesSection}
         ${negRatingTile}
         <div style="padding:12px 0;"><button class="see-more-btn" onclick="toggleCard(this)">See compensation details ↓</button></div>
-        ${postJobButton}
       </div>
       <div class="card-expanded card-body">
         <div class="formats-row">${formatPills}</div>
@@ -1128,6 +1127,7 @@ function renderCards(studios, totalCount, page) {
         ${contactSection}
         <div style="padding:12px 0;"><button class="see-less-btn" onclick="toggleCard(this)">See less ↑</button></div>
       </div>
+      ${postJobButton}
     `;
     grid.appendChild(el);
   });
