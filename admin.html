@@ -528,6 +528,42 @@
         </div>`;
     }
 
+    // ── Compute display names for all rows (call after load or after a save) ──
+    function computeDisplayNames() {
+      const norm = s => String(s || '').trim().toLowerCase();
+      const titleCase = s => s.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
+
+      const nameCityMap = {};
+      allRows.forEach(s => {
+        const r        = s.row, src = s.source;
+        const rawName  = String(r[2] || '').trim();
+        const cleanN   = String(src === 'studio' ? (r[31] || '') : (r[23] || '')).trim();
+        const baseName = cleanN || rawName;
+        const rawCity  = String(src === 'studio' ? (r[4] || r[5] || '') : (r[4] || '')).trim();
+        const cleanC   = String(src === 'studio' ? (r[32] || '') : (r[24] || '')).trim();
+        const city     = cleanC || rawCity;
+        const key      = norm(baseName);
+        if (!key) return;
+        if (!nameCityMap[key]) nameCityMap[key] = new Set();
+        if (city) nameCityMap[key].add(norm(city));
+      });
+
+      allRows.forEach(s => {
+        const r        = s.row, src = s.source;
+        const rawName  = String(r[2] || '').trim();
+        const cleanN   = String(src === 'studio' ? (r[31] || '') : (r[23] || '')).trim();
+        const baseName = cleanN || rawName;
+        const rawCity  = String(src === 'studio' ? (r[4] || r[5] || '') : (r[4] || '')).trim();
+        const cleanC   = String(src === 'studio' ? (r[32] || '') : (r[24] || '')).trim();
+        const city     = cleanC || rawCity;
+        const key      = norm(baseName);
+        const cityCount = nameCityMap[key] ? nameCityMap[key].size : 1;
+        s.displayName = cityCount > 1 && city
+          ? baseName + ' ' + titleCase(city)
+          : baseName;
+      });
+    }
+
     // ── Dirty marker ───────────────────────────────────────────────────────────
     function admDirty(id) {
       document.getElementById(id).classList.add('dirty');
@@ -546,17 +582,41 @@
         if (!d.success) throw new Error(d.error || 'Unknown error');
         cnEl.classList.remove('dirty');
         ccEl.classList.remove('dirty');
+
+        // Update the row data in memory
         const s = allRows.find(x => x.source === source && x.rowIndex === rowIndex);
         if (s) {
           if (source === 'studio') { s.row[31] = cnEl.value.trim(); s.row[32] = ccEl.value.trim(); }
           else                     { s.row[23] = cnEl.value.trim(); s.row[24] = ccEl.value.trim(); }
         }
+
+        // Recompute display names — saving clean name/city can affect this row
+        // AND any sibling rows that share the same studio name
+        computeDisplayNames();
+
+        // Re-render any tile currently visible on the page that shares the same
+        // base studio name as the saved row (they may have had city appended/removed)
+        const savedBaseName = String(s ? (source === 'studio' ? (s.row[31] || s.row[2]) : (s.row[23] || s.row[2])) : '').trim().toLowerCase();
+        document.querySelectorAll('#adm-grid .adm-tile').forEach(tileEl => {
+          const tileSrc = tileEl.dataset.source;
+          const tileRn  = parseInt(tileEl.dataset.row);
+          const tileRow = allRows.find(x => x.source === tileSrc && x.rowIndex === tileRn);
+          if (!tileRow) return;
+          const tileBase = String(tileSrc === 'studio'
+            ? (tileRow.row[31] || tileRow.row[2])
+            : (tileRow.row[23] || tileRow.row[2])).trim().toLowerCase();
+          if (tileBase === savedBaseName) {
+            tileEl.outerHTML = buildTile(tileRow);
+          }
+        });
+
         toast('Saved — row ' + rowIndex, 'ok');
       } catch (err) {
         toast('Error: ' + err.message, 'error');
       } finally {
-        btn.disabled = false;
-        btn.textContent = 'Save';
+        // btn may have been replaced by outerHTML swap above — re-query it
+        const newBtn = document.getElementById('adm-save-' + tid);
+        if (newBtn) { newBtn.disabled = false; newBtn.textContent = 'Save'; }
       }
     }
 
@@ -704,46 +764,8 @@
         // Sort most recent first
         allRows.sort((a, b) => b.dateVal - a.dateVal);
 
-        // ── Compute display names (mirrors database dedup logic) ──────────────
-        // For each studio name, count how many distinct cities have entries.
-        // If >1 city → chain → display name = "Studio Name City"
-        // If 1 city  → singleton → display name = "Studio Name"
-        // Uses clean name if present, falls back to raw name.
-        // Across both sheets combined — same as the public DB does it.
-        const norm = s => String(s || '').trim().toLowerCase();
-        const titleCase = s => s.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
-
-        const nameCityMap = {}; // normName → Set of normCities
-        allRows.forEach(s => {
-          const r        = s.row;
-          const src      = s.source;
-          const rawName  = String(r[2] || '').trim();
-          const cleanN   = String(src === 'studio' ? (r[31] || '') : (r[23] || '')).trim();
-          const baseName = cleanN || rawName;
-          const rawCity  = String(src === 'studio' ? (r[4] || r[5] || '') : (r[4] || '')).trim();
-          const cleanC   = String(src === 'studio' ? (r[32] || '') : (r[24] || '')).trim();
-          const city     = cleanC || rawCity;
-          const key      = norm(baseName);
-          if (!key) return;
-          if (!nameCityMap[key]) nameCityMap[key] = new Set();
-          if (city) nameCityMap[key].add(norm(city));
-        });
-
-        allRows.forEach(s => {
-          const r       = s.row;
-          const src     = s.source;
-          const rawName = String(r[2] || '').trim();
-          const cleanN  = String(src === 'studio' ? (r[31] || '') : (r[23] || '')).trim();
-          const baseName = cleanN || rawName;
-          const rawCity  = String(src === 'studio' ? (r[4] || r[5] || '') : (r[4] || '')).trim();
-          const cleanC   = String(src === 'studio' ? (r[32] || '') : (r[24] || '')).trim();
-          const city     = cleanC || rawCity;
-          const key      = norm(baseName);
-          const cityCount = nameCityMap[key] ? nameCityMap[key].size : 1;
-          s.displayName = cityCount > 1 && city
-            ? baseName + ' ' + titleCase(city)
-            : baseName;
-        });
+        // Compute display names (chain studios get city appended)
+        computeDisplayNames();
 
         // Populate format dropdown
         const fmts = [...new Set(allRows.map(s => s.source === 'studio' ? String(s.row[7] || '') : String(s.row[6] || '')).filter(Boolean))].sort();
