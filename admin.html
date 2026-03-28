@@ -472,9 +472,11 @@
       const subDate    = r[0] ? String(r[0]).slice(0, 10) : '';
       const cleanName  = String(src === 'studio' ? (r[31] || '') : (r[23] || ''));
       const cleanCity  = String(src === 'studio' ? (r[32] || '') : (r[24] || ''));
+      const displayCity = cleanCity || rawCity;  // prefer clean city, same as DB
       const displayName = s.displayName || rawName;
       const pay = fmtPay(r, src);
-      const loc = [rawCity, state, country].filter(Boolean).join(', ') || '—';
+      const loc = [displayCity, state, country].filter(Boolean).join(', ') || '—';
+      const showRawCity = cleanCity && cleanCity.toLowerCase() !== rawCity.toLowerCase() && rawCity;
       const esc = v => String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
       const tid = src + '-' + rn;
       // Show raw name as subtitle only when display name differs (i.e. city was appended)
@@ -494,7 +496,7 @@
             </div>
             <span class="adm-row-chip">row ${rn}</span>
           </div>
-          <div class="adm-tile-location">${esc(loc)}</div>
+          <div class="adm-tile-location">${esc(loc)}${showRawCity ? ` <span style="font-style:italic;color:#bbb;">(raw: ${esc(rawCity)})</span>` : ''}</div>
           <div class="adm-tile-badges">
             <span class="adm-badge adm-badge-${src}">${src}</span>
             ${format ? `<span class="adm-badge adm-badge-format">${esc(format)}</span>` : ''}
