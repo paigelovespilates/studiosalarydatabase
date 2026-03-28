@@ -180,7 +180,8 @@
     .adm-badge-instructor { background: #e8edf4; color: #2d4a6b; }
     .adm-badge-format     { background: #f0f0ee; color: #555; }
     .adm-badge-pay        { background: #e8f4ec; color: #2d6b45; }
-    .adm-badge-clean     { background: #e8f0fb; color: #2a4a8a; }
+    .adm-badge-clean          { background: #e8f0fb; color: #2a4a8a; }
+    .adm-badge-clean-inherited { background: #f0f4fd; color: #6a82b4; font-style: italic; }
 
     .adm-edit-section {
       border-top: 0.5px solid #e8e8e5;
@@ -376,7 +377,7 @@
   <script>
     // ── Password ───────────────────────────────────────────────────────────────
     // Change this to whatever password you want
-    const ADMIN_PASSWORD = '030219';
+    const ADMIN_PASSWORD = 'pilates2024';
 
     const SESSION_KEY = 'sdb_admin_auth';
 
@@ -480,8 +481,14 @@
       const showRawCity = cleanCity && cleanCity.toLowerCase() !== rawCity.toLowerCase() && rawCity;
       const esc = v => String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
       const tid = src + '-' + rn;
-      // Show raw name as subtitle only when display name differs (i.e. city was appended)
       const showRaw = displayName !== rawName && rawName;
+
+      // Determine if clean name/city is direct (set on this row) or inherited (from sibling)
+      const hasDirectCleanName = !!cleanName;
+      const hasDirectCleanCity = !!cleanCity;
+      const hasInheritedCleanName = !hasDirectCleanName && s.displayName && s.displayName !== rawName;
+      // Inherited city: displayCity differs from rawCity but no clean city on this row
+      const hasInheritedCleanCity = !hasDirectCleanCity && s.inheritedCleanCity && s.inheritedCleanCity.toLowerCase() !== rawCity.toLowerCase();
 
       return `
         <div class="adm-tile${ex ? ' excluded' : ''}" id="adm-tile-${tid}"
@@ -503,8 +510,10 @@
             ${format ? `<span class="adm-badge adm-badge-format">${esc(format)}</span>` : ''}
             ${pay    ? `<span class="adm-badge adm-badge-pay">${esc(pay)}</span>` : ''}
             ${exp    ? `<span class="adm-badge adm-badge-format">${esc(exp)}</span>` : ''}
-            ${cleanName ? `<span class="adm-badge adm-badge-clean" title="Clean name: ${esc(cleanName)}">✓ name</span>` : ''}
-            ${cleanCity ? `<span class="adm-badge adm-badge-clean" title="Clean city: ${esc(cleanCity)}">✓ city</span>` : ''}
+            ${hasDirectCleanName   ? `<span class="adm-badge adm-badge-clean" title="Clean name: ${esc(cleanName)}">✓ name</span>` : ''}
+            ${hasInheritedCleanName ? `<span class="adm-badge adm-badge-clean-inherited" title="Inherited clean name: ${esc(s.displayName||'')}">↳ name</span>` : ''}
+            ${hasDirectCleanCity   ? `<span class="adm-badge adm-badge-clean" title="Clean city: ${esc(cleanCity)}">✓ city</span>` : ''}
+            ${hasInheritedCleanCity ? `<span class="adm-badge adm-badge-clean-inherited" title="Inherited clean city: ${esc(s.inheritedCleanCity||'')}">↳ city</span>` : ''}
             <span id="adm-excbadge-${tid}">${ex ? '<span class="adm-badge adm-badge-excluded">excluded</span>' : ''}</span>
           </div>
           <div class="adm-edit-section">
@@ -538,34 +547,46 @@
       const norm = s => String(s || '').trim().toLowerCase();
       const titleCase = s => s.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
 
+      // Build: normRawName → { cleanName, cleanCity } from any row that has them set
       const nameCityMap = {};
+      const cleanNameMap = {};   // normRawName → canonical clean name
+      const cleanCityMap = {};   // normRawName → canonical clean city
       allRows.filter(s => !s.excluded).forEach(s => {
         const r        = s.row, src = s.source;
         const rawName  = String(r[2] || '').trim();
         const cleanN   = String(src === 'studio' ? (r[31] || '') : (r[23] || '')).trim();
+        const cleanC   = String(src === 'studio' ? (r[32] || '') : (r[24] || '')).trim();
         const baseName = cleanN || rawName;
         const rawCity  = String(src === 'studio' ? (r[4] || r[5] || '') : (r[4] || '')).trim();
-        const cleanC   = String(src === 'studio' ? (r[32] || '') : (r[24] || '')).trim();
         const city     = cleanC || rawCity;
         const key      = norm(baseName);
         if (!key) return;
         if (!nameCityMap[key]) nameCityMap[key] = new Set();
         if (city) nameCityMap[key].add(norm(city));
+        // Track canonical clean name/city by raw name key for fallback
+        const rawKey = norm(rawName);
+        if (cleanN && !cleanNameMap[rawKey]) cleanNameMap[rawKey] = cleanN;
+        if (cleanC && !cleanCityMap[rawKey]) cleanCityMap[rawKey] = cleanC;
       });
 
       allRows.forEach(s => {
         const r        = s.row, src = s.source;
         const rawName  = String(r[2] || '').trim();
         const cleanN   = String(src === 'studio' ? (r[31] || '') : (r[23] || '')).trim();
+        const cleanC   = String(src === 'studio' ? (r[32] || '') : (r[24] || '')).trim();
         const baseName = cleanN || rawName;
         const rawCity  = String(src === 'studio' ? (r[4] || r[5] || '') : (r[4] || '')).trim();
-        const cleanC   = String(src === 'studio' ? (r[32] || '') : (r[24] || '')).trim();
-        const city     = cleanC || rawCity;
+        const cleanCity = cleanC || rawCity;
         const key      = norm(baseName);
         const cityCount = nameCityMap[key] ? nameCityMap[key].size : 1;
-        s.displayName = cityCount > 1 && city
-          ? baseName + ' ' + titleCase(city)
+        s.displayName = cityCount > 1 && cleanCity
+          ? baseName + ' ' + titleCase(cleanCity)
           : baseName;
+
+        // Track inherited clean name/city (set on a sibling, not this row directly)
+        const rawKey = norm(rawName);
+        s.inheritedCleanCity = (!cleanC && cleanCityMap[rawKey] && cityCount <= 1)
+          ? cleanCityMap[rawKey] : null;
       });
     }
 
