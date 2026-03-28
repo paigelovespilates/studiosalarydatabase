@@ -180,7 +180,7 @@
     .adm-badge-instructor { background: #e8edf4; color: #2d4a6b; }
     .adm-badge-format     { background: #f0f0ee; color: #555; }
     .adm-badge-pay        { background: #e8f4ec; color: #2d6b45; }
-    .adm-badge-excluded   { background: #fce8e8; color: #a33; }
+    .adm-badge-clean     { background: #e8f0fb; color: #2a4a8a; }
 
     .adm-edit-section {
       border-top: 0.5px solid #e8e8e5;
@@ -376,7 +376,7 @@
   <script>
     // ── Password ───────────────────────────────────────────────────────────────
     // Change this to whatever password you want
-    const ADMIN_PASSWORD = 'pilates2024';
+    const ADMIN_PASSWORD = '030219';
 
     const SESSION_KEY = 'sdb_admin_auth';
 
@@ -503,6 +503,8 @@
             ${format ? `<span class="adm-badge adm-badge-format">${esc(format)}</span>` : ''}
             ${pay    ? `<span class="adm-badge adm-badge-pay">${esc(pay)}</span>` : ''}
             ${exp    ? `<span class="adm-badge adm-badge-format">${esc(exp)}</span>` : ''}
+            ${cleanName ? `<span class="adm-badge adm-badge-clean" title="Clean name: ${esc(cleanName)}">✓ name</span>` : ''}
+            ${cleanCity ? `<span class="adm-badge adm-badge-clean" title="Clean city: ${esc(cleanCity)}">✓ city</span>` : ''}
             <span id="adm-excbadge-${tid}">${ex ? '<span class="adm-badge adm-badge-excluded">excluded</span>' : ''}</span>
           </div>
           <div class="adm-edit-section">
