@@ -172,6 +172,7 @@
       line-height: 1.2;
     }
     .adm-tile-location { font-size: 12px; color: #888; margin-bottom: 8px; }
+    .adm-tile-rawname  { font-size: 11px; color: #aaa; margin-top: 2px; font-style: italic; }
 
     .adm-tile-badges { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
     .adm-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
@@ -462,19 +463,22 @@
     // ── Build tile ─────────────────────────────────────────────────────────────
     function buildTile(s) {
       const r = s.row, src = s.source, rn = s.rowIndex, ex = s.excluded;
-      const rawName   = String(r[2] || '');
-      const rawCity   = src === 'studio' ? String(r[4] || r[5] || '') : String(r[4] || '');
-      const state     = String(src === 'studio' ? (r[6] || '') : (r[5] || ''));
-      const country   = String(r[3] || '');
-      const format    = String(src === 'studio' ? (r[7] || '') : (r[6] || ''));
-      const exp       = String(src === 'studio' ? (r[11] || '') : (r[13] || ''));
-      const subDate   = r[0] ? String(r[0]).slice(0, 10) : '';
-      const cleanName = String(src === 'studio' ? (r[31] || '') : (r[23] || ''));
-      const cleanCity = String(src === 'studio' ? (r[32] || '') : (r[24] || ''));
+      const rawName    = String(r[2] || '');
+      const rawCity    = src === 'studio' ? String(r[4] || r[5] || '') : String(r[4] || '');
+      const state      = String(src === 'studio' ? (r[6] || '') : (r[5] || ''));
+      const country    = String(r[3] || '');
+      const format     = String(src === 'studio' ? (r[7] || '') : (r[6] || ''));
+      const exp        = String(src === 'studio' ? (r[11] || '') : (r[13] || ''));
+      const subDate    = r[0] ? String(r[0]).slice(0, 10) : '';
+      const cleanName  = String(src === 'studio' ? (r[31] || '') : (r[23] || ''));
+      const cleanCity  = String(src === 'studio' ? (r[32] || '') : (r[24] || ''));
+      const displayName = s.displayName || rawName;
       const pay = fmtPay(r, src);
       const loc = [rawCity, state, country].filter(Boolean).join(', ') || '—';
       const esc = v => String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
       const tid = src + '-' + rn;
+      // Show raw name as subtitle only when display name differs (i.e. city was appended)
+      const showRaw = displayName !== rawName && rawName;
 
       return `
         <div class="adm-tile${ex ? ' excluded' : ''}" id="adm-tile-${tid}"
@@ -484,7 +488,10 @@
           data-format="${esc(format.toLowerCase())}"
           data-excluded="${ex ? '1' : '0'}">
           <div class="adm-tile-header">
-            <div class="adm-tile-name">${esc(rawName) || 'Unnamed'}</div>
+            <div>
+              <div class="adm-tile-name">${esc(displayName) || 'Unnamed'}</div>
+              ${showRaw ? `<div class="adm-tile-rawname">raw: ${esc(rawName)}</div>` : ''}
+            </div>
             <span class="adm-row-chip">row ${rn}</span>
           </div>
           <div class="adm-tile-location">${esc(loc)}</div>
@@ -691,8 +698,52 @@
           dateVal:  parseDate(item.row[0])
         }));
 
+        // Drop rows with no studio name (e.g. instructors still in training)
+        allRows = allRows.filter(s => String(s.row[2] || '').trim() !== '');
+
         // Sort most recent first
         allRows.sort((a, b) => b.dateVal - a.dateVal);
+
+        // ── Compute display names (mirrors database dedup logic) ──────────────
+        // For each studio name, count how many distinct cities have entries.
+        // If >1 city → chain → display name = "Studio Name City"
+        // If 1 city  → singleton → display name = "Studio Name"
+        // Uses clean name if present, falls back to raw name.
+        // Across both sheets combined — same as the public DB does it.
+        const norm = s => String(s || '').trim().toLowerCase();
+        const titleCase = s => s.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
+
+        const nameCityMap = {}; // normName → Set of normCities
+        allRows.forEach(s => {
+          const r        = s.row;
+          const src      = s.source;
+          const rawName  = String(r[2] || '').trim();
+          const cleanN   = String(src === 'studio' ? (r[31] || '') : (r[23] || '')).trim();
+          const baseName = cleanN || rawName;
+          const rawCity  = String(src === 'studio' ? (r[4] || r[5] || '') : (r[4] || '')).trim();
+          const cleanC   = String(src === 'studio' ? (r[32] || '') : (r[24] || '')).trim();
+          const city     = cleanC || rawCity;
+          const key      = norm(baseName);
+          if (!key) return;
+          if (!nameCityMap[key]) nameCityMap[key] = new Set();
+          if (city) nameCityMap[key].add(norm(city));
+        });
+
+        allRows.forEach(s => {
+          const r       = s.row;
+          const src     = s.source;
+          const rawName = String(r[2] || '').trim();
+          const cleanN  = String(src === 'studio' ? (r[31] || '') : (r[23] || '')).trim();
+          const baseName = cleanN || rawName;
+          const rawCity  = String(src === 'studio' ? (r[4] || r[5] || '') : (r[4] || '')).trim();
+          const cleanC   = String(src === 'studio' ? (r[32] || '') : (r[24] || '')).trim();
+          const city     = cleanC || rawCity;
+          const key      = norm(baseName);
+          const cityCount = nameCityMap[key] ? nameCityMap[key].size : 1;
+          s.displayName = cityCount > 1 && city
+            ? baseName + ' ' + titleCase(city)
+            : baseName;
+        });
 
         // Populate format dropdown
         const fmts = [...new Set(allRows.map(s => s.source === 'studio' ? String(s.row[7] || '') : String(s.row[6] || '')).filter(Boolean))].sort();
