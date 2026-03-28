@@ -354,6 +354,7 @@
           <option value="active">Active only</option>
           <option value="excluded">Excluded only</option>
         </select>
+        <button id="adm-clear-btn" onclick="admClearFilters()" style="display:none;font-family:'DM Sans',sans-serif;font-size:12px;padding:6px 12px;border-radius:6px;border:0.5px solid rgba(237,235,228,0.5);background:transparent;color:#EDEBE4;cursor:pointer;white-space:nowrap;opacity:0.8;">✕ Clear</button>
       </div>
     </div>
     <div class="adm-stats" id="adm-stats">Loading…</div>
@@ -536,7 +537,7 @@
       const titleCase = s => s.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
 
       const nameCityMap = {};
-      allRows.forEach(s => {
+      allRows.filter(s => !s.excluded).forEach(s => {
         const r        = s.row, src = s.source;
         const rawName  = String(r[2] || '').trim();
         const cleanN   = String(src === 'studio' ? (r[31] || '') : (r[23] || '')).trim();
@@ -661,6 +662,16 @@
     let currentPage = 1;
     let filteredRows = [];
 
+    // ── Clear all filters ──────────────────────────────────────────────────────
+    function admClearFilters() {
+      document.getElementById('adm-name').value = '';
+      document.getElementById('adm-city').value = '';
+      document.getElementById('adm-src').value  = '';
+      document.getElementById('adm-fmt').value  = '';
+      document.getElementById('adm-exc').value  = 'all';
+      admFilter();
+    }
+
     // ── Filter + paginate ──────────────────────────────────────────────────────
     function admFilter() {
       const name = document.getElementById('adm-name').value.toLowerCase().trim();
@@ -668,6 +679,10 @@
       const src  = document.getElementById('adm-src').value;
       const fmt  = document.getElementById('adm-fmt').value.toLowerCase();
       const exc  = document.getElementById('adm-exc').value;
+
+      // Show/hide clear button
+      const isFiltered = name || city || src || fmt || exc !== 'all';
+      document.getElementById('adm-clear-btn').style.display = isFiltered ? 'block' : 'none';
 
       filteredRows = allRows.filter(s => {
         const r       = s.row;
