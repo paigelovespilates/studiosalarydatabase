@@ -503,11 +503,10 @@
       const showRaw = displayName !== rawName && rawName;
 
       // Determine if clean name/city is direct (set on this row) or inherited (from sibling)
-      const hasDirectCleanName = !!cleanName;
-      const hasDirectCleanCity = !!cleanCity;
-      const hasInheritedCleanName = !hasDirectCleanName && s.displayName && s.displayName !== rawName;
-      // Inherited city: displayCity differs from rawCity but no clean city on this row
-      const hasInheritedCleanCity = !hasDirectCleanCity && s.inheritedCleanCity && s.inheritedCleanCity.toLowerCase() !== rawCity.toLowerCase();
+      const hasDirectCleanName    = !!cleanName;
+      const hasDirectCleanCity    = !!cleanCity;
+      const hasInheritedCleanName = !hasDirectCleanName && !!s.inheritedCleanName;
+      const hasInheritedCleanCity = !hasDirectCleanCity && !!s.inheritedCleanCity;
 
       return `
         <div class="adm-tile${ex ? ' excluded' : ''}" id="adm-tile-${tid}"
@@ -593,19 +592,19 @@
         const rawName  = String(r[2] || '').trim();
         const cleanN   = String(src === 'studio' ? (r[31] || '') : (r[23] || '')).trim();
         const cleanC   = String(src === 'studio' ? (r[32] || '') : (r[24] || '')).trim();
-        const baseName = cleanN || rawName;
         const rawCity  = String(src === 'studio' ? (r[4] || r[5] || '') : (r[4] || '')).trim();
-        const cleanCity = cleanC || rawCity;
-        const key      = norm(baseName);
-        const cityCount = nameCityMap[key] ? nameCityMap[key].size : 1;
-        s.displayName = cityCount > 1 && cleanCity
-          ? baseName + ' ' + titleCase(cleanCity)
-          : baseName;
+        const rawKey   = norm(rawName);
 
-        // Track inherited clean name/city (set on a sibling, not this row directly)
-        const rawKey = norm(rawName);
-        s.inheritedCleanCity = (!cleanC && cleanCityMap[rawKey] && cityCount <= 1)
-          ? cleanCityMap[rawKey] : null;
+        // Use direct clean name if set, otherwise inherit from sibling
+        const resolvedName = cleanN || cleanNameMap[rawKey] || rawName;
+
+        s.displayName = cityCount > 1 && resolvedCity
+          ? resolvedName + ' ' + titleCase(resolvedCity)
+          : resolvedName;
+
+        // Track inherited flags for badge display
+        s.inheritedCleanName = !cleanN && !!cleanNameMap[rawKey] ? cleanNameMap[rawKey] : null;
+        s.inheritedCleanCity = !cleanC && !!cleanCityMap[rawKey] && cityCount <= 1 ? cleanCityMap[rawKey] : null;
       });
     }
 
@@ -623,7 +622,11 @@
       btn.disabled = true;
       btn.innerHTML = '<span class="adm-spinner"></span>';
       try {
-        const d = await jsonp({ action: 'updateCleanFields', source, rowIndex, cleanName: cnEl.value.trim(), cleanCity: ccEl.value.trim() });
+        const d = await jsonp({
+          action: 'updateCleanFields', source, rowIndex,
+          ...(cnEl.value.trim() ? { cleanName: cnEl.value.trim() } : {}),
+          ...(ccEl.value.trim() ? { cleanCity: ccEl.value.trim() } : {})
+        });
         if (!d.success) throw new Error(d.error || 'Unknown error');
         cnEl.classList.remove('dirty');
         ccEl.classList.remove('dirty');
