@@ -234,6 +234,63 @@
     }
     .adm-tile-date { font-size: 11px; color: #aaa; }
 
+    .adm-btn-expand {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      border: 0.5px solid #ccc;
+      background: transparent;
+      color: #888;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .adm-btn-expand:hover { border-color: #555; color: #333; }
+    .adm-btn-expand.open  { border-color: #373930; color: #373930; }
+
+    .adm-details {
+      border-top: 0.5px solid #e8e8e5;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .adm-detail-row {
+      display: flex;
+      gap: 8px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .adm-detail-label {
+      font-size: 11px;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      width: 90px;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+    .adm-detail-value {
+      color: #333;
+      flex: 1;
+    }
+    .adm-detail-value.highlight {
+      color: #2d6b45;
+      font-weight: 500;
+    }
+    .adm-detail-section {
+      font-size: 10px;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 4px;
+      margin-bottom: 2px;
+      border-top: 0.5px solid #f0f0ee;
+      padding-top: 8px;
+    }
+
     .adm-btn-exclude {
       font-family: 'DM Sans', sans-serif;
       font-size: 12px;
@@ -319,6 +376,37 @@
     #adm-toast.show  { opacity: 1; transform: translateY(0); }
     #adm-toast.ok    { background: #2d6b45; }
     #adm-toast.error { background: #a33; }
+
+    .adm-save-all-bar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 8px 16px;
+      background: #f0ede6;
+      border-top: 0.5px solid #ddd;
+      border-bottom: 0.5px solid #ddd;
+    }
+    .adm-save-all-msg {
+      font-size: 12px;
+      color: #888;
+      flex: 1;
+    }
+    .adm-btn-save-all {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 7px 18px;
+      border-radius: 7px;
+      cursor: pointer;
+      border: none;
+      background: #373930;
+      color: #EDEBE4;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .adm-btn-save-all:hover { background: #4a4d40; }
+    .adm-btn-save-all:disabled { opacity: 0.5; cursor: not-allowed; }
   </style>
 </head>
 <body>
@@ -367,6 +455,10 @@
       </div>
     </div>
     <div class="adm-stats" id="adm-stats">Loading…</div>
+    <div class="adm-save-all-bar" id="adm-save-all-top" style="display:none;">
+      <span class="adm-save-all-msg" id="adm-save-all-msg-top"></span>
+      <button class="adm-btn-save-all" onclick="admSaveAll()">Save all changes</button>
+    </div>
     <div class="adm-grid" id="adm-grid">
       <div class="adm-state">
         <span class="adm-spinner" style="width:16px;height:16px;border-width:2px;display:inline-block;margin-right:8px;"></span>
@@ -378,6 +470,10 @@
       <span class="adm-page-info" id="adm-page-info"></span>
       <button class="adm-page-btn" id="adm-next" onclick="admChangePage(1)">Next →</button>
     </div>
+    <div class="adm-save-all-bar" id="adm-save-all-bottom" style="display:none;">
+      <span class="adm-save-all-msg" id="adm-save-all-msg-bottom"></span>
+      <button class="adm-btn-save-all" onclick="admSaveAll()">Save all changes</button>
+    </div>
   </div>
 
   <div id="adm-toast"></div>
@@ -385,7 +481,7 @@
   <script>
     // ── Password ───────────────────────────────────────────────────────────────
     // Change this to whatever password you want
-    const ADMIN_PASSWORD = '030219';
+    const ADMIN_PASSWORD = 'pilates2024';
 
     const SESSION_KEY = 'sdb_admin_auth';
 
@@ -551,11 +647,17 @@
             </div>
           </div>
           <div class="adm-tile-footer">
+            <button class="adm-btn-expand" id="adm-expand-${tid}" onclick="admToggleExpand('${tid}')">
+              Details ↓
+            </button>
             <span class="adm-tile-date">${subDate}</span>
             <button class="adm-btn-exclude ${ex ? 'undo' : 'active'}" id="adm-btn-${tid}"
               onclick="admExclude('${src}', ${rn}, ${!ex})">
               ${ex ? 'Undo exclude' : 'Exclude tile'}
             </button>
+          </div>
+          <div class="adm-details" id="adm-details-${tid}" style="display:none;">
+            ${buildDetails(r, src)}
           </div>
         </div>`;
     }
@@ -611,9 +713,192 @@
       });
     }
 
+    // ── Toggle details panel ───────────────────────────────────────────────────
+    function admToggleExpand(tid) {
+      const panel = document.getElementById('adm-details-' + tid);
+      const btn   = document.getElementById('adm-expand-' + tid);
+      const open  = panel.style.display === 'none';
+      panel.style.display = open ? '' : 'none';
+      btn.textContent = open ? 'Details ↑' : 'Details ↓';
+      btn.classList.toggle('open', open);
+    }
+
+    // ── Build details panel HTML ───────────────────────────────────────────────
+    function buildDetails(r, src) {
+      const esc = v => String(v || '').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+      const val = (idx) => String(r[idx] || '').trim();
+      const row = (label, v, highlight) => v
+        ? `<div class="adm-detail-row"><span class="adm-detail-label">${label}</span><span class="adm-detail-value${highlight?' highlight':''}">${esc(v)}</span></div>`
+        : '';
+      const sec = (label) => `<div class="adm-detail-section">${label}</div>`;
+
+      let html = '';
+
+      if (src === 'studio') {
+        // Pay
+        html += sec('Compensation');
+        html += row('Structure',    val(8));
+        html += row('Summary',      val(9));
+        html += row('Pay/class',    val(10));
+        html += row('Exp level',    val(11));
+        html += row('Pay — new',    val(12));
+        html += row('Pay — exp',    val(13));
+        html += row('Pay/client',   val(14));
+        html += row('Capacity',     val(15));
+        html += row('Flat rate',    val(16));
+        html += row('Variable',     val(17));
+        html += row('Max earnings', val(18));
+        html += row('Hourly',       val(19));
+        // Requirements
+        html += sec('Requirements & perks');
+        html += row('Exp required', val(20));
+        html += row('Benefits',     val(21));
+        html += row('Other perks',  val(22));
+        // Notes
+        html += sec('Notes');
+        html += row('Contact',      val(23));
+        html += row('Notes',        val(24));
+        html += row('Source',       val(25));
+        html += row('Add. notes',   val(27));
+      } else {
+        // Pay
+        html += sec('Compensation');
+        html += row('Structure',    val(7));
+        html += row('Summary',      val(8));
+        html += row('Pay/class',    val(9));
+        html += row('Pay/client',   val(10));
+        html += row('Flat rate',    val(11));
+        html += row('Variable',     val(12));
+        html += row('Max earnings', val(25));
+        html += row('Capacity',     val(18));
+        // Experience & negotiation
+        html += sec('Experience & negotiation');
+        html += row('Experience',   val(13));
+        html += row('Negotiated',   val(15), val(15).toLowerCase() === 'yes');
+        html += row('Neg rating',   val(26));
+        html += row('Neg notes',    val(16), true);
+        // Perks
+        html += sec('Perks');
+        html += row('Perks',        val(14));
+        html += row('Other perks',  val(19));
+        // Source
+        html += sec('Source');
+        html += row('Source',       val(17));
+      }
+
+      // Strip empty sections (a section with no rows after it)
+      return html.replace(/<div class="adm-detail-section">[^<]+<\/div>(\s*<div class="adm-detail-section">)/g, '$1')
+                 .replace(/<div class="adm-detail-section">[^<]+<\/div>\s*$/g, '');
+    }
+
     // ── Dirty marker ───────────────────────────────────────────────────────────
     function admDirty(id) {
       document.getElementById(id).classList.add('dirty');
+      admUpdateSaveAllBar();
+    }
+
+    // ── Update save all bar visibility ─────────────────────────────────────────
+    function admUpdateSaveAllBar() {
+      const dirtyInputs = document.querySelectorAll('#adm-grid .adm-edit-input.dirty');
+      const count = dirtyInputs.length;
+      const show = count > 0;
+      // Count dirty tiles (each tile can have 2 dirty inputs)
+      const dirtyTiles = new Set();
+      dirtyInputs.forEach(el => {
+        const tile = el.closest('.adm-tile');
+        if (tile) dirtyTiles.add(tile.id);
+      });
+      const msg = show ? `${dirtyTiles.size} tile${dirtyTiles.size !== 1 ? 's' : ''} with unsaved changes` : '';
+      ['top','bottom'].forEach(pos => {
+        const bar = document.getElementById('adm-save-all-' + pos);
+        const msgEl = document.getElementById('adm-save-all-msg-' + pos);
+        if (bar) bar.style.display = show ? 'flex' : 'none';
+        if (msgEl) msgEl.textContent = msg;
+      });
+    }
+
+    // ── Save all dirty tiles on current page ───────────────────────────────────
+    async function admSaveAll() {
+      // Collect all tiles with at least one dirty input
+      const dirtyTiles = new Set();
+      document.querySelectorAll('#adm-grid .adm-edit-input.dirty').forEach(el => {
+        const tile = el.closest('.adm-tile');
+        if (tile) dirtyTiles.add(tile);
+      });
+
+      if (!dirtyTiles.size) return;
+
+      // Disable both save all buttons
+      document.querySelectorAll('.adm-btn-save-all').forEach(b => {
+        b.disabled = true;
+        b.innerHTML = '<span class="adm-spinner"></span> Saving…';
+      });
+
+      let saved = 0, failed = 0;
+      for (const tile of dirtyTiles) {
+        const src = tile.dataset.source;
+        const rn  = parseInt(tile.dataset.row);
+        const tid = src + '-' + rn;
+        const cnEl = document.getElementById('adm-cn-' + tid);
+        const ccEl = document.getElementById('adm-cc-' + tid);
+        if (!cnEl || !ccEl) continue;
+
+        // Only send fields that are dirty and non-empty
+        const params = { action: 'updateCleanFields', source: src, rowIndex: rn };
+        if (cnEl.classList.contains('dirty') && cnEl.value.trim()) params.cleanName = cnEl.value.trim();
+        if (ccEl.classList.contains('dirty') && ccEl.value.trim()) params.cleanCity = ccEl.value.trim();
+        if (!params.cleanName && !params.cleanCity) {
+          // Dirty but empty — just clear dirty state, nothing to save
+          cnEl.classList.remove('dirty');
+          ccEl.classList.remove('dirty');
+          continue;
+        }
+
+        try {
+          const d = await jsonp(params);
+          if (!d.success) throw new Error(d.error || 'Unknown error');
+          cnEl.classList.remove('dirty');
+          ccEl.classList.remove('dirty');
+
+          // Update in-memory row
+          const s = allRows.find(x => x.source === src && x.rowIndex === rn);
+          if (s) {
+            if (src === 'studio') {
+              if (params.cleanName) s.row[31] = params.cleanName;
+              if (params.cleanCity) s.row[32] = params.cleanCity;
+            } else {
+              if (params.cleanName) s.row[23] = params.cleanName;
+              if (params.cleanCity) s.row[24] = params.cleanCity;
+            }
+          }
+          saved++;
+        } catch (err) {
+          failed++;
+          console.error('Save all error row ' + rn + ':', err.message);
+        }
+      }
+
+      // Recompute display names and re-render affected tiles
+      computeDisplayNames();
+      document.querySelectorAll('#adm-grid .adm-tile').forEach(tileEl => {
+        const tileSrc = tileEl.dataset.source;
+        const tileRn  = parseInt(tileEl.dataset.row);
+        const tileRow = allRows.find(x => x.source === tileSrc && x.rowIndex === tileRn);
+        if (tileRow) tileEl.outerHTML = buildTile(tileRow);
+      });
+
+      admUpdateSaveAllBar();
+
+      if (failed > 0) {
+        toast(`Saved ${saved}, failed ${failed} — check console`, 'error');
+      } else {
+        toast(`Saved ${saved} tile${saved !== 1 ? 's' : ''}`, 'ok');
+      }
+
+      document.querySelectorAll('.adm-btn-save-all').forEach(b => {
+        b.disabled = false;
+        b.textContent = 'Save all changes';
+      });
     }
 
     // ── Save clean fields ──────────────────────────────────────────────────────
@@ -805,6 +1090,7 @@
 
       admStats(total);
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      admUpdateSaveAllBar();
     }
 
     function admChangePage(dir) {
