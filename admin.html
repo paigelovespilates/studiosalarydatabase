@@ -385,7 +385,7 @@
   <script>
     // ── Password ───────────────────────────────────────────────────────────────
     // Change this to whatever password you want
-    const ADMIN_PASSWORD = 'pilates2024';
+    const ADMIN_PASSWORD = '030219';
 
     const SESSION_KEY = 'sdb_admin_auth';
 
@@ -597,6 +597,9 @@
 
         // Use direct clean name if set, otherwise inherit from sibling
         const resolvedName = cleanN || cleanNameMap[rawKey] || rawName;
+        const resolvedCity = cleanC || cleanCityMap[rawKey] || rawCity;
+        const key      = norm(resolvedName);
+        const cityCount = nameCityMap[key] ? nameCityMap[key].size : 1;
 
         s.displayName = cityCount > 1 && resolvedCity
           ? resolvedName + ' ' + titleCase(resolvedCity)
