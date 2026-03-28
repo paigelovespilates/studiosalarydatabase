@@ -355,6 +355,14 @@
           <option value="active">Active only</option>
           <option value="excluded">Excluded only</option>
         </select>
+        <select id="adm-date" onchange="admFilter()">
+          <option value="all">All time</option>
+          <option value="today">Today</option>
+          <option value="yesterday">Yesterday</option>
+          <option value="week">This week</option>
+          <option value="month">This month</option>
+          <option value="90days">Last 90 days</option>
+        </select>
         <button id="adm-clear-btn" onclick="admClearFilters()" style="display:none;font-family:'DM Sans',sans-serif;font-size:12px;padding:6px 12px;border-radius:6px;border:0.5px solid rgba(237,235,228,0.5);background:transparent;color:#EDEBE4;cursor:pointer;white-space:nowrap;opacity:0.8;">✕ Clear</button>
       </div>
     </div>
@@ -471,7 +479,18 @@
       const country    = String(r[3] || '');
       const format     = String(src === 'studio' ? (r[7] || '') : (r[6] || ''));
       const exp        = String(src === 'studio' ? (r[11] || '') : (r[13] || ''));
-      const subDate    = r[0] ? String(r[0]).slice(0, 10) : '';
+      const subDate = (() => {
+        if (!r[0]) return '';
+        const raw = String(r[0]).trim();
+        const n = Number(raw);
+        if (!isNaN(n) && n > 40000) {
+          // Excel serial date — convert to readable date
+          const d = new Date(new Date(1900,0,1).getTime() + (n > 60 ? n-2 : n-1) * 86400000);
+          return isNaN(d) ? raw : d.toISOString().slice(0,10);
+        }
+        // ISO or other string — just take first 10 chars
+        return raw.slice(0, 10);
+      })();
       const cleanName  = String(src === 'studio' ? (r[31] || '') : (r[23] || ''));
       const cleanCity  = String(src === 'studio' ? (r[32] || '') : (r[24] || ''));
       const displayCity = cleanCity || rawCity;  // prefer clean city, same as DB
@@ -692,20 +711,40 @@
       document.getElementById('adm-src').value  = '';
       document.getElementById('adm-fmt').value  = '';
       document.getElementById('adm-exc').value  = 'all';
+      document.getElementById('adm-date').value = 'all';
       admFilter();
     }
 
     // ── Filter + paginate ──────────────────────────────────────────────────────
     function admFilter() {
-      const name = document.getElementById('adm-name').value.toLowerCase().trim();
-      const city = document.getElementById('adm-city').value.toLowerCase().trim();
-      const src  = document.getElementById('adm-src').value;
-      const fmt  = document.getElementById('adm-fmt').value.toLowerCase();
-      const exc  = document.getElementById('adm-exc').value;
+      const name    = document.getElementById('adm-name').value.toLowerCase().trim();
+      const city    = document.getElementById('adm-city').value.toLowerCase().trim();
+      const src     = document.getElementById('adm-src').value;
+      const fmt     = document.getElementById('adm-fmt').value.toLowerCase();
+      const exc     = document.getElementById('adm-exc').value;
+      const dateRng = document.getElementById('adm-date').value;
 
       // Show/hide clear button
-      const isFiltered = name || city || src || fmt || exc !== 'all';
+      const isFiltered = name || city || src || fmt || exc !== 'all' || dateRng !== 'all';
       document.getElementById('adm-clear-btn').style.display = isFiltered ? 'block' : 'none';
+
+      // Build date boundary for the selected range (start of day in local time)
+      const now = new Date();
+      const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      let dateFrom = null;
+      let dateTo   = null;
+      if (dateRng === 'today') {
+        dateFrom = startOfToday;
+      } else if (dateRng === 'yesterday') {
+        dateFrom = new Date(startOfToday); dateFrom.setDate(dateFrom.getDate() - 1);
+        dateTo   = startOfToday;
+      } else if (dateRng === 'week') {
+        dateFrom = new Date(startOfToday); dateFrom.setDate(dateFrom.getDate() - dateFrom.getDay());
+      } else if (dateRng === 'month') {
+        dateFrom = new Date(now.getFullYear(), now.getMonth(), 1);
+      } else if (dateRng === '90days') {
+        dateFrom = new Date(startOfToday); dateFrom.setDate(dateFrom.getDate() - 90);
+      }
 
       filteredRows = allRows.filter(s => {
         const r       = s.row;
@@ -714,6 +753,14 @@
           ? String(r[4] || r[5] || '').toLowerCase()
           : String(r[4] || '').toLowerCase();
         const format  = String(s.source === 'studio' ? (r[7] || '') : (r[6] || '')).toLowerCase();
+
+        // Date filter
+        if (dateRng !== 'all') {
+          const d = s.dateVal ? new Date(s.dateVal > 40000 ? new Date(1900,0,1).getTime() + (s.dateVal > 60 ? s.dateVal-2 : s.dateVal-1)*86400000 : s.dateVal) : null;
+          if (!d || isNaN(d)) return false;
+          if (dateFrom && d < dateFrom) return false;
+          if (dateTo   && d >= dateTo)  return false;
+        }
 
         return (!name || rawName.includes(name))
           && (!city || rawCity.includes(city))
