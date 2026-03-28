@@ -819,14 +819,17 @@
 
     // ── Save all dirty tiles on current page ───────────────────────────────────
     async function admSaveAll() {
-      // Collect all tiles with at least one dirty input
-      const dirtyTiles = new Set();
+      // Snapshot dirty tile identifiers BEFORE any DOM changes
+      const dirtyTileData = [];
+      const seen = new Set();
       document.querySelectorAll('#adm-grid .adm-edit-input.dirty').forEach(el => {
         const tile = el.closest('.adm-tile');
-        if (tile) dirtyTiles.add(tile);
+        if (!tile || seen.has(tile.id)) return;
+        seen.add(tile.id);
+        dirtyTileData.push({ src: tile.dataset.source, rn: parseInt(tile.dataset.row) });
       });
 
-      if (!dirtyTiles.size) return;
+      if (!dirtyTileData.length) return;
 
       // Disable both save all buttons
       document.querySelectorAll('.adm-btn-save-all').forEach(b => {
@@ -835,20 +838,17 @@
       });
 
       let saved = 0, failed = 0;
-      for (const tile of dirtyTiles) {
-        const src = tile.dataset.source;
-        const rn  = parseInt(tile.dataset.row);
-        const tid = src + '-' + rn;
+      for (const { src, rn } of dirtyTileData) {
+        const tid  = src + '-' + rn;
         const cnEl = document.getElementById('adm-cn-' + tid);
         const ccEl = document.getElementById('adm-cc-' + tid);
         if (!cnEl || !ccEl) continue;
 
-        // Only send fields that are dirty and non-empty
         const params = { action: 'updateCleanFields', source: src, rowIndex: rn };
         if (cnEl.classList.contains('dirty') && cnEl.value.trim()) params.cleanName = cnEl.value.trim();
         if (ccEl.classList.contains('dirty') && ccEl.value.trim()) params.cleanCity = ccEl.value.trim();
+
         if (!params.cleanName && !params.cleanCity) {
-          // Dirty but empty — just clear dirty state, nothing to save
           cnEl.classList.remove('dirty');
           ccEl.classList.remove('dirty');
           continue;
@@ -859,8 +859,6 @@
           if (!d.success) throw new Error(d.error || 'Unknown error');
           cnEl.classList.remove('dirty');
           ccEl.classList.remove('dirty');
-
-          // Update in-memory row
           const s = allRows.find(x => x.source === src && x.rowIndex === rn);
           if (s) {
             if (src === 'studio') {
@@ -878,14 +876,17 @@
         }
       }
 
-      // Recompute display names and re-render affected tiles
+      // Recompute display names once after all saves
       computeDisplayNames();
+
+      // Collect tile elements to re-render BEFORE any outerHTML swaps
+      const tilesToRender = [];
       document.querySelectorAll('#adm-grid .adm-tile').forEach(tileEl => {
-        const tileSrc = tileEl.dataset.source;
-        const tileRn  = parseInt(tileEl.dataset.row);
-        const tileRow = allRows.find(x => x.source === tileSrc && x.rowIndex === tileRn);
-        if (tileRow) tileEl.outerHTML = buildTile(tileRow);
+        const tileRow = allRows.find(x => x.source === tileEl.dataset.source && x.rowIndex === parseInt(tileEl.dataset.row));
+        if (tileRow) tilesToRender.push({ el: tileEl, row: tileRow });
       });
+      // Now do all outerHTML swaps
+      tilesToRender.forEach(({ el, row }) => { el.outerHTML = buildTile(row); });
 
       admUpdateSaveAllBar();
 
@@ -895,10 +896,12 @@
         toast(`Saved ${saved} tile${saved !== 1 ? 's' : ''}`, 'ok');
       }
 
+      // Re-query buttons after DOM changes
       document.querySelectorAll('.adm-btn-save-all').forEach(b => {
         b.disabled = false;
         b.textContent = 'Save all changes';
       });
+    }
     }
 
     // ── Save clean fields ──────────────────────────────────────────────────────
