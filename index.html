@@ -706,9 +706,11 @@ function buildStudioMap(studioRows, instructorRows) {
 
     if (!map.has(key)) {
       const country = v(row, S.country) || 'United States';
-      map.set(key, {name,city,state:v(row,S.state),country,currency:getCurrencyForCountry(country),hasStudio:false,hasInstructor:false,submissions:[],experiences:new Set(),benefits:new Set(),otherPerks:[],notes:[],contact:'',negNotes:[],negRatings:[],negotiated:null,coords:parseCoords(v(row,S.lat),v(row,S.lng)),_cityKey:cityKey,lastUpdated:null});
+      map.set(key, {name,city,state:v(row,S.state),country,currency:getCurrencyForCountry(country),hasStudio:false,hasInstructor:false,submissions:[],experiences:new Set(),benefits:new Set(),otherPerks:[],notes:[],contact:'',negNotes:[],negRatings:[],negotiated:null,coords:parseCoords(v(row,S.lat),v(row,S.lng)),_cityKey:cityKey,lastUpdated:null,_rawName:rawName});
     }
     const studio = map.get(key);
+    // Track whether any submission had a clean name set
+    if (v(row, S.cleanName) && !studio._hasCleanName) studio._hasCleanName = true;
     studio.hasStudio = true;
     if (!studio.city&&city) studio.city=city;
     if (!studio.state&&v(row,S.state)) studio.state=v(row,S.state);
@@ -763,9 +765,11 @@ function buildStudioMap(studioRows, instructorRows) {
     const key=findFuzzyKey(map,name,cityKey)||(norm(name)+(cityKey?'|'+cityKey:''));
     if (!map.has(key)) {
       const country=v(row,I.country)||'United States';
-      map.set(key,{name,city,state:v(row,I.state),country,currency:getCurrencyForCountry(country),hasStudio:false,hasInstructor:false,submissions:[],experiences:new Set(),benefits:new Set(),otherPerks:[],notes:[],contact:'',negNotes:[],negRatings:[],negotiated:null,coords:parseCoords(v(row,I.lat),v(row,I.lng)),_cityKey:cityKey,lastUpdated:null});
+      map.set(key,{name,city,state:v(row,I.state),country,currency:getCurrencyForCountry(country),hasStudio:false,hasInstructor:false,submissions:[],experiences:new Set(),benefits:new Set(),otherPerks:[],notes:[],contact:'',negNotes:[],negRatings:[],negotiated:null,coords:parseCoords(v(row,I.lat),v(row,I.lng)),_cityKey:cityKey,lastUpdated:null,_rawName:rawName});
     }
     const studio=map.get(key);
+    // Track whether any submission had a clean name set
+    if (v(row, I.cleanName) && !studio._hasCleanName) studio._hasCleanName = true;
     studio.hasInstructor=true;
     if (!studio.city&&city) studio.city=city;
     if (!studio.country&&v(row,I.country)) studio.country=v(row,I.country)||'United States';
@@ -1262,15 +1266,56 @@ async function init() {
     const studioMap=buildStudioMap(studioRows,instructorRows);
     allStudios=Array.from(studioMap.values());
 
-    // Disambiguate same-name chain studios in different cities
-    const nameGroups=new Map();
-    allStudios.forEach(s=>{const n=norm(s.name);if(!nameGroups.has(n))nameGroups.set(n,[]);nameGroups.get(n).push(s);});
-    nameGroups.forEach(group=>{
-      if (group.length>1) group.forEach(s=>{
-        const city=(s.city||'').trim();
-        if (city&&!norm(s.name).includes(norm(city))) s.name=s.name+' '+toTitleCase(city);
-      });
+    // ── Disambiguate chain studios + singleton clean name fallback ────────────
+    //
+    // Pass 1: group studios by their base name (lowercased, before any city append).
+    // For each group, determine if it's a TRUE chain (entries in multiple distinct
+    // cities) or just multiple submissions from the same city.
+    //
+    // Pass 2 (singleton clean name fallback):
+    // For singleton studios (one city only), if ANY entry in the group has a clean
+    // name set, propagate it to all entries in the group. This means setting the
+    // clean name on ONE Fitness Incentive submission covers all of them — including
+    // new submissions that come in later without a clean name.
+    // This does NOT apply to chains since each location needs its own clean name.
+
+    const nameGroups = new Map();
+    allStudios.forEach(s => {
+      const n = norm(s._rawName || s.name);
+      if (!nameGroups.has(n)) nameGroups.set(n, []);
+      nameGroups.get(n).push(s);
     });
+
+    nameGroups.forEach(group => {
+      if (group.length < 2) return;
+
+      // Determine distinct cities across the group
+      const distinctCities = new Set(
+        group.map(s => (s.city||'').toLowerCase().trim()).filter(Boolean)
+      );
+      const isChain = distinctCities.size > 1;
+
+      if (isChain) {
+        // Chain: append city to each entry to distinguish locations
+        group.forEach(s => {
+          const city = (s.city||'').trim();
+          if (city && !norm(s.name).includes(norm(city))) {
+            s.name = s.name + ' ' + toTitleCase(city);
+          }
+        });
+      } else {
+        // Singleton (same city or unknown city): propagate clean name if any entry has one
+        const canonical = group.find(s => s._hasCleanName);
+        if (canonical) {
+          group.forEach(s => {
+            if (!s._hasCleanName) s.name = canonical.name;
+          });
+        }
+      }
+    });
+
+    // Clean up internal tracking props
+    allStudios.forEach(s => { delete s._rawName; delete s._hasCleanName; });
 
     const withC=allStudios.filter(s=>s.coords).length;
     console.log('[Init] Studios:',allStudios.length,'| With coords:',withC,'| Without:',allStudios.length-withC);
