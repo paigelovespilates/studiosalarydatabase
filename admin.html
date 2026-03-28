@@ -274,6 +274,31 @@
     .adm-state { text-align: center; padding: 60px 24px; color: #888; font-size: 14px; }
     .adm-state.error { color: #c0392b; }
 
+    .adm-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 20px 16px 40px;
+      font-size: 13px;
+      color: #666;
+    }
+    .adm-page-btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 16px;
+      border-radius: 6px;
+      border: 0.5px solid #ccc;
+      background: #fff;
+      color: #373930;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .adm-page-btn:hover:not(:disabled) { background: #373930; color: #EDEBE4; border-color: #373930; }
+    .adm-page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .adm-page-info { color: #888; font-size: 12px; }
+
     #adm-toast {
       position: fixed;
       bottom: 24px; right: 24px;
@@ -313,7 +338,8 @@
     <div class="adm-header">
       <h1>Studio tile review</h1>
       <div class="adm-controls">
-        <input type="text" id="adm-search" placeholder="Search by studio name or city…" oninput="admFilter()">
+        <input type="text" id="adm-name" placeholder="Studio name…" oninput="admFilter()">
+        <input type="text" id="adm-city" placeholder="City…" oninput="admFilter()">
         <select id="adm-src" onchange="admFilter()">
           <option value="">Studio + instructor</option>
           <option value="studio">Studio only</option>
@@ -336,6 +362,11 @@
         Loading from Google Sheets…
       </div>
     </div>
+    <div class="adm-pagination" id="adm-pagination" style="display:none;">
+      <button class="adm-page-btn" id="adm-prev" onclick="admChangePage(-1)">← Prev</button>
+      <span class="adm-page-info" id="adm-page-info"></span>
+      <button class="adm-page-btn" id="adm-next" onclick="admChangePage(1)">Next →</button>
+    </div>
   </div>
 
   <div id="adm-toast"></div>
@@ -343,7 +374,7 @@
   <script>
     // ── Password ───────────────────────────────────────────────────────────────
     // Change this to whatever password you want
-    const ADMIN_PASSWORD = '030219';
+    const ADMIN_PASSWORD = 'pilates2024';
 
     const SESSION_KEY = 'sdb_admin_auth';
 
@@ -556,23 +587,69 @@
       }
     }
 
-    // ── Filter ─────────────────────────────────────────────────────────────────
+    // ── Pagination state ───────────────────────────────────────────────────────
+    const PAGE_SIZE = 12;
+    let currentPage = 1;
+    let filteredRows = [];
+
+    // ── Filter + paginate ──────────────────────────────────────────────────────
     function admFilter() {
-      const q   = document.getElementById('adm-search').value.toLowerCase();
-      const src = document.getElementById('adm-src').value;
-      const fmt = document.getElementById('adm-fmt').value.toLowerCase();
-      const exc = document.getElementById('adm-exc').value;
-      let vis   = 0;
-      document.querySelectorAll('#adm-grid .adm-tile').forEach(t => {
-        const show =
-          (!q   || t.dataset.name.includes(q) || t.dataset.city.includes(q)) &&
-          (!src || t.dataset.source === src) &&
-          (!fmt || t.dataset.format === fmt) &&
-          (exc === 'all' || (exc === 'active' && t.dataset.excluded === '0') || (exc === 'excluded' && t.dataset.excluded === '1'));
-        t.style.display = show ? '' : 'none';
-        if (show) vis++;
+      const name = document.getElementById('adm-name').value.toLowerCase().trim();
+      const city = document.getElementById('adm-city').value.toLowerCase().trim();
+      const src  = document.getElementById('adm-src').value;
+      const fmt  = document.getElementById('adm-fmt').value.toLowerCase();
+      const exc  = document.getElementById('adm-exc').value;
+
+      filteredRows = allRows.filter(s => {
+        const r       = s.row;
+        const rawName = String(r[2] || '').toLowerCase();
+        const rawCity = s.source === 'studio'
+          ? String(r[4] || r[5] || '').toLowerCase()
+          : String(r[4] || '').toLowerCase();
+        const format  = String(s.source === 'studio' ? (r[7] || '') : (r[6] || '')).toLowerCase();
+
+        return (!name || rawName.includes(name))
+          && (!city || rawCity.includes(city))
+          && (!src  || s.source === src)
+          && (!fmt  || format === fmt)
+          && (exc === 'all'
+              || (exc === 'active'   && !s.excluded)
+              || (exc === 'excluded' &&  s.excluded));
       });
-      admStats(vis);
+
+      currentPage = 1;
+      admRender();
+    }
+
+    // ── Render current page ────────────────────────────────────────────────────
+    function admRender() {
+      const grid  = document.getElementById('adm-grid');
+      const total = filteredRows.length;
+      const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+      currentPage = Math.min(currentPage, pages);
+
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const pageRows = filteredRows.slice(start, start + PAGE_SIZE);
+
+      if (total === 0) {
+        grid.innerHTML = '<div class="adm-state">No results match your filters.</div>';
+        document.getElementById('adm-pagination').style.display = 'none';
+      } else {
+        grid.innerHTML = pageRows.map(buildTile).join('');
+        document.getElementById('adm-pagination').style.display = 'flex';
+        document.getElementById('adm-prev').disabled = currentPage <= 1;
+        document.getElementById('adm-next').disabled = currentPage >= pages;
+        document.getElementById('adm-page-info').textContent =
+          `Page ${currentPage} of ${pages} · ${total} result${total !== 1 ? 's' : ''}`;
+      }
+
+      admStats(total);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function admChangePage(dir) {
+      currentPage += dir;
+      admRender();
     }
 
     // ── Stats ──────────────────────────────────────────────────────────────────
@@ -582,16 +659,12 @@
       const stud  = allRows.filter(s => s.source === 'studio').length;
       const inst  = allRows.filter(s => s.source === 'instructor').length;
       const bar   = document.getElementById('adm-stats');
-      const isF   = document.getElementById('adm-search').value
+      const isF   = document.getElementById('adm-name').value
+                    || document.getElementById('adm-city').value
                     || document.getElementById('adm-src').value
                     || document.getElementById('adm-fmt').value
                     || document.getElementById('adm-exc').value !== 'all';
-      let vis = visOverride;
-      if (vis === undefined) {
-        vis = 0;
-        document.querySelectorAll('#adm-grid .adm-tile').forEach(t => { if (t.style.display !== 'none') vis++; });
-      }
-      bar.innerHTML = `<span>${total}</span> total (<span>${stud}</span> studio · <span>${inst}</span> instructor) &nbsp;·&nbsp; <span>${total - excl}</span> active &nbsp;·&nbsp; <span>${excl}</span> excluded${isF ? ` &nbsp;·&nbsp; showing <span>${vis}</span>` : ''}`;
+      bar.innerHTML = `<span>${total}</span> total (<span>${stud}</span> studio · <span>${inst}</span> instructor) &nbsp;·&nbsp; <span>${total - excl}</span> active &nbsp;·&nbsp; <span>${excl}</span> excluded${isF ? ` &nbsp;·&nbsp; <span>${visOverride !== undefined ? visOverride : total}</span> matching` : ''}`;
     }
 
     // ── Load ───────────────────────────────────────────────────────────────────
@@ -601,19 +674,33 @@
         const d = await jsonp({ action: 'getSheet' });
         if (!d.rows || !d.rows.length) { grid.innerHTML = '<div class="adm-state">No rows found.</div>'; return; }
 
+        // Parse submission date for sorting — handles Excel serial numbers and date strings
+        function parseDate(val) {
+          if (!val) return 0;
+          const n = Number(val);
+          if (!isNaN(n) && n > 40000) return n; // Excel serial — higher = more recent
+          const d = new Date(val);
+          return isNaN(d) ? 0 : d.getTime();
+        }
+
         allRows = d.rows.map(item => ({
           source:   item.source,
           rowIndex: item.rowIndex,
           row:      item.row,
-          excluded: String(item.row[item.source === 'studio' ? 28 : 20] || '').toUpperCase() === 'Y'
+          excluded: String(item.row[item.source === 'studio' ? 28 : 20] || '').toUpperCase() === 'Y',
+          dateVal:  parseDate(item.row[0])
         }));
 
+        // Sort most recent first
+        allRows.sort((a, b) => b.dateVal - a.dateVal);
+
+        // Populate format dropdown
         const fmts = [...new Set(allRows.map(s => s.source === 'studio' ? String(s.row[7] || '') : String(s.row[6] || '')).filter(Boolean))].sort();
         const sel  = document.getElementById('adm-fmt');
         fmts.forEach(f => { const o = document.createElement('option'); o.value = f.toLowerCase(); o.textContent = f; sel.appendChild(o); });
 
-        grid.innerHTML = allRows.map(buildTile).join('');
-        admStats();
+        filteredRows = [...allRows];
+        admRender();
       } catch (err) {
         grid.innerHTML = `<div class="adm-state error">Failed to load: ${err.message}</div>`;
       }
