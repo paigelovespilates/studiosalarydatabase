@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Studio DB — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f5f4f0;
+      min-height: 100vh;
+    }
+
+    /* ── Password gate ───────────────────────────────────────── */
+    #gate {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .gate-card {
+      background: #fff;
+      border: 0.5px solid #ddd;
+      border-radius: 12px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+    }
+
+    .gate-card h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+    }
+
+    .gate-card p {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 28px;
+    }
+
+    .gate-input {
+      width: 100%;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      padding: 10px 14px;
+      border: 0.5px solid #ddd;
+      border-radius: 7px;
+      background: #f5f4f0;
+      color: #1a1a1a;
+      outline: none;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+    }
+    .gate-input:focus { border-color: #373930; background: #fff; }
+    .gate-input.error { border-color: #c0392b; background: #fef8f8; }
+
+    .gate-btn {
+      width: 100%;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px;
+      border-radius: 7px;
+      border: none;
+      background: #373930;
+      color: #EDEBE4;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .gate-btn:hover { background: #4a4d40; }
+
+    .gate-error {
+      font-size: 12px;
+      color: #c0392b;
+      margin-top: 10px;
+      min-height: 16px;
+    }
+
+    /* ── Main app ────────────────────────────────────────────── */
+    #app { display: none; }
+
+    .adm-header {
+      background: #373930;
+      color: #EDEBE4;
+      padding: 20px 24px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .adm-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: #EDEBE4;
+      margin-bottom: 12px;
+    }
+
+    .adm-controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .adm-controls input[type=text],
+    .adm-controls select {
+      background: rgba(237,235,228,0.12);
+      border: 0.5px solid rgba(237,235,228,0.3);
+      color: #EDEBE4;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+    }
+    .adm-controls input[type=text] { flex: 1; min-width: 180px; }
+    .adm-controls input::placeholder { color: rgba(237,235,228,0.45); }
+    .adm-controls input:focus,
+    .adm-controls select:focus { border-color: rgba(237,235,228,0.6); }
+    .adm-controls select option { background: #373930; }
+
+    .adm-stats {
+      background: rgba(55,57,48,0.07);
+      padding: 6px 24px;
+      font-size: 12px;
+      color: #666;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .adm-stats span { color: #373930; font-weight: 500; }
+
+    .adm-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .adm-tile {
+      background: #fff;
+      border: 0.5px solid #ddd;
+      border-radius: 10px;
+      padding: 14px 16px;
+      transition: opacity 0.3s;
+    }
+    .adm-tile.excluded { opacity: 0.45; }
+
+    .adm-tile-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .adm-tile-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: #1a1a1a;
+      line-height: 1.2;
+    }
+    .adm-tile-location { font-size: 12px; color: #888; margin-bottom: 8px; }
+
+    .adm-tile-badges { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+    .adm-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    .adm-badge-studio     { background: #EDEBE4; color: #373930; }
+    .adm-badge-instructor { background: #e8edf4; color: #2d4a6b; }
+    .adm-badge-format     { background: #f0f0ee; color: #555; }
+    .adm-badge-pay        { background: #e8f4ec; color: #2d6b45; }
+    .adm-badge-excluded   { background: #fce8e8; color: #a33; }
+
+    .adm-edit-section {
+      border-top: 0.5px solid #e8e8e5;
+      margin-top: 10px;
+      padding-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .adm-edit-row { display: flex; align-items: center; gap: 7px; }
+    .adm-edit-label { font-size: 11px; color: #888; width: 74px; flex-shrink: 0; }
+    .adm-edit-input {
+      flex: 1;
+      font-size: 12px;
+      font-family: 'DM Sans', sans-serif;
+      background: #f5f4f0;
+      border: 0.5px solid #ddd;
+      border-radius: 5px;
+      padding: 4px 8px;
+      color: #1a1a1a;
+      outline: none;
+      min-width: 0;
+    }
+    .adm-edit-input:focus { border-color: #888; background: #fff; }
+    .adm-edit-input.dirty { border-color: #b87c2a; background: #fdf8f0; color: #5a3d0a; }
+
+    .adm-btn-save {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      border: 0.5px solid #2d6b45;
+      background: transparent;
+      color: #2d6b45;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .adm-btn-save:hover { background: #2d6b45; color: #fff; }
+    .adm-btn-save:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .adm-tile-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 0.5px solid #e8e8e5;
+    }
+    .adm-tile-date { font-size: 11px; color: #aaa; }
+
+    .adm-btn-exclude {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 0.5px solid;
+      background: transparent;
+      transition: all 0.15s;
+    }
+    .adm-btn-exclude.active { border-color: #c0392b; color: #c0392b; }
+    .adm-btn-exclude.active:hover { background: #c0392b; color: #fff; }
+    .adm-btn-exclude.undo { border-color: #bbb; color: #888; }
+    .adm-btn-exclude.undo:hover { border-color: #555; color: #333; }
+    .adm-btn-exclude:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .adm-row-chip {
+      font-size: 10px;
+      color: #aaa;
+      background: #f0f0ee;
+      border-radius: 4px;
+      padding: 2px 5px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .adm-spinner {
+      display: inline-block;
+      width: 10px; height: 10px;
+      border: 1.5px solid currentColor;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: adm-spin 0.6s linear infinite;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+    @keyframes adm-spin { to { transform: rotate(360deg); } }
+
+    .adm-state { text-align: center; padding: 60px 24px; color: #888; font-size: 14px; }
+    .adm-state.error { color: #c0392b; }
+
+    #adm-toast {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.2s;
+      pointer-events: none;
+      background: #373930;
+      color: #EDEBE4;
+    }
+    #adm-toast.show  { opacity: 1; transform: translateY(0); }
+    #adm-toast.ok    { background: #2d6b45; }
+    #adm-toast.error { background: #a33; }
+  </style>
+</head>
+<body>
+
+  <!-- Password gate -->
+  <div id="gate">
+    <div class="gate-card">
+      <h1>Studio DB</h1>
+      <p>Admin access only</p>
+      <input class="gate-input" type="password" id="gate-pw" placeholder="Password"
+        onkeydown="if(event.key==='Enter') gateSubmit()">
+      <button class="gate-btn" onclick="gateSubmit()">Enter</button>
+      <div class="gate-error" id="gate-err"></div>
+    </div>
+  </div>
+
+  <!-- Main app (hidden until password correct) -->
+  <div id="app">
+    <div class="adm-header">
+      <h1>Studio tile review</h1>
+      <div class="adm-controls">
+        <input type="text" id="adm-search" placeholder="Search by studio name or city…" oninput="admFilter()">
+        <select id="adm-src" onchange="admFilter()">
+          <option value="">Studio + instructor</option>
+          <option value="studio">Studio only</option>
+          <option value="instructor">Instructor only</option>
+        </select>
+        <select id="adm-fmt" onchange="admFilter()">
+          <option value="">All formats</option>
+        </select>
+        <select id="adm-exc" onchange="admFilter()">
+          <option value="all">All tiles</option>
+          <option value="active">Active only</option>
+          <option value="excluded">Excluded only</option>
+        </select>
+      </div>
+    </div>
+    <div class="adm-stats" id="adm-stats">Loading…</div>
+    <div class="adm-grid" id="adm-grid">
+      <div class="adm-state">
+        <span class="adm-spinner" style="width:16px;height:16px;border-width:2px;display:inline-block;margin-right:8px;"></span>
+        Loading from Google Sheets…
+      </div>
+    </div>
+  </div>
+
+  <div id="adm-toast"></div>
+
+  <script>
+    // ── Password ───────────────────────────────────────────────────────────────
+    // Change this to whatever password you want
+    const ADMIN_PASSWORD = '030219';
+
+    const SESSION_KEY = 'sdb_admin_auth';
+
+    function gateSubmit() {
+      const pw = document.getElementById('gate-pw').value;
+      const inp = document.getElementById('gate-pw');
+      const err = document.getElementById('gate-err');
+      if (pw === ADMIN_PASSWORD) {
+        sessionStorage.setItem(SESSION_KEY, '1');
+        document.getElementById('gate').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        admLoad();
+      } else {
+        inp.classList.add('error');
+        err.textContent = 'Incorrect password.';
+        inp.value = '';
+        setTimeout(() => { inp.classList.remove('error'); err.textContent = ''; }, 2500);
+      }
+    }
+
+    // Check if already authenticated this session
+    if (sessionStorage.getItem(SESSION_KEY) === '1') {
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+    }
+
+    // ── Config ─────────────────────────────────────────────────────────────────
+    const ENDPOINT    = 'https://script.google.com/macros/s/AKfycbwSFmZXGDvaffhqRlJz3-MKpjn6MPru6GniP78zL5MdVSMAHmJubeVsyRuVbib6CuVBog/exec';
+    const EXCL_REASON = 'marked exclude in UI';
+
+    let allRows = [];
+    let pending = new Set();
+
+    // ── Toast ──────────────────────────────────────────────────────────────────
+    function toast(msg, type) {
+      const el = document.getElementById('adm-toast');
+      el.textContent = msg;
+      el.className = 'show' + (type ? ' ' + type : '');
+      clearTimeout(el._t);
+      el._t = setTimeout(() => el.className = '', 3200);
+    }
+
+    // ── JSONP ──────────────────────────────────────────────────────────────────
+    function jsonp(params) {
+      return new Promise((resolve, reject) => {
+        const cbName = '_admCb' + Date.now() + Math.floor(Math.random() * 1e6);
+        const timer  = setTimeout(() => {
+          delete window[cbName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+          reject(new Error('Request timed out'));
+        }, 20000);
+        window[cbName] = function(data) {
+          clearTimeout(timer);
+          delete window[cbName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+          resolve(data);
+        };
+        const qs = new URLSearchParams(params);
+        qs.set('callback', cbName);
+        const script = document.createElement('script');
+        script.src = ENDPOINT + '?' + qs.toString();
+        script.onerror = () => {
+          clearTimeout(timer);
+          delete window[cbName];
+          reject(new Error('Script load failed — check that the Apps Script is deployed as "Anyone"'));
+        };
+        document.head.appendChild(script);
+      });
+    }
+
+    // ── Pay display ────────────────────────────────────────────────────────────
+    function fmtPay(r, src) {
+      const tryParse = v => { const n = parseFloat(String(v).replace(/[^0-9.]/g, ' ')); return n > 0 ? n : null; };
+      if (src === 'studio') {
+        const n = tryParse(r[10]) || tryParse(r[16]) || tryParse(r[19]);
+        if (n) return '$' + n.toFixed(0) + (tryParse(r[10]) ? '/class' : tryParse(r[16]) ? ' flat' : '/hr');
+        return String(r[9] || '').slice(0, 40) || null;
+      } else {
+        const n = tryParse(r[9]) || tryParse(r[11]);
+        if (n) return '$' + n.toFixed(0) + (tryParse(r[9]) ? '/class' : ' flat');
+        return String(r[8] || '').slice(0, 40) || null;
+      }
+    }
+
+    // ── Build tile ─────────────────────────────────────────────────────────────
+    function buildTile(s) {
+      const r = s.row, src = s.source, rn = s.rowIndex, ex = s.excluded;
+      const rawName   = String(r[2] || '');
+      const rawCity   = src === 'studio' ? String(r[4] || r[5] || '') : String(r[4] || '');
+      const state     = String(src === 'studio' ? (r[6] || '') : (r[5] || ''));
+      const country   = String(r[3] || '');
+      const format    = String(src === 'studio' ? (r[7] || '') : (r[6] || ''));
+      const exp       = String(src === 'studio' ? (r[11] || '') : (r[13] || ''));
+      const subDate   = r[0] ? String(r[0]).slice(0, 10) : '';
+      const cleanName = String(src === 'studio' ? (r[31] || '') : (r[23] || ''));
+      const cleanCity = String(src === 'studio' ? (r[32] || '') : (r[24] || ''));
+      const pay = fmtPay(r, src);
+      const loc = [rawCity, state, country].filter(Boolean).join(', ') || '—';
+      const esc = v => String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+      const tid = src + '-' + rn;
+
+      return `
+        <div class="adm-tile${ex ? ' excluded' : ''}" id="adm-tile-${tid}"
+          data-source="${src}" data-row="${rn}"
+          data-name="${esc(rawName.toLowerCase())}"
+          data-city="${esc(rawCity.toLowerCase())}"
+          data-format="${esc(format.toLowerCase())}"
+          data-excluded="${ex ? '1' : '0'}">
+          <div class="adm-tile-header">
+            <div class="adm-tile-name">${esc(rawName) || 'Unnamed'}</div>
+            <span class="adm-row-chip">row ${rn}</span>
+          </div>
+          <div class="adm-tile-location">${esc(loc)}</div>
+          <div class="adm-tile-badges">
+            <span class="adm-badge adm-badge-${src}">${src}</span>
+            ${format ? `<span class="adm-badge adm-badge-format">${esc(format)}</span>` : ''}
+            ${pay    ? `<span class="adm-badge adm-badge-pay">${esc(pay)}</span>` : ''}
+            ${exp    ? `<span class="adm-badge adm-badge-format">${esc(exp)}</span>` : ''}
+            <span id="adm-excbadge-${tid}">${ex ? '<span class="adm-badge adm-badge-excluded">excluded</span>' : ''}</span>
+          </div>
+          <div class="adm-edit-section">
+            <div class="adm-edit-row">
+              <span class="adm-edit-label">Clean name</span>
+              <input class="adm-edit-input" type="text" id="adm-cn-${tid}"
+                value="${esc(cleanName)}" placeholder="Clean studio name…"
+                oninput="admDirty('adm-cn-${tid}')">
+            </div>
+            <div class="adm-edit-row">
+              <span class="adm-edit-label">Clean city</span>
+              <input class="adm-edit-input" type="text" id="adm-cc-${tid}"
+                value="${esc(cleanCity)}" placeholder="Clean city…"
+                oninput="admDirty('adm-cc-${tid}')">
+              <button class="adm-btn-save" id="adm-save-${tid}"
+                onclick="admSave('${src}', ${rn})">Save</button>
+            </div>
+          </div>
+          <div class="adm-tile-footer">
+            <span class="adm-tile-date">${subDate}</span>
+            <button class="adm-btn-exclude ${ex ? 'undo' : 'active'}" id="adm-btn-${tid}"
+              onclick="admExclude('${src}', ${rn}, ${!ex})">
+              ${ex ? 'Undo exclude' : 'Exclude tile'}
+            </button>
+          </div>
+        </div>`;
+    }
+
+    // ── Dirty marker ───────────────────────────────────────────────────────────
+    function admDirty(id) {
+      document.getElementById(id).classList.add('dirty');
+    }
+
+    // ── Save clean fields ──────────────────────────────────────────────────────
+    async function admSave(source, rowIndex) {
+      const tid  = source + '-' + rowIndex;
+      const cnEl = document.getElementById('adm-cn-' + tid);
+      const ccEl = document.getElementById('adm-cc-' + tid);
+      const btn  = document.getElementById('adm-save-' + tid);
+      btn.disabled = true;
+      btn.innerHTML = '<span class="adm-spinner"></span>';
+      try {
+        const d = await jsonp({ action: 'updateCleanFields', source, rowIndex, cleanName: cnEl.value.trim(), cleanCity: ccEl.value.trim() });
+        if (!d.success) throw new Error(d.error || 'Unknown error');
+        cnEl.classList.remove('dirty');
+        ccEl.classList.remove('dirty');
+        const s = allRows.find(x => x.source === source && x.rowIndex === rowIndex);
+        if (s) {
+          if (source === 'studio') { s.row[31] = cnEl.value.trim(); s.row[32] = ccEl.value.trim(); }
+          else                     { s.row[23] = cnEl.value.trim(); s.row[24] = ccEl.value.trim(); }
+        }
+        toast('Saved — row ' + rowIndex, 'ok');
+      } catch (err) {
+        toast('Error: ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save';
+      }
+    }
+
+    // ── Exclude / restore ──────────────────────────────────────────────────────
+    async function admExclude(source, rowIndex, exclude) {
+      const key  = source + '-' + rowIndex;
+      if (pending.has(key)) return;
+      pending.add(key);
+      const btn  = document.getElementById('adm-btn-' + key);
+      const tile = document.getElementById('adm-tile-' + key);
+      btn.disabled = true;
+      btn.innerHTML = `<span class="adm-spinner"></span>${exclude ? 'Excluding…' : 'Restoring…'}`;
+      try {
+        const d = await jsonp({ action: 'setExclude', source, rowIndex, exclude: exclude ? 'Y' : '', reason: exclude ? EXCL_REASON : '' });
+        if (!d.success) throw new Error(d.error || 'Unknown error');
+        const s = allRows.find(x => x.source === source && x.rowIndex === rowIndex);
+        if (s) s.excluded = exclude;
+        tile.dataset.excluded = exclude ? '1' : '0';
+        tile.className = 'adm-tile' + (exclude ? ' excluded' : '');
+        document.getElementById('adm-excbadge-' + key).innerHTML = exclude
+          ? '<span class="adm-badge adm-badge-excluded">excluded</span>' : '';
+        btn.disabled = false;
+        btn.className = 'adm-btn-exclude ' + (exclude ? 'undo' : 'active');
+        btn.textContent = exclude ? 'Undo exclude' : 'Exclude tile';
+        admStats();
+        toast(exclude ? 'Excluded row ' + rowIndex : 'Restored row ' + rowIndex);
+      } catch (err) {
+        btn.disabled = false;
+        const s = allRows.find(x => x.source === source && x.rowIndex === rowIndex);
+        btn.className = 'adm-btn-exclude ' + ((s && s.excluded) ? 'undo' : 'active');
+        btn.textContent = (s && s.excluded) ? 'Undo exclude' : 'Exclude tile';
+        toast('Error: ' + err.message, 'error');
+      } finally {
+        pending.delete(key);
+      }
+    }
+
+    // ── Filter ─────────────────────────────────────────────────────────────────
+    function admFilter() {
+      const q   = document.getElementById('adm-search').value.toLowerCase();
+      const src = document.getElementById('adm-src').value;
+      const fmt = document.getElementById('adm-fmt').value.toLowerCase();
+      const exc = document.getElementById('adm-exc').value;
+      let vis   = 0;
+      document.querySelectorAll('#adm-grid .adm-tile').forEach(t => {
+        const show =
+          (!q   || t.dataset.name.includes(q) || t.dataset.city.includes(q)) &&
+          (!src || t.dataset.source === src) &&
+          (!fmt || t.dataset.format === fmt) &&
+          (exc === 'all' || (exc === 'active' && t.dataset.excluded === '0') || (exc === 'excluded' && t.dataset.excluded === '1'));
+        t.style.display = show ? '' : 'none';
+        if (show) vis++;
+      });
+      admStats(vis);
+    }
+
+    // ── Stats ──────────────────────────────────────────────────────────────────
+    function admStats(visOverride) {
+      const total = allRows.length;
+      const excl  = allRows.filter(s => s.excluded).length;
+      const stud  = allRows.filter(s => s.source === 'studio').length;
+      const inst  = allRows.filter(s => s.source === 'instructor').length;
+      const bar   = document.getElementById('adm-stats');
+      const isF   = document.getElementById('adm-search').value
+                    || document.getElementById('adm-src').value
+                    || document.getElementById('adm-fmt').value
+                    || document.getElementById('adm-exc').value !== 'all';
+      let vis = visOverride;
+      if (vis === undefined) {
+        vis = 0;
+        document.querySelectorAll('#adm-grid .adm-tile').forEach(t => { if (t.style.display !== 'none') vis++; });
+      }
+      bar.innerHTML = `<span>${total}</span> total (<span>${stud}</span> studio · <span>${inst}</span> instructor) &nbsp;·&nbsp; <span>${total - excl}</span> active &nbsp;·&nbsp; <span>${excl}</span> excluded${isF ? ` &nbsp;·&nbsp; showing <span>${vis}</span>` : ''}`;
+    }
+
+    // ── Load ───────────────────────────────────────────────────────────────────
+    async function admLoad() {
+      const grid = document.getElementById('adm-grid');
+      try {
+        const d = await jsonp({ action: 'getSheet' });
+        if (!d.rows || !d.rows.length) { grid.innerHTML = '<div class="adm-state">No rows found.</div>'; return; }
+
+        allRows = d.rows.map(item => ({
+          source:   item.source,
+          rowIndex: item.rowIndex,
+          row:      item.row,
+          excluded: String(item.row[item.source === 'studio' ? 28 : 20] || '').toUpperCase() === 'Y'
+        }));
+
+        const fmts = [...new Set(allRows.map(s => s.source === 'studio' ? String(s.row[7] || '') : String(s.row[6] || '')).filter(Boolean))].sort();
+        const sel  = document.getElementById('adm-fmt');
+        fmts.forEach(f => { const o = document.createElement('option'); o.value = f.toLowerCase(); o.textContent = f; sel.appendChild(o); });
+
+        grid.innerHTML = allRows.map(buildTile).join('');
+        admStats();
+      } catch (err) {
+        grid.innerHTML = `<div class="adm-state error">Failed to load: ${err.message}</div>`;
+      }
+    }
+
+    // Auto-load if already authenticated
+    if (sessionStorage.getItem(SESSION_KEY) === '1') admLoad();
+  </script>
+</body>
+</html>
