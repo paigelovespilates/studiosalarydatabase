@@ -697,9 +697,13 @@
         const rawCity  = String(src === 'studio' ? (r[4] || r[5] || '') : (r[4] || '')).trim();
         const rawKey   = norm(rawName);
 
-        // Use direct clean name if set, otherwise inherit from sibling
-        const resolvedName = cleanN || cleanNameMap[rawKey] || rawName;
-        const resolvedCity = cleanC || cleanCityMap[rawKey] || rawCity;
+        // Use direct clean name if set, otherwise inherit from sibling — but only if cities match
+        const inheritedName = cleanNameMap[rawKey];
+        const inheritedCity = cleanCityMap[rawKey];
+        const citiesMatch = !inheritedCity || !rawCity ||
+          norm(inheritedCity) === norm(rawCity);
+        const resolvedName = cleanN || (citiesMatch ? inheritedName : null) || rawName;
+        const resolvedCity = cleanC || (citiesMatch ? inheritedCity : null) || rawCity;
         const key      = norm(resolvedName);
         const cityCount = nameCityMap[key] ? nameCityMap[key].size : 1;
 
