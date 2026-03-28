@@ -159,6 +159,19 @@
   .notes-text { font-size:12px; color:var(--text-muted); font-style:italic; line-height:1.5; }
 
   .neg-notes-section { border-top:1px solid var(--border-light); padding:12px 22px; background:#faf9f7; }
+  .working-here-section { border-top:1px solid var(--border-light); padding:12px 22px; background:#f7f9f7; }
+  .working-here-label { font-size:10px; color:#575648; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; font-weight:500; }
+  .working-here-avg { display:inline-flex; align-items:center; gap:6px; font-size:11px; color:var(--text-muted); margin-bottom:8px; padding:5px 8px; background:var(--warm-white); border-radius:6px; }
+  .working-here-avg .stars { color:#b8a96a; font-size:14px; letter-spacing:1px; }
+  .working-here-avg .score { font-weight:500; color:var(--accent-deep); }
+  .working-here-comment { font-size:12px; color:var(--text-muted); font-style:italic; line-height:1.5; margin:0 0 6px 0; }
+  .working-here-tile { border-top:1px solid var(--border-light); padding:10px 22px 12px; display:flex; flex-direction:column; gap:3px; }
+  .working-here-tile-stars { display:flex; align-items:center; gap:6px; }
+  .working-here-tile-stars .stars { color:#b8a96a; font-size:16px; letter-spacing:2px; line-height:1; }
+  .working-here-tile-stars .score { font-size:13px; font-weight:500; color:var(--accent-deep); }
+  .working-here-tile-count { font-size:11px; color:var(--stone); font-style:italic; }
+  #db-wrap[data-mobile] .working-here-section { padding:10px 16px !important; }
+  #db-wrap[data-mobile] .working-here-tile { padding:10px 16px 12px !important; }
   .neg-star-rating { display:inline-flex; align-items:center; gap:1px; margin-right:4px; vertical-align:middle; color:#b8a96a; font-size:13px; line-height:1; }
   .neg-avg-rating { display:inline-flex; align-items:center; gap:6px; font-size:11px; color:var(--text-muted); margin-bottom:8px; padding:5px 8px; background:var(--warm-white); border-radius:6px; }
   .neg-avg-rating .stars { color:#b8a96a; font-size:14px; letter-spacing:1px; }
@@ -345,6 +358,7 @@
     .benefits-section { padding:10px 16px; }
     .notes-section { padding:10px 16px; }
     .neg-notes-section { padding:10px 16px; }
+    .working-here-section { padding:10px 16px; }
     .contact-section { padding:10px 16px; }
     .differs-banner { margin:0 16px 10px; }
     .near-me-wrap { width:100%; }
@@ -610,7 +624,7 @@ function v(row, idx) { return (idx >= 0 && row[idx] !== undefined) ? row[idx].tr
 const S = {submitted:0,studioName:2,country:3,city:4,cityOld:5,state:6,classFormat:7,payStructure:8,compSummary:9,payPerClass:10,expLevel:11,payNew:12,payExp:13,payPerClient:14,classCapacityPerClient:15,flatRate:16,variableDetails:17,maxEarnings:18,hourlyPay:19,experience:20,benefits:21,otherPerks:22,contact:23,notes:24,source:25,lat:29,lng:30,cleanName:31,cleanCity:32};
 
 // ── Instructor column map ──
-const I = {submitted:0,studioName:2,country:3,city:4,state:5,classFormat:6,payStructure:7,compSummary:8,payPerClass:9,payPerClient:10,flatRate:11,variableDetails:12,experience:13,perks:14,negotiated:15,negNotes:16,source:17,classCapacity:18,otherPerks:19,lat:21,lng:22,cleanName:23,cleanCity:24,maxEarnings:25,negRating:26};
+const I = {submitted:0,studioName:2,country:3,city:4,state:5,classFormat:6,payStructure:7,compSummary:8,payPerClass:9,payPerClient:10,flatRate:11,variableDetails:12,experience:13,perks:14,negotiated:15,negNotes:16,source:17,classCapacity:18,otherPerks:19,lat:21,lng:22,cleanName:23,cleanCity:24,maxEarnings:25,negRating:26,email:27,studioRating:28,workingHereComment:29};
 
 // ── Pay helpers ───────────────────────────────────────────────
 function extractPayNum(payStr) {
@@ -706,7 +720,7 @@ function buildStudioMap(studioRows, instructorRows) {
 
     if (!map.has(key)) {
       const country = v(row, S.country) || 'United States';
-      map.set(key, {name,city,state:v(row,S.state),country,currency:getCurrencyForCountry(country),hasStudio:false,hasInstructor:false,submissions:[],experiences:new Set(),benefits:new Set(),otherPerks:[],notes:[],contact:'',negNotes:[],negRatings:[],negotiated:null,coords:parseCoords(v(row,S.lat),v(row,S.lng)),_cityKey:cityKey,lastUpdated:null,_rawName:rawName});
+      map.set(key, {name,city,state:v(row,S.state),country,currency:getCurrencyForCountry(country),hasStudio:false,hasInstructor:false,submissions:[],experiences:new Set(),benefits:new Set(),otherPerks:[],notes:[],contact:'',negNotes:[],negRatings:[],studioRatings:[],workingHereComments:[],negotiated:null,coords:parseCoords(v(row,S.lat),v(row,S.lng)),_cityKey:cityKey,lastUpdated:null,_rawName:rawName});
     }
     const studio = map.get(key);
     // Track whether any submission had a clean name set
@@ -765,7 +779,7 @@ function buildStudioMap(studioRows, instructorRows) {
     const key=findFuzzyKey(map,name,cityKey)||(norm(name)+(cityKey?'|'+cityKey:''));
     if (!map.has(key)) {
       const country=v(row,I.country)||'United States';
-      map.set(key,{name,city,state:v(row,I.state),country,currency:getCurrencyForCountry(country),hasStudio:false,hasInstructor:false,submissions:[],experiences:new Set(),benefits:new Set(),otherPerks:[],notes:[],contact:'',negNotes:[],negRatings:[],negotiated:null,coords:parseCoords(v(row,I.lat),v(row,I.lng)),_cityKey:cityKey,lastUpdated:null,_rawName:rawName});
+      map.set(key,{name,city,state:v(row,I.state),country,currency:getCurrencyForCountry(country),hasStudio:false,hasInstructor:false,submissions:[],experiences:new Set(),benefits:new Set(),otherPerks:[],notes:[],contact:'',negNotes:[],negRatings:[],studioRatings:[],workingHereComments:[],negotiated:null,coords:parseCoords(v(row,I.lat),v(row,I.lng)),_cityKey:cityKey,lastUpdated:null,_rawName:rawName});
     }
     const studio=map.get(key);
     // Track whether any submission had a clean name set
@@ -802,6 +816,11 @@ function buildStudioMap(studioRows, instructorRows) {
     if (neg&&!studio.negotiated) studio.negotiated=neg;
     if (nn&&nn.toLowerCase()!=='n/a'&&nn.trim()) studio.negNotes.push(nn);
     if (negRating!==null) { if (!studio.negRatings) studio.negRatings=[]; studio.negRatings.push(negRating); }
+    const studioRatingRaw=v(row,I.studioRating);
+    const studioRating=studioRatingRaw&&!isNaN(parseFloat(studioRatingRaw))?parseFloat(studioRatingRaw):null;
+    if (studioRating!==null) { if (!studio.studioRatings) studio.studioRatings=[]; studio.studioRatings.push(studioRating); }
+    const whComment=v(row,I.workingHereComment);
+    if (whComment&&whComment.toLowerCase()!=='n/a'&&whComment.trim()) { if (!studio.workingHereComments) studio.workingHereComments=[]; studio.workingHereComments.push(whComment); }
     parseBenefits(v(row,I.perks)).forEach(b=>studio.benefits.add(b));
     const iop=v(row,I.otherPerks); if(iop&&iop.toLowerCase()!=='n/a'&&iop.trim()) studio.otherPerks.push(iop);
   });
@@ -1086,6 +1105,19 @@ function renderCards(studios, totalCount, page) {
         }).join('')
     }</div>`:''
 
+    // ── Working here rating + comments ──
+    const avgStudioRating=(studio.studioRatings&&studio.studioRatings.length)?(studio.studioRatings.reduce((a,b)=>a+b,0)/studio.studioRatings.length):null;
+    const workingHereTile=avgStudioRating!==null
+      ?`<div class="working-here-tile"><div style="font-size:10px;color:#575648;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;margin-bottom:5px;">Overall Rating</div><div class="working-here-tile-stars"><span class="stars">${renderStars(avgStudioRating)}</span><span class="score">${avgStudioRating.toFixed(1)}/5</span></div><div class="working-here-tile-count">${studio.studioRatings.length} instructor rating${studio.studioRatings.length>1?'s':''}</div></div>`
+      :'';
+    const avgStudioRatingHtml=avgStudioRating!==null
+      ?`<div class="working-here-avg"><span class="stars">${renderStars(avgStudioRating)}</span><span class="score">${avgStudioRating.toFixed(1)}/5</span><span style="color:var(--stone);">(${studio.studioRatings.length} rating${studio.studioRatings.length>1?'s':''})</span></div>`
+      :'';
+    const uniqueWorkingHereComments=[...new Set(studio.workingHereComments||[])].filter(Boolean);
+    const workingHereSection=(avgStudioRating!==null||uniqueWorkingHereComments.length)
+      ?`<div class="working-here-section"><div class="working-here-label">What instructors say about working here</div>${avgStudioRatingHtml}${uniqueWorkingHereComments.map(c=>`<p class="working-here-comment">"${c}"</p>`).join('')}</div>`
+      :'';
+
     const contactSection=studio.contact?`<div class="contact-section"><div class="notes-label" style="margin-bottom:6px;">Best way to contact this studio about teaching opportunities</div><a href="mailto:${studio.contact}">${studio.contact}</a></div>`:'';
 
     const postJobButton=studio.hasStudio?`<div style="padding:12px 0;"><a href="https://tally.so/r/dWPV7V?studioName=${encodeURIComponent(studio.name)}&studioCity=${encodeURIComponent(studio.city||'')}" target="_blank" style="display:block;width:calc(100% - 44px);margin:0 22px;padding:8px 0;background:#4a5220;border:1px solid #3a4118;border-radius:8px;color:#e6ead0;text-decoration:none;text-align:center;font-family:'Cormorant Garamond',Georgia,serif;font-size:11px;font-weight:500;letter-spacing:0.04em;transition:background 0.15s;">+ Post a job</a></div>`:'';
@@ -1111,7 +1143,7 @@ function renderCards(studios, totalCount, page) {
         ${differsBanner}
         ${benefitsSection}
         ${notesSection}
-        ${negRatingTile}
+        ${workingHereTile}
         <div style="padding:12px 0;"><button class="see-more-btn" onclick="toggleCard(this)">See compensation details ↓</button></div>
       </div>
       <div class="card-expanded card-body">
@@ -1128,6 +1160,7 @@ function renderCards(studios, totalCount, page) {
         ${benefitsSection}
         ${notesSection}
         ${negNotesSection}
+        ${workingHereSection}
         ${contactSection}
         <div style="padding:12px 0;"><button class="see-less-btn" onclick="toggleCard(this)">See less ↑</button></div>
       </div>
