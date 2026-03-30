@@ -817,48 +817,150 @@
       }
     }
 
+    // ── Heuristic interest scorer ──────────────────────────────────────────────
+    function heuristicScore(text) {
+      if (!text || text.trim().length < 10) return { score: 1, reason: 'Too short to evaluate' };
+
+      const t = text.trim();
+      const lower = t.toLowerCase();
+      let score = 1;
+      const reasons = [];
+
+      // ── Word / sentence structure ──
+      const words     = t.split(/\s+/).filter(Boolean);
+      const wordCount = words.length;
+      const sentences = t.split(/[.!?]+/).map(s => s.trim()).filter(s => s.length > 3);
+      const sentCount = sentences.length;
+
+      // Repetition penalty — same word 3+ times
+      const wordFreq = {};
+      words.forEach(w => { const wl = w.toLowerCase().replace(/[^a-z]/g,''); wordFreq[wl] = (wordFreq[wl]||0)+1; });
+      const maxRepeat = Math.max(...Object.values(wordFreq));
+      if (maxRepeat >= 3 && wordCount < 15) return { score: 1, reason: 'Repetitive or generic' };
+
+      // All caps penalty
+      if (t === t.toUpperCase() && /[A-Z]/.test(t)) return { score: 1, reason: 'All caps' };
+
+      // Pure filler phrases — cap at 2
+      const fillerOnly = /^(great( studio| experience| place)?|love it( here)?|highly recommend|amazing|terrible|fine|ok|okay|good experience|bad experience|not great|pretty good|so good|so bad|loved it|hated it)\.?$/i;
+      if (fillerOnly.test(t.trim())) return { score: 2, reason: 'Generic phrase with no detail' };
+
+      // ── Base score from length + sentences ──
+      if (wordCount >= 8)  { score = 2; }
+      if (wordCount >= 15) { score = 2; reasons.push('substantive length'); }
+      if (sentCount >= 2)  { score = Math.max(score, 2); }
+      if (sentCount >= 3)  { score = Math.max(score, 3); reasons.push('multi-sentence'); }
+
+      // ── Numbers (dollar amounts, percentages, durations) ──
+      const hasNumber     = /\$\d+|\d+%|\d+\s*(per|\/)(class|hour|client|hr)|\d+\s*(year|month|week|day)s?|\d{2,}/i.test(t);
+      const hasDollar     = /\$\d+|\d+\s*dollar|\d+\s*per\s*(class|hour|client)/i.test(t);
+      const hasPercent    = /\d+\s*%|percent/i.test(t);
+      if (hasNumber) { score = Math.max(score, 2); reasons.push('specific numbers'); }
+      if (hasDollar) { score = Math.max(score, 3); reasons.push('dollar amount'); }
+
+      // ── Negotiation outcome words ──
+      const outcomeWords = [
+        'raised','denied','countered','offered','declined','accepted','rejected',
+        'walked away','left','quit','stayed','matched','negotiated','renegotiated',
+        'asked for','pushed back','said no','said yes','turned down','gave me',
+        'they offered','she offered','he offered','they said','she said','he said',
+        'they told','she told','he told','i asked','i pushed','i left','i quit',
+        'i stayed','i ended up','ended up','they agreed','they refused'
+      ];
+      const hasOutcome = outcomeWords.some(w => lower.includes(w));
+      if (hasOutcome) { score = Math.max(score, 3); reasons.push('negotiation outcome'); }
+
+      // ── Power dynamic / relational language ──
+      const powerWords = [
+        'owner','manager','studio owner','franchise','corporate','hr',
+        'pressured','uncomfortable','unfair','underpaid','undervalued',
+        'worth it','not worth','burned out','burnout','toxic','supportive',
+        'respect','disrespect','transparent','secretive','favorites'
+      ];
+      const hasPower = powerWords.some(w => lower.includes(w));
+      if (hasPower) { score = Math.max(score, 3); reasons.push('workplace dynamic'); }
+
+      // ── Comparison / contrast language ──
+      const compareWords = [
+        'more than','less than','same as','compared to','other studios','other instructors',
+        'new instructors','senior instructors','years of experience','industry standard',
+        'market rate','average','below average','above average','competitive','not competitive'
+      ];
+      const hasCompare = compareWords.some(w => lower.includes(w));
+      if (hasCompare) { score = Math.max(score, 3); reasons.push('comparison'); }
+
+      // ── Causal / progression language ──
+      const causalWords = [
+        'because','so they','which means','ended up','as a result','after that',
+        'eventually','finally','months later','a year later','first year','at first',
+        'over time','since then','after i','before i','when i','once i'
+      ];
+      const hasCausal = causalWords.some(w => lower.includes(w));
+      if (hasCausal && wordCount >= 12) { score = Math.max(score, 3); reasons.push('narrative arc'); }
+
+      // ── Emotional authenticity ──
+      const emotionWords = [
+        'honestly','frustrated','surprised','disappointed','relieved','proud',
+        'regret','wish i','should have','glad i','happy i','annoyed','upset',
+        'excited','nervous','awkward','uncomfortable','grateful','lucky','unfair'
+      ];
+      const hasEmotion = emotionWords.some(w => lower.includes(w));
+      if (hasEmotion) { score = Math.max(score, 2); reasons.push('personal feeling'); }
+
+      // ── Boost: dollar amount + outcome = strong story ──
+      if (hasDollar && hasOutcome) {
+        score = Math.max(score, 4);
+        reasons.push('specific outcome with amount');
+      }
+
+      // ── Boost: percent + outcome ──
+      if (hasPercent && hasOutcome) {
+        score = Math.max(score, 4);
+        reasons.push('specific % outcome');
+      }
+
+      // ── Boost: 3+ sentences with varied length ──
+      if (sentCount >= 3) {
+        const lens = sentences.map(s => s.split(/\s+/).length);
+        const avg  = lens.reduce((a,b) => a+b, 0) / lens.length;
+        const varied = lens.some(l => Math.abs(l - avg) > 3);
+        if (varied) { score = Math.max(score, 4); reasons.push('rich narrative'); }
+      }
+
+      // ── Boost: long + multi-signal ──
+      const signalCount = [hasNumber, hasOutcome, hasPower, hasCompare, hasCausal, hasEmotion].filter(Boolean).length;
+      if (signalCount >= 3 && wordCount >= 20) { score = Math.max(score, 4); reasons.push('multi-signal'); }
+      if (signalCount >= 4 && wordCount >= 30) { score = 5; reasons.push('exceptionally detailed'); }
+
+      // ── Cap at 2 if very short regardless of signals ──
+      if (wordCount < 8) score = Math.min(score, 2);
+
+      // Build reason string
+      const reasonMap = {
+        1: 'Too vague or short to feature',
+        2: 'Some detail but limited story',
+        3: reasons.length ? reasons.slice(0,2).join(' + ') : 'Has real content',
+        4: reasons.length ? reasons.slice(0,2).join(' + ') : 'Strong specific detail',
+        5: 'Exceptionally detailed with multiple story signals'
+      };
+
+      return { score, reason: reasonMap[score] || 'Scored' };
+    }
+
     async function scoreRow(s) {
       const text = getTextToScore(s);
       if (!text) return;
 
-      s.interestScore = 'scoring';
-      const tid = s.source + '-' + s.rowIndex;
-      const badge = document.getElementById('adm-ibadge-' + tid);
-      if (badge) badge.innerHTML = renderInterestBadge(s);
-
-      try {
-        const resp = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514',
-            max_tokens: 120,
-            system: `You are reviewing Pilates instructor submissions to a studio salary database. 
-Score the following submission text for "story quality" — meaning: does it contain specific, personal, 
-authentic detail that would be genuinely interesting to feature or learn from? 
-A high score means: real experience shared, specific negotiation outcome, honest workplace commentary, 
-useful context about culture or pay rationale. A low score means: generic, vague, very short, or filler.
-
-Respond ONLY with valid JSON in this exact format (no markdown, no preamble):
-{"score": <1-5>, "reason": "<one sentence, max 15 words>"}`,
-            messages: [{ role: 'user', content: text }]
-          })
-        });
-        const data = await resp.json();
-        const raw = (data.content || []).map(b => b.text || '').join('').trim();
-        const parsed = JSON.parse(raw);
-        s.interestScore  = Math.max(1, Math.min(5, parseInt(parsed.score) || 1));
-        s.interestReason = String(parsed.reason || '').slice(0, 120);
-        if (s.interestScore >= 3) scoringStatus.found++;
-      } catch (e) {
-        s.interestScore  = 0;
-        s.interestReason = '';
-      }
+      const { score, reason } = heuristicScore(text);
+      s.interestScore  = score;
+      s.interestReason = reason;
+      if (score >= 3) scoringStatus.found++;
 
       scoringStatus.done++;
       updateScoringStatusBar();
 
       // Update badge on tile if currently visible
+      const tid     = s.source + '-' + s.rowIndex;
       const badgeEl = document.getElementById('adm-ibadge-' + tid);
       if (badgeEl) badgeEl.innerHTML = renderInterestBadge(s);
     }
@@ -868,14 +970,20 @@ Respond ONLY with valid JSON in this exact format (no markdown, no preamble):
       if (qualifying.length === 0) return;
 
       scoringStatus = { total: qualifying.length, done: 0, found: 0 };
+
+      // Heuristic scoring is synchronous — run all at once
+      qualifying.forEach(s => {
+        const { score, reason } = heuristicScore(getTextToScore(s));
+        s.interestScore  = score;
+        s.interestReason = reason;
+        if (score >= 3) scoringStatus.found++;
+        scoringStatus.done++;
+      });
+
       updateScoringStatusBar();
 
-      // Score in batches of 5 (parallel within batch, sequential between)
-      const BATCH = 5;
-      for (let i = 0; i < qualifying.length; i += BATCH) {
-        const batch = qualifying.slice(i, i + BATCH);
-        await Promise.all(batch.map(scoreRow));
-      }
+      // Re-render current page to show badges
+      admRender();
     }
 
     // ── Toggle details panel ───────────────────────────────────────────────────
