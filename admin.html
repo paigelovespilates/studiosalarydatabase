@@ -216,6 +216,38 @@
     }
     .adm-badge-scoring { background: #f5f4f0; color: #aaa; border: 0.5px solid #ddd; font-style: italic; }
 
+    .adm-story-callout {
+      background: #fdf8ec;
+      border: 0.5px solid #e8c96a;
+      border-radius: 7px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+    .adm-story-callout-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #a07820;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .adm-story-field {
+      margin-bottom: 8px;
+    }
+    .adm-story-field:last-child { margin-bottom: 0; }
+    .adm-story-field-label {
+      font-size: 10px;
+      color: #b89030;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 3px;
+    }
+    .adm-story-field-text {
+      font-size: 13px;
+      color: #2a2010;
+      line-height: 1.5;
+    }
+
     .adm-edit-section {
       border-top: 0.5px solid #e8e8e5;
       margin-top: 10px;
@@ -709,7 +741,7 @@
             </button>
           </div>
           <div class="adm-details" id="adm-details-${tid}" style="display:none;">
-            ${buildDetails(r, src)}
+            ${buildDetails(r, src, s)}
           </div>
         </div>`;
     }
@@ -997,7 +1029,7 @@
     }
 
     // ── Build details panel HTML ───────────────────────────────────────────────
-    function buildDetails(r, src) {
+    function buildDetails(r, src, s) {
       const esc = v => String(v || '').replace(/&/g,'&amp;').replace(/</g,'&lt;');
       const val = (idx) => String(r[idx] || '').trim();
       const row = (label, v, highlight) => v
@@ -1006,6 +1038,35 @@
       const sec = (label) => `<div class="adm-detail-section">${label}</div>`;
 
       let html = '';
+
+      // ── Story callout — show scored fields first if interesting ──
+      if (s && typeof s.interestScore === 'number' && s.interestScore >= 3) {
+        const storyFields = [];
+        if (src === 'instructor') {
+          const negNotes    = val(16);
+          const otherPerks  = val(19);
+          const workingHere = val(29);
+          if (negNotes    && isSubstantive(negNotes, 15))    storyFields.push({ label: 'Negotiation notes', text: negNotes });
+          if (workingHere && isSubstantive(workingHere, 15)) storyFields.push({ label: 'Working here', text: workingHere });
+          if (otherPerks  && isSubstantive(otherPerks, 15))  storyFields.push({ label: 'Other perks', text: otherPerks });
+        } else {
+          const otherPerks = val(22);
+          const notes      = val(24);
+          if (otherPerks && isSubstantive(otherPerks, 15)) storyFields.push({ label: 'Other perks', text: otherPerks });
+          if (notes      && isSubstantive(notes, 15))      storyFields.push({ label: 'Notes', text: notes });
+        }
+        if (storyFields.length) {
+          const stars = '✨'.repeat(Math.min(s.interestScore - 2, 3));
+          html += `<div class="adm-story-callout">
+            <div class="adm-story-callout-label">${stars} ${s.interestScore}/5 · ${esc(s.interestReason || '')}</div>
+            ${storyFields.map(f => `
+              <div class="adm-story-field">
+                <div class="adm-story-field-label">${f.label}</div>
+                <div class="adm-story-field-text">${esc(f.text)}</div>
+              </div>`).join('')}
+          </div>`;
+        }
+      }
 
       if (src === 'studio') {
         // Pay
