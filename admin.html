@@ -182,6 +182,39 @@
     .adm-badge-pay        { background: #e8f4ec; color: #2d6b45; }
     .adm-badge-clean          { background: #e8f0fb; color: #2a4a8a; }
     .adm-badge-clean-inherited { background: #f0f4fd; color: #6a82b4; font-style: italic; }
+    .adm-badge-interest       { background: #fdf3dc; color: #7a4f0d; border: 0.5px solid #e8c96a; cursor: default; position: relative; }
+    .adm-badge-interest:hover .adm-interest-tooltip {
+      display: block;
+    }
+    .adm-interest-tooltip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2a2a22;
+      color: #f5f3ec;
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 1.45;
+      padding: 7px 10px;
+      border-radius: 6px;
+      width: 220px;
+      white-space: normal;
+      z-index: 200;
+      pointer-events: none;
+      font-style: normal;
+    }
+    .adm-interest-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: #2a2a22;
+    }
+    .adm-badge-scoring { background: #f5f4f0; color: #aaa; border: 0.5px solid #ddd; font-style: italic; }
 
     .adm-edit-section {
       border-top: 0.5px solid #e8e8e5;
@@ -451,6 +484,14 @@
           <option value="month">This month</option>
           <option value="90days">Last 90 days</option>
         </select>
+        <select id="adm-sort" onchange="admFilter()">
+          <option value="date">Newest first</option>
+          <option value="interest">✨ Interest</option>
+        </select>
+        <select id="adm-story" onchange="admFilter()">
+          <option value="all">All tiles</option>
+          <option value="stories">✨ Has story</option>
+        </select>
         <button id="adm-clear-btn" onclick="admClearFilters()" style="display:none;font-family:'DM Sans',sans-serif;font-size:12px;padding:6px 12px;border-radius:6px;border:0.5px solid rgba(237,235,228,0.5);background:transparent;color:#EDEBE4;cursor:pointer;white-space:nowrap;opacity:0.8;">✕ Clear</button>
       </div>
     </div>
@@ -566,6 +607,16 @@
       }
     }
 
+    // ── Interest badge renderer ────────────────────────────────────────────────
+    function renderInterestBadge(s) {
+      if (s.interestScore === undefined) return '';
+      if (s.interestScore === 'scoring') return '<span class="adm-badge adm-badge-scoring">scoring…</span>';
+      if (s.interestScore < 3) return '';
+      const stars = '✨'.repeat(Math.min(s.interestScore - 2, 3)); // 1–3 stars for scores 3–5
+      const reason = String(s.interestReason || '').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+      return `<span class="adm-badge adm-badge-interest">${stars} ${s.interestScore}/5<span class="adm-interest-tooltip">${reason}</span></span>`;
+    }
+
     // ── Build tile ─────────────────────────────────────────────────────────────
     function buildTile(s) {
       const r = s.row, src = s.source, rn = s.rowIndex, ex = s.excluded;
@@ -629,6 +680,7 @@
             ${hasDirectCleanCity   ? `<span class="adm-badge adm-badge-clean" title="Clean city: ${esc(cleanCity)}">✓ city</span>` : ''}
             ${hasInheritedCleanCity ? `<span class="adm-badge adm-badge-clean-inherited" title="Inherited clean city: ${esc(s.inheritedCleanCity||'')}">↳ city</span>` : ''}
             <span id="adm-excbadge-${tid}">${ex ? '<span class="adm-badge adm-badge-excluded">excluded</span>' : ''}</span>
+            <span id="adm-ibadge-${tid}">${renderInterestBadge(s)}</span>
           </div>
           <div class="adm-edit-section">
             <div class="adm-edit-row">
@@ -715,6 +767,107 @@
         s.inheritedCleanName = !cleanN && !!cleanNameMap[rawKey] ? cleanNameMap[rawKey] : null;
         s.inheritedCleanCity = !cleanC && !!cleanCityMap[rawKey] && cityCount <= 1 ? cleanCityMap[rawKey] : null;
       });
+    }
+
+    // ── Interest scoring ───────────────────────────────────────────────────────
+    // Fields scored per source type:
+    //   instructor: r[15]=Negotiated, r[16]=Negotiation Notes, r[19]=Other Perks, r[29]=Working Here Comments
+    //   studio:     r[22]=Other Perks, r[24]=Notes
+
+    function getTextToScore(s) {
+      const r = s.row;
+      const parts = [];
+      if (s.source === 'instructor') {
+        const negNotes  = String(r[16] || '').trim();
+        const otherPerks = String(r[19] || '').trim();
+        const workingHere = String(r[29] || '').trim();
+        const negotiated = String(r[15] || '').trim().toLowerCase();
+        if (negotiated === 'yes' && negNotes.length >= 40) parts.push('Negotiation notes: ' + negNotes);
+        if (otherPerks.length >= 40)  parts.push('Other perks: ' + otherPerks);
+        if (workingHere.length >= 80) parts.push('Working here: ' + workingHere);
+      } else {
+        const otherPerks = String(r[22] || '').trim();
+        const notes      = String(r[24] || '').trim();
+        if (otherPerks.length >= 80) parts.push('Other perks: ' + otherPerks);
+        if (notes.length >= 80)      parts.push('Notes: ' + notes);
+      }
+      return parts.join('\n\n');
+    }
+
+    let scoringStatus = { total: 0, done: 0, found: 0 };
+
+    function updateScoringStatusBar() {
+      const bar = document.getElementById('adm-stats');
+      if (!bar) return;
+      const { total, done, found } = scoringStatus;
+      if (total === 0) { admStats(); return; }
+      const base = bar.dataset.baseText || '';
+      if (done < total) {
+        bar.innerHTML = base + ` &nbsp;·&nbsp; <span style="color:#b87c2a">✨ Scoring ${done}/${total}…</span>`;
+      } else {
+        bar.innerHTML = base + ` &nbsp;·&nbsp; <span style="color:#7a4f0d">✨ ${found} stor${found !== 1 ? 'ies' : 'y'} found</span>`;
+      }
+    }
+
+    async function scoreRow(s) {
+      const text = getTextToScore(s);
+      if (!text) return;
+
+      s.interestScore = 'scoring';
+      const tid = s.source + '-' + s.rowIndex;
+      const badge = document.getElementById('adm-ibadge-' + tid);
+      if (badge) badge.innerHTML = renderInterestBadge(s);
+
+      try {
+        const resp = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 120,
+            system: `You are reviewing Pilates instructor submissions to a studio salary database. 
+Score the following submission text for "story quality" — meaning: does it contain specific, personal, 
+authentic detail that would be genuinely interesting to feature or learn from? 
+A high score means: real experience shared, specific negotiation outcome, honest workplace commentary, 
+useful context about culture or pay rationale. A low score means: generic, vague, very short, or filler.
+
+Respond ONLY with valid JSON in this exact format (no markdown, no preamble):
+{"score": <1-5>, "reason": "<one sentence, max 15 words>"}`,
+            messages: [{ role: 'user', content: text }]
+          })
+        });
+        const data = await resp.json();
+        const raw = (data.content || []).map(b => b.text || '').join('').trim();
+        const parsed = JSON.parse(raw);
+        s.interestScore  = Math.max(1, Math.min(5, parseInt(parsed.score) || 1));
+        s.interestReason = String(parsed.reason || '').slice(0, 120);
+        if (s.interestScore >= 3) scoringStatus.found++;
+      } catch (e) {
+        s.interestScore  = 0;
+        s.interestReason = '';
+      }
+
+      scoringStatus.done++;
+      updateScoringStatusBar();
+
+      // Update badge on tile if currently visible
+      const badgeEl = document.getElementById('adm-ibadge-' + tid);
+      if (badgeEl) badgeEl.innerHTML = renderInterestBadge(s);
+    }
+
+    async function runInterestScoring() {
+      const qualifying = allRows.filter(s => getTextToScore(s).length > 0);
+      if (qualifying.length === 0) return;
+
+      scoringStatus = { total: qualifying.length, done: 0, found: 0 };
+      updateScoringStatusBar();
+
+      // Score in batches of 5 (parallel within batch, sequential between)
+      const BATCH = 5;
+      for (let i = 0; i < qualifying.length; i += BATCH) {
+        const batch = qualifying.slice(i, i + BATCH);
+        await Promise.all(batch.map(scoreRow));
+      }
     }
 
     // ── Toggle details panel ───────────────────────────────────────────────────
@@ -1009,6 +1162,8 @@
       document.getElementById('adm-fmt').value  = '';
       document.getElementById('adm-exc').value  = 'all';
       document.getElementById('adm-date').value = 'all';
+      document.getElementById('adm-sort').value  = 'date';
+      document.getElementById('adm-story').value = 'all';
       admFilter();
     }
 
@@ -1020,9 +1175,11 @@
       const fmt     = document.getElementById('adm-fmt').value.toLowerCase();
       const exc     = document.getElementById('adm-exc').value;
       const dateRng = document.getElementById('adm-date').value;
+      const sortBy  = document.getElementById('adm-sort').value;
+      const storyF  = document.getElementById('adm-story').value;
 
       // Show/hide clear button
-      const isFiltered = name || city || src || fmt || exc !== 'all' || dateRng !== 'all';
+      const isFiltered = name || city || src || fmt || exc !== 'all' || dateRng !== 'all' || sortBy !== 'date' || storyF !== 'all';
       document.getElementById('adm-clear-btn').style.display = isFiltered ? 'block' : 'none';
 
       // Build date boundary for the selected range (start of day in local time)
@@ -1059,6 +1216,9 @@
           if (dateTo   && d >= dateTo)  return false;
         }
 
+        // Story filter
+        if (storyF === 'stories' && (typeof s.interestScore !== 'number' || s.interestScore < 3)) return false;
+
         return (!name || rawName.includes(name))
           && (!city || rawCity.includes(city))
           && (!src  || s.source === src)
@@ -1067,6 +1227,12 @@
               || (exc === 'active'   && !s.excluded)
               || (exc === 'excluded' &&  s.excluded));
       });
+
+      // Sort
+      if (sortBy === 'interest') {
+        filteredRows.sort((a, b) => (b.interestScore || 0) - (a.interestScore || 0));
+      }
+      // default 'date' sort is already applied at load time on allRows
 
       currentPage = 1;
       admRender();
@@ -1116,7 +1282,16 @@
                     || document.getElementById('adm-src').value
                     || document.getElementById('adm-fmt').value
                     || document.getElementById('adm-exc').value !== 'all';
-      bar.innerHTML = `<span>${total}</span> total (<span>${stud}</span> studio · <span>${inst}</span> instructor) &nbsp;·&nbsp; <span>${total - excl}</span> active &nbsp;·&nbsp; <span>${excl}</span> excluded${isF ? ` &nbsp;·&nbsp; <span>${visOverride !== undefined ? visOverride : total}</span> matching` : ''}`;
+      const baseText = `<span>${total}</span> total (<span>${stud}</span> studio · <span>${inst}</span> instructor) &nbsp;·&nbsp; <span>${total - excl}</span> active &nbsp;·&nbsp; <span>${excl}</span> excluded${isF ? ` &nbsp;·&nbsp; <span>${visOverride !== undefined ? visOverride : total}</span> matching` : ''}`;
+      bar.dataset.baseText = baseText;
+      // If scoring is in progress, let updateScoringStatusBar handle it
+      if (scoringStatus && scoringStatus.total > 0 && scoringStatus.done < scoringStatus.total) {
+        bar.innerHTML = baseText + ` &nbsp;·&nbsp; <span style="color:#b87c2a">✨ Scoring ${scoringStatus.done}/${scoringStatus.total}…</span>`;
+      } else if (scoringStatus && scoringStatus.total > 0 && scoringStatus.done >= scoringStatus.total) {
+        bar.innerHTML = baseText + ` &nbsp;·&nbsp; <span style="color:#7a4f0d">✨ ${scoringStatus.found} stor${scoringStatus.found !== 1 ? 'ies' : 'y'} found</span>`;
+      } else {
+        bar.innerHTML = baseText;
+      }
     }
 
     // ── Load ───────────────────────────────────────────────────────────────────
@@ -1159,6 +1334,9 @@
 
         filteredRows = [...allRows];
         admRender();
+
+        // Start interest scoring in background (non-blocking)
+        runInterestScoring();
       } catch (err) {
         grid.innerHTML = `<div class="adm-state error">Failed to load: ${err.message}</div>`;
       }
