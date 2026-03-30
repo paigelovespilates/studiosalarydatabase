@@ -774,22 +774,30 @@
     //   instructor: r[15]=Negotiated, r[16]=Negotiation Notes, r[19]=Other Perks, r[29]=Working Here Comments
     //   studio:     r[22]=Other Perks, r[24]=Notes
 
+    // Noise words that pass length check but have no story value
+    const NOISE_PATTERN = /^(no|n\/a|na|none|not sure|idk|yes|no comment|nothing|nope|good|great|fine|ok|okay|well|well!|denied|n\/a\.|-)\.?$/i;
+
+    function isSubstantive(text, minLen) {
+      if (!text || text.length < minLen) return false;
+      if (NOISE_PATTERN.test(text.trim())) return false;
+      return true;
+    }
+
     function getTextToScore(s) {
       const r = s.row;
       const parts = [];
       if (s.source === 'instructor') {
-        const negNotes  = String(r[16] || '').trim();
+        const negNotes   = String(r[16] || '').trim();
         const otherPerks = String(r[19] || '').trim();
         const workingHere = String(r[29] || '').trim();
-        const negotiated = String(r[15] || '').trim().toLowerCase();
-        if (negotiated === 'yes' && negNotes.length >= 40) parts.push('Negotiation notes: ' + negNotes);
-        if (otherPerks.length >= 40)  parts.push('Other perks: ' + otherPerks);
-        if (workingHere.length >= 80) parts.push('Working here: ' + workingHere);
+        if (isSubstantive(negNotes, 15))   parts.push('Negotiation notes: ' + negNotes);
+        if (isSubstantive(otherPerks, 15)) parts.push('Other perks: ' + otherPerks);
+        if (isSubstantive(workingHere, 15)) parts.push('Working here: ' + workingHere);
       } else {
         const otherPerks = String(r[22] || '').trim();
         const notes      = String(r[24] || '').trim();
-        if (otherPerks.length >= 80) parts.push('Other perks: ' + otherPerks);
-        if (notes.length >= 80)      parts.push('Notes: ' + notes);
+        if (isSubstantive(otherPerks, 15)) parts.push('Other perks: ' + otherPerks);
+        if (isSubstantive(notes, 15))      parts.push('Notes: ' + notes);
       }
       return parts.join('\n\n');
     }
