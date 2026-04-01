@@ -1349,6 +1349,26 @@ async function init() {
 
     // Clean up internal tracking props
     allStudios.forEach(s => { delete s._rawName; delete s._hasCleanName; });
+// ── Fix Tally-era "PR" state bug for Australian submissions ──
+const AU_CITY_TO_STATE = {
+  'sydney': 'NSW', 'parramatta': 'NSW', 'newcastle': 'NSW', 'wollongong': 'NSW',
+  'central coast': 'NSW', 'maitland': 'NSW', 'bathurst': 'NSW', 'wagga wagga': 'NSW',
+  'melbourne': 'VIC', 'geelong': 'VIC', 'ballarat': 'VIC', 'bendigo': 'VIC',
+  'shepparton': 'VIC', 'mildura': 'VIC', 'wodonga': 'VIC',
+  'brisbane': 'QLD', 'gold coast': 'QLD', 'sunshine coast': 'QLD', 'cairns': 'QLD',
+  'townsville': 'QLD', 'toowoomba': 'QLD', 'rockhampton': 'QLD', 'mackay': 'QLD',
+  'perth': 'WA', 'mandurah': 'WA', 'bunbury': 'WA', 'albany': 'WA', 'geraldton': 'WA',
+  'adelaide': 'SA', 'mount gambier': 'SA', 'whyalla': 'SA',
+  'hobart': 'TAS', 'launceston': 'TAS', 'devonport': 'TAS', 'burnie': 'TAS',
+  'darwin': 'NT', 'alice springs': 'NT',
+  'canberra': 'ACT',
+};
+allStudios.forEach(s => {
+  if ((s.country || '') === 'Australia' && (s.state || '').trim() === 'PR') {
+    const cityKey = (s.city || '').toLowerCase().trim();
+    s.state = AU_CITY_TO_STATE[cityKey] || '';
+  }
+});
 
     const withC=allStudios.filter(s=>s.coords).length;
     console.log('[Init] Studios:',allStudios.length,'| With coords:',withC,'| Without:',allStudios.length-withC);
