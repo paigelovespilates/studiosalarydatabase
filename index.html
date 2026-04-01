@@ -1349,7 +1349,7 @@ async function init() {
 
     // Clean up internal tracking props
     allStudios.forEach(s => { delete s._rawName; delete s._hasCleanName; });
-// ── Fix Tally-era "PR" state bug for Australian submissions ──
+// ── Fix Tally-era "PR" state bug for non-US submissions ──
 const AU_CITY_TO_STATE = {
   'sydney': 'NSW', 'parramatta': 'NSW', 'newcastle': 'NSW', 'wollongong': 'NSW',
   'central coast': 'NSW', 'maitland': 'NSW', 'bathurst': 'NSW', 'wagga wagga': 'NSW',
@@ -1363,6 +1363,45 @@ const AU_CITY_TO_STATE = {
   'darwin': 'NT', 'alice springs': 'NT',
   'canberra': 'ACT',
 };
+const CA_CITY_TO_STATE = {
+  'toronto': 'ON', 'ottawa': 'ON', 'mississauga': 'ON', 'brampton': 'ON', 'hamilton': 'ON',
+  'london': 'ON', 'markham': 'ON', 'vaughan': 'ON', 'kitchener': 'ON', 'waterloo': 'ON',
+  'oakville': 'ON', 'burlington': 'ON', 'barrie': 'ON', 'kingston': 'ON', 'sudbury': 'ON',
+  'vancouver': 'BC', 'surrey': 'BC', 'burnaby': 'BC', 'richmond': 'BC', 'kelowna': 'BC',
+  'abbotsford': 'BC', 'coquitlam': 'BC', 'langley': 'BC', 'victoria': 'BC', 'nanaimo': 'BC',
+  'calgary': 'AB', 'edmonton': 'AB', 'red deer': 'AB', 'lethbridge': 'AB', 'medicine hat': 'AB',
+  'montreal': 'QC', 'quebec city': 'QC', 'laval': 'QC', 'gatineau': 'QC', 'longueuil': 'QC',
+  'halifax': 'NS', 'dartmouth': 'NS',
+  'winnipeg': 'MB', 'brandon': 'MB',
+  'saskatoon': 'SK', 'regina': 'SK',
+  'fredericton': 'NB', 'moncton': 'NB', 'saint john': 'NB',
+  'st. john\'s': 'NL', 'corner brook': 'NL',
+  'charlottetown': 'PE',
+  'whitehorse': 'YT', 'yellowknife': 'NT', 'iqaluit': 'NU',
+};
+const UK_CITY_TO_STATE = {
+  'london': 'England', 'manchester': 'England', 'birmingham': 'England', 'leeds': 'England',
+  'liverpool': 'England', 'sheffield': 'England', 'bristol': 'England', 'newcastle': 'England',
+  'nottingham': 'England', 'leicester': 'England', 'coventry': 'England', 'brighton': 'England',
+  'oxford': 'England', 'cambridge': 'England', 'bath': 'England', 'exeter': 'England',
+  'reading': 'England', 'guildford': 'England', 'windsor': 'England', 'portsmouth': 'England',
+  'norwich': 'England', 'ipswich': 'England', 'york': 'England', 'hull': 'England',
+  'sunderland': 'England', 'plymouth': 'England', 'stoke-on-trent': 'England',
+  'edinburgh': 'Scotland', 'glasgow': 'Scotland', 'aberdeen': 'Scotland', 'dundee': 'Scotland',
+  'inverness': 'Scotland', 'stirling': 'Scotland',
+  'cardiff': 'Wales', 'swansea': 'Wales', 'newport': 'Wales',
+  'belfast': 'Northern Ireland', 'derry': 'Northern Ireland',
+};
+
+allStudios.forEach(s => {
+  if ((s.state || '').trim() !== 'PR') return;
+  const cityKey = (s.city || '').toLowerCase().trim();
+  const country = (s.country || '').trim();
+  if (country === 'Australia') s.state = AU_CITY_TO_STATE[cityKey] || '';
+  else if (country === 'Canada') s.state = CA_CITY_TO_STATE[cityKey] || '';
+  else if (country === 'United Kingdom') s.state = UK_CITY_TO_STATE[cityKey] || '';
+});
+
 allStudios.forEach(s => {
   if ((s.country || '') === 'Australia' && (s.state || '').trim() === 'PR') {
     const cityKey = (s.city || '').toLowerCase().trim();
