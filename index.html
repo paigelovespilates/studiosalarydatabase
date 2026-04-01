@@ -1402,13 +1402,6 @@ allStudios.forEach(s => {
   else if (country === 'United Kingdom') s.state = UK_CITY_TO_STATE[cityKey] || '';
 });
 
-allStudios.forEach(s => {
-  if ((s.country || '') === 'Australia' && (s.state || '').trim() === 'PR') {
-    const cityKey = (s.city || '').toLowerCase().trim();
-    s.state = AU_CITY_TO_STATE[cityKey] || '';
-  }
-});
-
     const withC=allStudios.filter(s=>s.coords).length;
     console.log('[Init] Studios:',allStudios.length,'| With coords:',withC,'| Without:',allStudios.length-withC);
 
