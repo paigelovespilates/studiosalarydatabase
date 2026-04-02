@@ -155,30 +155,17 @@ body {
 
 /* ── Step ────────────────────────────────── */
 .form-step {
-  overflow: hidden;
-  max-height: 0;
+  display: none;
   opacity: 0;
   margin-bottom: 0;
-  transition:
-    max-height 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity    0.4s ease,
-    margin-bottom 0.35s ease;
+  transition: opacity 0.35s ease;
 }
 
-.form-step.revealed {
-  max-height: 600px;
+.form-step.first-step {
+  display: block;
   opacity: 1;
   margin-bottom: 36px;
 }
-
-.form-step.completed {
-  max-height: 80px;
-  opacity: 0.4;
-  margin-bottom: 20px;
-}
-
-.form-step.completed .step-input-area { display: none; }
-.form-step.completed .step-answer     { display: block; }
 
 /* Step number */
 .step-label {
@@ -907,7 +894,7 @@ input[type="range"]::-webkit-slider-thumb {
     <p class="form-intro">Answer a few quick questions and we'll have the board ready for you, tailored to what you're looking for.</p>
 
     <!-- Step 1: Location -->
-    <div class="form-step revealed" id="step-location">
+    <div class="form-step first-step" id="step-location">
       <div class="step-label">
         <div class="step-check"></div>
         <span class="step-num-badge">Step 1 of 4</span>
@@ -937,7 +924,7 @@ input[type="range"]::-webkit-slider-thumb {
           <input class="form-input" type="text" id="pref-postal" placeholder="Postal code" autocomplete="postal-code">
         </div>
         <div class="location-hint" id="locationHint">Enter your country and postal code above</div>
-        <button class="step-btn" id="locationContinueBtn" onclick="confirmLocation()" disabled>
+        <button class="step-btn" id="locationContinueBtn" onclick="confirmLocation()">
           Continue
           <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
@@ -1170,18 +1157,27 @@ function updateProgress(done, total) {
 //  STEP HELPERS
 // ════════════════════════════════════════════
 function completeStep(stepId, answerText) {
-  const el = document.getElementById(stepId);
-  el.classList.remove('revealed');
-  el.classList.add('completed');
-  const ans = document.getElementById('answer-' + stepId.replace('step-',''));
-  if (ans) ans.textContent = answerText;
+  const el      = document.getElementById(stepId);
+  const inputEl = el.querySelector('.step-input-area');
+  const ansEl   = el.querySelector('.step-answer');
+  const checkEl = el.querySelector('.step-check');
+  const badgeEl = el.querySelector('.step-num-badge');
+
+  if (inputEl) inputEl.style.display = 'none';
+  if (ansEl)   { ansEl.style.display = 'block'; ansEl.textContent = answerText; }
+  if (checkEl) checkEl.style.display = 'flex';
+  if (badgeEl) badgeEl.style.display = 'none';
+  el.style.opacity = '0.4';
 }
 
 function revealStep(stepId) {
   setTimeout(() => {
     const el = document.getElementById(stepId);
-    el.classList.add('revealed');
-    setTimeout(() => el.scrollIntoView({ behavior:'smooth', block:'nearest' }), 60);
+    el.style.display     = 'block';
+    el.style.maxHeight   = '600px';
+    el.style.opacity     = '1';
+    el.style.marginBottom = '36px';
+    setTimeout(() => el.scrollIntoView({ behavior:'smooth', block:'nearest' }), 80);
   }, 160);
 }
 
@@ -1225,17 +1221,6 @@ async function tryGeocode() {
   }
 }
 
-// Enable the button as soon as country + postal are both filled
-function checkLocationReady() {
-  const country = document.getElementById('pref-country').value;
-  const postal  = document.getElementById('pref-postal').value.trim();
-  const btn     = document.getElementById('locationContinueBtn');
-  btn.disabled  = !(country && postal.length >= 3);
-}
-
-document.getElementById('pref-country').addEventListener('change', checkLocationReady);
-document.getElementById('pref-postal').addEventListener('input', checkLocationReady);
-
 // Geocode on blur — purely for data capture, never blocks progression
 document.getElementById('pref-postal').addEventListener('blur', tryGeocode);
 document.getElementById('pref-country').addEventListener('change', () => {
@@ -1245,19 +1230,22 @@ document.getElementById('pref-country').addEventListener('change', () => {
 function confirmLocation() {
   const country  = document.getElementById('pref-country').value;
   const postal   = document.getElementById('pref-postal').value.trim();
+  const hint     = document.getElementById('locationHint');
 
   if (!country) {
-    document.getElementById('pref-country').classList.add('invalid');
+    hint.textContent = 'Please select your country first.';
+    hint.className   = 'location-hint error';
     return;
   }
   if (!postal) {
-    document.getElementById('pref-postal').classList.add('invalid');
+    hint.textContent = 'Please enter your postal code.';
+    hint.className   = 'location-hint error';
     return;
   }
 
   const display = geocodedCity
     ? [geocodedCity, geocodedState].filter(Boolean).join(', ')
-    : postal + (country ? ', ' + country.toUpperCase() : '');
+    : postal + ', ' + country.toUpperCase();
 
   completeStep('step-location', display);
   updateProgress(1, 4);
@@ -1315,8 +1303,11 @@ function onAlertChange() {
   if (val === 'none') {
     // No email needed — show final button directly
     setTimeout(() => {
-      document.getElementById('finalActions').classList.add('revealed');
-      document.getElementById('finalActions').scrollIntoView({ behavior:'smooth', block:'nearest' });
+    const fa = document.getElementById('finalActions');
+    fa.style.display     = 'block';
+    fa.style.maxHeight   = '200px';
+    fa.style.opacity     = '1';
+    fa.scrollIntoView({ behavior:'smooth', block:'nearest' });
     }, 280);
   } else {
     // Wants alerts — ask for email
