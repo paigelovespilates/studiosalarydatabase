@@ -923,7 +923,7 @@ input[type="range"]::-webkit-slider-thumb {
           </select>
           <input class="form-input" type="text" id="pref-postal" placeholder="Postal code" autocomplete="postal-code">
         </div>
-        <div class="location-hint" id="locationHint">Enter your country and postal code above</div>
+        <div id="locationHint" style="font-size:12px;color:#c0392b;min-height:18px;margin-bottom:10px;"></div>
         <button class="step-btn" id="locationContinueBtn" onclick="confirmLocation()">
           Continue
           <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -1184,75 +1184,25 @@ function revealStep(stepId) {
 // ════════════════════════════════════════════
 //  STEP 1 — LOCATION
 // ════════════════════════════════════════════
-let geocodedLat = null, geocodedLng = null;
-let geocodedCity = '', geocodedState = '';
-let geocoding = false;
-
-async function tryGeocode() {
-  const postal   = document.getElementById('pref-postal').value.trim();
-  const country  = document.getElementById('pref-country').value;
-  const hint     = document.getElementById('locationHint');
-
-  if (!postal || !country) return;
-
-  hint.textContent = 'Looking up your location…';
-  hint.className   = 'location-hint';
-  geocodedLat = null; geocodedLng = null;
-
-  try {
-    const url  = `https://nominatim.openstreetmap.org/search?postalcode=${encodeURIComponent(postal)}&countrycodes=${country}&format=json&addressdetails=1&limit=1`;
-    const data = await (await fetch(url, { headers:{ 'Accept-Language':'en' } })).json();
-
-    if (data && data.length > 0) {
-      const addr    = data[0].address || {};
-      geocodedCity  = addr.city || addr.town || addr.village || addr.county || '';
-      geocodedState = addr.state || '';
-      geocodedLat   = data[0].lat;
-      geocodedLng   = data[0].lon;
-      hint.textContent = '✓ ' + [geocodedCity, geocodedState].filter(Boolean).join(', ');
-      hint.className   = 'location-hint ok';
-    } else {
-      hint.textContent = 'Postal code not found — we\'ll still use what you entered';
-      hint.className   = 'location-hint error';
-    }
-  } catch(e) {
-    hint.textContent = 'Could not look up location — you can still continue';
-    hint.className   = 'location-hint error';
-  }
-}
-
-// Geocode on blur — purely for data capture, never blocks progression
-document.getElementById('pref-postal').addEventListener('blur', tryGeocode);
-document.getElementById('pref-country').addEventListener('change', () => {
-  if (document.getElementById('pref-postal').value.trim()) tryGeocode();
-});
-
 function confirmLocation() {
-  const country  = document.getElementById('pref-country').value;
-  const postal   = document.getElementById('pref-postal').value.trim();
-  const hint     = document.getElementById('locationHint');
+  const country = document.getElementById('pref-country').value;
+  const postal  = document.getElementById('pref-postal').value.trim();
+  const hint    = document.getElementById('locationHint');
 
   if (!country) {
-    hint.textContent = 'Please select your country first.';
-    hint.className   = 'location-hint error';
+    hint.textContent = 'Please select your country.';
+    hint.style.color = '#c0392b';
     return;
   }
   if (!postal) {
     hint.textContent = 'Please enter your postal code.';
-    hint.className   = 'location-hint error';
+    hint.style.color = '#c0392b';
     return;
   }
 
-  const display = geocodedCity
-    ? [geocodedCity, geocodedState].filter(Boolean).join(', ')
-    : postal + ', ' + country.toUpperCase();
-
-  completeStep('step-location', display);
+  completeStep('step-location', postal + ', ' + country.toUpperCase());
   updateProgress(1, 4);
   revealStep('step-radius');
-
-  // If geocode hasn't finished yet, run it silently in background
-  if (!geocodedLat) tryGeocode();
 }
 
 // ════════════════════════════════════════════
@@ -1361,10 +1311,6 @@ async function handleSubmit() {
       body: JSON.stringify({
         type: 'subscribeInstructor',
         email, country, postalCode,
-        city:  geocodedCity,
-        state: geocodedState,
-        lat:   geocodedLat,
-        lng:   geocodedLng,
         classFormats:   formats.join(', '),
         distanceRadius: radius,
         radiusUnit,
