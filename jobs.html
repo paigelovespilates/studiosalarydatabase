@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Board — Paige Loves Pilates</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white:   #F5F4F0;
+  --linen:   #ECEAE2;
+  --linen-d: #E0DDD4;
+  --rule:    #CCCAB8;
+  --muted:   #9A9890;
+  --mid:     #6E6C64;
+  --dark:    #2C2C28;
+  --olive:   #373930;
+  --olive-m: #4a5220;
+}
+
+html { font-size: 16px; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--white);
+  color: var(--dark);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ── PAGE TRANSITIONS ─────────────────────── */
+#entrance { opacity: 1; transition: opacity 0.4s ease; }
+#entrance.fading { opacity: 0; pointer-events: none; }
+#board { display: none; opacity: 0; transition: opacity 0.5s ease; }
+#board.visible { display: block; opacity: 1; }
+
+/* ══════════════════════════════════════════
+   ENTRANCE
+══════════════════════════════════════════ */
+
+/* ── Header ─────────────────────────────── */
+.entrance-top {
+  background: var(--olive);
+  padding: 52px 56px 52px;
+  position: relative;
+  overflow: hidden;
+}
+
+.entrance-top::after {
+  content: '\201C';
+  position: absolute;
+  right: 40px;
+  top: -24px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 220px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.05);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.entrance-kicker {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(237,235,228,0.4);
+  margin-bottom: 20px;
+}
+
+.entrance-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(30px, 4.5vw, 44px);
+  font-weight: 300;
+  line-height: 1.1;
+  color: #EDEBE4;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  max-width: 520px;
+}
+
+.entrance-title em { font-style: italic; }
+
+.entrance-sub {
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(237,235,228,0.55);
+  line-height: 1.65;
+  max-width: 400px;
+  margin-bottom: 32px;
+}
+
+/* Progress inside header */
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.progress-track {
+  flex: 1;
+  height: 1.5px;
+  background: rgba(237,235,228,0.15);
+  border-radius: 2px;
+  overflow: hidden;
+  max-width: 280px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: rgba(237,235,228,0.6);
+  border-radius: 2px;
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 0%;
+}
+
+.progress-text {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(237,235,228,0.4);
+  white-space: nowrap;
+}
+
+.progress-text em {
+  color: rgba(237,235,228,0.7);
+  font-style: normal;
+}
+
+/* ── Form body ───────────────────────────── */
+.entrance-body {
+  padding: 48px 56px 72px;
+  max-width: 580px;
+}
+
+/* ── Form intro ──────────────────────────── */
+.form-intro {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--mid);
+  line-height: 1.65;
+  margin-bottom: 36px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--rule);
+}
+
+/* ── Step ────────────────────────────────── */
+.form-step {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  margin-bottom: 0;
+  transition:
+    max-height 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity    0.4s ease,
+    margin-bottom 0.35s ease;
+}
+
+.form-step.revealed {
+  max-height: 600px;
+  opacity: 1;
+  margin-bottom: 36px;
+}
+
+.form-step.completed {
+  max-height: 80px;
+  opacity: 0.4;
+  margin-bottom: 20px;
+}
+
+.form-step.completed .step-input-area { display: none; }
+.form-step.completed .step-answer     { display: block; }
+
+/* Step number */
+.step-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.step-num-badge {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.step-check {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--olive-m);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.form-step.completed .step-check { display: flex; }
+.form-step.completed .step-num-badge { display: none; }
+
+.step-check::after {
+  content: '';
+  width: 6px;
+  height: 4px;
+  border-left: 1.5px solid #fff;
+  border-bottom: 1.5px solid #fff;
+  transform: rotate(-45deg) translate(1px, -1px);
+  display: block;
+}
+
+/* Question */
+.step-question {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--dark);
+  line-height: 1.2;
+  margin-bottom: 18px;
+}
+
+/* Completed answer summary */
+.step-answer {
+  display: none;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--mid);
+  margin-top: 2px;
+}
+
+/* ── Inputs ──────────────────────────────── */
+.form-input {
+  width: 100%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--dark);
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.form-input:focus { border-color: var(--olive); }
+.form-input.invalid { border-color: #c0392b; }
+
+.location-row {
+  display: grid;
+  grid-template-columns: 1fr 148px;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.location-hint {
+  font-size: 12px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--muted);
+  min-height: 18px;
+  margin-bottom: 14px;
+  transition: color 0.2s;
+}
+
+.location-hint.ok    { color: var(--olive-m); }
+.location-hint.error { color: #c0392b; }
+
+/* ── Radius ──────────────────────────────── */
+.radius-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.radius-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-weight: 300;
+  color: var(--olive);
+  min-width: 44px;
+  text-align: right;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.radius-unit-toggle {
+  display: flex;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.unit-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.unit-btn.active { background: var(--olive); color: #EDEBE4; }
+
+input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 1px;
+  background: var(--rule);
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--olive);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px var(--olive);
+}
+
+/* ── Formats ─────────────────────────────── */
+.format-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.format-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  user-select: none;
+}
+
+.format-option input[type="checkbox"] { display: none; }
+
+.check-box {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--rule);
+  border-radius: 1px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.format-option input:checked ~ .check-box {
+  background: var(--olive);
+  border-color: var(--olive);
+}
+
+.format-option input:checked ~ .check-box::after {
+  content: '';
+  width: 7px;
+  height: 5px;
+  border-left: 1.5px solid #fff;
+  border-bottom: 1.5px solid #fff;
+  transform: rotate(-45deg) translate(1px, -1px);
+  display: block;
+}
+
+.format-label-text {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--dark);
+}
+
+.format-option:has(input:checked) {
+  border-color: var(--olive);
+  background: var(--linen);
+}
+
+/* ── Alert options ───────────────────────── */
+.alert-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.alert-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  user-select: none;
+}
+
+.alert-option input[type="radio"] { display: none; }
+
+.radio-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid var(--rule);
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s;
+}
+
+.alert-option input:checked ~ .radio-dot {
+  border-color: var(--olive);
+}
+
+.alert-option input:checked ~ .radio-dot::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--olive);
+  display: block;
+}
+
+.alert-option:has(input:checked) {
+  border-color: var(--olive);
+  background: var(--linen);
+}
+
+.alert-title {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--dark);
+  margin-bottom: 2px;
+}
+
+.alert-desc {
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+/* ── Continue button ─────────────────────── */
+.step-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #EDEBE4;
+  background: var(--olive);
+  border: none;
+  border-radius: 2px;
+  padding: 12px 22px;
+  cursor: pointer;
+  transition: background 0.2s, gap 0.2s;
+  margin-top: 4px;
+}
+
+.step-btn:hover { background: #2a2c24; gap: 14px; }
+.step-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.step-btn svg {
+  width: 11px; height: 11px;
+  stroke: rgba(237,235,228,0.7);
+  stroke-width: 1.5;
+  flex-shrink: 0;
+}
+
+/* ── Final submit ────────────────────────── */
+.final-actions {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+.final-actions.revealed {
+  max-height: 200px;
+  opacity: 1;
+}
+
+.final-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--olive);
+  color: #EDEBE4;
+  border: none;
+  border-radius: 2px;
+  padding: 15px 32px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, gap 0.2s;
+  margin-bottom: 16px;
+}
+
+.final-submit-btn:hover { background: #2a2c24; gap: 16px; }
+.final-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.final-submit-btn svg {
+  width: 12px; height: 12px;
+  stroke: rgba(237,235,228,0.7);
+  stroke-width: 1.5;
+}
+
+.form-status {
+  font-size: 13px;
+  font-weight: 300;
+  padding: 11px 16px;
+  border-radius: 2px;
+  margin-bottom: 14px;
+  display: none;
+  line-height: 1.5;
+}
+
+.form-status.loading { display: block; color: var(--mid); background: var(--linen); }
+.form-status.error   { display: block; color: #8B2020; background: #FAECEC; border: 1px solid #DEB8B8; }
+
+/* ══════════════════════════════════════════
+   JOB BOARD
+══════════════════════════════════════════ */
+.board-header {
+  background: var(--olive);
+  padding: 48px 56px 40px;
+}
+
+.board-header-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.board-subtitle {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(237,235,228,0.4);
+  margin-bottom: 10px;
+}
+
+.board-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 300;
+  color: #EDEBE4;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.board-title em { font-style: italic; }
+
+.board-alert-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(237,235,228,0.6);
+  border: 1px solid rgba(237,235,228,0.2);
+  border-radius: 2px;
+  padding: 9px 16px;
+  cursor: pointer;
+  background: transparent;
+  transition: color 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.board-alert-btn:hover { color: #EDEBE4; border-color: rgba(237,235,228,0.5); }
+
+.board-filters {
+  padding: 24px 56px;
+  background: var(--linen);
+  border-bottom: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: 1fr repeat(3, auto) auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.filter-group { display: flex; flex-direction: column; gap: 5px; }
+
+.filter-label {
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.filter-input {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--dark);
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  min-width: 140px;
+}
+
+.filter-input:focus { border-color: var(--olive); }
+
+.clear-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 9px 14px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  align-self: end;
+}
+
+.clear-btn:hover { color: var(--dark); border-color: var(--dark); }
+
+.board-body { padding: 36px 56px 80px; }
+
+.board-status {
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+.job-card {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 24px;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.job-card:hover {
+  box-shadow: 0 4px 20px rgba(55,57,48,0.08);
+  border-color: var(--linen-d);
+}
+
+.job-card-studio {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--dark);
+  margin-bottom: 2px;
+  text-decoration: none;
+  display: block;
+  transition: color 0.2s;
+}
+
+.job-card-studio:hover { color: var(--olive-m); }
+
+.job-card-db-link {
+  font-size: 10px;
+  font-weight: 300;
+  color: var(--muted);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 12px;
+  transition: color 0.2s;
+}
+
+.job-card-db-link:hover { color: var(--mid); }
+
+.job-card-location { font-size: 12px; font-weight: 300; color: var(--mid); margin-bottom: 14px; }
+
+.job-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+
+.job-badge {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 2px;
+}
+
+.job-badge-type   { background: var(--olive); color: #EDEBE4; }
+.job-badge-format { background: var(--linen); color: var(--mid); }
+
+.job-card-details {
+  border-top: 1px solid var(--linen-d);
+  border-bottom: 1px solid var(--linen-d);
+  padding: 14px 0;
+  margin: 14px 0;
+}
+
+.job-detail-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 300;
+  margin-bottom: 8px;
+  color: var(--dark);
+}
+
+.job-detail-row:last-child { margin-bottom: 0; }
+
+.job-detail-label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.job-pay {
+  background: var(--linen);
+  padding: 10px 14px;
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--olive);
+  margin: 12px 0;
+  border-radius: 2px;
+}
+
+.job-notes {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--mid);
+  line-height: 1.65;
+  margin: 12px 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--linen-d);
+}
+
+.job-notes-label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.job-card-cta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+
+.job-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  border-radius: 2px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  transition: background 0.2s, color 0.2s;
+}
+
+.job-btn-primary { background: var(--olive); color: #EDEBE4; border: none; }
+.job-btn-primary:hover { background: #2a2c24; }
+.job-btn-secondary { background: transparent; color: var(--mid); border: 1px solid var(--rule); }
+.job-btn-secondary:hover { border-color: var(--olive); color: var(--olive); }
+
+.raise-hand-form {
+  display: none;
+  margin-top: 14px;
+  padding: 16px;
+  background: var(--linen);
+  border-radius: 2px;
+  border: 1px solid var(--rule);
+}
+
+.raise-hand-form.open { display: block; }
+
+.raise-hand-input {
+  width: 100%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--dark);
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 10px 12px;
+  outline: none;
+  margin-bottom: 8px;
+  transition: border-color 0.2s;
+}
+
+.raise-hand-input:focus { border-color: var(--olive); }
+
+.raise-hand-helper {
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--muted);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.raise-hand-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.raise-hand-msg {
+  font-size: 12px;
+  font-weight: 300;
+  padding: 8px 12px;
+  border-radius: 2px;
+  margin-bottom: 10px;
+  display: none;
+}
+
+.raise-hand-msg.success { display: block; color: #2d6b45; background: #E8F4EC; }
+.raise-hand-msg.error   { display: block; color: #8B2020; background: #FAECEC; }
+
+.empty-state {
+  padding: 64px 0;
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--muted);
+}
+
+/* ── MOBILE ──────────────────────────────── */
+@media (max-width: 600px) {
+  .entrance-top  { padding: 40px 24px 44px; }
+  .entrance-body { padding: 36px 24px 56px; }
+  .format-grid   { grid-template-columns: 1fr; }
+  .location-row  { grid-template-columns: 1fr; }
+  .board-header  { padding: 36px 24px 32px; }
+  .board-filters { padding: 20px 24px; grid-template-columns: 1fr; }
+  .board-body    { padding: 28px 24px 60px; }
+  .jobs-grid     { grid-template-columns: 1fr; }
+  .job-card-cta  { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     ENTRANCE
+════════════════════════════════════════ -->
+<div id="entrance">
+
+  <div class="entrance-top">
+    <div class="entrance-kicker">Job Board — Paige Loves Pilates</div>
+    <h1 class="entrance-title">Be first to know<br><em>when the right role appears.</em></h1>
+  </div>
+
+  <div class="entrance-body">
+
+    <p class="form-intro">Answer a few quick questions and we'll have the board ready for you, tailored to what you're looking for.</p>
+
+    <!-- Step 1: Location -->
+    <div class="form-step revealed" id="step-location">
+      <div class="step-label">
+        <div class="step-check"></div>
+        <span class="step-num-badge">Step 1 of 4</span>
+      </div>
+      <div class="step-question">Where are you based?</div>
+      <div class="step-answer" id="answer-location"></div>
+      <div class="step-input-area">
+        <div class="location-row">
+          <select class="form-input" id="pref-country">
+            <option value="">Country</option>
+            <option value="us">United States</option>
+            <option value="ca">Canada</option>
+            <option value="gb">United Kingdom</option>
+            <option value="au">Australia</option>
+            <option value="nz">New Zealand</option>
+            <option value="de">Germany</option>
+            <option value="fr">France</option>
+            <option value="nl">Netherlands</option>
+            <option value="se">Sweden</option>
+            <option value="no">Norway</option>
+            <option value="dk">Denmark</option>
+            <option value="ch">Switzerland</option>
+            <option value="ie">Ireland</option>
+            <option value="sg">Singapore</option>
+            <option value="ae">UAE</option>
+          </select>
+          <input class="form-input" type="text" id="pref-postal" placeholder="Postal code" autocomplete="postal-code">
+        </div>
+        <div class="location-hint" id="locationHint">Enter your country and postal code above</div>
+        <button class="step-btn" id="locationContinueBtn" onclick="confirmLocation()" disabled>
+          Continue
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2: Distance -->
+    <div class="form-step" id="step-radius">
+      <div class="step-label">
+        <div class="step-check"></div>
+        <span class="step-num-badge">Step 2 of 4</span>
+      </div>
+      <div class="step-question">How far are you willing to travel?</div>
+      <div class="step-answer" id="answer-radius"></div>
+      <div class="step-input-area">
+        <div class="radius-wrap">
+          <span class="radius-val" id="radiusVal">25</span>
+          <input type="range" id="pref-radius" min="5" max="100" step="5" value="25"
+            oninput="document.getElementById('radiusVal').textContent=this.value">
+          <div class="radius-unit-toggle">
+            <button class="unit-btn active" id="btn-mi" onclick="setUnit('mi')">mi</button>
+            <button class="unit-btn" id="btn-km" onclick="setUnit('km')">km</button>
+          </div>
+        </div>
+        <button class="step-btn" onclick="confirmRadius()">
+          Continue
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 3: Formats -->
+    <div class="form-step" id="step-formats">
+      <div class="step-label">
+        <div class="step-check"></div>
+        <span class="step-num-badge">Step 3 of 4</span>
+      </div>
+      <div class="step-question">Which class formats do you teach?</div>
+      <div class="step-answer" id="answer-formats"></div>
+      <div class="step-input-area">
+        <div class="format-grid">
+          <label class="format-option">
+            <input type="checkbox" name="classFormat" value="Mat Pilates" onchange="onFormatChange()">
+            <span class="check-box"></span>
+            <span class="format-label-text">Mat Pilates</span>
+          </label>
+          <label class="format-option">
+            <input type="checkbox" name="classFormat" value="Reformer / Apparatus" onchange="onFormatChange()">
+            <span class="check-box"></span>
+            <span class="format-label-text">Reformer / Apparatus</span>
+          </label>
+          <label class="format-option">
+            <input type="checkbox" name="classFormat" value="Yoga" onchange="onFormatChange()">
+            <span class="check-box"></span>
+            <span class="format-label-text">Yoga</span>
+          </label>
+          <label class="format-option">
+            <input type="checkbox" name="classFormat" value="Sculpt" onchange="onFormatChange()">
+            <span class="check-box"></span>
+            <span class="format-label-text">Sculpt</span>
+          </label>
+        </div>
+        <button class="step-btn" id="formatContinueBtn" onclick="confirmFormats()" style="display:none;">
+          Continue
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 4: Alert preference -->
+    <div class="form-step" id="step-alerts">
+      <div class="step-label">
+        <div class="step-check"></div>
+        <span class="step-num-badge">Step 4 of 4</span>
+      </div>
+      <div class="step-question">How would you like to hear about new roles?</div>
+      <div class="step-answer" id="answer-alerts"></div>
+      <div class="step-input-area">
+        <div class="alert-options">
+          <label class="alert-option">
+            <input type="radio" name="alertFreq" value="realtime" onchange="onAlertChange()">
+            <span class="radio-dot"></span>
+            <div>
+              <div class="alert-title">As it happens</div>
+              <div class="alert-desc">Email the moment a matching role is posted</div>
+            </div>
+          </label>
+          <label class="alert-option">
+            <input type="radio" name="alertFreq" value="daily" onchange="onAlertChange()">
+            <span class="radio-dot"></span>
+            <div>
+              <div class="alert-title">Daily digest</div>
+              <div class="alert-desc">One email each morning with new matches</div>
+            </div>
+          </label>
+          <label class="alert-option">
+            <input type="radio" name="alertFreq" value="none" onchange="onAlertChange()">
+            <span class="radio-dot"></span>
+            <div>
+              <div class="alert-title">No alerts for now</div>
+              <div class="alert-desc">I'll browse on my own — just take me to the board</div>
+            </div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5: Email — only if they want alerts -->
+    <div class="form-step" id="step-email">
+      <div class="step-label">
+        <div class="step-check"></div>
+        <span class="step-num-badge">Almost done</span>
+      </div>
+      <div class="step-question">Where should we send your alerts?</div>
+      <div class="step-answer" id="answer-email"></div>
+      <div class="step-input-area">
+        <input class="form-input" type="email" id="pref-email" placeholder="you@example.com" autocomplete="email" style="margin-bottom:12px;">
+        <button class="step-btn" onclick="confirmEmail()">
+          Done — show me the board
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Final actions (no-alert path) -->
+    <div class="final-actions" id="finalActions">
+      <div class="form-status" id="formStatus"></div>
+      <button class="final-submit-btn" id="submitBtn" onclick="handleSubmit()">
+        Take me to the board
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+  </div>
+</div><!-- /entrance -->
+
+
+<!-- ════════════════════════════════════════
+     JOB BOARD
+════════════════════════════════════════ -->
+<div id="board">
+
+  <div class="board-header">
+    <div class="board-header-top">
+      <div>
+        <div class="board-subtitle">Paige Loves Pilates</div>
+        <h1 class="board-title">Studio <em>Job Board</em></h1>
+      </div>
+      <button class="board-alert-btn" onclick="showEntranceAgain()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Manage alerts
+      </button>
+    </div>
+  </div>
+
+  <div class="board-filters">
+    <div class="filter-group">
+      <span class="filter-label">Search</span>
+      <input class="filter-input" id="jb-search" type="text" placeholder="Studio or city…">
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Location</span>
+      <select class="filter-input" id="jb-location"></select>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Format</span>
+      <select class="filter-input" id="jb-format"></select>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Type</span>
+      <select class="filter-input" id="jb-position"></select>
+    </div>
+    <button class="clear-btn" onclick="jobBoardClearFilters()">Clear</button>
+  </div>
+
+  <div class="board-body">
+    <div class="board-status"><span id="jb-status">Loading…</span></div>
+    <div class="jobs-grid" id="jb-grid"></div>
+  </div>
+
+</div><!-- /board -->
+
+
+<script>
+// ════════════════════════════════════════════
+//  CONFIG
+// ════════════════════════════════════════════
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSFmZXGDvaffhqRlJz3-MKpjn6MPru6GniP78zL5MdVSMAHmJubeVsyRuVbib6CuVBog/exec';
+const JOBS_API        = 'https://script.google.com/macros/s/AKfycbxFGHyETxrFultdpVuIaOhf5wVmJ5gHwq2cMEG8TSKxsF8yjrVqXegeVGBv7WGRPHtePg/exec';
+const INTERESTS_ID    = '1zG59bNRfIQ_VtA5Se_vJWNyDr13sx_Ff11AwWDplNf0';
+const DONE_KEY        = 'plp_jobs_pref_done';
+const SKIP_KEY        = 'plp_jobs_pref_skipped';
+
+// ════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════
+if (localStorage.getItem(DONE_KEY) || localStorage.getItem(SKIP_KEY)) {
+  document.getElementById('entrance').style.display = 'none';
+  showBoard();
+} else {
+  initJobBoard(); // load in background
+}
+
+// ════════════════════════════════════════════
+//  PROGRESS
+// ════════════════════════════════════════════
+// Steps: location, radius, formats, alerts, (email if needed)
+// For "no alerts" path: 4 steps. For alert path: 5 steps.
+let totalSteps = 4;
+let doneSteps  = 0;
+
+const progressMessages = [
+  'Getting started',
+  'Almost there',
+  'One more',
+  'Last one',
+  'All done'
+];
+
+function updateProgress(done, total) {
+  doneSteps  = done;
+  totalSteps = total;
+  const pct  = Math.round((done / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  const msg = done >= total ? 'All done' : `<em>${done}</em> of ${total}`;
+  document.getElementById('progressText').innerHTML = msg;
+}
+
+// ════════════════════════════════════════════
+//  STEP HELPERS
+// ════════════════════════════════════════════
+function completeStep(stepId, answerText) {
+  const el = document.getElementById(stepId);
+  el.classList.remove('revealed');
+  el.classList.add('completed');
+  const ans = document.getElementById('answer-' + stepId.replace('step-',''));
+  if (ans) ans.textContent = answerText;
+}
+
+function revealStep(stepId) {
+  setTimeout(() => {
+    const el = document.getElementById(stepId);
+    el.classList.add('revealed');
+    setTimeout(() => el.scrollIntoView({ behavior:'smooth', block:'nearest' }), 60);
+  }, 160);
+}
+
+// ════════════════════════════════════════════
+//  STEP 1 — LOCATION
+// ════════════════════════════════════════════
+let geocodedLat = null, geocodedLng = null;
+let geocodedCity = '', geocodedState = '';
+let geocoding = false;
+
+async function tryGeocode() {
+  const postal   = document.getElementById('pref-postal').value.trim();
+  const country  = document.getElementById('pref-country').value;
+  const hint     = document.getElementById('locationHint');
+
+  if (!postal || !country) return;
+
+  hint.textContent = 'Looking up your location…';
+  hint.className   = 'location-hint';
+  geocodedLat = null; geocodedLng = null;
+
+  try {
+    const url  = `https://nominatim.openstreetmap.org/search?postalcode=${encodeURIComponent(postal)}&countrycodes=${country}&format=json&addressdetails=1&limit=1`;
+    const data = await (await fetch(url, { headers:{ 'Accept-Language':'en' } })).json();
+
+    if (data && data.length > 0) {
+      const addr    = data[0].address || {};
+      geocodedCity  = addr.city || addr.town || addr.village || addr.county || '';
+      geocodedState = addr.state || '';
+      geocodedLat   = data[0].lat;
+      geocodedLng   = data[0].lon;
+      hint.textContent = '✓ ' + [geocodedCity, geocodedState].filter(Boolean).join(', ');
+      hint.className   = 'location-hint ok';
+    } else {
+      hint.textContent = 'Postal code not found — we\'ll still use what you entered';
+      hint.className   = 'location-hint error';
+    }
+  } catch(e) {
+    hint.textContent = 'Could not look up location — you can still continue';
+    hint.className   = 'location-hint error';
+  }
+}
+
+// Enable the button as soon as country + postal are both filled
+function checkLocationReady() {
+  const country = document.getElementById('pref-country').value;
+  const postal  = document.getElementById('pref-postal').value.trim();
+  const btn     = document.getElementById('locationContinueBtn');
+  btn.disabled  = !(country && postal.length >= 3);
+}
+
+document.getElementById('pref-country').addEventListener('change', checkLocationReady);
+document.getElementById('pref-postal').addEventListener('input', checkLocationReady);
+
+// Geocode on blur — purely for data capture, never blocks progression
+document.getElementById('pref-postal').addEventListener('blur', tryGeocode);
+document.getElementById('pref-country').addEventListener('change', () => {
+  if (document.getElementById('pref-postal').value.trim()) tryGeocode();
+});
+
+function confirmLocation() {
+  const country  = document.getElementById('pref-country').value;
+  const postal   = document.getElementById('pref-postal').value.trim();
+
+  if (!country) {
+    document.getElementById('pref-country').classList.add('invalid');
+    return;
+  }
+  if (!postal) {
+    document.getElementById('pref-postal').classList.add('invalid');
+    return;
+  }
+
+  const display = geocodedCity
+    ? [geocodedCity, geocodedState].filter(Boolean).join(', ')
+    : postal + (country ? ', ' + country.toUpperCase() : '');
+
+  completeStep('step-location', display);
+  updateProgress(1, 4);
+  revealStep('step-radius');
+
+  // If geocode hasn't finished yet, run it silently in background
+  if (!geocodedLat) tryGeocode();
+}
+
+// ════════════════════════════════════════════
+//  STEP 2 — RADIUS
+// ════════════════════════════════════════════
+let radiusUnit = 'mi';
+
+function setUnit(u) {
+  radiusUnit = u;
+  document.getElementById('btn-mi').classList.toggle('active', u === 'mi');
+  document.getElementById('btn-km').classList.toggle('active', u === 'km');
+}
+
+function confirmRadius() {
+  const val = document.getElementById('pref-radius').value;
+  completeStep('step-radius', `Within ${val} ${radiusUnit}`);
+  updateProgress(2, 4);
+  revealStep('step-formats');
+}
+
+// ════════════════════════════════════════════
+//  STEP 3 — FORMATS
+// ════════════════════════════════════════════
+function onFormatChange() {
+  const count = document.querySelectorAll('input[name="classFormat"]:checked').length;
+  document.getElementById('formatContinueBtn').style.display = count > 0 ? 'inline-flex' : 'none';
+}
+
+function confirmFormats() {
+  const selected = Array.from(document.querySelectorAll('input[name="classFormat"]:checked')).map(el => el.value);
+  if (!selected.length) return;
+  completeStep('step-formats', selected.join(', '));
+  updateProgress(3, 4);
+  revealStep('step-alerts');
+}
+
+// ════════════════════════════════════════════
+//  STEP 4 — ALERTS
+// ════════════════════════════════════════════
+function onAlertChange() {
+  const val = document.querySelector('input[name="alertFreq"]:checked')?.value;
+  if (!val) return;
+
+  const labels = { realtime:'As it happens', daily:'Daily digest', none:'No alerts' };
+  completeStep('step-alerts', labels[val] || val);
+  updateProgress(4, 4);
+
+  if (val === 'none') {
+    // No email needed — show final button directly
+    setTimeout(() => {
+      document.getElementById('finalActions').classList.add('revealed');
+      document.getElementById('finalActions').scrollIntoView({ behavior:'smooth', block:'nearest' });
+    }, 280);
+  } else {
+    // Wants alerts — ask for email
+    revealStep('step-email');
+  }
+}
+
+// ════════════════════════════════════════════
+//  STEP 5 (conditional) — EMAIL
+// ════════════════════════════════════════════
+document.getElementById('pref-email').addEventListener('keydown', e => {
+  if (e.key === 'Enter') confirmEmail();
+});
+
+function confirmEmail() {
+  const email = document.getElementById('pref-email').value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('pref-email').classList.add('invalid');
+    document.getElementById('pref-email').focus();
+    return;
+  }
+  document.getElementById('pref-email').classList.remove('invalid');
+  completeStep('step-email', email);
+  handleSubmit();
+}
+
+// ════════════════════════════════════════════
+//  SUBMIT
+// ════════════════════════════════════════════
+function showStatus(msg, type) {
+  const el = document.getElementById('formStatus');
+  el.textContent = msg;
+  el.className = 'form-status ' + type;
+}
+
+async function handleSubmit() {
+  const alertVal   = document.querySelector('input[name="alertFreq"]:checked')?.value;
+  const email      = alertVal !== 'none' ? document.getElementById('pref-email').value.trim() : 'no-alert@placeholder';
+  const country    = document.getElementById('pref-country').value;
+  const postalCode = document.getElementById('pref-postal').value.trim();
+  const formats    = Array.from(document.querySelectorAll('input[name="classFormat"]:checked')).map(el => el.value);
+  const radius     = parseInt(document.getElementById('pref-radius').value);
+  const btn        = document.getElementById('submitBtn');
+
+  if (btn) btn.disabled = true;
+  showStatus('Saving your preferences…', 'loading');
+
+  try {
+    const resp = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        type: 'subscribeInstructor',
+        email, country, postalCode,
+        city:  geocodedCity,
+        state: geocodedState,
+        lat:   geocodedLat,
+        lng:   geocodedLng,
+        classFormats:   formats.join(', '),
+        distanceRadius: radius,
+        radiusUnit,
+        frequency: alertVal || 'none',
+        timestamp: new Date().toISOString()
+      })
+    });
+
+    const result = await resp.json();
+    if (result.success) {
+      localStorage.setItem(DONE_KEY, '1');
+      revealBoard();
+    } else {
+      throw new Error(result.error || 'Submission failed');
+    }
+  } catch(err) {
+    showStatus('Something went wrong — please try again. (' + err.message + ')', 'error');
+    if (btn) btn.disabled = false;
+  }
+}
+
+// ════════════════════════════════════════════
+//  BOARD TRANSITIONS
+// ════════════════════════════════════════════
+function revealBoard() {
+  const entrance = document.getElementById('entrance');
+  entrance.classList.add('fading');
+  setTimeout(() => {
+    entrance.style.display = 'none';
+    const board = document.getElementById('board');
+    board.style.display = 'block';
+    requestAnimationFrame(() => board.classList.add('visible'));
+  }, 420);
+}
+
+function showBoard() {
+  document.getElementById('entrance').style.display = 'none';
+  const board = document.getElementById('board');
+  board.style.display = 'block';
+  requestAnimationFrame(() => board.classList.add('visible'));
+  initJobBoard();
+}
+
+function showEntranceAgain() {
+  localStorage.removeItem(DONE_KEY);
+  localStorage.removeItem(SKIP_KEY);
+  document.getElementById('board').style.display = 'none';
+  document.getElementById('board').classList.remove('visible');
+  document.getElementById('entrance').style.display = 'block';
+  document.getElementById('entrance').classList.remove('fading');
+}
+
+// ════════════════════════════════════════════
+//  JOB BOARD
+// ════════════════════════════════════════════
+let jobData = [];
+let boardInitialised = false;
+
+function initJobBoard() {
+  if (boardInitialised) return;
+  boardInitialised = true;
+
+  fetch(JOBS_API)
+    .then(r => r.text())
+    .then(text => {
+      const match = text.match(/jobsCallback\(([\s\S]*)\)/);
+      if (!match) throw new Error('Invalid API response');
+      const json = JSON.parse(match[1]);
+      if (json.error) throw new Error(json.error);
+      if (!json.jobs?.length) throw new Error('No jobs found');
+
+      const raw   = json.jobs;
+      const start = raw[0]?.[0] === 'JobId' ? 1 : 0;
+
+      jobData = raw.slice(start).map(r => ({
+        id:       r[0],  studio:   r[2]  || '',
+        city:     r[3]  || '',  state:    r[4]  || '',
+        country:  r[5]  || '',  format:   r[6]  || '',
+        type:     r[7]  || '',  schedule: r[8]  || '',
+        pay:      r[10] || '',  notes:    r[11] || '',
+        email:    r[12] || '',  posted:   r[16] || ''
+      })).filter(j => j.studio.trim());
+
+      setupFilters();
+      renderJobs();
+
+      const rh = new URLSearchParams(window.location.search).get('raiseHand');
+      if (rh) setTimeout(() => {
+        const f = document.getElementById('rh-' + rh);
+        if (f) { f.closest('.job-card').scrollIntoView({ behavior:'smooth', block:'center' }); f.classList.add('open'); }
+      }, 400);
+    })
+    .catch(err => {
+      const s = document.getElementById('jb-status');
+      const g = document.getElementById('jb-grid');
+      if (s) s.textContent = 'Error loading jobs: ' + err.message;
+      if (g) g.innerHTML = '<div class="empty-state">Could not load jobs right now.</div>';
+    });
+}
+
+function setupFilters() {
+  const locs = new Set(), fmts = new Set(), types = new Set();
+  jobData.forEach(j => {
+    if (j.city && j.state) locs.add(j.city + ', ' + j.state);
+    if (j.format) fmts.add(j.format);
+    if (j.type)   types.add(j.type);
+  });
+  document.getElementById('jb-location').innerHTML = '<option value="">All Locations</option>' + [...locs].sort().map(l => `<option>${esc(l)}</option>`).join('');
+  document.getElementById('jb-format').innerHTML   = '<option value="">All Formats</option>'   + [...fmts].sort().map(f => `<option>${esc(f)}</option>`).join('');
+  document.getElementById('jb-position').innerHTML = '<option value="">All Types</option>'     + [...types].sort().map(t => `<option>${esc(t)}</option>`).join('');
+}
+
+function getFiltered() {
+  const search = document.getElementById('jb-search')?.value.toLowerCase() || '';
+  const loc    = document.getElementById('jb-location')?.value || '';
+  const fmt    = document.getElementById('jb-format')?.value || '';
+  const type   = document.getElementById('jb-position')?.value || '';
+  return jobData.filter(j =>
+    (!search || j.studio.toLowerCase().includes(search) || j.city.toLowerCase().includes(search)) &&
+    (!loc    || (j.city + ', ' + j.state) === loc) &&
+    (!fmt    || j.format === fmt) &&
+    (!type   || j.type === type)
+  );
+}
+
+function renderJobs() {
+  const filtered = getFiltered();
+  const grid = document.getElementById('jb-grid');
+  const status = document.getElementById('jb-status');
+  if (!grid) return;
+
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="empty-state">No positions match your filters.</div>';
+    if (status) status.textContent = 'Showing 0 positions';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(job => {
+    const loc   = [job.city, job.state, job.country].filter(Boolean).join(', ');
+    const dbUrl = `https://www.paigelovespilates.com/home-pay?studio=${encodeURIComponent(job.studio)}`;
+    return `
+      <div class="job-card">
+        <a class="job-card-studio" href="${dbUrl}">${esc(job.studio)}</a>
+        <a class="job-card-db-link" href="${dbUrl}">→ See studio in Salary Database</a>
+        <div class="job-card-location">${esc(loc)}</div>
+        <div class="job-badges">
+          ${job.type   ? `<span class="job-badge job-badge-type">${esc(job.type)}</span>` : ''}
+          ${job.format ? `<span class="job-badge job-badge-format">${esc(job.format)}</span>` : ''}
+        </div>
+        <div class="job-card-details">
+          ${job.schedule ? `<div class="job-detail-row"><span class="job-detail-label">Schedule</span><span>${esc(job.schedule)}</span></div>` : ''}
+          <div class="job-detail-row"><span class="job-detail-label">Posted</span><span>${fmtDate(job.posted)}</span></div>
+        </div>
+        ${job.pay   ? `<div class="job-pay">${esc(job.pay)}</div>` : ''}
+        ${job.notes ? `<div class="job-notes"><div class="job-notes-label">From the studio</div>${esc(job.notes)}</div>` : ''}
+        <div class="job-card-cta">
+          <a href="mailto:${esc(job.email)}" class="job-btn job-btn-primary">Reach out</a>
+          <button class="job-btn job-btn-secondary" onclick="toggleRaiseHand('${job.id}')">Raise your hand</button>
+        </div>
+        <div class="raise-hand-form" id="rh-${job.id}">
+          <div class="raise-hand-msg" id="rh-msg-${job.id}"></div>
+          <input type="email" class="raise-hand-input" id="rh-email-${job.id}" placeholder="Your email address">
+          <div class="raise-hand-helper">We'll let the studio know you're interested — they'll reach out directly.</div>
+          <div class="raise-hand-btns">
+            <button class="job-btn job-btn-secondary" onclick="toggleRaiseHand('${job.id}')">Cancel</button>
+            <button class="job-btn job-btn-primary" onclick="submitRaiseHand('${job.id}')">Raise hand</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  if (status) status.textContent = `Showing ${filtered.length} position${filtered.length !== 1 ? 's' : ''}`;
+}
+
+function fmtDate(v) {
+  if (!v || isNaN(v)) return 'Recently posted';
+  const d = new Date((v - 25569) * 86400 * 1000);
+  const now = new Date();
+  if (d > now || d < new Date(now - 365*24*60*60*1000)) return 'Recently posted';
+  return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+}
+
+function esc(t) {
+  const d = document.createElement('div');
+  d.textContent = String(t || '');
+  return d.innerHTML;
+}
+
+window.jobBoardClearFilters = function() {
+  ['jb-search','jb-location','jb-format','jb-position'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.tagName === 'INPUT' ? (el.value='') : (el.value=''); }
+  });
+  renderJobs();
+};
+
+window.toggleRaiseHand = function(jobId) {
+  document.getElementById('rh-' + jobId)?.classList.toggle('open');
+};
+
+window.submitRaiseHand = async function(jobId) {
+  const emailEl = document.getElementById('rh-email-' + jobId);
+  const msgEl   = document.getElementById('rh-msg-' + jobId);
+  const email   = emailEl?.value.trim();
+  if (!email || !email.includes('@')) {
+    if (msgEl) { msgEl.textContent = 'Please enter a valid email.'; msgEl.className = 'raise-hand-msg error'; }
+    return;
+  }
+  if (msgEl) msgEl.className = 'raise-hand-msg';
+  try {
+    const resp  = await fetch(`${JOBS_API}?action=recordInterest&jobId=${encodeURIComponent(jobId)}&email=${encodeURIComponent(email)}&spreadsheetId=${encodeURIComponent(INTERESTS_ID)}`);
+    const text  = await resp.text();
+    const match = text.match(/jobsCallback\(([\s\S]*)\)/);
+    if (!match) throw new Error('Invalid response');
+    const json = JSON.parse(match[1]);
+    if (json.success) {
+      if (msgEl) { msgEl.textContent = json.duplicate ? 'Already submitted!' : 'Done — the studio will be in touch.'; msgEl.className = 'raise-hand-msg success'; }
+      if (emailEl) emailEl.value = '';
+      setTimeout(() => { document.getElementById('rh-' + jobId)?.classList.remove('open'); if (msgEl) msgEl.className = 'raise-hand-msg'; }, 2200);
+    } else throw new Error(json.error);
+  } catch(err) {
+    if (msgEl) { msgEl.textContent = 'Error: ' + err.message; msgEl.className = 'raise-hand-msg error'; }
+  }
+};
+
+['jb-search','jb-location','jb-format','jb-position'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener(el.tagName === 'INPUT' ? 'input' : 'change', renderJobs);
+});
+
+</script>
+</body>
+</html>
