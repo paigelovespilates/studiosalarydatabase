@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Pilates Pay Playbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --olive: #373930;
+  --olive-mid: #4a4f3a;
+  --linen: #EDEBE4;
+  --linen-mid: #E0DDD4;
+  --linen-dark: #C8C4B8;
+  --linen-deeper: #B8B4A6;
+  --amber: #C4993A;
+  --amber-light: #E8C97A;
+  --amber-pale: #F5EDD5;
+  --text: #2A2B25;
+  --text-mid: #5A5B52;
+  --text-light: #8A8B80;
+  --ghost: #D0CEC6;
+  --c1: #4a5220;
+  --c2: #6B5B3E;
+  --c3: #3A5247;
+}
+
+html, body {
+  min-height: 100%;
+  background: var(--linen);
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* GRAIN OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.028;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* LAYOUT */
+.shell {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 52px 28px 80px;
+}
+
+/* HEADER */
+.masthead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 56px;
+  animation: rise 0.6s ease both;
+}
+
+.brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-light);
+}
+
+.brand span {
+  display: block;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--linen-deeper);
+  margin-top: 3px;
+}
+
+/* INTRO */
+.intro {
+  margin-bottom: 60px;
+  animation: rise 0.6s 0.08s ease both;
+}
+
+.intro-kicker {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 16px;
+}
+
+.intro h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 8vw, 52px);
+  font-weight: 300;
+  line-height: 1.08;
+  color: var(--olive);
+  margin-bottom: 18px;
+  letter-spacing: -0.01em;
+}
+
+.intro h1 em {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.intro p {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text-mid);
+  line-height: 1.7;
+  max-width: 400px;
+}
+
+/* PATH CONTAINER */
+.path {
+  position: relative;
+}
+
+/* Vertical thread line */
+.path-line {
+  position: absolute;
+  left: 28px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--linen-dark) 0%, var(--linen-mid) 60%, transparent 100%);
+  transform-origin: top;
+  animation: drawLine 1.2s 0.3s ease both;
+}
+
+@keyframes drawLine {
+  from { transform: scaleY(0); opacity: 0; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+
+/* STEP */
+.step {
+  position: relative;
+  padding-left: 68px;
+  margin-bottom: 0;
+  animation: rise 0.5s ease both;
+}
+
+.step:nth-child(2) { animation-delay: 0.18s; }
+.step:nth-child(3) { animation-delay: 0.26s; }
+.step:nth-child(4) { animation-delay: 0.34s; }
+
+/* Node on the line */
+.step-node {
+  position: absolute;
+  left: 16px;
+  top: 22px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid var(--linen-dark);
+  background: var(--linen);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s, background 0.3s, transform 0.3s;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.step.is-open .step-node {
+  border-color: var(--olive);
+  background: var(--olive);
+  transform: scale(1.1);
+}
+
+.step.is-ghost .step-node {
+  border-color: var(--linen-dark);
+  border-style: dashed;
+  background: transparent;
+}
+
+.node-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--linen-dark);
+  transition: background 0.3s;
+}
+
+.step.is-open .node-dot {
+  background: var(--linen);
+}
+
+/* STEP HEADER — always visible */
+.step-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 16px 0 16px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.step-num-large {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--linen-deeper);
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+  transition: color 0.3s;
+  position: relative;
+  top: -1px;
+}
+
+.step.is-open .step-num-large { color: var(--text-light); }
+
+.step-headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--text-mid);
+  line-height: 1.1;
+  transition: color 0.3s;
+  letter-spacing: -0.01em;
+}
+
+.step.is-open .step-headline {
+  color: var(--text);
+}
+
+.step.is-ghost .step-headline {
+  color: var(--linen-deeper);
+  font-style: italic;
+}
+
+.step-tag {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  align-self: center;
+  transition: opacity 0.3s;
+}
+
+.step.is-ghost .step-tag { opacity: 0.4; }
+
+.tag-1 { background: #E8EDD8; color: var(--c1); }
+.tag-2 { background: #EDE8E0; color: var(--c2); }
+.tag-3 { background: #DDE8E5; color: var(--c3); }
+.tag-soon { background: var(--linen-mid); color: var(--text-light); }
+
+/* STEP BODY — expands */
+.step-body {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+  opacity: 0;
+}
+
+.step.is-open .step-body {
+  max-height: 600px;
+  opacity: 1;
+}
+
+.step-body-inner {
+  padding-bottom: 36px;
+}
+
+/* Big italic number */
+.step-numeral {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 96px;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 0.85;
+  color: var(--linen-mid);
+  letter-spacing: -0.04em;
+  margin-bottom: -12px;
+  display: block;
+  user-select: none;
+  transition: color 0.4s;
+}
+
+.step.is-open .step-numeral { color: var(--linen-dark); }
+
+.step-about {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-mid);
+  line-height: 1.45;
+  margin-bottom: 16px;
+  max-width: 420px;
+}
+
+.step-detail {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-mid);
+  line-height: 1.7;
+  margin-bottom: 22px;
+  max-width: 400px;
+}
+
+/* Attributes pills */
+.step-attrs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.attr {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-mid);
+  background: #fff;
+  border: 1px solid var(--linen-mid);
+  border-radius: 20px;
+  padding: 5px 12px;
+}
+
+/* CTA */
+.step-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--olive);
+  color: var(--linen);
+  border: none;
+  border-radius: 3px;
+  padding: 13px 24px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s, gap 0.2s;
+}
+
+.step-cta:hover {
+  background: var(--olive-mid);
+  transform: translateY(-1px);
+  gap: 14px;
+}
+
+.step-cta svg {
+  width: 13px;
+  height: 13px;
+  stroke: var(--amber-light);
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.step-cta:hover svg { transform: translateX(2px); }
+
+/* Callout nudge inside step */
+.step-nudge {
+  margin-top: 22px;
+  padding: 16px 20px;
+  background: var(--amber-pale);
+  border-left: 2px solid var(--amber);
+  border-radius: 2px;
+}
+
+.step-nudge p {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--text-mid);
+  line-height: 1.6;
+}
+
+.step-nudge strong {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.step-nudge a {
+  color: var(--c2);
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid var(--amber-light);
+  transition: border-color 0.2s;
+}
+
+.step-nudge a:hover { border-color: var(--amber); }
+
+/* DIVIDER between steps */
+.step-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--linen-mid) 20%, var(--linen-mid) 80%, transparent);
+  margin: 0 0 0 0;
+}
+
+/* GHOST steps */
+.step.is-ghost {
+  pointer-events: none;
+  opacity: 0.45;
+}
+
+/* FOOTER NOTE */
+.footer-note {
+  margin-top: 56px;
+  padding-top: 28px;
+  border-top: 1px solid var(--linen-mid);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: rise 0.5s 0.5s ease both;
+}
+
+.footer-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  flex-shrink: 0;
+}
+
+.footer-note p {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--text-light);
+  line-height: 1.55;
+  font-style: italic;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+}
+
+/* ANIMATIONS */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile */
+@media (max-width: 500px) {
+  .shell { padding: 36px 20px 60px; }
+  .step-head { gap: 10px; }
+  .step-headline { font-size: 22px; }
+  .step-tag { display: none; }
+  .step-numeral { font-size: 72px; }
+  .step-about { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="masthead">
+    <div class="brand">
+      Paige Loves Pilates
+      <span>Member Portal</span>
+    </div>
+  </div>
+
+  <div class="intro">
+    <div class="intro-kicker">Your pay playbook</div>
+    <h1>Know it.<br><em>Own it.</em><br>Find it.</h1>
+    <p>A three-step process for understanding your market, building your case, and landing the opportunity that actually fits.</p>
+  </div>
+
+  <div class="path">
+    <div class="path-line"></div>
+
+    <!-- STEP 1 -->
+    <div class="step is-open" data-step="1">
+      <div class="step-node"><div class="node-dot"></div></div>
+      <div class="step-head">
+        <span class="step-num-large">01</span>
+        <span class="step-headline">Know the market</span>
+        <span class="step-tag tag-1">Salary Database</span>
+      </div>
+      <div class="step-body">
+        <div class="step-body-inner">
+          <span class="step-numeral">1</span>
+          <p class="step-about">Real pay data from 400+ instructors — filtered to what actually matches your situation.</p>
+          <p class="step-detail">Before you can negotiate, you need to know what the market looks like. Filter by class format, experience level, and city to see what instructors like you are actually earning — not what studios wish you'd accept.</p>
+          <div class="step-attrs">
+            <span class="attr">400+ submissions</span>
+            <span class="attr">Reformer · Mat · Sculpt · more</span>
+            <span class="attr">US + international</span>
+            <span class="attr">Base & variable pay</span>
+          </div>
+          <a href="www.paigelovespilates.com/database" class="step-cta">
+            Explore the data
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <div class="step-nudge">
+            <p>Once you've filtered to your market, <strong>Step 2 turns that data into your personal ask range</strong> — with language to back it up. <a href="www.paigelovespilates.com/worth" onclick="openStep(2); return false;">Go to Step 2 →</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-divider"></div>
+
+    <!-- STEP 2 -->
+    <div class="step" data-step="2">
+      <div class="step-node"><div class="node-dot"></div></div>
+      <div class="step-head">
+        <span class="step-num-large">02</span>
+        <span class="step-headline">Identify where you fit</span>
+        <span class="step-tag tag-2">Negotiation Brief</span>
+      </div>
+      <div class="step-body">
+        <div class="step-body-inner">
+          <span class="step-numeral">2</span>
+          <p class="step-about">Your format, experience, and city — turned into a personalized ask range built from live data.</p>
+          <p class="step-detail">The negotiation brief pulls from the same database and filters it to you specifically. You'll get a recommended range, context on where you sit in the market, and language you can actually use in the conversation.</p>
+          <div class="step-attrs">
+            <span class="attr">Takes 3 minutes</span>
+            <span class="attr">City-tier adjusted</span>
+            <span class="attr">New vs. veteran ranges</span>
+            <span class="attr">Live data</span>
+          </div>
+          <a href="www.paigelovespilates.com/worth" class="step-cta">
+            Build my brief
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <div class="step-nudge">
+            <p>Brief in hand? <strong>Step 3 is where you put it to work</strong> — pay-transparent roles, real-time alerts, and a way to raise your hand to studios that are hiring. <a href="www.paigelovespilates.com/jobs" onclick="openStep(3); return false;">Go to Step 3 →</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-divider"></div>
+
+    <!-- STEP 3 -->
+    <div class="step" data-step="3">
+      <div class="step-node"><div class="node-dot"></div></div>
+      <div class="step-head">
+        <span class="step-num-large">03</span>
+        <span class="step-headline">Find your opportunity</span>
+        <span class="step-tag tag-3">Job Board</span>
+      </div>
+      <div class="step-body">
+        <div class="step-body-inner">
+          <span class="step-numeral">3</span>
+          <p class="step-about">Pay-transparent roles, real-time alerts, and a way to raise your hand before a job is even posted.</p>
+          <p class="step-detail">The job board only lists roles where studios are upfront about pay. Set an alert for your criteria, or use Raise Your Hand to signal interest to studios actively hiring — before they've even posted anything publicly.</p>
+          <div class="step-attrs">
+            <span class="attr">Pay-transparent only</span>
+            <span class="attr">Real-time alerts</span>
+            <span class="attr">Raise your hand</span>
+            <span class="attr">Curated roles</span>
+          </div>
+          <a href="www.paigelovespilates.com/jobs" class="step-cta">
+            Browse the board
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-divider"></div>
+
+    <!-- GHOST: Coming soon -->
+    <div class="step is-ghost">
+      <div class="step-node"><div class="node-dot"></div></div>
+      <div class="step-head">
+        <span class="step-num-large">—</span>
+        <span class="step-headline">More coming</span>
+        <span class="step-tag tag-soon">In development</span>
+      </div>
+    </div>
+
+  </div><!-- /path -->
+
+  <div class="footer-note">
+    <div class="footer-dot"></div>
+    <p><em>Every tool in this platform is built on real data, submitted by instructors like you.</em></p>
+  </div>
+
+</div><!-- /shell -->
+
+<script>
+  function openStep(n) {
+    document.querySelectorAll('.step:not(.is-ghost)').forEach(s => {
+      s.classList.remove('is-open');
+    });
+    const target = document.querySelector(`.step[data-step="${n}"]`);
+    if (target) {
+      target.classList.add('is-open');
+      setTimeout(() => {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 60);
+    }
+  }
+
+  document.querySelectorAll('.step:not(.is-ghost)').forEach(step => {
+    step.querySelector('.step-head').addEventListener('click', () => {
+      const isOpen = step.classList.contains('is-open');
+      document.querySelectorAll('.step:not(.is-ghost)').forEach(s => s.classList.remove('is-open'));
+      if (!isOpen) step.classList.add('is-open');
+    });
+  });
+</script>
+</body>
+</html>
