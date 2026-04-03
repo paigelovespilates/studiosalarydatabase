@@ -155,14 +155,12 @@ body {
 
 /* ── Step ────────────────────────────────── */
 .form-step {
-  display: none;
   opacity: 0;
   margin-bottom: 0;
   transition: opacity 0.35s ease;
 }
 
 .form-step.first-step {
-  display: block;
   opacity: 1;
   margin-bottom: 36px;
 }
@@ -487,18 +485,8 @@ input[type="range"]::-webkit-slider-thumb {
   flex-shrink: 0;
 }
 
-/* ── Final submit ────────────────────────── */
-.final-actions {
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  transition: max-height 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
-}
-
-.final-actions.revealed {
-  max-height: 200px;
-  opacity: 1;
-}
+/* final-actions starts hidden via inline style */
+.final-actions { opacity: 0; transition: opacity 0.35s ease; }
 
 .final-submit-btn {
   display: inline-flex;
@@ -932,7 +920,7 @@ input[type="range"]::-webkit-slider-thumb {
     </div>
 
     <!-- Step 2: Distance -->
-    <div class="form-step" id="step-radius">
+    <div class="form-step" id="step-radius" style="display:none;">
       <div class="step-label">
         <div class="step-check"></div>
         <span class="step-num-badge">Step 2 of 4</span>
@@ -957,7 +945,7 @@ input[type="range"]::-webkit-slider-thumb {
     </div>
 
     <!-- Step 3: Formats -->
-    <div class="form-step" id="step-formats">
+    <div class="form-step" id="step-formats" style="display:none;">
       <div class="step-label">
         <div class="step-check"></div>
         <span class="step-num-badge">Step 3 of 4</span>
@@ -995,7 +983,7 @@ input[type="range"]::-webkit-slider-thumb {
     </div>
 
     <!-- Step 4: Alert preference -->
-    <div class="form-step" id="step-alerts">
+    <div class="form-step" id="step-alerts" style="display:none;">
       <div class="step-label">
         <div class="step-check"></div>
         <span class="step-num-badge">Step 4 of 4</span>
@@ -1033,7 +1021,7 @@ input[type="range"]::-webkit-slider-thumb {
     </div>
 
     <!-- Step 5: Email — only if they want alerts -->
-    <div class="form-step" id="step-email">
+    <div class="form-step" id="step-email" style="display:none;">
       <div class="step-label">
         <div class="step-check"></div>
         <span class="step-num-badge">Almost done</span>
@@ -1050,7 +1038,7 @@ input[type="range"]::-webkit-slider-thumb {
     </div>
 
     <!-- Final actions (no-alert path) -->
-    <div class="final-actions" id="finalActions">
+    <div class="final-actions" id="finalActions" style="display:none;">
       <div class="form-status" id="formStatus"></div>
       <button class="final-submit-btn" id="submitBtn" onclick="handleSubmit()">
         Take me to the board
@@ -1173,11 +1161,13 @@ function completeStep(stepId, answerText) {
 function revealStep(stepId) {
   setTimeout(() => {
     const el = document.getElementById(stepId);
-    el.style.display     = 'block';
-    el.style.maxHeight   = '600px';
-    el.style.opacity     = '1';
+    el.style.display      = 'block';
     el.style.marginBottom = '36px';
-    setTimeout(() => el.scrollIntoView({ behavior:'smooth', block:'nearest' }), 80);
+    // Fade in on next frame so transition works
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => { el.style.opacity = '1'; });
+    });
+    setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
   }, 160);
 }
 
@@ -1254,10 +1244,9 @@ function onAlertChange() {
     // No email needed — show final button directly
     setTimeout(() => {
     const fa = document.getElementById('finalActions');
-    fa.style.display     = 'block';
-    fa.style.maxHeight   = '200px';
-    fa.style.opacity     = '1';
-    fa.scrollIntoView({ behavior:'smooth', block:'nearest' });
+    fa.style.display = 'block';
+    requestAnimationFrame(() => { requestAnimationFrame(() => { fa.style.opacity = '1'; }); });
+    setTimeout(() => fa.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
     }, 280);
   } else {
     // Wants alerts — ask for email
