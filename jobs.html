@@ -179,12 +179,22 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
 .board-title em { font-style: italic; }
 .board-alert-btn { display: inline-flex; align-items: center; gap: 8px; font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(237,235,228,0.6); border: 1px solid rgba(237,235,228,0.2); border-radius: 2px; padding: 9px 16px; cursor: pointer; background: transparent; }
 .board-alert-btn:hover { color: #EDEBE4; border-color: rgba(237,235,228,0.5); }
-.board-filters { padding: 24px 56px; background: var(--linen); border-bottom: 1px solid var(--rule); display: grid; grid-template-columns: 1fr repeat(3, auto) auto; gap: 12px; align-items: end; }
+.board-filters { padding: 20px 56px; background: var(--linen); border-bottom: 1px solid var(--rule); display: flex; flex-direction: column; gap: 12px; }
+.filter-row-top { display: flex; }
+.filter-row-bottom { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.filter-search-wrap { position: relative; width: 100%; }
+.filter-search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.filter-search { padding-left: 36px !important; width: 100%; }
 .filter-group { display: flex; flex-direction: column; gap: 5px; }
 .filter-label { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
-.filter-input { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 300; color: var(--dark); background: #fff; border: 1px solid var(--rule); border-radius: 2px; padding: 9px 12px; outline: none; appearance: none; -webkit-appearance: none; min-width: 140px; }
+.filter-input { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 300; color: var(--dark); background: #fff; border: 1px solid var(--rule); border-radius: 20px; padding: 9px 16px; outline: none; appearance: none; -webkit-appearance: none; }
 .filter-input:focus { border-color: var(--olive); }
-.clear-btn { font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: transparent; border: 1px solid var(--rule); border-radius: 2px; padding: 9px 14px; cursor: pointer; align-self: end; }
+.filter-select { padding-right: 32px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239A9890' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; min-width: 140px; }
+.filter-nearme { display: inline-flex; align-items: center; gap: 7px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 400; color: var(--mid); background: #fff; border: 1px solid var(--rule); border-radius: 20px; padding: 9px 16px; cursor: pointer; white-space: nowrap; transition: border-color 0.15s, color 0.15s, background 0.15s; }
+.filter-nearme:hover { border-color: var(--olive); color: var(--olive); }
+.filter-nearme.active { background: var(--olive); color: #EDEBE4; border-color: var(--olive); }
+.filter-nearme.active svg { stroke: #EDEBE4; }
+.clear-btn { font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: transparent; border: 1px solid var(--rule); border-radius: 20px; padding: 9px 14px; cursor: pointer; }
 .clear-btn:hover { color: var(--dark); border-color: var(--dark); }
 .board-body { padding: 36px 56px 80px; }
 .board-status { font-size: 11px; color: var(--muted); margin-bottom: 28px; }
@@ -222,6 +232,33 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
 .raise-hand-msg { font-size: 12px; padding: 8px 12px; border-radius: 2px; margin-bottom: 10px; display: none; }
 .raise-hand-msg.success { display: block; color: #2d6b45; background: #E8F4EC; }
 .raise-hand-msg.error   { display: block; color: #8B2020; background: #FAECEC; }
+
+/* ── Raise your hand tooltip ── */
+.rh-tooltip-wrap { position: relative; }
+.rh-tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  width: 220px;
+  background: var(--dark);
+  color: #EDEBE4;
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 1.55;
+  padding: 10px 13px;
+  border-radius: 4px;
+  z-index: 10;
+  pointer-events: none;
+}
+.rh-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%; right: 18px;
+  border: 6px solid transparent;
+  border-top-color: var(--dark);
+}
+.rh-tooltip-wrap:hover .rh-tooltip { display: block; }
 .empty-state { padding: 64px 0; text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic; color: var(--muted); }
 
 /* ── Mobile ── */
@@ -231,7 +268,9 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
   .loc-row  { grid-template-columns: 1fr; }
   .format-grid { grid-template-columns: 1fr; }
   .board-header  { padding: 36px 24px 32px; }
-  .board-filters { padding: 20px 24px; grid-template-columns: 1fr; }
+  .board-filters { padding: 16px 24px; }
+  .filter-row-bottom { gap: 8px; }
+  .filter-select { min-width: 0; }
   .board-body    { padding: 28px 24px 60px; }
   .jobs-grid     { grid-template-columns: 1fr; }
   .job-card-cta  { grid-template-columns: 1fr; }
@@ -410,11 +449,21 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
     </div>
   </div>
   <div class="board-filters">
-    <div class="filter-group"><span class="filter-label">Search</span><input class="filter-input" id="jb-search" type="text" placeholder="Studio or city…"></div>
-    <div class="filter-group"><span class="filter-label">Location</span><select class="filter-input" id="jb-location"></select></div>
-    <div class="filter-group"><span class="filter-label">Format</span><select class="filter-input" id="jb-format"></select></div>
-    <div class="filter-group"><span class="filter-label">Type</span><select class="filter-input" id="jb-position"></select></div>
-    <button type="button" class="clear-btn" onclick="jobBoardClearFilters()">Clear</button>
+    <div class="filter-row-top">
+      <div class="filter-search-wrap">
+        <svg class="filter-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input class="filter-input filter-search" id="jb-search" type="text" placeholder="Search studio or city…">
+      </div>
+    </div>
+    <div class="filter-row-bottom">
+      <button type="button" class="filter-nearme" id="jb-nearme" onclick="toggleNearMe()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+        Near Me
+      </button>
+      <div class="filter-group"><select class="filter-input filter-select" id="jb-format"></select></div>
+      <div class="filter-group"><select class="filter-input filter-select" id="jb-position"></select></div>
+      <button type="button" class="clear-btn" onclick="jobBoardClearFilters()">Clear</button>
+    </div>
   </div>
   <div class="board-body">
     <div class="board-status"><span id="jb-status">Loading…</span></div>
@@ -452,7 +501,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  ['jb-search','jb-location','jb-format','jb-position'].forEach(function(id) {
+  ['jb-search','jb-format','jb-position'].forEach(function(id) {
     const el = document.getElementById(id);
     if (el) el.addEventListener(el.tagName === 'INPUT' ? 'input' : 'change', renderJobs);
   });
@@ -634,7 +683,8 @@ function initJobBoard() {
         id: r[0], studio: r[2]||'', city: r[3]||'', state: r[4]||'',
         country: r[5]||'', format: r[6]||'', type: r[7]||'',
         schedule: r[8]||'', pay: r[10]||'', notes: r[11]||'',
-        email: r[12]||'', posted: r[16]||''
+        email: r[12]||'', posted: r[16]||'',
+        lat: r[17]||'', lng: r[18]||''
       })).filter(j => j.studio.trim());
       setupFilters();
       renderJobs();
@@ -653,26 +703,29 @@ function initJobBoard() {
 }
 
 function setupFilters() {
-  const locs=new Set(), fmts=new Set(), types=new Set();
+  const fmts=new Set(), types=new Set();
   jobData.forEach(j => {
-    if (j.city && j.state) locs.add(j.city+', '+j.state);
     if (j.format) fmts.add(j.format);
     if (j.type)   types.add(j.type);
   });
-  document.getElementById('jb-location').innerHTML = '<option value="">All Locations</option>' + [...locs].sort().map(l=>`<option>${esc(l)}</option>`).join('');
-  document.getElementById('jb-format').innerHTML   = '<option value="">All Formats</option>'   + [...fmts].sort().map(f=>`<option>${esc(f)}</option>`).join('');
-  document.getElementById('jb-position').innerHTML = '<option value="">All Types</option>'     + [...types].sort().map(t=>`<option>${esc(t)}</option>`).join('');
+  document.getElementById('jb-format').innerHTML   = '<option value="">All Formats</option>'        + [...fmts].sort().map(f=>`<option>${esc(f)}</option>`).join('');
+  document.getElementById('jb-position').innerHTML = '<option value="">Employment Type</option>'    + [...types].sort().map(t=>`<option>${esc(t)}</option>`).join('');
 }
 
 function getFiltered() {
   const search = document.getElementById('jb-search')?.value.toLowerCase()||'';
-  const loc    = document.getElementById('jb-location')?.value||'';
   const fmt    = document.getElementById('jb-format')?.value||'';
   const type   = document.getElementById('jb-position')?.value||'';
-  return jobData.filter(j =>
-    (!search || j.studio.toLowerCase().includes(search) || j.city.toLowerCase().includes(search)) &&
-    (!loc || (j.city+', '+j.state)===loc) && (!fmt || j.format===fmt) && (!type || j.type===type)
-  );
+  return jobData.filter(j => {
+    if (search && !j.studio.toLowerCase().includes(search) && !j.city.toLowerCase().includes(search)) return false;
+    if (fmt  && j.format !== fmt)  return false;
+    if (type && j.type   !== type) return false;
+    if (nearMeActive && userCoords && j.lat && j.lng) {
+      const dist = haversineKm(userCoords.lat, userCoords.lng, parseFloat(j.lat), parseFloat(j.lng));
+      if (dist > nearMeRadiusKm) return false;
+    }
+    return true;
+  });
 }
 
 function renderJobs() {
@@ -704,7 +757,10 @@ function renderJobs() {
       ${job.notes ? `<div class="job-notes"><div class="job-notes-label">From the studio</div>${esc(job.notes)}</div>` : ''}
       <div class="job-card-cta">
         <a href="mailto:${esc(job.email)}" class="job-btn job-btn-primary">Reach out</a>
-        <button class="job-btn job-btn-secondary" onclick="toggleRaiseHand('${job.id}')">Raise your hand</button>
+        <div class="rh-tooltip-wrap">
+          <button class="job-btn job-btn-secondary" onclick="toggleRaiseHand('${job.id}')">Raise your hand</button>
+          <div class="rh-tooltip">Let the studio know you're interested — we'll send them your email so they can reach out directly.</div>
+        </div>
       </div>
       <div class="raise-hand-form" id="rh-${job.id}">
         <div class="raise-hand-msg" id="rh-msg-${job.id}"></div>
@@ -729,10 +785,56 @@ function fmtDate(v) {
 
 function esc(t) { const d=document.createElement('div'); d.textContent=String(t||''); return d.innerHTML; }
 
+// ── Near Me ───────────────────────────────────────
+let nearMeActive = false;
+let userCoords   = null;
+const nearMeRadiusKm = 50;
+
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371, dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+window.toggleNearMe = function() {
+  const btn = document.getElementById('jb-nearme');
+  if (nearMeActive) {
+    nearMeActive = false;
+    btn.classList.remove('active');
+    renderJobs();
+    return;
+  }
+  if (userCoords) {
+    nearMeActive = true;
+    btn.classList.add('active');
+    renderJobs();
+    return;
+  }
+  btn.textContent = 'Locating…';
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      userCoords   = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      nearMeActive = true;
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Near Me`;
+      btn.classList.add('active');
+      renderJobs();
+    },
+    () => {
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Near Me`;
+      alert('Location access was denied. Please allow location in your browser settings.');
+    }
+  );
+};
+
 window.jobBoardClearFilters = function() {
-  ['jb-search','jb-location','jb-format','jb-position'].forEach(id => {
+  ['jb-search','jb-format','jb-position'].forEach(id => {
     const el=document.getElementById(id); if(el){el.value='';}
   });
+  if (nearMeActive) {
+    nearMeActive = false;
+    const btn = document.getElementById('jb-nearme');
+    if (btn) btn.classList.remove('active');
+  }
   renderJobs();
 };
 
