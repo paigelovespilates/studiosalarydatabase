@@ -302,11 +302,12 @@
 
   @media (max-width:768px) { select,input,textarea { font-size:16px !important; } }
 
+
   /* ── Job Board Banner (Option A) ─────────────────────────── */
   #jb-banner { background:#373930; padding:10px 40px; display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; box-sizing:border-box; }
-  #jb-banner .jb-text { font-family:'DM Sans','Helvetica Neue',sans-serif; font-size:13px; font-weight:400; color:#EDEBE4; }
+  #jb-banner .jb-text { font-family:'Cormorant Garamond',Georgia,serif; font-size:16px; font-weight:300; color:#EDEBE4; }
   #jb-banner .jb-text strong { font-weight:500; }
-  #jb-banner .jb-cta { font-family:'DM Sans','Helvetica Neue',sans-serif; background:#EDEBE4; color:#373930; font-size:12px; font-weight:500; padding:6px 16px; border-radius:99px; white-space:nowrap; flex-shrink:0; text-decoration:none; border:none; cursor:pointer; transition:opacity 0.15s; }
+  #jb-banner .jb-cta { font-family:'Cormorant Garamond',Georgia,serif; background:#EDEBE4; color:#373930; font-size:15px; font-weight:400; padding:6px 18px; border-radius:99px; white-space:nowrap; flex-shrink:0; text-decoration:none; border:none; cursor:pointer; transition:opacity 0.15s; }
   #jb-banner .jb-cta:hover { opacity:0.85; }
   #jb-banner .jb-close { font-size:16px; color:rgba(237,235,228,0.45); cursor:pointer; flex-shrink:0; line-height:1; background:none; border:none; padding:0 0 0 8px; transition:color 0.15s; }
   #jb-banner .jb-close:hover { color:rgba(237,235,228,0.8); }
@@ -316,22 +317,15 @@
   .jb-inline-inner { display:flex; align-items:center; gap:14px; background:#fff; border:1px solid var(--border); border-radius:12px; padding:14px 18px; max-width:100%; box-sizing:border-box; }
   .jb-inline-icon { width:36px; height:36px; border-radius:8px; background:#373930; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
   .jb-inline-copy { flex:1; min-width:0; }
-  .jb-inline-copy .jb-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:16px; font-weight:500; color:#2e2d29; }
-  .jb-inline-copy .jb-sub { font-family:'DM Sans','Helvetica Neue',sans-serif; font-size:12px; color:#757263; margin-top:2px; }
-  .jb-inline-btn { font-family:'DM Sans','Helvetica Neue',sans-serif; background:#373930; color:#EDEBE4; font-size:12px; font-weight:500; padding:8px 16px; border-radius:99px; white-space:nowrap; flex-shrink:0; text-decoration:none; border:none; cursor:pointer; transition:opacity 0.15s; }
+  .jb-inline-copy .jb-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:18px; font-weight:500; color:#2e2d29; }
+  .jb-inline-copy .jb-sub { font-family:'Cormorant Garamond',Georgia,serif; font-size:14px; font-weight:300; color:#757263; margin-top:2px; }
+  .jb-inline-btn { font-family:'Cormorant Garamond',Georgia,serif; background:#373930; color:#EDEBE4 !important; -webkit-text-fill-color:#EDEBE4 !important; font-size:15px; font-weight:400; padding:8px 18px; border-radius:99px; white-space:nowrap; flex-shrink:0; text-decoration:none; border:none; cursor:pointer; transition:opacity 0.15s; display:inline-block; }
   .jb-inline-btn:hover { opacity:0.8; }
 
   #db-wrap[data-mobile] #jb-banner { padding:10px 16px !important; }
-  #db-wrap[data-mobile] #jb-banner .jb-text { font-size:12px !important; }
+  #db-wrap[data-mobile] #jb-banner .jb-text { font-size:14px !important; }
   #db-wrap[data-mobile] #jb-inline { padding:12px 16px !important; }
   #db-wrap[data-mobile] .jb-inline-copy .jb-sub { display:none; }
-
-  @media (max-width:640px) {
-    #jb-banner { padding:10px 16px !important; }
-    #jb-banner .jb-text { font-size:12px !important; }
-    #jb-inline { padding:12px 16px !important; }
-    .jb-inline-copy .jb-sub { display:none; }
-  }
 
   @media (max-width:640px) {
     header,.filter-section,main { padding-left:16px !important; padding-right:16px !important; }
@@ -467,7 +461,6 @@
       <button class="clear-filters-btn" id="clear-filters-btn" onclick="clearFilters()">✕ Clear</button>
     </div>
   </div>
-</div>
 
 <div id="jb-inline">
   <div class="jb-inline-inner">
@@ -485,6 +478,7 @@
     <a class="jb-inline-btn" href="https://www.paigelovespilates.com/pilates-job-board" target="_blank">Browse jobs →</a>
   </div>
 </div>
+
 
 <main>
   <div class="legend">
