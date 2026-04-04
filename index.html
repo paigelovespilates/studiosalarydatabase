@@ -302,6 +302,37 @@
 
   @media (max-width:768px) { select,input,textarea { font-size:16px !important; } }
 
+  /* ── Job Board Banner (Option A) ─────────────────────────── */
+  #jb-banner { background:#373930; padding:10px 40px; display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; box-sizing:border-box; }
+  #jb-banner .jb-text { font-family:'DM Sans','Helvetica Neue',sans-serif; font-size:13px; font-weight:400; color:#EDEBE4; }
+  #jb-banner .jb-text strong { font-weight:500; }
+  #jb-banner .jb-cta { font-family:'DM Sans','Helvetica Neue',sans-serif; background:#EDEBE4; color:#373930; font-size:12px; font-weight:500; padding:6px 16px; border-radius:99px; white-space:nowrap; flex-shrink:0; text-decoration:none; border:none; cursor:pointer; transition:opacity 0.15s; }
+  #jb-banner .jb-cta:hover { opacity:0.85; }
+  #jb-banner .jb-close { font-size:16px; color:rgba(237,235,228,0.45); cursor:pointer; flex-shrink:0; line-height:1; background:none; border:none; padding:0 0 0 8px; transition:color 0.15s; }
+  #jb-banner .jb-close:hover { color:rgba(237,235,228,0.8); }
+
+  /* ── Job Board Inline Card (Option B) ────────────────────── */
+  #jb-inline { padding:14px 40px; border-bottom:1px solid var(--border-light); background:#eeedeb; }
+  .jb-inline-inner { display:flex; align-items:center; gap:14px; background:#fff; border:1px solid var(--border); border-radius:12px; padding:14px 18px; max-width:100%; box-sizing:border-box; }
+  .jb-inline-icon { width:36px; height:36px; border-radius:8px; background:#373930; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .jb-inline-copy { flex:1; min-width:0; }
+  .jb-inline-copy .jb-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:16px; font-weight:500; color:#2e2d29; }
+  .jb-inline-copy .jb-sub { font-family:'DM Sans','Helvetica Neue',sans-serif; font-size:12px; color:#757263; margin-top:2px; }
+  .jb-inline-btn { font-family:'DM Sans','Helvetica Neue',sans-serif; background:#373930; color:#EDEBE4; font-size:12px; font-weight:500; padding:8px 16px; border-radius:99px; white-space:nowrap; flex-shrink:0; text-decoration:none; border:none; cursor:pointer; transition:opacity 0.15s; }
+  .jb-inline-btn:hover { opacity:0.8; }
+
+  #db-wrap[data-mobile] #jb-banner { padding:10px 16px !important; }
+  #db-wrap[data-mobile] #jb-banner .jb-text { font-size:12px !important; }
+  #db-wrap[data-mobile] #jb-inline { padding:12px 16px !important; }
+  #db-wrap[data-mobile] .jb-inline-copy .jb-sub { display:none; }
+
+  @media (max-width:640px) {
+    #jb-banner { padding:10px 16px !important; }
+    #jb-banner .jb-text { font-size:12px !important; }
+    #jb-inline { padding:12px 16px !important; }
+    .jb-inline-copy .jb-sub { display:none; }
+  }
+
   @media (max-width:640px) {
     header,.filter-section,main { padding-left:16px !important; padding-right:16px !important; }
     header { padding-top:20px !important; padding-bottom:8px !important; }
@@ -369,6 +400,12 @@
 <body>
 <div id="db-wrap">
 
+<div id="jb-banner">
+  <div class="jb-text"><strong>New:</strong> Studios in our database are posting open jobs — browse the job board</div>
+  <a class="jb-cta" href="https://www.paigelovespilates.com/pilates-job-board" target="_blank">See open roles →</a>
+  <button class="jb-close" onclick="document.getElementById('jb-banner').style.display='none'" aria-label="Dismiss">×</button>
+</div>
+
 <header>
   <div class="header-inner">
     <div class="logo-area">
@@ -429,6 +466,23 @@
       <div class="result-count">Showing <span id="result-num">—</span> studios <span id="sort-indicator" style="display:none;font-size:11px;color:var(--accent);margin-left:6px;">📍 sorted by distance</span></div>
       <button class="clear-filters-btn" id="clear-filters-btn" onclick="clearFilters()">✕ Clear</button>
     </div>
+  </div>
+</div>
+
+<div id="jb-inline">
+  <div class="jb-inline-inner">
+    <div class="jb-inline-icon">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1.5" y="3.5" width="13" height="9" rx="1.5" stroke="#EDEBE4" stroke-width="1.25"/>
+        <path d="M5 3.5V2.5C5 2 5.5 1.5 6 1.5H10C10.5 1.5 11 2 11 2.5V3.5" stroke="#EDEBE4" stroke-width="1.25"/>
+        <line x1="1.5" y1="6.5" x2="14.5" y2="6.5" stroke="#EDEBE4" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="jb-inline-copy">
+      <div class="jb-title">Looking for your next studio job?</div>
+      <div class="jb-sub">New listings added weekly from studios in this database</div>
+    </div>
+    <a class="jb-inline-btn" href="https://www.paigelovespilates.com/pilates-job-board" target="_blank">Browse jobs →</a>
   </div>
 </div>
 
