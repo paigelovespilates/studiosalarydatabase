@@ -167,32 +167,24 @@
   .handraise-header-btn { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; border:1.5px solid #dddbd6; background:transparent; cursor:pointer; font-size:14px; transition:border-color 0.2s,background 0.2s; flex-shrink:0; line-height:1; padding:0; }
   .handraise-header-btn:hover { border-color:var(--accent-deep); background:var(--sand); }
   .handraise-header-btn.submitted { border-color:#5c8a5c; background:#f0f5f0; }
-  .hr-modal-overlay { position:fixed; inset:0; background:rgba(46,45,41,0.5); z-index:1000; display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; pointer-events:none; transition:opacity 0.2s; }
-  .hr-modal-overlay.open { opacity:1; pointer-events:all; }
-  body.db-mobile .hr-modal-overlay { align-items:flex-end; padding:0; }
-  .hr-modal { background:white; border-radius:16px; max-width:420px; width:100%; padding:28px; box-shadow:0 24px 80px rgba(46,45,41,0.2); transform:translateY(12px); transition:transform 0.2s; }
-  .hr-modal-overlay.open .hr-modal { transform:translateY(0); }
-  body.db-mobile .hr-modal { border-radius:20px 20px 0 0; max-width:100%; padding:20px 20px 32px; transform:translateY(100%); }
-  body.db-mobile .hr-modal-overlay.open .hr-modal { transform:translateY(0); }
-  .hr-modal-handle { display:none; }
-  body.db-mobile .hr-modal-handle { display:block; width:36px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 16px; }
-  .hr-modal-title { font-family:'Cormorant Garamond','Palatino Linotype',Palatino,Georgia,serif !important; font-size:20px; font-weight:500; color:var(--charcoal); margin-bottom:4px; }
-  .hr-modal-studio { font-size:13px; color:var(--text-muted); margin-bottom:16px; font-style:italic; }
-  .hr-modal-label { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; display:block; }
-  .hr-modal-input { width:100%; padding:10px 13px; border:1.5px solid var(--border); border-radius:8px; font-family:'Cormorant Garamond',Georgia,serif !important; font-size:14px; color:var(--text); background:var(--sand); outline:none; transition:border-color 0.2s; margin-bottom:14px; }
-  .hr-modal-input:focus { border-color:var(--accent); }
-  .hr-modal-note { font-size:11px; color:var(--stone); line-height:1.5; margin-bottom:20px; font-style:italic; }
-  .hr-modal-actions { display:flex; gap:10px; }
-  .hr-modal-cancel { flex:1; padding:10px 0; background:transparent; border:1.5px solid var(--border); border-radius:8px; font-family:'Cormorant Garamond',Georgia,serif !important; font-size:13px; color:var(--stone); cursor:pointer; transition:border-color 0.2s; }
-  .hr-modal-cancel:hover { border-color:var(--accent); color:var(--accent-deep); }
-  .hr-modal-submit { flex:2; padding:10px 0; background:var(--accent-deep); border:none; border-radius:8px; font-family:'Cormorant Garamond',Georgia,serif !important; font-size:13px; color:white; cursor:pointer; font-weight:500; letter-spacing:0.03em; transition:background 0.2s; }
-  .hr-modal-submit:hover { background:var(--charcoal); }
-  .hr-modal-submit:disabled { background:var(--stone); cursor:not-allowed; }
-  .hr-modal-error { font-size:11px; color:#a04040; margin-top:-10px; margin-bottom:12px; display:none; }
-  .hr-modal-success { text-align:center; padding:12px 0 4px; }
-  .hr-modal-success-icon { font-size:28px; margin-bottom:8px; }
-  .hr-modal-success-msg { font-family:'Cormorant Garamond',Georgia,serif !important; font-size:17px; color:var(--charcoal); margin-bottom:6px; font-weight:500; }
-  .hr-modal-success-sub { font-size:12px; color:var(--stone); line-height:1.5; }
+  /* ── Hand-raise inline form ─────────────────────────────────── */
+  .hr-inline { display:none; padding:12px 22px 14px; background:#fafaf8; border-bottom:1px solid var(--border-light); }
+  .hr-inline.open { display:block; }
+  .hr-inline-header-slot { border-bottom:1px solid var(--border-light); border-top:none; }
+  .hr-inline-bottom-slot { border-top:1px solid var(--border-light); border-bottom:none; }
+  .hr-inline-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .hr-inline-label { font-size:11px; color:var(--accent-deep); font-weight:500; letter-spacing:0.04em; font-style:italic; }
+  .hr-inline-close { background:none; border:none; font-size:18px; color:var(--stone); cursor:pointer; line-height:1; padding:0 2px; }
+  .hr-inline-input { width:100%; padding:9px 12px; border:1.5px solid var(--border); border-radius:8px; font-family:'Cormorant Garamond',Georgia,serif !important; font-size:14px; color:var(--text); background:#fff; outline:none; transition:border-color 0.2s; margin-bottom:6px; }
+  .hr-inline-input:focus { border-color:var(--accent); }
+  .hr-inline-note { font-size:11px; color:var(--stone); font-style:italic; line-height:1.5; margin-bottom:10px; }
+  .hr-inline-error { font-size:11px; color:#a04040; margin-bottom:6px; display:none; }
+  .hr-inline-actions { display:flex; gap:8px; }
+  .hr-inline-cancel { flex:1; padding:8px 0; background:transparent; border:1.5px solid var(--border); border-radius:8px; font-family:'Cormorant Garamond',Georgia,serif !important; font-size:12px; color:var(--stone); cursor:pointer; }
+  .hr-inline-submit { flex:2; padding:8px 0; background:var(--accent-deep); border:none; border-radius:8px; font-family:'Cormorant Garamond',Georgia,serif !important; font-size:12px; color:white; cursor:pointer; font-weight:500; letter-spacing:0.03em; transition:background 0.2s; }
+  .hr-inline-submit:hover { background:var(--charcoal); }
+  .hr-inline-submit:disabled { background:var(--stone); cursor:not-allowed; }
+  .hr-inline-success { font-size:13px; color:#3a5c3a; font-style:italic; text-align:center; padding:2px 0; }
 
   .benefits-section { border-top:1px solid #e8e7e3 !important; padding:12px 22px !important; display:flex !important; gap:8px !important; flex-wrap:wrap !important; list-style:none !important; }
   .benefit-chip { display:flex !important; align-items:center !important; gap:6px !important; font-size:12px !important; font-weight:400 !important; color:#575648 !important; -webkit-text-fill-color:#575648 !important; font-family:'Cormorant Garamond',Georgia,serif !important; text-decoration:none !important; list-style:none !important; padding-left:0 !important; margin:0 !important; }
@@ -1242,7 +1234,17 @@ function renderCards(studios, totalCount, page) {
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
           <div class="source-tags">${sourceTags}</div>
-          <button class="handraise-header-btn" onclick="openHrModal(this)" data-hr-idx="${hrIdx}" title="Interested in working here?"><svg width="13" height="15" viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 7V2a1 1 0 0 1 2 0v5"/><path d="M7 3a1 1 0 0 1 2 0v4"/><path d="M9 4a1 1 0 0 1 2 0v4"/><path d="M11 6a1 1 0 0 1 2 0v3a5 5 0 0 1-5 5H6A5 5 0 0 1 1 9V7a1 1 0 0 1 2 0v2"/><path d="M3 9V2a1 1 0 0 1 2 0v5"/></svg></button>
+          <button class="handraise-header-btn" onclick="openHrInline(this,'header')" data-hr-idx="${hrIdx}" title="Interested in working here?"><svg width="13" height="15" viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 7V2a1 1 0 0 1 2 0v5"/><path d="M7 3a1 1 0 0 1 2 0v4"/><path d="M9 4a1 1 0 0 1 2 0v4"/><path d="M11 6a1 1 0 0 1 2 0v3a5 5 0 0 1-5 5H6A5 5 0 0 1 1 9V7a1 1 0 0 1 2 0v2"/><path d="M3 9V2a1 1 0 0 1 2 0v5"/></svg></button>
+        </div>
+      </div>
+      <div class="hr-inline hr-inline-header-slot" id="hr-header-${hrIdx}">
+        <div class="hr-inline-top"><span class="hr-inline-label">Send a hint to ${studio.name}</span><button class="hr-inline-close" onclick="closeHrInline(this)">×</button></div>
+        <input class="hr-inline-input" type="email" placeholder="your@email.com" autocomplete="email">
+        <div class="hr-inline-error">Please enter a valid email address.</div>
+        <p class="hr-inline-note">Send a little hint to let them know you're interested. We'll do the work and reach out to the studio for you.</p>
+        <div class="hr-inline-actions">
+          <button class="hr-inline-cancel" onclick="closeHrInline(this)">Cancel</button>
+          <button class="hr-inline-submit" onclick="submitHrInline(this,${hrIdx})">Send hint →</button>
         </div>
       </div>
       <div class="card-collapsed">
@@ -1272,7 +1274,26 @@ function renderCards(studios, totalCount, page) {
         <div style="padding:12px 0;"><button class="see-less-btn" onclick="toggleCard(this)">See less ↑</button></div>
       </div>
       ${postJobButton}
-      ${handraiseButton}
+      <div class="handraise-btn-wrap">
+        <button class="handraise-btn" onclick="openHrInline(this,'bottom')" data-hr-idx="${hrIdx}">
+          <svg width="13" height="15" viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 7V2a1 1 0 0 1 2 0v5"/><path d="M7 3a1 1 0 0 1 2 0v4"/><path d="M9 4a1 1 0 0 1 2 0v4"/><path d="M11 6a1 1 0 0 1 2 0v3a5 5 0 0 1-5 5H6A5 5 0 0 1 1 9V7a1 1 0 0 1 2 0v2"/><path d="M3 9V2a1 1 0 0 1 2 0v5"/></svg> Interested in working here?
+          <span class="handraise-tooltip-wrap" onclick="event.stopPropagation()">
+            <span class="handraise-info-icon" ontouchend="toggleHrTooltip(event,this)">i
+              <span class="handraise-tooltip">Interested in working here? Send a little hint to let them know. We'll do the work and reach out to the studio for you.</span>
+            </span>
+          </span>
+        </button>
+      </div>
+      <div class="hr-inline hr-inline-bottom-slot" id="hr-bottom-${hrIdx}">
+        <div class="hr-inline-top"><span class="hr-inline-label">Send a hint to ${studio.name}</span><button class="hr-inline-close" onclick="closeHrInline(this)">×</button></div>
+        <input class="hr-inline-input" type="email" placeholder="your@email.com" autocomplete="email">
+        <div class="hr-inline-error">Please enter a valid email address.</div>
+        <p class="hr-inline-note">Send a little hint to let them know you're interested. We'll do the work and reach out to the studio for you.</p>
+        <div class="hr-inline-actions">
+          <button class="hr-inline-cancel" onclick="closeHrInline(this)">Cancel</button>
+          <button class="hr-inline-submit" onclick="submitHrInline(this,${hrIdx})">Send hint →</button>
+        </div>
+      </div>
     `;
     grid.appendChild(el);
   });
@@ -1554,42 +1575,91 @@ window.addEventListener('message', (event) => {
   }
 }, false);
 
-// ── Hand-raise modal ──────────────────────────────────────────
+// ── Hand-raise inline ─────────────────────────────────────────
 const _hrDataRegistry = [];  // stores studio data objects keyed by card index
-let _hrCurrentStudio = null;
-let _hrCurrentBtn = null;
 
-function openHrModal(btn) {
+function openHrInline(btn, slot) {
   const idx = parseInt(btn.getAttribute('data-hr-idx'), 10);
+  const card = btn.closest('.studio-card');
+  if (!card) return;
+
+  // Close any other open inline forms across all cards
+  document.querySelectorAll('.hr-inline.open').forEach(el => el.classList.remove('open'));
+
+  const formId = slot === 'header' ? `hr-header-${idx}` : `hr-bottom-${idx}`;
+  const form = document.getElementById(formId);
+  if (!form) return;
+
+  // Reset form state
+  const input = form.querySelector('.hr-inline-input');
+  const error = form.querySelector('.hr-inline-error');
+  const submit = form.querySelector('.hr-inline-submit');
+  if (input) { input.value = ''; input.disabled = false; }
+  if (error) error.style.display = 'none';
+  if (submit) { submit.disabled = false; submit.textContent = 'Send hint →'; }
+
+  form.classList.add('open');
+  setTimeout(() => { if (input) input.focus(); }, 100);
+  sendHeight();
+}
+
+function closeHrInline(el) {
+  const form = el.closest('.hr-inline');
+  if (form) { form.classList.remove('open'); sendHeight(); }
+}
+
+async function submitHrInline(btn, idx) {
+  const form = btn.closest('.hr-inline');
+  const input = form.querySelector('.hr-inline-input');
+  const error = form.querySelector('.hr-inline-error');
+  const email = input ? input.value.trim() : '';
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (error) error.style.display = 'block';
+    return;
+  }
+  if (error) error.style.display = 'none';
+
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
   const data = _hrDataRegistry[idx];
   if (!data) return;
-  _hrCurrentStudio = data;
-  _hrCurrentBtn = btn;
 
-  // Reset modal state
-  document.getElementById('hr-modal-form-view').style.display = '';
-  document.getElementById('hr-modal-success-view').style.display = 'none';
-  document.getElementById('hr-email-input').value = '';
-  document.getElementById('hr-modal-error').style.display = 'none';
-  document.getElementById('hr-modal-submit').disabled = false;
-  document.getElementById('hr-modal-submit').textContent = 'Send hint →';
+  const payload = {
+    instructorEmail: email,
+    studioName: data.studioName,
+    city: data.city,
+    state: data.state,
+    country: data.country,
+    classFormat: data.classFormat,
+    payStructure: data.payStructure,
+    compSummary: data.compSummary,
+    sourceTimestamp: data.sourceTimestamp
+  };
 
-  // Set studio name in subtitle
-  const loc = [data.city, data.state].filter(Boolean).join(', ');
-  document.getElementById('hr-modal-studio-name').textContent = data.studioName + (loc ? ' · ' + loc : '');
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(err) {
+    console.warn('[Handraise] fetch error:', err);
+  }
 
-  document.getElementById('hr-modal-overlay').classList.add('open');
-  setTimeout(() => document.getElementById('hr-email-input').focus(), 250);
-}
+  // Show success in the form
+  form.innerHTML = `<div class="hr-inline-success">✓ Hint sent — we'll reach out to the studio for you.</div>`;
 
-function closeHrModal() {
-  document.getElementById('hr-modal-overlay').classList.remove('open');
-  _hrCurrentStudio = null;
-  _hrCurrentBtn = null;
-}
+  // Mark all handraise buttons on this card as submitted
+  const card = form.closest('.studio-card');
+  if (card) {
+    card.querySelectorAll('.handraise-header-btn').forEach(b => { b.classList.add('submitted'); b.title='Hint sent ✓'; b.onclick=null; });
+    card.querySelectorAll('.handraise-btn').forEach(b => { b.classList.add('submitted'); b.innerHTML='✓ Hint sent'; b.onclick=null; });
+  }
 
-function hrModalClickOutside(e) {
-  if (e.target === document.getElementById('hr-modal-overlay')) closeHrModal();
+  setTimeout(() => { form.classList.remove('open'); sendHeight(); }, 2200);
 }
 
 // Touch-friendly tooltip toggle for mobile info icon
@@ -1605,65 +1675,6 @@ function toggleHrTooltip(e, el) {
   }
 }
 
-async function submitHandraise() {
-  const email = document.getElementById('hr-email-input').value.trim();
-  const errorEl = document.getElementById('hr-modal-error');
-  const submitBtn = document.getElementById('hr-modal-submit');
-
-  // Validate email
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    errorEl.style.display = 'block';
-    return;
-  }
-  errorEl.style.display = 'none';
-
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Sending…';
-
-  const payload = {
-    instructorEmail: email,
-    studioName: _hrCurrentStudio.studioName,
-    city: _hrCurrentStudio.city,
-    state: _hrCurrentStudio.state,
-    country: _hrCurrentStudio.country,
-    classFormat: _hrCurrentStudio.classFormat,
-    payStructure: _hrCurrentStudio.payStructure,
-    compSummary: _hrCurrentStudio.compSummary,
-    sourceTimestamp: _hrCurrentStudio.sourceTimestamp
-  };
-
-  try {
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',  // Apps Script doPost via no-cors — response is opaque but write succeeds
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-  } catch(err) {
-    console.warn('[Handraise] Fetch error (likely no-cors opaque, write may still have succeeded):', err);
-  }
-
-  // Show success regardless — no-cors means we can't read the response
-  document.getElementById('hr-modal-form-view').style.display = 'none';
-  document.getElementById('hr-modal-success-view').style.display = '';
-
-  // Update all handraise buttons on this card to show submitted state
-  if (_hrCurrentBtn) {
-    const card = _hrCurrentBtn.closest('.studio-card');
-    if (card) {
-      card.querySelectorAll('.handraise-header-btn').forEach(b => { b.classList.add('submitted'); b.title='Hint sent ✓'; b.onclick=null; });
-      card.querySelectorAll('.handraise-btn').forEach(b => { b.classList.add('submitted'); b.innerHTML='✓ Hint sent'; b.onclick=null; });
-    }
-  }
-
-  setTimeout(() => closeHrModal(), 2200);
-}
-
-// Close modal on Escape key
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeHrModal();
-});
-
 init();
 
 // ── iframe height ─────────────────────────────────────────────
@@ -1674,29 +1685,7 @@ new MutationObserver(()=>{clearTimeout(_sendHeightTimer);_sendHeightTimer=setTim
 let _hic=0; const _hi=setInterval(()=>{sendHeight();if(++_hic>=10)clearInterval(_hi);},500);
 </script>
 
-<!-- ── Hand-raise modal ─────────────────────────────────────── -->
-<div class="hr-modal-overlay" id="hr-modal-overlay" onclick="hrModalClickOutside(event)">
-  <div class="hr-modal" id="hr-modal">
-    <div class="hr-modal-handle"></div>
-    <div id="hr-modal-form-view">
-      <div class="hr-modal-title" style="display:flex;align-items:center;gap:8px;"><svg width="16" height="18" viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 7V2a1 1 0 0 1 2 0v5"/><path d="M7 3a1 1 0 0 1 2 0v4"/><path d="M9 4a1 1 0 0 1 2 0v4"/><path d="M11 6a1 1 0 0 1 2 0v3a5 5 0 0 1-5 5H6A5 5 0 0 1 1 9V7a1 1 0 0 1 2 0v2"/><path d="M3 9V2a1 1 0 0 1 2 0v5"/></svg> Raise your hand</div>
-      <div class="hr-modal-studio" id="hr-modal-studio-name"></div>
-      <label class="hr-modal-label" for="hr-email-input">Your email</label>
-      <input class="hr-modal-input" type="email" id="hr-email-input" placeholder="you@email.com" autocomplete="email">
-      <div class="hr-modal-error" id="hr-modal-error">Please enter a valid email address.</div>
-      <p class="hr-modal-note">Send a little hint to let them know you're interested. We'll do the work and reach out to the studio for you.</p>
-      <div class="hr-modal-actions">
-        <button class="hr-modal-cancel" onclick="closeHrModal()">Cancel</button>
-        <button class="hr-modal-submit" id="hr-modal-submit" onclick="submitHandraise()">Send hint →</button>
-      </div>
-    </div>
-    <div id="hr-modal-success-view" class="hr-modal-success" style="display:none;">
-      <div class="hr-modal-success-icon" style="font-size:24px;">✓</div>
-      <div class="hr-modal-success-msg">Hint sent!</div>
-      <div class="hr-modal-success-sub">We'll do the work and reach out to the studio for you.</div>
-    </div>
-  </div>
-</div>
+<!-- ── Hand-raise inline forms are rendered per-card in renderCards ── -->
 
 </div>
 </body>
