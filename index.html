@@ -146,6 +146,50 @@
   .has-tooltip .tooltip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:var(--charcoal); }
   .has-tooltip:hover .tooltip { display:block; }
 
+  /* ── Hand-raise button ───────────────────────────────────────── */
+  .handraise-btn-wrap { padding:0 22px 14px; position:relative; }
+  .handraise-btn { display:flex; align-items:center; justify-content:center; gap:7px; width:100%; padding:9px 0; background:transparent; border:1.5px solid #b0aea4; border-radius:8px; font-family:'Cormorant Garamond',Georgia,serif !important; font-size:12px; color:var(--accent-deep); cursor:pointer; font-weight:500; letter-spacing:0.04em; transition:border-color 0.2s,background 0.2s,color 0.2s; text-align:center; }
+  .handraise-btn:hover { border-color:var(--accent-deep); background:var(--sand); }
+  .handraise-btn.submitted { border-color:#5c8a5c; color:#3a5c3a; background:#f0f5f0; cursor:default; }
+  .handraise-tooltip-wrap { position:relative; display:inline-flex; align-items:center; }
+  .handraise-info-icon { display:inline-flex; align-items:center; justify-content:center; width:15px; height:15px; border-radius:50%; border:1.5px solid #b0aea4; color:#9e9c8f; font-size:9px; font-style:normal; font-weight:600; cursor:help; flex-shrink:0; line-height:1; font-family:'DM Sans',sans-serif; transition:border-color 0.2s; }
+  .handraise-info-icon:hover { border-color:var(--accent-deep); color:var(--accent-deep); }
+  /* Tooltip on info icon — opens upward */
+  .handraise-tooltip { display:none; position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background:var(--charcoal); color:#f5f4f2; font-size:11px; line-height:1.55; padding:9px 13px; border-radius:8px; white-space:normal; width:230px; text-align:center; z-index:300; pointer-events:none; font-weight:400; letter-spacing:0; text-transform:none; font-style:normal; }
+  .handraise-tooltip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:var(--charcoal); }
+  .handraise-info-icon:hover .handraise-tooltip,
+  .handraise-tooltip-wrap:hover .handraise-tooltip { display:block; }
+  /* Touch-friendly tooltip toggle */
+  .handraise-tooltip-wrap.tooltip-open .handraise-tooltip { display:block; }
+
+  /* ── Hand-raise modal ───────────────────────────────────────── */
+  .hr-modal-overlay { position:fixed; inset:0; background:rgba(46,45,41,0.5); z-index:1000; display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; pointer-events:none; transition:opacity 0.2s; }
+  .hr-modal-overlay.open { opacity:1; pointer-events:all; }
+  body.db-mobile .hr-modal-overlay { align-items:flex-end; padding:0; }
+  .hr-modal { background:white; border-radius:16px; max-width:420px; width:100%; padding:28px; box-shadow:0 24px 80px rgba(46,45,41,0.2); transform:translateY(12px); transition:transform 0.2s; }
+  .hr-modal-overlay.open .hr-modal { transform:translateY(0); }
+  body.db-mobile .hr-modal { border-radius:20px 20px 0 0; max-width:100%; padding:20px 20px 32px; transform:translateY(100%); }
+  body.db-mobile .hr-modal-overlay.open .hr-modal { transform:translateY(0); }
+  .hr-modal-handle { display:none; }
+  body.db-mobile .hr-modal-handle { display:block; width:36px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 16px; }
+  .hr-modal-title { font-family:'Cormorant Garamond','Palatino Linotype',Palatino,Georgia,serif !important; font-size:20px; font-weight:500; color:var(--charcoal); margin-bottom:4px; }
+  .hr-modal-studio { font-size:13px; color:var(--text-muted); margin-bottom:16px; font-style:italic; }
+  .hr-modal-label { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; display:block; }
+  .hr-modal-input { width:100%; padding:10px 13px; border:1.5px solid var(--border); border-radius:8px; font-family:'Cormorant Garamond',Georgia,serif !important; font-size:14px; color:var(--text); background:var(--sand); outline:none; transition:border-color 0.2s; margin-bottom:14px; }
+  .hr-modal-input:focus { border-color:var(--accent); }
+  .hr-modal-note { font-size:11px; color:var(--stone); line-height:1.5; margin-bottom:20px; font-style:italic; }
+  .hr-modal-actions { display:flex; gap:10px; }
+  .hr-modal-cancel { flex:1; padding:10px 0; background:transparent; border:1.5px solid var(--border); border-radius:8px; font-family:'Cormorant Garamond',Georgia,serif !important; font-size:13px; color:var(--stone); cursor:pointer; transition:border-color 0.2s; }
+  .hr-modal-cancel:hover { border-color:var(--accent); color:var(--accent-deep); }
+  .hr-modal-submit { flex:2; padding:10px 0; background:var(--accent-deep); border:none; border-radius:8px; font-family:'Cormorant Garamond',Georgia,serif !important; font-size:13px; color:white; cursor:pointer; font-weight:500; letter-spacing:0.03em; transition:background 0.2s; }
+  .hr-modal-submit:hover { background:var(--charcoal); }
+  .hr-modal-submit:disabled { background:var(--stone); cursor:not-allowed; }
+  .hr-modal-error { font-size:11px; color:#a04040; margin-top:-10px; margin-bottom:12px; display:none; }
+  .hr-modal-success { text-align:center; padding:12px 0 4px; }
+  .hr-modal-success-icon { font-size:28px; margin-bottom:8px; }
+  .hr-modal-success-msg { font-family:'Cormorant Garamond',Georgia,serif !important; font-size:17px; color:var(--charcoal); margin-bottom:6px; font-weight:500; }
+  .hr-modal-success-sub { font-size:12px; color:var(--stone); line-height:1.5; }
+
   .benefits-section { border-top:1px solid #e8e7e3 !important; padding:12px 22px !important; display:flex !important; gap:8px !important; flex-wrap:wrap !important; list-style:none !important; }
   .benefit-chip { display:flex !important; align-items:center !important; gap:6px !important; font-size:12px !important; font-weight:400 !important; color:#575648 !important; -webkit-text-fill-color:#575648 !important; font-family:'Cormorant Garamond',Georgia,serif !important; text-decoration:none !important; list-style:none !important; padding-left:0 !important; margin:0 !important; }
   #db-wrap .benefit-chip, #db-wrap .benefits-section .benefit-chip, #db-wrap .benefits-section div.benefit-chip, #db-wrap .studio-card .benefit-chip, #db-wrap .card-collapsed .benefit-chip, #db-wrap .card-expanded .benefit-chip, div#db-wrap .benefit-chip { color:#575648 !important; -webkit-text-fill-color:#575648 !important; }
@@ -1096,6 +1140,7 @@ function renderCards(studios, totalCount, page) {
   page=page||1;
   const grid=document.getElementById('cards-grid');
   grid.innerHTML='';
+  _hrDataRegistry.length = 0;  // reset handraise registry on each render
 
   if (!studios.length) {
     grid.innerHTML=`<div class="state-msg"><p>No studios match your search.</p><small>Try adjusting your filters above.</small></div>`;
@@ -1170,6 +1215,31 @@ function renderCards(studios, totalCount, page) {
 
     const postJobButton=studio.hasStudio?`<div style="padding:12px 0;"><a href="https://tally.so/r/dWPV7V?studioName=${encodeURIComponent(studio.name)}&studioCity=${encodeURIComponent(studio.city||'')}" target="_blank" style="display:block;width:calc(100% - 44px);margin:0 22px;padding:8px 0;background:#4a5220;border:1px solid #3a4118;border-radius:8px;color:#e6ead0;text-decoration:none;text-align:center;font-family:'Cormorant Garamond',Georgia,serif;font-size:11px;font-weight:500;letter-spacing:0.04em;transition:background 0.15s;">+ Post a job</a></div>`:'';
 
+    // Store handraise data in a global registry keyed by index — avoids JSON-in-HTML quoting issues
+    const hrIdx = _hrDataRegistry.length;
+    _hrDataRegistry.push({
+      studioName: studio.name,
+      city: studio.city||'',
+      state: studio.state||'',
+      country: studio.country||'United States',
+      classFormat: studio.submissions.length ? studio.submissions[0].format : '',
+      payStructure: studio.submissions.length ? studio.submissions[0].structure : '',
+      compSummary: studio.submissions.length ? (studio.submissions[0].payRaw||'') : '',
+      sourceTimestamp: studio.lastUpdated ? studio.lastUpdated.toISOString() : ''
+    });
+
+    const handraiseButton = `
+      <div class="handraise-btn-wrap">
+        <button class="handraise-btn" onclick="openHrModal(this)" data-hr-idx="${hrIdx}">
+          🙋 Interested in working here?
+          <span class="handraise-tooltip-wrap" onclick="event.stopPropagation()">
+            <span class="handraise-info-icon" ontouchend="toggleHrTooltip(event,this)">i
+              <span class="handraise-tooltip">Interested in working here? Send a little hint to let them know. We'll do the work and reach out to the studio for you.</span>
+            </span>
+          </span>
+        </button>
+      </div>`;
+
     const relativityBadge=studio.relativity?`<span class="relativity-badge ${studio.relativity}">${studio.relativity==='above'?`↑ Above average for ${studio.relativityLabel||'their market'}`:studio.relativity==='below'?`↓ Below average for ${studio.relativityLabel||'their market'}`:`~ Average for ${studio.relativityLabel||'their market'}`}</span>`:'';
 
     const distanceBadge=studio._distanceMiles!==null&&studio._distanceMiles!==undefined?`<span class="distance-badge">📍 ${studio._distanceMiles} mi away</span>`:'';
@@ -1213,6 +1283,7 @@ function renderCards(studios, totalCount, page) {
         <div style="padding:12px 0;"><button class="see-less-btn" onclick="toggleCard(this)">See less ↑</button></div>
       </div>
       ${postJobButton}
+      ${handraiseButton}
     `;
     grid.appendChild(el);
   });
@@ -1494,6 +1565,114 @@ window.addEventListener('message', (event) => {
   }
 }, false);
 
+// ── Hand-raise modal ──────────────────────────────────────────
+const _hrDataRegistry = [];  // stores studio data objects keyed by card index
+let _hrCurrentStudio = null;
+let _hrCurrentBtn = null;
+
+function openHrModal(btn) {
+  const idx = parseInt(btn.getAttribute('data-hr-idx'), 10);
+  const data = _hrDataRegistry[idx];
+  if (!data) return;
+  _hrCurrentStudio = data;
+  _hrCurrentBtn = btn;
+
+  // Reset modal state
+  document.getElementById('hr-modal-form-view').style.display = '';
+  document.getElementById('hr-modal-success-view').style.display = 'none';
+  document.getElementById('hr-email-input').value = '';
+  document.getElementById('hr-modal-error').style.display = 'none';
+  document.getElementById('hr-modal-submit').disabled = false;
+  document.getElementById('hr-modal-submit').textContent = 'Send hint →';
+
+  // Set studio name in subtitle
+  const loc = [data.city, data.state].filter(Boolean).join(', ');
+  document.getElementById('hr-modal-studio-name').textContent = data.studioName + (loc ? ' · ' + loc : '');
+
+  document.getElementById('hr-modal-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('hr-email-input').focus(), 250);
+}
+
+function closeHrModal() {
+  document.getElementById('hr-modal-overlay').classList.remove('open');
+  _hrCurrentStudio = null;
+  _hrCurrentBtn = null;
+}
+
+function hrModalClickOutside(e) {
+  if (e.target === document.getElementById('hr-modal-overlay')) closeHrModal();
+}
+
+// Touch-friendly tooltip toggle for mobile info icon
+function toggleHrTooltip(e, el) {
+  e.preventDefault();
+  e.stopPropagation();
+  const wrap = el.closest('.handraise-tooltip-wrap');
+  const isOpen = wrap.classList.contains('tooltip-open');
+  document.querySelectorAll('.handraise-tooltip-wrap.tooltip-open').forEach(w => w.classList.remove('tooltip-open'));
+  if (!isOpen) {
+    wrap.classList.add('tooltip-open');
+    setTimeout(() => wrap.classList.remove('tooltip-open'), 3000);
+  }
+}
+
+async function submitHandraise() {
+  const email = document.getElementById('hr-email-input').value.trim();
+  const errorEl = document.getElementById('hr-modal-error');
+  const submitBtn = document.getElementById('hr-modal-submit');
+
+  // Validate email
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errorEl.style.display = 'block';
+    return;
+  }
+  errorEl.style.display = 'none';
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending…';
+
+  const payload = {
+    instructorEmail: email,
+    studioName: _hrCurrentStudio.studioName,
+    city: _hrCurrentStudio.city,
+    state: _hrCurrentStudio.state,
+    country: _hrCurrentStudio.country,
+    classFormat: _hrCurrentStudio.classFormat,
+    payStructure: _hrCurrentStudio.payStructure,
+    compSummary: _hrCurrentStudio.compSummary,
+    sourceTimestamp: _hrCurrentStudio.sourceTimestamp
+  };
+
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',  // Apps Script doPost via no-cors — response is opaque but write succeeds
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(err) {
+    console.warn('[Handraise] Fetch error (likely no-cors opaque, write may still have succeeded):', err);
+  }
+
+  // Show success regardless — no-cors means we can't read the response
+  document.getElementById('hr-modal-form-view').style.display = 'none';
+  document.getElementById('hr-modal-success-view').style.display = '';
+
+  // Update the button on the card to show submitted state
+  if (_hrCurrentBtn) {
+    _hrCurrentBtn.classList.add('submitted');
+    _hrCurrentBtn.innerHTML = '✓ Hint sent';
+    _hrCurrentBtn.onclick = null;
+  }
+
+  setTimeout(() => closeHrModal(), 2200);
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeHrModal();
+});
+
 init();
 
 // ── iframe height ─────────────────────────────────────────────
@@ -1503,6 +1682,30 @@ let _sendHeightTimer=null;
 new MutationObserver(()=>{clearTimeout(_sendHeightTimer);_sendHeightTimer=setTimeout(sendHeight,100);}).observe(document.getElementById('cards-grid')||document.body,{childList:true,subtree:false});
 let _hic=0; const _hi=setInterval(()=>{sendHeight();if(++_hic>=10)clearInterval(_hi);},500);
 </script>
+
+<!-- ── Hand-raise modal ─────────────────────────────────────── -->
+<div class="hr-modal-overlay" id="hr-modal-overlay" onclick="hrModalClickOutside(event)">
+  <div class="hr-modal" id="hr-modal">
+    <div class="hr-modal-handle"></div>
+    <div id="hr-modal-form-view">
+      <div class="hr-modal-title">🙋 Raise your hand</div>
+      <div class="hr-modal-studio" id="hr-modal-studio-name"></div>
+      <label class="hr-modal-label" for="hr-email-input">Your email</label>
+      <input class="hr-modal-input" type="email" id="hr-email-input" placeholder="you@email.com" autocomplete="email">
+      <div class="hr-modal-error" id="hr-modal-error">Please enter a valid email address.</div>
+      <p class="hr-modal-note">We'll reach out when enough instructors have expressed interest in this studio. We won't share your email without your permission.</p>
+      <div class="hr-modal-actions">
+        <button class="hr-modal-cancel" onclick="closeHrModal()">Cancel</button>
+        <button class="hr-modal-submit" id="hr-modal-submit" onclick="submitHandraise()">Send hint →</button>
+      </div>
+    </div>
+    <div id="hr-modal-success-view" class="hr-modal-success" style="display:none;">
+      <div class="hr-modal-success-icon">🌿</div>
+      <div class="hr-modal-success-msg">Hint sent!</div>
+      <div class="hr-modal-success-sub">We'll do the work and reach out to the studio for you.</div>
+    </div>
+  </div>
+</div>
 
 </div>
 </body>
