@@ -360,20 +360,13 @@
   #jb-banner .jb-close { font-size:16px; color:rgba(237,235,228,0.45); cursor:pointer; flex-shrink:0; line-height:1; background:none; border:none; padding:0 0 0 8px; transition:color 0.15s; }
   #jb-banner .jb-close:hover { color:rgba(237,235,228,0.8); }
 
-  /* ── Job Board Inline Card (Option B) ────────────────────── */
-  #jb-inline { padding:14px 40px; border-bottom:1px solid var(--border-light); background:#eeedeb; }
-  .jb-inline-inner { display:flex; align-items:center; gap:14px; background:#fff; border:1px solid var(--border); border-radius:12px; padding:14px 18px; max-width:100%; box-sizing:border-box; }
-  .jb-inline-icon { width:36px; height:36px; border-radius:8px; background:#373930; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .jb-inline-copy { flex:1; min-width:0; }
-  .jb-inline-copy .jb-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:18px; font-weight:500; color:#2e2d29; }
-  .jb-inline-copy .jb-sub { font-family:'Cormorant Garamond',Georgia,serif; font-size:14px; font-weight:300; color:#757263; margin-top:2px; }
-  .jb-inline-btn { font-family:'Cormorant Garamond',Georgia,serif; background:#373930; color:#EDEBE4 !important; -webkit-text-fill-color:#EDEBE4 !important; font-size:15px; font-weight:400; padding:8px 18px; border-radius:99px; white-space:nowrap; flex-shrink:0; text-decoration:none; border:none; cursor:pointer; transition:opacity 0.15s; display:inline-block; }
-  .jb-inline-btn:hover { opacity:0.8; }
-
-  #db-wrap[data-mobile] #jb-banner { padding:10px 16px !important; }
-  #db-wrap[data-mobile] #jb-banner .jb-text { font-size:14px !important; }
-  #db-wrap[data-mobile] #jb-inline { padding:12px 16px !important; }
-  #db-wrap[data-mobile] .jb-inline-copy .jb-sub { display:none; }
+  /* ── Hand-raise callout strip ────────────────────────────── */
+  #hr-callout { padding:10px 40px 14px; background:#eeedeb; }
+  .hr-callout-inner { display:flex; align-items:center; gap:8px; }
+  .hr-callout-text { font-family:'Cormorant Garamond',Georgia,serif; font-size:13px; color:var(--text-muted); line-height:1.4; }
+  .hr-callout-text strong { color:var(--accent-deep); font-weight:500; }
+  #db-wrap[data-mobile] #hr-callout { padding:8px 16px 12px !important; }
+  #db-wrap[data-mobile] .hr-callout-text { font-size:12px !important; }
 
   @media (max-width:640px) {
     header,.filter-section,main { padding-left:16px !important; padding-right:16px !important; }
@@ -510,20 +503,10 @@
     </div>
   </div>
 
-<div id="jb-inline">
-  <div class="jb-inline-inner">
-    <div class="jb-inline-icon">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="1.5" y="3.5" width="13" height="9" rx="1.5" stroke="#EDEBE4" stroke-width="1.25"/>
-        <path d="M5 3.5V2.5C5 2 5.5 1.5 6 1.5H10C10.5 1.5 11 2 11 2.5V3.5" stroke="#EDEBE4" stroke-width="1.25"/>
-        <line x1="1.5" y1="6.5" x2="14.5" y2="6.5" stroke="#EDEBE4" stroke-width="1"/>
-      </svg>
-    </div>
-    <div class="jb-inline-copy">
-      <div class="jb-title">Looking for your next studio job?</div>
-      <div class="jb-sub">New listings added weekly from studios in this database</div>
-    </div>
-    <a class="jb-inline-btn" href="https://www.paigelovespilates.com/jobs" target="_blank">Browse jobs →</a>
+<div id="hr-callout">
+  <div class="hr-callout-inner">
+    <span style="display:inline-flex;align-items:center;flex-shrink:0;"><svg width="14" height="16" viewBox="0 0 14 16" fill="none" stroke="#9e9c8f" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 7V2a1 1 0 0 1 2 0v5"/><path d="M7 3a1 1 0 0 1 2 0v4"/><path d="M9 4a1 1 0 0 1 2 0v4"/><path d="M11 6a1 1 0 0 1 2 0v3a5 5 0 0 1-5 5H6A5 5 0 0 1 1 9V7a1 1 0 0 1 2 0v2"/><path d="M3 9V2a1 1 0 0 1 2 0v5"/></svg></span>
+    <p class="hr-callout-text">See a studio you'd love to work at? <strong>Tap the hand icon on any tile</strong> to send a hint — we'll do the work and reach out to the studio for you.</p>
   </div>
 </div>
 
@@ -1235,7 +1218,7 @@ function renderCards(studios, totalCount, page) {
     const handraiseButton = `
       <div class="handraise-btn-wrap">
         <button class="handraise-btn" onclick="openHrModal(this)" data-hr-idx="${hrIdx}">
-          🙋 Interested in working here?
+          <svg width="13" height="15" viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 7V2a1 1 0 0 1 2 0v5"/><path d="M7 3a1 1 0 0 1 2 0v4"/><path d="M9 4a1 1 0 0 1 2 0v4"/><path d="M11 6a1 1 0 0 1 2 0v3a5 5 0 0 1-5 5H6A5 5 0 0 1 1 9V7a1 1 0 0 1 2 0v2"/><path d="M3 9V2a1 1 0 0 1 2 0v5"/></svg> Interested in working here?
           <span class="handraise-tooltip-wrap" onclick="event.stopPropagation()">
             <span class="handraise-info-icon" ontouchend="toggleHrTooltip(event,this)">i
               <span class="handraise-tooltip">Interested in working here? Send a little hint to let them know. We'll do the work and reach out to the studio for you.</span>
@@ -1260,7 +1243,7 @@ function renderCards(studios, totalCount, page) {
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
           <div class="source-tags">${sourceTags}</div>
-          <button class="handraise-header-btn" onclick="openHrModal(this)" data-hr-idx="${hrIdx}" title="Interested in working here?">🙋</button>
+          <button class="handraise-header-btn" onclick="openHrModal(this)" data-hr-idx="${hrIdx}" title="Interested in working here?"><svg width="13" height="15" viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 7V2a1 1 0 0 1 2 0v5"/><path d="M7 3a1 1 0 0 1 2 0v4"/><path d="M9 4a1 1 0 0 1 2 0v4"/><path d="M11 6a1 1 0 0 1 2 0v3a5 5 0 0 1-5 5H6A5 5 0 0 1 1 9V7a1 1 0 0 1 2 0v2"/><path d="M3 9V2a1 1 0 0 1 2 0v5"/></svg></button>
         </div>
       </div>
       <div class="card-collapsed">
@@ -1697,7 +1680,7 @@ let _hic=0; const _hi=setInterval(()=>{sendHeight();if(++_hic>=10)clearInterval(
   <div class="hr-modal" id="hr-modal">
     <div class="hr-modal-handle"></div>
     <div id="hr-modal-form-view">
-      <div class="hr-modal-title">🙋 Raise your hand</div>
+      <div class="hr-modal-title" style="display:flex;align-items:center;gap:8px;"><svg width="16" height="18" viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 7V2a1 1 0 0 1 2 0v5"/><path d="M7 3a1 1 0 0 1 2 0v4"/><path d="M9 4a1 1 0 0 1 2 0v4"/><path d="M11 6a1 1 0 0 1 2 0v3a5 5 0 0 1-5 5H6A5 5 0 0 1 1 9V7a1 1 0 0 1 2 0v2"/><path d="M3 9V2a1 1 0 0 1 2 0v5"/></svg> Raise your hand</div>
       <div class="hr-modal-studio" id="hr-modal-studio-name"></div>
       <label class="hr-modal-label" for="hr-email-input">Your email</label>
       <input class="hr-modal-input" type="email" id="hr-email-input" placeholder="you@email.com" autocomplete="email">
@@ -1709,7 +1692,7 @@ let _hic=0; const _hi=setInterval(()=>{sendHeight();if(++_hic>=10)clearInterval(
       </div>
     </div>
     <div id="hr-modal-success-view" class="hr-modal-success" style="display:none;">
-      <div class="hr-modal-success-icon">🌿</div>
+      <div class="hr-modal-success-icon" style="font-size:24px;">✓</div>
       <div class="hr-modal-success-msg">Hint sent!</div>
       <div class="hr-modal-success-sub">We'll do the work and reach out to the studio for you.</div>
     </div>
