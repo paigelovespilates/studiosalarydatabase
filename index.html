@@ -41,7 +41,7 @@
   .badge .label { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; }
   .badge-divider { width:1px; height:32px; background:var(--border); }
 
-  .filter-section { background:#eeedeb; padding:16px 40px; border-bottom:1px solid var(--border-light); width:100% !important; box-sizing:border-box !important; }
+  .filter-section { background:#eeedeb; padding:16px 40px 20px; border-bottom:none; width:100% !important; box-sizing:border-box !important; }
   .filter-inner { max-width:1200px; margin:0; display:flex; flex-direction:column; gap:10px; }
   .filter-row-search { display:flex; align-items:center; width:100%; }
   .filter-row-dropdowns { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
@@ -361,11 +361,11 @@
   #jb-banner .jb-close:hover { color:rgba(237,235,228,0.8); }
 
   /* ── Hand-raise callout strip ────────────────────────────── */
-  #hr-callout { padding:10px 40px 14px; background:#eeedeb; }
+  #hr-callout { padding:10px 40px 16px; background:#eeedeb; }
   .hr-callout-inner { display:flex; align-items:center; gap:8px; }
   .hr-callout-text { font-family:'Cormorant Garamond',Georgia,serif; font-size:13px; color:var(--text-muted); line-height:1.4; }
   .hr-callout-text strong { color:var(--accent-deep); font-weight:500; }
-  #db-wrap[data-mobile] #hr-callout { padding:8px 16px 12px !important; }
+  #db-wrap[data-mobile] #hr-callout { padding:8px 16px 14px !important; }
   #db-wrap[data-mobile] .hr-callout-text { font-size:12px !important; }
 
   @media (max-width:640px) {
@@ -1685,7 +1685,7 @@ let _hic=0; const _hi=setInterval(()=>{sendHeight();if(++_hic>=10)clearInterval(
       <label class="hr-modal-label" for="hr-email-input">Your email</label>
       <input class="hr-modal-input" type="email" id="hr-email-input" placeholder="you@email.com" autocomplete="email">
       <div class="hr-modal-error" id="hr-modal-error">Please enter a valid email address.</div>
-      <p class="hr-modal-note">We'll reach out when enough instructors have expressed interest in this studio. We won't share your email without your permission.</p>
+      <p class="hr-modal-note">Send a little hint to let them know you're interested. We'll do the work and reach out to the studio for you.</p>
       <div class="hr-modal-actions">
         <button class="hr-modal-cancel" onclick="closeHrModal()">Cancel</button>
         <button class="hr-modal-submit" id="hr-modal-submit" onclick="submitHandraise()">Send hint →</button>
