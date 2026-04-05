@@ -155,14 +155,18 @@
   .handraise-info-icon { display:inline-flex; align-items:center; justify-content:center; width:15px; height:15px; border-radius:50%; border:1.5px solid #b0aea4; color:#9e9c8f; font-size:9px; font-style:normal; font-weight:600; cursor:help; flex-shrink:0; line-height:1; font-family:'DM Sans',sans-serif; transition:border-color 0.2s; }
   .handraise-info-icon:hover { border-color:var(--accent-deep); color:var(--accent-deep); }
   /* Tooltip on info icon — opens upward */
-  .handraise-tooltip { display:none; position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background:var(--charcoal); color:#f5f4f2; font-size:11px; line-height:1.55; padding:9px 13px; border-radius:8px; white-space:normal; width:230px; text-align:center; z-index:300; pointer-events:none; font-weight:400; letter-spacing:0; text-transform:none; font-style:normal; }
-  .handraise-tooltip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:var(--charcoal); }
+  .handraise-tooltip { display:none; position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background:#ffffff; color:#2e2d29; border:1.5px solid #dddbd6; box-shadow:0 4px 16px rgba(46,45,41,0.12); font-size:11px; line-height:1.55; padding:9px 13px; border-radius:8px; white-space:normal; width:230px; text-align:center; z-index:300; pointer-events:none; font-weight:400; letter-spacing:0; text-transform:none; font-style:normal; }
+  .handraise-tooltip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:#dddbd6; }
+  .handraise-tooltip::before { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:6px solid transparent; border-top-color:#dddbd6; margin-top:1px; }
   .handraise-info-icon:hover .handraise-tooltip,
   .handraise-tooltip-wrap:hover .handraise-tooltip { display:block; }
   /* Touch-friendly tooltip toggle */
   .handraise-tooltip-wrap.tooltip-open .handraise-tooltip { display:block; }
 
-  /* ── Hand-raise modal ───────────────────────────────────────── */
+  /* ── Hand icon in card header ───────────────────────────────── */
+  .handraise-header-btn { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; border:1.5px solid #dddbd6; background:transparent; cursor:pointer; font-size:14px; transition:border-color 0.2s,background 0.2s; flex-shrink:0; line-height:1; padding:0; }
+  .handraise-header-btn:hover { border-color:var(--accent-deep); background:var(--sand); }
+  .handraise-header-btn.submitted { border-color:#5c8a5c; background:#f0f5f0; }
   .hr-modal-overlay { position:fixed; inset:0; background:rgba(46,45,41,0.5); z-index:1000; display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; pointer-events:none; transition:opacity 0.2s; }
   .hr-modal-overlay.open { opacity:1; pointer-events:all; }
   body.db-mobile .hr-modal-overlay { align-items:flex-end; padding:0; }
@@ -1254,7 +1258,10 @@ function renderCards(studios, totalCount, page) {
           </div>
           ${location?`<div class="studio-location"><svg width="10" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg>${location}</div>`:''}
         </div>
-        <div class="source-tags">${sourceTags}</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
+          <div class="source-tags">${sourceTags}</div>
+          <button class="handraise-header-btn" onclick="openHrModal(this)" data-hr-idx="${hrIdx}" title="Interested in working here?">🙋</button>
+        </div>
       </div>
       <div class="card-collapsed">
         <div class="formats-row">${formatPills}</div>
@@ -1658,11 +1665,13 @@ async function submitHandraise() {
   document.getElementById('hr-modal-form-view').style.display = 'none';
   document.getElementById('hr-modal-success-view').style.display = '';
 
-  // Update the button on the card to show submitted state
+  // Update all handraise buttons on this card to show submitted state
   if (_hrCurrentBtn) {
-    _hrCurrentBtn.classList.add('submitted');
-    _hrCurrentBtn.innerHTML = '✓ Hint sent';
-    _hrCurrentBtn.onclick = null;
+    const card = _hrCurrentBtn.closest('.studio-card');
+    if (card) {
+      card.querySelectorAll('.handraise-header-btn').forEach(b => { b.classList.add('submitted'); b.title='Hint sent ✓'; b.onclick=null; });
+      card.querySelectorAll('.handraise-btn').forEach(b => { b.classList.add('submitted'); b.innerHTML='✓ Hint sent'; b.onclick=null; });
+    }
   }
 
   setTimeout(() => closeHrModal(), 2200);
