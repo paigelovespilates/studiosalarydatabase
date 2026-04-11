@@ -216,36 +216,54 @@
     }
     .adm-badge-scoring { background: #f5f4f0; color: #aaa; border: 0.5px solid #ddd; font-style: italic; }
 
+    .adm-story-meta {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      color: #9a957f;
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
     .adm-story-callout {
-      background: #fdf8ec;
-      border: 0.5px solid #e8c96a;
-      border-radius: 7px;
-      padding: 10px 12px;
-      margin-bottom: 10px;
+      background: #EDEBE4;
+      border: none;
+      border-radius: 10px;
+      padding: 28px 26px 24px;
+      margin-bottom: 12px;
+      position: relative;
     }
     .adm-story-callout-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #a07820;
-      font-weight: 500;
-      margin-bottom: 6px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      font-style: italic;
+      color: #373930;
+      letter-spacing: 0;
+      text-transform: none;
+      margin-bottom: 18px;
+      line-height: 1.2;
     }
     .adm-story-field {
-      margin-bottom: 8px;
+      margin-bottom: 16px;
+      padding-left: 14px;
+      border-left: 2px solid rgba(55,57,48,0.15);
     }
     .adm-story-field:last-child { margin-bottom: 0; }
     .adm-story-field-label {
-      font-size: 10px;
-      color: #b89030;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 9px;
+      font-weight: 500;
+      color: #9a957f;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 3px;
+      letter-spacing: 0.1em;
+      margin-bottom: 5px;
     }
     .adm-story-field-text {
-      font-size: 13px;
-      color: #2a2010;
-      line-height: 1.5;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: #373930;
+      line-height: 1.55;
     }
 
     .adm-edit-section {
@@ -1057,8 +1075,9 @@
         }
         if (storyFields.length) {
           const stars = '✨'.repeat(Math.min(s.interestScore - 2, 3));
+          html += `<div class="adm-story-meta">${stars} ${s.interestScore}/5 · ${esc(s.interestReason || '')}</div>`;
           html += `<div class="adm-story-callout">
-            <div class="adm-story-callout-label">${stars} ${s.interestScore}/5 · ${esc(s.interestReason || '')}</div>
+            <div class="adm-story-callout-label">Stories that caught my eye</div>
             ${storyFields.map(f => `
               <div class="adm-story-field">
                 <div class="adm-story-field-label">${f.label}</div>
