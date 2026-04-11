@@ -265,6 +265,21 @@
       color: #373930;
       line-height: 1.55;
     }
+    .adm-story-open-btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 6px 12px;
+      margin-top: 18px;
+      border-radius: 5px;
+      border: 0.5px solid rgba(55,57,48,0.3);
+      background: transparent;
+      color: #373930;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.02em;
+    }
+    .adm-story-open-btn:hover { background: #373930; color: #EDEBE4; border-color: #373930; }
 
     .adm-edit-section {
       border-top: 0.5px solid #e8e8e5;
@@ -1046,6 +1061,123 @@
       btn.classList.toggle('open', open);
     }
 
+    // ── Open story in standalone page ──────────────────────────────────────────
+    function admOpenStory(storyKey) {
+      const story = (window._storyCache || {})[storyKey];
+      if (!story) { toast('Story data not found', 'error'); return; }
+      const esc = v => String(v || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+      const fieldsHtml = story.fields.map(f => `
+        <div class="story-field">
+          <div class="story-field-label">${esc(f.label)}</div>
+          <div class="story-field-text">${esc(f.text)}</div>
+        </div>`).join('');
+      const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Story — ${esc(story.displayName)}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #EDEBE4;
+    min-height: 100vh;
+    padding: 64px 48px;
+    color: #373930;
+  }
+  .story-page {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .story-brand {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    color: #9a957f;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 8px;
+  }
+  .story-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 600;
+    font-style: italic;
+    color: #373930;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .story-studio {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: #9a957f;
+    margin-bottom: 44px;
+    letter-spacing: 0.02em;
+  }
+  .story-field {
+    margin-bottom: 32px;
+    padding-left: 20px;
+    border-left: 2px solid rgba(55,57,48,0.2);
+  }
+  .story-field:last-child { margin-bottom: 0; }
+  .story-field-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    color: #9a957f;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 10px;
+  }
+  .story-field-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: #373930;
+    line-height: 1.5;
+  }
+  .story-footer {
+    margin-top: 56px;
+    padding-top: 20px;
+    border-top: 0.5px solid rgba(55,57,48,0.25);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    color: #9a957f;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+  }
+  @media (max-width: 640px) {
+    body { padding: 40px 28px; }
+    .story-heading { font-size: 32px; }
+    .story-field-text { font-size: 19px; }
+  }
+</style>
+</head>
+<body>
+  <div class="story-page">
+    <div class="story-brand">Stories that caught my eye</div>
+    <h1 class="story-heading">${esc(story.displayName)}</h1>
+    <div class="story-studio">${esc(story.location)}</div>
+    ${fieldsHtml}
+    <div class="story-footer">
+      <span>paigelovespilates.com</span>
+      <span>Studio salary database</span>
+    </div>
+  </div>
+</body>
+</html>`;
+      const w = window.open('', '_blank');
+      if (!w) { toast('Popup blocked — allow popups for this site', 'error'); return; }
+      w.document.open();
+      w.document.write(html);
+      w.document.close();
+    }
+
     // ── Build details panel HTML ───────────────────────────────────────────────
     function buildDetails(r, src, s) {
       const esc = v => String(v || '').replace(/&/g,'&amp;').replace(/</g,'&lt;');
@@ -1075,6 +1207,14 @@
         }
         if (storyFields.length) {
           const stars = '✨'.repeat(Math.min(s.interestScore - 2, 3));
+          const storyKey = src + '-' + s.rowIndex;
+          // Stash story payload for the popup window to retrieve
+          window._storyCache = window._storyCache || {};
+          window._storyCache[storyKey] = {
+            displayName: s.displayName || String(r[2] || ''),
+            location:    [String(src === 'studio' ? (r[32] || r[4] || r[5] || '') : (r[24] || r[4] || '')), String(src === 'studio' ? (r[6] || '') : (r[5] || '')), String(r[3] || '')].filter(Boolean).join(', '),
+            fields:      storyFields
+          };
           html += `<div class="adm-story-meta">${stars} ${s.interestScore}/5 · ${esc(s.interestReason || '')}</div>`;
           html += `<div class="adm-story-callout">
             <div class="adm-story-callout-label">Stories that caught my eye</div>
@@ -1083,7 +1223,9 @@
                 <div class="adm-story-field-label">${f.label}</div>
                 <div class="adm-story-field-text">${esc(f.text)}</div>
               </div>`).join('')}
+            <button class="adm-story-open-btn" onclick="admOpenStory('${storyKey}')">Open full view ↗</button>
           </div>`;
+        }
         }
       }
 
