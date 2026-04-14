@@ -315,6 +315,26 @@ body {
   border-color: var(--dark);
 }
 
+/* ── STUDIO BANNER ───────────────────────────────── */
+.studio-banner {
+  background: var(--linen);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 14px 20px;
+  margin-bottom: 48px;
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--mid);
+  line-height: 1.6;
+}
+.studio-banner a {
+  color: var(--olive);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule);
+  transition: border-color 0.2s;
+}
+.studio-banner a:hover { border-color: var(--olive); }
+
 /* ── FOOTER ──────────────────────────────────────── */
 .foot {
   margin-top: 64px;
@@ -516,6 +536,10 @@ body {
     </a>
   </div>
 
+  <div class="studio-banner">
+    Are you a studio owner? <a href="https://www.paigelovespilates.com/postajob" target="_top">Post a job</a> and immediately connect with instructors in your area.
+  </div>
+
   <!-- STEPS -->
   <div class="steps">
 
@@ -581,9 +605,6 @@ body {
             <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
           <span class="step-status">Live</span>
-        </div>
-        <div class="step-nudge">
-          <a href="https://www.paigelovespilates.com/postajob" target="_top">Studio owner? Post a job →</a>
         </div>
       </div>
     </div>
