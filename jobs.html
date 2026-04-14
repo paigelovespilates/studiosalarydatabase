@@ -203,6 +203,10 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
 .board-title em { font-style: italic; }
 .board-alert-btn { display: inline-flex; align-items: center; gap: 8px; font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(237,235,228,0.6); border: 1px solid rgba(237,235,228,0.2); border-radius: 2px; padding: 9px 16px; cursor: pointer; background: transparent; }
 .board-alert-btn:hover { color: #EDEBE4; border-color: rgba(237,235,228,0.5); }
+.studio-strip { display: flex; align-items: center; justify-content: space-between; padding: 20px 56px; background: var(--linen); border-top: 1px solid rgba(55,57,48,0.15); }
+.studio-strip-label { font-size: 13px; font-weight: 300; color: var(--olive); opacity: 0.55; }
+.studio-strip-btn { display: inline-flex; align-items: center; font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; color: var(--olive); border: 1px solid var(--olive); border-radius: 2px; padding: 9px 16px; text-decoration: none; opacity: 0.7; transition: opacity 0.15s; }
+.studio-strip-btn:hover { opacity: 1; }
 .board-filters { padding: 20px 56px; background: var(--linen); border-bottom: 1px solid var(--rule); display: flex; flex-direction: column; gap: 12px; }
 .filter-row-top { display: flex; }
 .filter-row-bottom { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -497,14 +501,15 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
         <div class="board-subtitle">Paige Loves Pilates</div>
         <h1 class="board-title">Studio <em>Job Board</em></h1>
       </div>
-      <div style="display:flex; flex-direction:column; align-items:flex-end; gap:12px;">
-        <button type="button" class="board-alert-btn" onclick="showEntranceAgain()">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          Update my alerts
-        </button>
-        <a href="https://www.paigelovespilates.com/postajob" target="_top" style="font-size:10px; font-weight:400; letter-spacing:0.14em; text-transform:uppercase; color:rgba(237,235,228,0.5); text-decoration:none; border-bottom:1px solid rgba(237,235,228,0.2);">Post a job →</a>
-      </div>
+      <button type="button" class="board-alert-btn" onclick="showEntranceAgain()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Update my alerts
+      </button>
     </div>
+  </div>
+  <div class="studio-strip">
+    <span class="studio-strip-label">Hiring instructors at your studio?</span>
+    <a href="https://www.paigelovespilates.com/postajob" target="_top" class="studio-strip-btn">Post a job →</a>
   </div>
   <div style="padding: 64px 56px 80px; max-width: 560px;">
     <p style="font-family:'Cormorant Garamond',serif; font-size:13px; font-weight:400; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); margin-bottom:20px;">Coming soon</p>
