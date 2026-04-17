@@ -267,19 +267,21 @@ function getSubscribers(frequency) {
   const rows  = sheet.getDataRange().getValues();
   const subs  = [];
 
+  // Subscriber sheet column layout (0-based):
+  // 0  email  1  country  2  postalCode  5  radius  6  radiusUnit  7  frequency  13  classFormats
   for (let i = 1; i < rows.length; i++) {
     const r     = rows[i];
-    const email = (r[1] || '').toString().trim();
+    const email = (r[0] || '').toString().trim();
     if (!email) continue;
     const subFreq = (r[7] || '').toString().trim().toLowerCase();
     if (frequency !== 'all' && subFreq !== frequency) continue;
     subs.push({
       email:      email,
-      country:    (r[2] || '').toString().trim(),
-      postalCode: (r[3] || '').toString().trim(),
-      formats:    (r[4] || '').toString().split(',').map(f => f.trim().toLowerCase()).filter(Boolean),
+      country:    (r[1]  || '').toString().trim(),
+      postalCode: (r[2]  || '').toString().trim(),
+      formats:    (r[13] || '').toString().split(',').map(f => f.trim().toLowerCase()).filter(Boolean),
       radius:     parseFloat(r[5]) || 50,
-      radiusUnit: (r[6] || 'km').toString().trim().toLowerCase(),
+      radiusUnit: (r[6]  || 'km').toString().trim().toLowerCase(),
       frequency:  subFreq
     });
   }
