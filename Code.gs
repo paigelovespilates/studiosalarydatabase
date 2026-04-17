@@ -150,7 +150,12 @@ function onJobPostingSubmit(e) {
   const sheet = ss.getSheetByName(JOBS_SHEET_NAME);
   if (!sheet) return;
 
-  const lastRow = sheet.getLastRow();
+  // getLastRow() can return phantom rows from leftover formatting — scan col 1 for last real row
+  const colValues = sheet.getRange(1, COL_JOB_ID, sheet.getLastRow(), 1).getValues();
+  let lastRow = 0;
+  for (let i = colValues.length - 1; i >= 0; i--) {
+    if (colValues[i][0] !== '') { lastRow = i + 1; break; }
+  }
   if (lastRow < 2) return;
 
   const row        = sheet.getRange(lastRow, 1, 1, sheet.getLastColumn()).getValues()[0];
