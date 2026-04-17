@@ -45,7 +45,7 @@ function handleSubscribeInstructor(body) {
 function subscribeInstructorCore(body) {
   try {
     const ss    = SpreadsheetApp.openById(SUBS_SHEET_ID);
-    const sheet = ss.getSheets()[0];
+    const sheet = ss.getSheetByName('Instructor Job Board Preferences') || ss.getSheets()[0];
     sheet.appendRow([
       body.timestamp      || new Date().toISOString(),
       body.email          || '',
