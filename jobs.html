@@ -493,7 +493,7 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
 </div><!-- /entrance -->
 
 
-<!-- ════════ COMING SOON ════════ -->
+<!-- ════════ JOB BOARD ════════ -->
 <div id="board">
   <div class="board-header">
     <div class="board-header-top">
@@ -507,19 +507,39 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
       </button>
     </div>
   </div>
-  <div class="studio-strip">
-    <span class="studio-strip-label">Hiring instructors at your studio?</span>
-    <a href="https://www.paigelovespilates.com/postajob" target="_top" class="studio-strip-btn">Post a job →</a>
+  <div class="board-filters">
+    <div class="filter-row-top">
+      <div class="filter-search-wrap">
+        <svg class="filter-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input class="filter-input filter-search" id="jb-search" type="text" placeholder="Search studio or city…">
+      </div>
+    </div>
+    <div class="filter-row-bottom">
+      <div class="filter-nearme-wrap" id="jb-nearme-wrap">
+        <button type="button" class="filter-nearme" id="jb-nearme" onclick="toggleNearMe()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+          Near Me
+        </button>
+        <select class="filter-input filter-select filter-radius" id="jb-radius" onchange="renderJobs()">
+          <option value="16">Within 10 mi</option>
+          <option value="40" selected>Within 25 mi</option>
+          <option value="80">Within 50 mi</option>
+          <option value="160">Within 100 mi</option>
+        </select>
+      </div>
+      <span class="nearme-error" id="jb-nearme-error">Location access denied — check your browser settings</span>
+      <button type="button" class="filter-sortdist" id="jb-sortdist" onclick="toggleSortDistance()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
+        Sort by Distance
+      </button>
+      <div class="filter-group"><select class="filter-input filter-select" id="jb-format"></select></div>
+      <div class="filter-group"><select class="filter-input filter-select" id="jb-position"></select></div>
+      <button type="button" class="clear-btn" onclick="jobBoardClearFilters()">Clear</button>
+    </div>
   </div>
-  <div style="padding: 64px 56px 80px; max-width: 560px;">
-    <p style="font-family:'Cormorant Garamond',serif; font-size:13px; font-weight:400; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); margin-bottom:20px;">Coming soon</p>
-    <h2 style="font-family:'Cormorant Garamond',serif; font-size:clamp(28px,4vw,38px); font-weight:300; color:var(--dark); line-height:1.2; letter-spacing:-0.01em; margin-bottom:20px;">Your alerts are set.<br><em>We'll do the rest.</em></h2>
-    <p style="font-family:'Cormorant Garamond',serif; font-size:17px; font-weight:300; font-style:italic; color:var(--mid); line-height:1.65; margin-bottom:32px; padding-bottom:32px; border-bottom:1px solid var(--rule);">The job board is almost ready. When it launches, we'll match new listings to your preferences and send them straight to your inbox — no hunting required.</p>
-    <p style="font-size:13px; font-weight:300; color:var(--muted); line-height:1.6; margin-bottom:28px;">In the meantime, browse the <a href="https://www.paigelovespilates.com/home-pay" style="color:var(--olive-m); text-decoration:none; border-bottom:1px solid var(--rule);">Studio Salary Database</a> to research studios in your area — and raise your hand on any tile to send a hint that you're interested, even before they post a role.</p>
-    <button type="button" onclick="showEntranceAgain()" style="display:inline-flex; align-items:center; gap:10px; background:transparent; border:1px solid var(--rule); border-radius:2px; padding:11px 20px; font-family:'DM Sans',sans-serif; font-size:10px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:var(--mid); cursor:pointer; transition:border-color 0.15s, color 0.15s;">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      Update my alerts
-    </button>
+  <div class="board-body">
+    <div class="board-status"><span id="jb-status">Loading…</span></div>
+    <div class="jobs-grid" id="jb-grid"></div>
   </div>
 </div>
 
@@ -541,6 +561,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (lsGet(DONE_KEY) || lsGet(SKIP_KEY)) {
     document.getElementById('entrance').style.display = 'none';
     document.getElementById('board').style.display = 'block';
+    initJobBoard();
   } else {
     // show entrance
   }
@@ -714,6 +735,7 @@ function goToBoard() {
   document.body.classList.remove('manage-mode');
   document.getElementById('entrance').style.display = 'none';
   document.getElementById('board').style.display = 'block';
+  initJobBoard();
   try { window.scrollTo(0, 0); } catch(e) {}
 }
 
