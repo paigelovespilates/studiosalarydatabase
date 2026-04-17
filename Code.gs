@@ -58,10 +58,9 @@ function doGet(e) {
   try {
     const action = (e.parameter.action || '').trim();
     const type   = (e.parameter.type   || '').trim();
-    if (action === 'getJobs'        || type === 'getJobs')        return handleGetJobs(e);
     if (action === 'recordInterest' || type === 'recordInterest') return handleRecordInterest(e);
     if (action === 'trackClick'     || type === 'trackClick')     return handleTrackClick(e);
-    return createJsonpResponse(e, { error: 'unknown action' });
+    return handleGetJobs(e); // default — jobs.html calls with no action param
   } catch (err) {
     return createJsonpResponse(e, { error: err.message });
   }

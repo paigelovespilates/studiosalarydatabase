@@ -802,13 +802,12 @@ function initJobBoard() {
       const json = JSON.parse(match[1]);
       if (json.error) throw new Error(json.error);
       const raw = json.jobs || [];
-      const start = raw[0]?.[0] === 'JobId' ? 1 : 0;
-      jobData = raw.slice(start).map(r => ({
-        id: r[0], studio: r[2]||'', city: r[3]||'', state: r[4]||'',
-        country: r[5]||'', format: r[6]||'', type: r[7]||'',
-        schedule: r[8]||'', pay: r[10]||'', notes: r[11]||'',
-        email: r[12]||'', posted: r[16]||'',
-        lat: r[17]||'', lng: r[18]||''
+      jobData = raw.map(j => ({
+        id: j.id||'', studio: j.studio||'', city: j.city||'', state: j.state||'',
+        country: j.country||'', format: j.format||'', type: j.role||'',
+        schedule: j.days||'', pay: j.pay||'', notes: j.notes||'',
+        email: j.contactEmail||'', posted: j.posted||'',
+        lat: j.lat||'', lng: j.lng||''
       })).filter(j => j.studio.trim());
       setupFilters();
       renderJobs();
