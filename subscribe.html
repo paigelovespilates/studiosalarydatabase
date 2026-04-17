@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Instructor Job Digest Subscription</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --sand: #eeedeb;
+      --warm-white: #f5f4f2;
+      --accent: #757263;
+      --accent-deep: #575648;
+      --stone: #9e9c8f;
+      --charcoal: #2e2d29;
+      --border: #dddbd6;
+      --border-light: #e8e7e3;
+    }
+    body { font-family: Lora, Georgia, serif; background: var(--warm-white); padding: 20px; }
+    .form-container { max-width: 520px; margin: 0 auto; background: white; padding: 40px; border-radius: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border-light); }
+    h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; font-weight: 400; margin-bottom: 12px; color: var(--charcoal); }
+    .form-description { font-size: 14px; color: var(--stone); margin-bottom: 28px; line-height: 1.6; }
+    .form-group { margin-bottom: 24px; }
+    label { display: block; font-size: 13px; font-weight: 500; color: var(--charcoal); margin-bottom: 8px; letter-spacing: 0.3px; }
+    input[type="text"], input[type="email"], input[type="number"], select { width: 100%; padding: 11px 12px; border: 1px solid var(--border); background: white; font-size: 13px; font-family: Lora, Georgia, serif; color: var(--charcoal); transition: border-color 0.2s; }
+    input[type="text"]:focus, input[type="email"]:focus, select:focus { outline: none; border-color: var(--accent); }
+    .input-hint { font-size: 12px; color: var(--stone); margin-top: 5px; font-style: italic; }
+    .checkbox-group, .radio-group { display: flex; flex-direction: column; gap: 11px; }
+    .checkbox-item, .radio-item { display: flex; align-items: center; gap: 10px; }
+    input[type="checkbox"], input[type="radio"] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent); }
+    .checkbox-item label, .radio-item label { margin: 0; cursor: pointer; font-weight: 400; font-size: 13px; color: var(--accent-deep); }
+    .slider-row { display: flex; align-items: center; gap: 12px; }
+    input[type="range"] { flex: 1; cursor: pointer; accent-color: var(--accent); }
+    .slider-value { min-width: 30px; text-align: right; font-size: 13px; color: var(--charcoal); font-weight: 500; }
+    .unit-toggle { display: flex; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    .unit-toggle button { width: auto; padding: 5px 10px; font-size: 11px; font-weight: 600; font-family: Lora, Georgia, serif; border: none; background: white; color: var(--stone); cursor: pointer; transition: all 0.2s; letter-spacing: 0.03em; }
+    .unit-toggle button.active { background: var(--accent); color: white; }
+    .unit-toggle button:hover:not(.active) { background: var(--sand); }
+    button[type="submit"] { width: 100%; padding: 13px 16px; background: var(--accent); color: white; border: none; font-family: Lora, Georgia, serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; letter-spacing: 0.3px; }
+    button[type="submit"]:hover { background: var(--accent-deep); }
+    button[type="submit"]:disabled { background: var(--stone); cursor: not-allowed; }
+    .form-status { display: none; padding: 13px 14px; border-radius: 2px; font-size: 13px; margin-bottom: 20px; text-align: center; border: 1px solid; }
+    .form-status.success { display: block; background: #f1f8f6; color: #2d6a4f; border-color: #d8ede8; }
+    .form-status.error { display: block; background: #fdf6f6; color: #8b3a3a; border-color: #f0d4d4; }
+    .form-status.loading { display: block; background: #f5f4f2; color: var(--accent); border-color: var(--border-light); }
+  </style>
+</head>
+<body>
+
+<div class="form-container">
+  <h2>Get Job Updates</h2>
+  <p class="form-description">Subscribe to digests of new teaching opportunities in your area, sorted by distance.</p>
+
+  <div class="form-status" id="formStatus"></div>
+
+  <form id="subscriptionForm" onsubmit="handleSubscribe(event)">
+
+    <div class="form-group">
+      <label for="email">Email Address *</label>
+      <input type="email" id="email" name="email" required placeholder="you@example.com">
+      <div class="input-hint">Where we'll send your digest</div>
+    </div>
+
+    <div class="form-group">
+      <label for="country">Country *</label>
+      <select id="country" name="country" required>
+        <option value="">Select country</option>
+        <option value="United States">United States</option>
+        <option value="Australia">Australia</option>
+        <option value="Austria">Austria</option>
+        <option value="Belgium">Belgium</option>
+        <option value="Canada">Canada</option>
+        <option value="Denmark">Denmark</option>
+        <option value="Finland">Finland</option>
+        <option value="France">France</option>
+        <option value="Germany">Germany</option>
+        <option value="Ireland">Ireland</option>
+        <option value="Italy">Italy</option>
+        <option value="Japan">Japan</option>
+        <option value="Netherlands">Netherlands</option>
+        <option value="New Zealand">New Zealand</option>
+        <option value="Norway">Norway</option>
+        <option value="Portugal">Portugal</option>
+        <option value="Singapore">Singapore</option>
+        <option value="Spain">Spain</option>
+        <option value="Sweden">Sweden</option>
+        <option value="Switzerland">Switzerland</option>
+        <option value="United Kingdom">United Kingdom</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="postalCode">Postal / Zip Code *</label>
+      <input type="text" id="postalCode" name="postalCode" required placeholder="e.g., 10001 or SW1A 1AA">
+      <div class="input-hint">We'll use this to find jobs near you</div>
+    </div>
+
+    <div class="form-group">
+      <label>Class Formats *</label>
+      <div class="checkbox-group">
+        <div class="checkbox-item">
+          <input type="checkbox" id="format-mat" name="classFormat" value="Mat Pilates">
+          <label for="format-mat">Mat Pilates</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="format-reformer" name="classFormat" value="Reformer / Apparatus">
+          <label for="format-reformer">Reformer / Apparatus</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="format-yoga" name="classFormat" value="Yoga">
+          <label for="format-yoga">Yoga</label>
+        </div>
+        <div class="checkbox-item">
+          <input type="checkbox" id="format-sculpt" name="classFormat" value="Sculpt">
+          <label for="format-sculpt">Sculpt</label>
+        </div>
+      </div>
+      <div class="input-hint">Select all formats you teach</div>
+    </div>
+
+    <div class="form-group">
+      <label>Search Radius</label>
+      <div class="slider-row">
+        <input type="range" id="distanceRadius" name="distanceRadius" min="1" max="100" value="25">
+        <span class="slider-value"><span id="distanceValue">25</span></span>
+        <div class="unit-toggle">
+          <button type="button" id="unit-mi" class="active" onclick="setUnit('mi')">mi</button>
+          <button type="button" id="unit-km" onclick="setUnit('km')">km</button>
+        </div>
+      </div>
+      <div class="input-hint">Jobs within this distance from your postal code</div>
+    </div>
+
+    <div class="form-group">
+      <label>Email Frequency *</label>
+      <div class="radio-group">
+        <div class="radio-item">
+          <input type="radio" id="freq-daily" name="frequency" value="daily" checked>
+          <label for="freq-daily">Daily digest (10 AM your time)</label>
+        </div>
+        <div class="radio-item">
+          <input type="radio" id="freq-weekly" name="frequency" value="weekly">
+          <label for="freq-weekly">Weekly digest (Mondays, 10 AM your time)</label>
+        </div>
+        <div class="radio-item">
+          <input type="radio" id="freq-realtime" name="frequency" value="realtime">
+          <label for="freq-realtime">Real-time alerts</label>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit">Subscribe to Job Updates</button>
+  </form>
+</div>
+
+<script>
+var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyG9ABlJnD7rghmsz_2p63zQOxKEwm1fBOOMIhNcXYBp2kGuy8lVQvk3BLDKOVxAVJm/exec';
+
+var radiusUnit = 'miles';
+
+function setUnit(unit) {
+  radiusUnit = unit === 'km' ? 'km' : 'miles';
+  document.getElementById('unit-mi').classList.toggle('active', unit === 'mi');
+  document.getElementById('unit-km').classList.toggle('active', unit === 'km');
+}
+
+document.getElementById('distanceRadius').addEventListener('input', function(e) {
+  document.getElementById('distanceValue').textContent = e.target.value;
+});
+
+function handleSubscribe(e) {
+  e.preventDefault();
+  e.stopPropagation();
+
+  var email          = document.getElementById('email').value.trim();
+  var country        = document.getElementById('country').value;
+  var postalCode     = document.getElementById('postalCode').value.trim();
+  var formatEls      = document.querySelectorAll('input[name="classFormat"]:checked');
+  var formats        = Array.prototype.slice.call(formatEls).map(function(el) { return el.value; });
+  var distanceRadius = parseInt(document.getElementById('distanceRadius').value);
+  var frequency      = document.querySelector('input[name="frequency"]:checked').value;
+
+  if (!formats.length) { showStatus('Please select at least one class format.', 'error'); return false; }
+
+  var submitBtn = document.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  showStatus('Subscribing...', 'loading');
+
+  var cbName = '_subCb_' + Date.now();
+  window[cbName] = function(result) {
+    delete window[cbName];
+    submitBtn.disabled = false;
+    if (result.ok) {
+      showStatus("You're subscribed! You'll receive job alerts based on your preferences.", 'success');
+      document.getElementById('subscriptionForm').reset();
+      document.getElementById('distanceValue').textContent = '25';
+      setUnit('mi');
+    } else {
+      showStatus(result.error || 'Subscription failed — please try again.', 'error');
+    }
+  };
+
+  var params = 'action=subscribe'
+    + '&callback=' + encodeURIComponent(cbName)
+    + '&email='    + encodeURIComponent(email)
+    + '&country='  + encodeURIComponent(country)
+    + '&postalCode='     + encodeURIComponent(postalCode)
+    + '&classFormats='   + encodeURIComponent(formats.join(', '))
+    + '&distanceRadius=' + encodeURIComponent(distanceRadius)
+    + '&radiusUnit='     + encodeURIComponent(radiusUnit)
+    + '&frequency='      + encodeURIComponent(frequency)
+    + '&timestamp='      + encodeURIComponent(new Date().toISOString());
+
+  var s = document.createElement('script');
+  s.src = APPS_SCRIPT_URL + '?' + params;
+  s.onerror = function() {
+    delete window[cbName];
+    submitBtn.disabled = false;
+    showStatus('Subscription failed — please try again.', 'error');
+    s.parentNode && s.parentNode.removeChild(s);
+  };
+  s.onload = function() { s.parentNode && s.parentNode.removeChild(s); };
+  document.body.appendChild(s);
+
+  return false;
+}
+
+function showStatus(message, type) {
+  var statusEl = document.getElementById('formStatus');
+  statusEl.textContent = message;
+  statusEl.className = 'form-status ' + type;
+  if (type === 'success') {
+    setTimeout(function() { statusEl.style.display = 'none'; }, 6000);
+  }
+}
+</script>
+
+</body>
+</html>
