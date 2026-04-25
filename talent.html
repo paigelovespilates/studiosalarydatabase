@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pilates Instructor Talent Directory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAF8F5;
+      --surface: #FFFFFF;
+      --border: #E8E2DA;
+      --text: #2C2825;
+      --text-secondary: #7A7067;
+      --accent: #B8860B;
+      --accent-light: #F5EDD6;
+      --accent-hover: #9A7009;
+      --tag-bg: #F0EBE3;
+      --tag-text: #5C5347;
+      --green: #4A7C59;
+      --green-bg: #EDF5EF;
+      --radius: 10px;
+      --shadow: 0 1px 3px rgba(44,40,37,0.06), 0 4px 12px rgba(44,40,37,0.04);
+      --shadow-hover: 0 2px 8px rgba(44,40,37,0.1), 0 8px 24px rgba(44,40,37,0.06);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 2rem 1.5rem 1.5rem;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.01em;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── Filters ── */
+    .filters {
+      max-width: 900px;
+      margin: 1.5rem auto 0;
+      padding: 0 1.5rem;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-row select,
+    .filter-row input {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      padding: 0.6rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .filter-row select:focus,
+    .filter-row input:focus {
+      border-color: var(--accent);
+    }
+
+    .filter-row select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A7067' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      padding-right: 2rem;
+    }
+
+    .search-btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.6rem 1.5rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+
+    .search-btn:hover { background: var(--accent-hover); }
+
+    .filter-summary {
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .clear-btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      color: var(--accent);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* ── Results ── */
+    .results {
+      max-width: 900px;
+      margin: 1.5rem auto 3rem;
+      padding: 0 1.5rem;
+    }
+
+    .results-count {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 4rem 1rem;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 2.5px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-bottom: 0.75rem;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 1rem;
+      color: var(--text-secondary);
+    }
+
+    .empty-state p { font-size: 0.95rem; }
+
+    /* ── Cards ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.35rem;
+      transition: box-shadow 0.2s, border-color 0.2s;
+      box-shadow: var(--shadow);
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-hover);
+      border-color: #D4CDC4;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.65rem;
+    }
+
+    .card-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      line-height: 1.3;
+    }
+
+    .card-location {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.15rem;
+    }
+
+    .card-experience {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--green);
+      background: var(--green-bg);
+      padding: 0.2rem 0.55rem;
+      border-radius: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.2rem 0.55rem;
+      border-radius: 20px;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+    }
+
+    .tag.cert {
+      background: var(--accent-light);
+      color: var(--accent-hover);
+    }
+
+    .card-notes {
+      font-size: 0.825rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 0.65rem;
+    }
+
+    .card-notes em {
+      font-style: normal;
+      color: var(--text);
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .social-link {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--accent);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: color 0.15s;
+    }
+
+    .social-link:hover { color: var(--accent-hover); }
+
+    .social-icon {
+      width: 14px;
+      height: 14px;
+      opacity: 0.7;
+    }
+
+    .card-looking-for {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .header h1 { font-size: 1.5rem; }
+      .filter-row { flex-direction: column; }
+      .filter-row select,
+      .filter-row input { min-width: 100%; }
+      .card-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Instructor Talent Directory</h1>
+    <p>Find Pilates instructors near you for sub and regular teaching opportunities.</p>
+  </div>
+
+  <div class="filters">
+    <div class="filter-row">
+      <input type="text" id="filterCity" placeholder="City (e.g., Austin)">
+      <select id="filterState"><option value="">Any State</option></select>
+      <select id="filterFormat"><option value="">Any Format</option></select>
+      <select id="filterCert"><option value="">Any Certification</option></select>
+      <select id="filterExperience"><option value="">Any Experience</option></select>
+      <button class="search-btn" onclick="applyFilters()">Search</button>
+    </div>
+    <div class="filter-summary" id="filterSummary" style="display:none;">
+      <span id="filterSummaryText"></span>
+      <button class="clear-btn" onclick="clearFilters()">Clear all</button>
+    </div>
+  </div>
+
+  <div class="results" id="results">
+    <div class="loading">
+      <div class="loading-spinner"></div>
+      <p>Loading instructor profiles…</p>
+    </div>
+  </div>
+
+  <script>
+    var ENDPOINT = 'https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec';
+    var allProfiles = [];
+
+    // ── Load data on page load ──
+    function init() {
+      var script = document.createElement('script');
+      script.src = ENDPOINT + '?action=talentBrowse&callback=handleBrowseResponse';
+      script.onerror = function() {
+        document.getElementById('results').innerHTML =
+          '<div class="empty-state"><p>Failed to load profiles. Please try again later.</p></div>';
+      };
+      document.body.appendChild(script);
+    }
+
+    function handleBrowseResponse(data) {
+      if (!data.success || !data.profiles) {
+        document.getElementById('results').innerHTML =
+          '<div class="empty-state"><p>No profiles available yet.</p></div>';
+        return;
+      }
+
+      allProfiles = data.profiles;
+      populateFilterDropdowns(allProfiles);
+      renderProfiles(allProfiles);
+    }
+
+    // ── Populate filter dropdowns from data ──
+    function populateFilterDropdowns(profiles) {
+      var states = {}, formats = {}, certs = {}, experiences = {};
+
+      profiles.forEach(function(p) {
+        if (p.state) states[p.state] = true;
+        if (p.formats) {
+          p.formats.split(',').forEach(function(f) {
+            var t = f.trim();
+            if (t) formats[t] = true;
+          });
+        }
+        if (p.certs) {
+          p.certs.split(',').forEach(function(c) {
+            var t = c.trim();
+            if (t) certs[t] = true;
+          });
+        }
+        if (p.experience) experiences[p.experience] = true;
+      });
+
+      fillSelect('filterState', states, 'Any State');
+      fillSelect('filterFormat', formats, 'Any Format');
+      fillSelect('filterCert', certs, 'Any Certification');
+      fillSelect('filterExperience', experiences, 'Any Experience');
+    }
+
+    function fillSelect(id, obj, placeholder) {
+      var el = document.getElementById(id);
+      el.innerHTML = '<option value="">' + placeholder + '</option>';
+      Object.keys(obj).sort().forEach(function(key) {
+        var opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = key;
+        el.appendChild(opt);
+      });
+    }
+
+    // ── Filter logic (client-side, no re-fetch) ──
+    function applyFilters() {
+      var city       = document.getElementById('filterCity').value.trim().toLowerCase();
+      var state      = document.getElementById('filterState').value;
+      var format     = document.getElementById('filterFormat').value.toLowerCase();
+      var cert       = document.getElementById('filterCert').value.toLowerCase();
+      var experience = document.getElementById('filterExperience').value.toLowerCase();
+
+      var filtered = allProfiles.filter(function(p) {
+        if (city && (p.city || '').toLowerCase().indexOf(city) === -1) return false;
+        if (state && (p.state || '') !== state) return false;
+        if (format && (p.formats || '').toLowerCase().indexOf(format) === -1) return false;
+        if (cert && (p.certs || '').toLowerCase().indexOf(cert) === -1) return false;
+        if (experience && (p.experience || '').toLowerCase() !== experience) return false;
+        return true;
+      });
+
+      // Show filter summary
+      var activeFilters = [];
+      if (city) activeFilters.push('city: ' + city);
+      if (state) activeFilters.push(state);
+      if (format) activeFilters.push(format);
+      if (cert) activeFilters.push(cert);
+      if (experience) activeFilters.push(experience);
+
+      var summary = document.getElementById('filterSummary');
+      if (activeFilters.length > 0) {
+        document.getElementById('filterSummaryText').textContent =
+          filtered.length + ' instructor' + (filtered.length !== 1 ? 's' : '') + ' matching: ' + activeFilters.join(', ');
+        summary.style.display = 'flex';
+      } else {
+        summary.style.display = 'none';
+      }
+
+      renderProfiles(filtered);
+    }
+
+    function clearFilters() {
+      document.getElementById('filterCity').value = '';
+      document.getElementById('filterState').value = '';
+      document.getElementById('filterFormat').value = '';
+      document.getElementById('filterCert').value = '';
+      document.getElementById('filterExperience').value = '';
+      document.getElementById('filterSummary').style.display = 'none';
+      renderProfiles(allProfiles);
+    }
+
+    // ── Render cards ──
+    function renderProfiles(profiles) {
+      var container = document.getElementById('results');
+
+      if (profiles.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>No instructors match your filters. Try broadening your search.</p></div>';
+        return;
+      }
+
+      var html = '<div class="results-count">' + profiles.length + ' instructor' + (profiles.length !== 1 ? 's' : '') + '</div>';
+      html += '<div class="card-grid">';
+
+      profiles.forEach(function(p) {
+        html += '<div class="card">';
+
+        // Header: name + experience badge
+        html += '<div class="card-header">';
+        html += '<div>';
+        html += '<div class="card-name">' + esc(p.displayName) + '</div>';
+        var loc = [p.city, p.state].filter(Boolean).join(', ');
+        if (loc) html += '<div class="card-location">' + esc(loc) + '</div>';
+        html += '</div>';
+        if (p.experience) {
+          html += '<span class="card-experience">' + esc(p.experience) + '</span>';
+        }
+        html += '</div>';
+
+        // Tags: formats + certs
+        var tags = [];
+        if (p.formats) {
+          p.formats.split(',').forEach(function(f) {
+            var t = f.trim();
+            if (t) tags.push('<span class="tag">' + esc(t) + '</span>');
+          });
+        }
+        if (p.certs) {
+          p.certs.split(',').forEach(function(c) {
+            var t = c.trim();
+            if (t) tags.push('<span class="tag cert">' + esc(t) + '</span>');
+          });
+        }
+        if (tags.length > 0) {
+          html += '<div class="card-tags">' + tags.join('') + '</div>';
+        }
+
+        // Notes
+        if (p.notes) {
+          var noteText = p.notes.length > 140 ? p.notes.substring(0, 140) + '…' : p.notes;
+          html += '<div class="card-notes">' + esc(noteText) + '</div>';
+        }
+
+        // Footer: socials + looking for
+        var hasFooter = p.instagram || p.tiktok || p.lookingFor;
+        if (hasFooter) {
+          html += '<div class="card-footer">';
+          if (p.instagram) {
+            html += '<a class="social-link" href="https://instagram.com/' + esc(p.instagram) + '" target="_blank" rel="noopener">';
+            html += '<svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>';
+            html += '@' + esc(p.instagram) + '</a>';
+          }
+          if (p.tiktok) {
+            html += '<a class="social-link" href="https://tiktok.com/@' + esc(p.tiktok) + '" target="_blank" rel="noopener">';
+            html += '<svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.46V13a8.28 8.28 0 005.58 2.17V11.7a4.83 4.83 0 01-3.77-1.24V6.69h3.77z"/></svg>';
+            html += '@' + esc(p.tiktok) + '</a>';
+          }
+          if (p.lookingFor) {
+            html += '<span class="card-looking-for">Looking for: ' + esc(p.lookingFor) + '</span>';
+          }
+          html += '</div>';
+        }
+
+        html += '</div>';
+      });
+
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
+    function esc(str) {
+      if (!str) return '';
+      var div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // ── Enter key triggers search ──
+    document.getElementById('filterCity').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') applyFilters();
+    });
+
+    // Init
+    init();
+  </script>
+</body>
+</html>
