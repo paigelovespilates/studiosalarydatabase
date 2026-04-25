@@ -8,322 +8,78 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #FAF8F5;
-      --surface: #FFFFFF;
-      --border: #E8E2DA;
-      --text: #2C2825;
-      --text-secondary: #7A7067;
-      --accent: #B8860B;
-      --accent-light: #F5EDD6;
-      --accent-hover: #9A7009;
-      --tag-bg: #F0EBE3;
-      --tag-text: #5C5347;
-      --green: #4A7C59;
-      --green-bg: #EDF5EF;
-      --red: #C0392B;
-      --red-bg: #FDEDEB;
-      --radius: 10px;
-      --shadow: 0 1px 3px rgba(44,40,37,0.06), 0 4px 12px rgba(44,40,37,0.04);
+      --bg: #FAF8F5; --surface: #FFFFFF; --border: #E8E2DA; --text: #2C2825;
+      --text-secondary: #7A7067; --accent: #B8860B; --accent-light: #F5EDD6;
+      --accent-hover: #9A7009; --tag-bg: #F0EBE3; --tag-text: #5C5347;
+      --green: #4A7C59; --green-bg: #EDF5EF; --red: #C0392B; --red-bg: #FDEDEB;
+      --radius: 10px; --shadow: 0 1px 3px rgba(44,40,37,0.06), 0 4px 12px rgba(44,40,37,0.04);
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 2rem 1.5rem 1.5rem;
-      text-align: center;
-      width: 100%;
-    }
-
-    .header h1 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.75rem;
-      font-weight: 400;
-      margin-bottom: 0.3rem;
-    }
-
-    .header p {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      max-width: 440px;
-      margin: 0 auto;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 520px;
-      padding: 2rem 1.5rem 3rem;
-    }
-
-    /* ── Form steps ── */
-    .step { display: none; }
-    .step.active { display: block; }
-
-    .step-label {
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-secondary);
-      margin-bottom: 0.5rem;
-    }
-
-    .step-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.3rem;
-      margin-bottom: 0.35rem;
-    }
-
-    .step-desc {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      margin-bottom: 1.25rem;
-    }
-
-    .input-group {
-      display: flex;
-      gap: 0.6rem;
-    }
-
-    .input-group input {
-      flex: 1;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 1rem;
-      padding: 0.7rem 0.9rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--surface);
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.15s;
-    }
-
-    .input-group input:focus {
-      border-color: var(--accent);
-    }
-
-    .input-group input.code-input {
-      text-align: center;
-      font-size: 1.4rem;
-      font-weight: 700;
-      letter-spacing: 0.25em;
-    }
-
-    .btn {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 600;
-      padding: 0.7rem 1.4rem;
-      border: none;
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: background 0.15s, opacity 0.15s;
-      white-space: nowrap;
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-    }
-
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+    .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 2rem 1.5rem 1.5rem; text-align: center; width: 100%; }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: 1.75rem; font-weight: 400; margin-bottom: 0.3rem; }
+    .header p { color: var(--text-secondary); font-size: 0.9rem; max-width: 440px; margin: 0 auto; }
+    .container { width: 100%; max-width: 520px; padding: 2rem 1.5rem 3rem; }
+    .step { display: none; } .step.active { display: block; }
+    .step-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); margin-bottom: 0.5rem; }
+    .step-title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 0.35rem; }
+    .step-desc { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .input-group { display: flex; gap: 0.6rem; }
+    .input-group input { flex: 1; font-family: 'DM Sans', sans-serif; font-size: 1rem; padding: 0.7rem 0.9rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); outline: none; transition: border-color 0.15s; }
+    .input-group input:focus { border-color: var(--accent); }
+    .input-group input.code-input { text-align: center; font-size: 1.4rem; font-weight: 700; letter-spacing: 0.25em; }
+    .btn { font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; padding: 0.7rem 1.4rem; border: none; border-radius: var(--radius); cursor: pointer; transition: background 0.15s, opacity 0.15s; white-space: nowrap; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary { background: var(--accent); color: #fff; }
     .btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--accent);
-      border: 1.5px solid var(--accent);
-    }
-
-    .btn-outline:hover:not(:disabled) {
-      background: var(--accent-light);
-    }
-
-    .error-msg {
-      font-size: 0.825rem;
-      color: var(--red);
-      margin-top: 0.6rem;
-      display: none;
-    }
-
+    .btn-outline { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
+    .btn-outline:hover:not(:disabled) { background: var(--accent-light); }
+    .btn-sm { font-size: 0.8rem; padding: 0.45rem 0.9rem; }
+    .error-msg { font-size: 0.825rem; color: var(--red); margin-top: 0.6rem; display: none; }
     .error-msg.visible { display: block; }
+    .resend-row { margin-top: 0.75rem; font-size: 0.825rem; color: var(--text-secondary); }
+    .resend-link { color: var(--accent); cursor: pointer; text-decoration: underline; background: none; border: none; font-family: inherit; font-size: inherit; }
 
-    .resend-row {
-      margin-top: 0.75rem;
-      font-size: 0.825rem;
-      color: var(--text-secondary);
-    }
-
-    .resend-link {
-      color: var(--accent);
-      cursor: pointer;
-      text-decoration: underline;
-      background: none;
-      border: none;
-      font-family: inherit;
-      font-size: inherit;
-    }
-
-    /* ── Profile card ── */
-    .profile-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .profile-card-header {
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-
-    .profile-name {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.35rem;
-    }
-
-    .profile-location {
-      font-size: 0.825rem;
-      color: var(--text-secondary);
-      margin-top: 0.15rem;
-    }
-
-    .profile-visible-badge {
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 0.2rem 0.6rem;
-      border-radius: 20px;
-      flex-shrink: 0;
-      margin-top: 0.15rem;
-    }
-
-    .profile-visible-badge.on {
-      color: var(--green);
-      background: var(--green-bg);
-    }
-
-    .profile-visible-badge.off {
-      color: var(--red);
-      background: var(--red-bg);
-    }
-
-    .profile-card-body {
-      padding: 1.25rem 1.5rem;
-    }
-
-    .profile-field {
-      margin-bottom: 1rem;
-    }
-
-    .profile-field:last-child { margin-bottom: 0; }
-
-    .profile-field-label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-secondary);
-      margin-bottom: 0.25rem;
-    }
-
-    .profile-field-value {
-      font-size: 0.9rem;
-    }
-
-    .profile-field-value.empty {
-      color: var(--red);
-      font-style: italic;
-      font-size: 0.825rem;
-    }
-
-    .profile-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem;
-    }
-
-    .profile-tag {
-      font-size: 0.75rem;
-      font-weight: 500;
-      padding: 0.2rem 0.55rem;
-      border-radius: 20px;
-      background: var(--tag-bg);
-      color: var(--tag-text);
-    }
-
-    .profile-tag.cert {
-      background: var(--accent-light);
-      color: var(--accent-hover);
-    }
-
-    .profile-social-link {
-      font-size: 0.85rem;
-      color: var(--accent);
-      text-decoration: none;
-    }
-
+    /* Profile card */
+    .profile-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .profile-card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; }
+    .profile-name { font-family: 'DM Serif Display', serif; font-size: 1.35rem; }
+    .profile-location { font-size: 0.825rem; color: var(--text-secondary); margin-top: 0.15rem; }
+    .profile-visible-badge { font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 20px; flex-shrink: 0; margin-top: 0.15rem; }
+    .profile-visible-badge.on { color: var(--green); background: var(--green-bg); }
+    .profile-visible-badge.off { color: var(--red); background: var(--red-bg); }
+    .profile-card-body { padding: 1.25rem 1.5rem; }
+    .profile-field { margin-bottom: 1rem; } .profile-field:last-child { margin-bottom: 0; }
+    .profile-field-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); margin-bottom: 0.25rem; }
+    .profile-field-value { font-size: 0.9rem; }
+    .profile-field-value.empty { color: var(--red); font-style: italic; font-size: 0.825rem; }
+    .profile-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .profile-tag { font-size: 0.75rem; font-weight: 500; padding: 0.2rem 0.55rem; border-radius: 20px; background: var(--tag-bg); color: var(--tag-text); }
+    .profile-tag.cert { background: var(--accent-light); color: var(--accent-hover); }
+    .profile-social-link { font-size: 0.85rem; color: var(--accent); text-decoration: none; }
     .profile-social-link:hover { text-decoration: underline; }
-
-    .profile-card-footer {
-      padding: 1rem 1.5rem;
-      border-top: 1px solid var(--border);
-      background: #FDFCFA;
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-
-    .missing-banner {
-      background: var(--accent-light);
-      border: 1px solid #E8D9A8;
-      border-radius: var(--radius);
-      padding: 0.85rem 1rem;
-      margin-bottom: 1.25rem;
-      font-size: 0.825rem;
-      color: var(--accent-hover);
-      line-height: 1.5;
-    }
-
+    .profile-card-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); background: #FDFCFA; display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .missing-banner { background: var(--accent-light); border: 1px solid #E8D9A8; border-radius: var(--radius); padding: 0.85rem 1rem; margin-bottom: 1.25rem; font-size: 0.825rem; color: var(--accent-hover); line-height: 1.5; }
     .missing-banner strong { font-weight: 600; }
 
-    /* ── Responsive ── */
-    @media (max-width: 500px) {
-      .header h1 { font-size: 1.4rem; }
-      .input-group { flex-direction: column; }
-      .container { padding: 1.5rem 1rem 3rem; }
-    }
+    /* Edit mode */
+    .edit-input { font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); outline: none; width: 100%; transition: border-color 0.15s; }
+    .edit-input:focus { border-color: var(--accent); }
+    .edit-textarea { font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); outline: none; width: 100%; min-height: 70px; resize: vertical; transition: border-color 0.15s; }
+    .edit-textarea:focus { border-color: var(--accent); }
+    .save-status { font-size: 0.825rem; margin-top: 0.5rem; }
+    .save-status.success { color: var(--green); }
+    .save-status.error { color: var(--red); }
+
+    @media (max-width: 500px) { .header h1 { font-size: 1.4rem; } .input-group { flex-direction: column; } .container { padding: 1.5rem 1rem 3rem; } }
   </style>
 </head>
 <body>
-
   <div class="header">
     <h1>View Your Profile</h1>
     <p>See what studios see when they browse the Talent Directory.</p>
   </div>
-
   <div class="container">
-
-    <!-- Step 1: Enter email -->
     <div class="step active" id="stepEmail">
       <div class="step-label">Step 1</div>
       <div class="step-title">Enter your email</div>
@@ -334,8 +90,6 @@
       </div>
       <div class="error-msg" id="emailError"></div>
     </div>
-
-    <!-- Step 2: Enter code -->
     <div class="step" id="stepCode">
       <div class="step-label">Step 2</div>
       <div class="step-title">Enter your code</div>
@@ -345,140 +99,69 @@
         <button class="btn btn-primary" id="verifyBtn" onclick="verifyCode()">Verify</button>
       </div>
       <div class="error-msg" id="codeError"></div>
-      <div class="resend-row">
-        Didn't get it? <button class="resend-link" onclick="resendCode()">Resend code</button>
-      </div>
+      <div class="resend-row">Didn't get it? <button class="resend-link" onclick="resendCode()">Resend code</button></div>
     </div>
-
-    <!-- Step 3: Profile -->
     <div class="step" id="stepProfile"></div>
-
   </div>
 
   <script>
     var ENDPOINT = 'https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec';
-    var TALLY_FORM = 'https://tally.so/r/Pd2XO0';
     var currentEmail = '';
+    var currentProfile = null;
+    var isEditMode = false;
     var callbackCounter = 0;
 
-    // ── JSONP helper ──
     function jsonp(url, cb) {
       var cbName = '__talentCb' + (callbackCounter++);
-      window[cbName] = function(data) {
-        delete window[cbName];
-        if (script.parentNode) script.parentNode.removeChild(script);
-        cb(data);
-      };
+      window[cbName] = function(data) { delete window[cbName]; if (script.parentNode) script.parentNode.removeChild(script); cb(data); };
       var script = document.createElement('script');
       script.src = url + (url.indexOf('?') > -1 ? '&' : '?') + 'callback=' + cbName;
-      script.onerror = function() {
-        delete window[cbName];
-        if (script.parentNode) script.parentNode.removeChild(script);
-        cb({ success: false, error: 'Network error' });
-      };
+      script.onerror = function() { delete window[cbName]; if (script.parentNode) script.parentNode.removeChild(script); cb({ success: false, error: 'Network error' }); };
       document.body.appendChild(script);
     }
 
-    // ── Step navigation ──
-    function showStep(id) {
-      document.querySelectorAll('.step').forEach(function(s) { s.classList.remove('active'); });
-      document.getElementById(id).classList.add('active');
-    }
+    function showStep(id) { document.querySelectorAll('.step').forEach(function(s) { s.classList.remove('active'); }); document.getElementById(id).classList.add('active'); }
+    function showError(id, msg) { var el = document.getElementById(id); el.textContent = msg; el.classList.add('visible'); }
+    function clearError(id) { var el = document.getElementById(id); el.textContent = ''; el.classList.remove('visible'); }
 
-    function showError(id, msg) {
-      var el = document.getElementById(id);
-      el.textContent = msg;
-      el.classList.add('visible');
-    }
-
-    function clearError(id) {
-      var el = document.getElementById(id);
-      el.textContent = '';
-      el.classList.remove('visible');
-    }
-
-    // ── Step 1: Send code ──
     function sendCode() {
       clearError('emailError');
       var email = document.getElementById('emailInput').value.trim().toLowerCase();
-
-      if (!email || email.indexOf('@') === -1) {
-        showError('emailError', 'Please enter a valid email address.');
-        return;
-      }
-
+      if (!email || email.indexOf('@') === -1) { showError('emailError', 'Please enter a valid email address.'); return; }
       currentEmail = email;
-      var btn = document.getElementById('sendCodeBtn');
-      btn.disabled = true;
-      btn.textContent = 'Sending…';
-
+      var btn = document.getElementById('sendCodeBtn'); btn.disabled = true; btn.textContent = 'Sending…';
       jsonp(ENDPOINT + '?action=talentSendCode&email=' + encodeURIComponent(email), function(data) {
-        btn.disabled = false;
-        btn.textContent = 'Send Code';
-
-        if (data.success) {
-          document.getElementById('codeSentTo').textContent = 'We sent a 6-digit code to ' + email + '.';
-          showStep('stepCode');
-          document.getElementById('codeInput').focus();
-        } else if (data.error === 'not_found') {
-          showError('emailError', 'We don\'t have a profile for this email. Submit the Talent Directory form first.');
-        } else {
-          showError('emailError', 'Something went wrong sending the code. Please try again.');
-        }
+        btn.disabled = false; btn.textContent = 'Send Code';
+        if (data.success) { document.getElementById('codeSentTo').textContent = 'We sent a 6-digit code to ' + email + '.'; showStep('stepCode'); document.getElementById('codeInput').focus(); }
+        else if (data.error === 'not_found') showError('emailError', 'We don\'t have a profile for this email. Submit the Talent Directory form first.');
+        else showError('emailError', 'Something went wrong sending the code. Please try again.');
       });
     }
 
     function resendCode() {
-      clearError('codeError');
-      document.getElementById('codeInput').value = '';
-
+      clearError('codeError'); document.getElementById('codeInput').value = '';
       jsonp(ENDPOINT + '?action=talentSendCode&email=' + encodeURIComponent(currentEmail), function(data) {
-        if (data.success) {
-          showError('codeError', 'New code sent!');
-          document.getElementById('codeError').style.color = 'var(--green)';
-          setTimeout(function() { clearError('codeError'); document.getElementById('codeError').style.color = ''; }, 3000);
-        } else {
-          showError('codeError', 'Failed to resend. Please try again.');
-        }
+        if (data.success) { showError('codeError', 'New code sent!'); document.getElementById('codeError').style.color = 'var(--green)'; setTimeout(function() { clearError('codeError'); document.getElementById('codeError').style.color = ''; }, 3000); }
+        else showError('codeError', 'Failed to resend. Please try again.');
       });
     }
 
-    // ── Step 2: Verify code ──
     function verifyCode() {
       clearError('codeError');
       var code = document.getElementById('codeInput').value.trim();
-
-      if (!code || code.length !== 6) {
-        showError('codeError', 'Please enter the 6-digit code from your email.');
-        return;
-      }
-
-      var btn = document.getElementById('verifyBtn');
-      btn.disabled = true;
-      btn.textContent = 'Verifying…';
-
+      if (!code || code.length !== 6) { showError('codeError', 'Please enter the 6-digit code from your email.'); return; }
+      var btn = document.getElementById('verifyBtn'); btn.disabled = true; btn.textContent = 'Verifying…';
       jsonp(ENDPOINT + '?action=talentVerify&email=' + encodeURIComponent(currentEmail) + '&code=' + encodeURIComponent(code), function(data) {
-        btn.disabled = false;
-        btn.textContent = 'Verify';
-
-        if (data.success && data.profile) {
-          renderProfile(data.profile);
-          showStep('stepProfile');
-        } else if (data.error === 'invalid_code') {
-          showError('codeError', 'That code doesn\'t match. Please check and try again.');
-        } else if (data.error === 'expired_code') {
-          showError('codeError', 'That code has expired. Click "Resend code" to get a new one.');
-        } else {
-          showError('codeError', 'Verification failed. Please try again.');
-        }
+        btn.disabled = false; btn.textContent = 'Verify';
+        if (data.success && data.profile) { currentProfile = data.profile; isEditMode = false; renderProfile(data.profile); showStep('stepProfile'); }
+        else if (data.error === 'invalid_code') showError('codeError', 'That code doesn\'t match. Please check and try again.');
+        else if (data.error === 'expired_code') showError('codeError', 'That code has expired. Click "Resend code" to get a new one.');
+        else showError('codeError', 'Verification failed. Please try again.');
       });
     }
 
-    // ── Step 3: Render profile ──
     function renderProfile(p) {
       var container = document.getElementById('stepProfile');
-
-      // Check which fields are empty
       var missing = [];
       if (!p.displayName) missing.push('Display Name');
       if (!p.phone) missing.push('Phone');
@@ -490,23 +173,22 @@
 
       var html = '';
 
-      // Missing fields banner
-      if (missing.length > 0) {
-        html += '<div class="missing-banner">';
-        html += '<strong>Complete your profile!</strong> Studios see the fields below when browsing. ';
-        html += 'You\'re missing: ' + missing.join(', ') + '. ';
-        html += '<a href="' + TALLY_FORM + '" target="_blank" style="color:inherit;font-weight:600;">Update now →</a>';
-        html += '</div>';
+      if (missing.length > 0 && !isEditMode) {
+        html += '<div class="missing-banner"><strong>Complete your profile!</strong> Studios see the fields below when browsing. You\'re missing: ' + missing.join(', ') + '. Click "Edit Profile" to fill them in.</div>';
       }
 
       html += '<div class="profile-card">';
 
       // Header
-      html += '<div class="profile-card-header">';
-      html += '<div>';
-      html += '<div class="profile-name">' + esc(p.displayName || 'No name set') + '</div>';
-      var loc = [p.city, p.state].filter(Boolean).join(', ');
-      html += '<div class="profile-location">' + (loc ? esc(loc) : '<span style="color:var(--red);font-style:italic;">No location</span>') + '</div>';
+      html += '<div class="profile-card-header"><div>';
+      if (isEditMode) {
+        html += '<div class="profile-field-label">Display Name</div>';
+        html += '<input class="edit-input" id="editName" value="' + escAttr(p.displayName) + '" placeholder="Your display name">';
+      } else {
+        html += '<div class="profile-name">' + esc(p.displayName || 'No name set') + '</div>';
+        var loc = [p.city, p.state].filter(Boolean).join(', ');
+        html += '<div class="profile-location">' + (loc ? esc(loc) : '<span style="color:var(--red);font-style:italic;">No location</span>') + '</div>';
+      }
       html += '</div>';
       html += '<span class="profile-visible-badge ' + (p.visible ? 'on' : 'off') + '">' + (p.visible ? 'Visible' : 'Hidden') + '</span>';
       html += '</div>';
@@ -514,96 +196,110 @@
       // Body
       html += '<div class="profile-card-body">';
 
-      // Contact info (only instructor sees this)
-      html += fieldRow('Email', p.email);
-      html += fieldRow('Phone', p.phone);
-
-      // Formats
-      if (p.formats) {
-        html += '<div class="profile-field"><div class="profile-field-label">Class Formats</div><div class="profile-tags">';
-        p.formats.split(',').forEach(function(f) {
-          var t = f.trim();
-          if (t) html += '<span class="profile-tag">' + esc(t) + '</span>';
-        });
-        html += '</div></div>';
+      if (isEditMode) {
+        html += editField('Phone', 'editPhone', p.phone, 'Your phone number');
+        html += editField('Certifications', 'editCerts', p.certs, 'e.g., Balanced Body, Stott/Merrithew');
+        html += editField('Experience Level', 'editExperience', p.experience, 'e.g., 5+ years');
+        html += editField('Instagram', 'editInstagram', p.instagram, 'Handle only, no @');
+        html += editField('TikTok', 'editTiktok', p.tiktok, 'Handle only, no @');
+        html += '<div class="profile-field"><div class="profile-field-label">Additional Notes</div>';
+        html += '<textarea class="edit-textarea" id="editNotes" placeholder="Anything else studios should know">' + esc(p.notes) + '</textarea></div>';
       } else {
-        html += fieldRow('Class Formats', '');
+        html += fieldRow('Email', p.email);
+        html += fieldRow('Phone', p.phone);
+
+        if (p.formats) {
+          html += '<div class="profile-field"><div class="profile-field-label">Class Formats</div><div class="profile-tags">';
+          p.formats.split(',').forEach(function(f) { var t = f.trim(); if (t) html += '<span class="profile-tag">' + esc(t) + '</span>'; });
+          html += '</div></div>';
+        } else { html += fieldRow('Class Formats', ''); }
+
+        html += fieldRow('Experience', p.experience);
+
+        if (p.certs) {
+          html += '<div class="profile-field"><div class="profile-field-label">Certifications</div><div class="profile-tags">';
+          p.certs.split(',').forEach(function(c) { var t = c.trim(); if (t) html += '<span class="profile-tag cert">' + esc(t) + '</span>'; });
+          html += '</div></div>';
+        } else { html += fieldRow('Certifications', ''); }
+
+        if (p.lookingFor) html += fieldRow('Looking For', p.lookingFor);
+
+        if (p.instagram) {
+          html += '<div class="profile-field"><div class="profile-field-label">Instagram</div><a class="profile-social-link" href="https://instagram.com/' + esc(p.instagram) + '" target="_blank">@' + esc(p.instagram) + '</a></div>';
+        } else { html += fieldRow('Instagram', ''); }
+
+        if (p.tiktok) {
+          html += '<div class="profile-field"><div class="profile-field-label">TikTok</div><a class="profile-social-link" href="https://tiktok.com/@' + esc(p.tiktok) + '" target="_blank">@' + esc(p.tiktok) + '</a></div>';
+        }
+
+        if (p.notes) html += fieldRow('Additional Notes', p.notes);
       }
 
-      // Experience
-      html += fieldRow('Experience', p.experience);
-
-      // Certifications
-      if (p.certs) {
-        html += '<div class="profile-field"><div class="profile-field-label">Certifications</div><div class="profile-tags">';
-        p.certs.split(',').forEach(function(c) {
-          var t = c.trim();
-          if (t) html += '<span class="profile-tag cert">' + esc(t) + '</span>';
-        });
-        html += '</div></div>';
-      } else {
-        html += fieldRow('Certifications', '');
-      }
-
-      // Looking for
-      if (p.lookingFor) html += fieldRow('Looking For', p.lookingFor);
-
-      // Instagram
-      if (p.instagram) {
-        html += '<div class="profile-field"><div class="profile-field-label">Instagram</div>';
-        html += '<a class="profile-social-link" href="https://instagram.com/' + esc(p.instagram) + '" target="_blank">@' + esc(p.instagram) + '</a></div>';
-      } else {
-        html += fieldRow('Instagram', '');
-      }
-
-      // TikTok
-      if (p.tiktok) {
-        html += '<div class="profile-field"><div class="profile-field-label">TikTok</div>';
-        html += '<a class="profile-social-link" href="https://tiktok.com/@' + esc(p.tiktok) + '" target="_blank">@' + esc(p.tiktok) + '</a></div>';
-      }
-
-      // Notes
-      if (p.notes) html += fieldRow('Additional Notes', p.notes);
-
+      html += '<div id="saveStatus"></div>';
       html += '</div>';
 
       // Footer
       html += '<div class="profile-card-footer">';
-      html += '<a href="' + TALLY_FORM + '" target="_blank" class="btn btn-primary" style="text-decoration:none;">Edit My Profile</a>';
-      html += '<button class="btn btn-outline" onclick="location.reload()">Sign Out</button>';
-      html += '</div>';
-
-      html += '</div>';
+      if (isEditMode) {
+        html += '<button class="btn btn-primary" id="saveBtn" onclick="saveProfile()">Save Changes</button>';
+        html += '<button class="btn btn-outline" onclick="cancelEdit()">Cancel</button>';
+      } else {
+        html += '<button class="btn btn-primary" onclick="enterEditMode()">Edit Profile</button>';
+        html += '<button class="btn btn-outline" onclick="location.reload()">Sign Out</button>';
+      }
+      html += '</div></div>';
 
       container.innerHTML = html;
     }
 
+    function editField(label, id, value, placeholder) {
+      return '<div class="profile-field"><div class="profile-field-label">' + esc(label) + '</div>'
+        + '<input class="edit-input" id="' + id + '" value="' + escAttr(value) + '" placeholder="' + esc(placeholder) + '"></div>';
+    }
+
     function fieldRow(label, value) {
-      var html = '<div class="profile-field">';
-      html += '<div class="profile-field-label">' + esc(label) + '</div>';
-      if (value) {
-        html += '<div class="profile-field-value">' + esc(value) + '</div>';
-      } else {
-        html += '<div class="profile-field-value empty">Not provided</div>';
-      }
-      html += '</div>';
-      return html;
+      var html = '<div class="profile-field"><div class="profile-field-label">' + esc(label) + '</div>';
+      if (value) html += '<div class="profile-field-value">' + esc(value) + '</div>';
+      else html += '<div class="profile-field-value empty">Not provided</div>';
+      html += '</div>'; return html;
     }
 
-    function esc(str) {
-      if (!str) return '';
-      var div = document.createElement('div');
-      div.textContent = str;
-      return div.innerHTML;
+    function enterEditMode() { isEditMode = true; renderProfile(currentProfile); }
+    function cancelEdit() { isEditMode = false; renderProfile(currentProfile); }
+
+    function saveProfile() {
+      var btn = document.getElementById('saveBtn');
+      btn.disabled = true; btn.textContent = 'Saving…';
+
+      var params = 'action=talentUpdate&email=' + encodeURIComponent(currentEmail);
+      params += '&displayName=' + encodeURIComponent(document.getElementById('editName').value);
+      params += '&phone=' + encodeURIComponent(document.getElementById('editPhone').value);
+      params += '&certs=' + encodeURIComponent(document.getElementById('editCerts').value);
+      params += '&experience=' + encodeURIComponent(document.getElementById('editExperience').value);
+      params += '&instagram=' + encodeURIComponent(document.getElementById('editInstagram').value);
+      params += '&tiktok=' + encodeURIComponent(document.getElementById('editTiktok').value);
+      params += '&notes=' + encodeURIComponent(document.getElementById('editNotes').value);
+
+      jsonp(ENDPOINT + '?' + params, function(data) {
+        btn.disabled = false; btn.textContent = 'Save Changes';
+        if (data.success && data.profile) {
+          currentProfile = data.profile;
+          isEditMode = false;
+          renderProfile(data.profile);
+          var status = document.getElementById('saveStatus');
+          if (status) { status.textContent = 'Profile saved!'; status.className = 'save-status success'; setTimeout(function() { status.textContent = ''; }, 3000); }
+        } else {
+          var status = document.getElementById('saveStatus');
+          if (status) { status.textContent = 'Failed to save. Please try again.'; status.className = 'save-status error'; }
+        }
+      });
     }
 
-    // ── Enter key handlers ──
-    document.getElementById('emailInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') sendCode();
-    });
-    document.getElementById('codeInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') verifyCode();
-    });
+    function esc(str) { if (!str) return ''; var div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
+    function escAttr(str) { if (!str) return ''; return str.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    document.getElementById('emailInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') sendCode(); });
+    document.getElementById('codeInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') verifyCode(); });
   </script>
 </body>
 </html>
