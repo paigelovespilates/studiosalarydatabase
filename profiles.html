@@ -25,7 +25,7 @@
     .step-title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 0.35rem; }
     .step-desc { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.25rem; }
     .input-group { display: flex; gap: 0.6rem; }
-    .input-group input { flex: 1; font-family: 'DM Sans', sans-serif; font-size: 1rem; padding: 0.7rem 0.9rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); outline: none; transition: border-color 0.15s; }
+    .input-group input { flex: 1; font-family: 'DM Sans', sans-serif; font-size: 1rem; padding: 0.7rem 0.9rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); outline: none; }
     .input-group input:focus { border-color: var(--accent); }
     .input-group input.code-input { text-align: center; font-size: 1.4rem; font-weight: 700; letter-spacing: 0.25em; }
     .btn { font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; padding: 0.7rem 1.4rem; border: none; border-radius: var(--radius); cursor: pointer; transition: background 0.15s, opacity 0.15s; white-space: nowrap; }
@@ -34,13 +34,10 @@
     .btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
     .btn-outline { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
     .btn-outline:hover:not(:disabled) { background: var(--accent-light); }
-    .btn-sm { font-size: 0.8rem; padding: 0.45rem 0.9rem; }
     .error-msg { font-size: 0.825rem; color: var(--red); margin-top: 0.6rem; display: none; }
     .error-msg.visible { display: block; }
     .resend-row { margin-top: 0.75rem; font-size: 0.825rem; color: var(--text-secondary); }
     .resend-link { color: var(--accent); cursor: pointer; text-decoration: underline; background: none; border: none; font-family: inherit; font-size: inherit; }
-
-    /* Profile card */
     .profile-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
     .profile-card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; }
     .profile-name { font-family: 'DM Serif Display', serif; font-size: 1.35rem; }
@@ -61,43 +58,38 @@
     .profile-card-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); background: #FDFCFA; display: flex; gap: 0.75rem; flex-wrap: wrap; }
     .missing-banner { background: var(--accent-light); border: 1px solid #E8D9A8; border-radius: var(--radius); padding: 0.85rem 1rem; margin-bottom: 1.25rem; font-size: 0.825rem; color: var(--accent-hover); line-height: 1.5; }
     .missing-banner strong { font-weight: 600; }
-
-    /* Edit mode */
-    .edit-input { font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); outline: none; width: 100%; transition: border-color 0.15s; }
+    .edit-input { font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); outline: none; width: 100%; }
     .edit-input:focus { border-color: var(--accent); }
-    .edit-textarea { font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); outline: none; width: 100%; min-height: 70px; resize: vertical; transition: border-color 0.15s; }
+    .edit-select { font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); outline: none; width: 100%; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A7067' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; padding-right: 2rem; }
+    .edit-select:focus { border-color: var(--accent); }
+    .edit-textarea { font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); outline: none; width: 100%; min-height: 70px; resize: vertical; }
     .edit-textarea:focus { border-color: var(--accent); }
+    .checkbox-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .checkbox-label { font-size: 0.85rem; display: flex; align-items: center; gap: 0.35rem; cursor: pointer; padding: 0.35rem 0.65rem; border: 1px solid var(--border); border-radius: 20px; transition: all 0.15s; user-select: none; }
+    .checkbox-label:hover { border-color: var(--accent); }
+    .checkbox-label.checked { background: var(--tag-bg); border-color: var(--tag-text); }
+    .checkbox-label input { display: none; }
+    .edit-row { display: flex; gap: 0.6rem; }
+    .edit-row > * { flex: 1; }
     .save-status { font-size: 0.825rem; margin-top: 0.5rem; }
     .save-status.success { color: var(--green); }
     .save-status.error { color: var(--red); }
-
-    @media (max-width: 500px) { .header h1 { font-size: 1.4rem; } .input-group { flex-direction: column; } .container { padding: 1.5rem 1rem 3rem; } }
+    @media (max-width: 500px) { .header h1 { font-size: 1.4rem; } .input-group { flex-direction: column; } .container { padding: 1.5rem 1rem 3rem; } .edit-row { flex-direction: column; } }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>View Your Profile</h1>
-    <p>See what studios see when they browse the Talent Directory.</p>
-  </div>
+  <div class="header"><h1>View Your Profile</h1><p>See what studios see when they browse the Talent Directory.</p></div>
   <div class="container">
     <div class="step active" id="stepEmail">
-      <div class="step-label">Step 1</div>
-      <div class="step-title">Enter your email</div>
+      <div class="step-label">Step 1</div><div class="step-title">Enter your email</div>
       <div class="step-desc">We'll send a verification code to confirm it's you.</div>
-      <div class="input-group">
-        <input type="email" id="emailInput" placeholder="your@email.com" autocomplete="email">
-        <button class="btn btn-primary" id="sendCodeBtn" onclick="sendCode()">Send Code</button>
-      </div>
+      <div class="input-group"><input type="email" id="emailInput" placeholder="your@email.com" autocomplete="email"><button class="btn btn-primary" id="sendCodeBtn" onclick="sendCode()">Send Code</button></div>
       <div class="error-msg" id="emailError"></div>
     </div>
     <div class="step" id="stepCode">
-      <div class="step-label">Step 2</div>
-      <div class="step-title">Enter your code</div>
+      <div class="step-label">Step 2</div><div class="step-title">Enter your code</div>
       <div class="step-desc" id="codeSentTo">We sent a 6-digit code to your email.</div>
-      <div class="input-group">
-        <input type="text" id="codeInput" class="code-input" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="one-time-code">
-        <button class="btn btn-primary" id="verifyBtn" onclick="verifyCode()">Verify</button>
-      </div>
+      <div class="input-group"><input type="text" id="codeInput" class="code-input" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="one-time-code"><button class="btn btn-primary" id="verifyBtn" onclick="verifyCode()">Verify</button></div>
       <div class="error-msg" id="codeError"></div>
       <div class="resend-row">Didn't get it? <button class="resend-link" onclick="resendCode()">Resend code</button></div>
     </div>
@@ -106,20 +98,19 @@
 
   <script>
     var ENDPOINT = 'https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec';
-    var currentEmail = '';
-    var currentProfile = null;
-    var isEditMode = false;
-    var callbackCounter = 0;
+    var currentEmail = '', currentProfile = null, isEditMode = false, callbackCounter = 0;
+
+    var FORMAT_OPTIONS = ['Mat Pilates', 'Reformer / Apparatus', 'Yoga', 'Sculpt'];
+    var LOOKING_FOR_OPTIONS = ['Sub Positions', 'Full Time Positions', 'Both - depends on the opportunity'];
 
     function jsonp(url, cb) {
-      var cbName = '__talentCb' + (callbackCounter++);
-      window[cbName] = function(data) { delete window[cbName]; if (script.parentNode) script.parentNode.removeChild(script); cb(data); };
-      var script = document.createElement('script');
-      script.src = url + (url.indexOf('?') > -1 ? '&' : '?') + 'callback=' + cbName;
-      script.onerror = function() { delete window[cbName]; if (script.parentNode) script.parentNode.removeChild(script); cb({ success: false, error: 'Network error' }); };
-      document.body.appendChild(script);
+      var cbName = '__cb' + (callbackCounter++);
+      window[cbName] = function(data) { delete window[cbName]; if (s.parentNode) s.parentNode.removeChild(s); cb(data); };
+      var s = document.createElement('script');
+      s.src = url + (url.indexOf('?') > -1 ? '&' : '?') + 'callback=' + cbName;
+      s.onerror = function() { delete window[cbName]; if (s.parentNode) s.parentNode.removeChild(s); cb({ success: false, error: 'Network error' }); };
+      document.body.appendChild(s);
     }
-
     function showStep(id) { document.querySelectorAll('.step').forEach(function(s) { s.classList.remove('active'); }); document.getElementById(id).classList.add('active'); }
     function showError(id, msg) { var el = document.getElementById(id); el.textContent = msg; el.classList.add('visible'); }
     function clearError(id) { var el = document.getElementById(id); el.textContent = ''; el.classList.remove('visible'); }
@@ -137,7 +128,6 @@
         else showError('emailError', 'Something went wrong sending the code. Please try again.');
       });
     }
-
     function resendCode() {
       clearError('codeError'); document.getElementById('codeInput').value = '';
       jsonp(ENDPOINT + '?action=talentSendCode&email=' + encodeURIComponent(currentEmail), function(data) {
@@ -145,7 +135,6 @@
         else showError('codeError', 'Failed to resend. Please try again.');
       });
     }
-
     function verifyCode() {
       clearError('codeError');
       var code = document.getElementById('codeInput').value.trim();
@@ -172,11 +161,9 @@
       if (!p.instagram) missing.push('Instagram');
 
       var html = '';
-
       if (missing.length > 0 && !isEditMode) {
         html += '<div class="missing-banner"><strong>Complete your profile!</strong> Studios see the fields below when browsing. You\'re missing: ' + missing.join(', ') + '. Click "Edit Profile" to fill them in.</div>';
       }
-
       html += '<div class="profile-card">';
 
       // Header
@@ -189,22 +176,48 @@
         var loc = [p.city, p.state].filter(Boolean).join(', ');
         html += '<div class="profile-location">' + (loc ? esc(loc) : '<span style="color:var(--red);font-style:italic;">No location</span>') + '</div>';
       }
-      html += '</div>';
-      html += '<span class="profile-visible-badge ' + (p.visible ? 'on' : 'off') + '">' + (p.visible ? 'Visible' : 'Hidden') + '</span>';
-      html += '</div>';
+      html += '</div><span class="profile-visible-badge ' + (p.visible ? 'on' : 'off') + '">' + (p.visible ? 'Visible' : 'Hidden') + '</span></div>';
 
       // Body
       html += '<div class="profile-card-body">';
 
       if (isEditMode) {
+        // Location: zip + country
+        html += '<div class="profile-field"><div class="profile-field-label">Location</div>';
+        var locDisplay = [p.city, p.state, p.country].filter(Boolean).join(', ');
+        if (locDisplay) html += '<div class="profile-field-value" style="margin-bottom:0.5rem;font-size:0.825rem;color:var(--text-secondary);">Current: ' + esc(locDisplay) + '</div>';
+        html += '<div class="edit-row">';
+        html += '<input class="edit-input" id="editZip" value="" placeholder="Zip / Postal Code">';
+        html += '<input class="edit-input" id="editCountry" value="' + escAttr(p.country) + '" placeholder="Country">';
+        html += '</div>';
+        html += '<div style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.25rem;">Enter zip + country to update your location</div></div>';
+
         html += editField('Phone', 'editPhone', p.phone, 'Your phone number');
         html += editField('Certifications', 'editCerts', p.certs, 'e.g., Balanced Body, Stott/Merrithew');
         html += editField('Experience Level', 'editExperience', p.experience, 'e.g., 5+ years');
+
+        // Class Formats: checkboxes
+        html += '<div class="profile-field"><div class="profile-field-label">Class Formats</div><div class="checkbox-group" id="editFormats">';
+        var currentFormats = (p.formats || '').split(',').map(function(f) { return f.trim().toLowerCase(); });
+        FORMAT_OPTIONS.forEach(function(opt) {
+          var checked = currentFormats.indexOf(opt.toLowerCase()) > -1;
+          html += '<label class="checkbox-label' + (checked ? ' checked' : '') + '"><input type="checkbox" value="' + escAttr(opt) + '"' + (checked ? ' checked' : '') + ' onchange="toggleCheckbox(this)">' + esc(opt) + '</label>';
+        });
+        html += '</div></div>';
+
+        // Looking For: dropdown
+        html += '<div class="profile-field"><div class="profile-field-label">Looking For</div>';
+        html += '<select class="edit-select" id="editLookingFor"><option value="">Select...</option>';
+        LOOKING_FOR_OPTIONS.forEach(function(opt) {
+          html += '<option value="' + escAttr(opt) + '"' + (p.lookingFor === opt ? ' selected' : '') + '>' + esc(opt) + '</option>';
+        });
+        html += '</select></div>';
+
         html += editField('Instagram', 'editInstagram', p.instagram, 'Handle only, no @');
         html += editField('TikTok', 'editTiktok', p.tiktok, 'Handle only, no @');
-        html += '<div class="profile-field"><div class="profile-field-label">Additional Notes</div>';
-        html += '<textarea class="edit-textarea" id="editNotes" placeholder="Anything else studios should know">' + esc(p.notes) + '</textarea></div>';
+        html += '<div class="profile-field"><div class="profile-field-label">Additional Notes</div><textarea class="edit-textarea" id="editNotes" placeholder="Anything else studios should know">' + esc(p.notes) + '</textarea></div>';
       } else {
+        // View mode
         html += fieldRow('Email', p.email);
         html += fieldRow('Phone', p.phone);
 
@@ -212,7 +225,7 @@
           html += '<div class="profile-field"><div class="profile-field-label">Class Formats</div><div class="profile-tags">';
           p.formats.split(',').forEach(function(f) { var t = f.trim(); if (t) html += '<span class="profile-tag">' + esc(t) + '</span>'; });
           html += '</div></div>';
-        } else { html += fieldRow('Class Formats', ''); }
+        } else html += fieldRow('Class Formats', '');
 
         html += fieldRow('Experience', p.experience);
 
@@ -220,23 +233,19 @@
           html += '<div class="profile-field"><div class="profile-field-label">Certifications</div><div class="profile-tags">';
           p.certs.split(',').forEach(function(c) { var t = c.trim(); if (t) html += '<span class="profile-tag cert">' + esc(t) + '</span>'; });
           html += '</div></div>';
-        } else { html += fieldRow('Certifications', ''); }
+        } else html += fieldRow('Certifications', '');
 
-        if (p.lookingFor) html += fieldRow('Looking For', p.lookingFor);
+        html += fieldRow('Looking For', p.lookingFor);
 
-        if (p.instagram) {
-          html += '<div class="profile-field"><div class="profile-field-label">Instagram</div><a class="profile-social-link" href="https://instagram.com/' + esc(p.instagram) + '" target="_blank">@' + esc(p.instagram) + '</a></div>';
-        } else { html += fieldRow('Instagram', ''); }
+        if (p.instagram) html += '<div class="profile-field"><div class="profile-field-label">Instagram</div><a class="profile-social-link" href="https://instagram.com/' + esc(p.instagram) + '" target="_blank">@' + esc(p.instagram) + '</a></div>';
+        else html += fieldRow('Instagram', '');
 
-        if (p.tiktok) {
-          html += '<div class="profile-field"><div class="profile-field-label">TikTok</div><a class="profile-social-link" href="https://tiktok.com/@' + esc(p.tiktok) + '" target="_blank">@' + esc(p.tiktok) + '</a></div>';
-        }
+        if (p.tiktok) html += '<div class="profile-field"><div class="profile-field-label">TikTok</div><a class="profile-social-link" href="https://tiktok.com/@' + esc(p.tiktok) + '" target="_blank">@' + esc(p.tiktok) + '</a></div>';
 
         if (p.notes) html += fieldRow('Additional Notes', p.notes);
       }
 
-      html += '<div id="saveStatus"></div>';
-      html += '</div>';
+      html += '<div id="saveStatus"></div></div>';
 
       // Footer
       html += '<div class="profile-card-footer">';
@@ -248,44 +257,59 @@
         html += '<button class="btn btn-outline" onclick="location.reload()">Sign Out</button>';
       }
       html += '</div></div>';
-
       container.innerHTML = html;
     }
 
-    function editField(label, id, value, placeholder) {
-      return '<div class="profile-field"><div class="profile-field-label">' + esc(label) + '</div>'
-        + '<input class="edit-input" id="' + id + '" value="' + escAttr(value) + '" placeholder="' + esc(placeholder) + '"></div>';
+    function toggleCheckbox(el) {
+      var label = el.parentElement;
+      if (el.checked) label.classList.add('checked');
+      else label.classList.remove('checked');
     }
 
+    function getSelectedFormats() {
+      var checkboxes = document.querySelectorAll('#editFormats input[type="checkbox"]');
+      var selected = [];
+      checkboxes.forEach(function(cb) { if (cb.checked) selected.push(cb.value); });
+      return selected.join(', ');
+    }
+
+    function editField(label, id, value, placeholder) {
+      return '<div class="profile-field"><div class="profile-field-label">' + esc(label) + '</div><input class="edit-input" id="' + id + '" value="' + escAttr(value) + '" placeholder="' + esc(placeholder) + '"></div>';
+    }
     function fieldRow(label, value) {
       var html = '<div class="profile-field"><div class="profile-field-label">' + esc(label) + '</div>';
       if (value) html += '<div class="profile-field-value">' + esc(value) + '</div>';
       else html += '<div class="profile-field-value empty">Not provided</div>';
-      html += '</div>'; return html;
+      return html + '</div>';
     }
-
     function enterEditMode() { isEditMode = true; renderProfile(currentProfile); }
     function cancelEdit() { isEditMode = false; renderProfile(currentProfile); }
 
     function saveProfile() {
-      var btn = document.getElementById('saveBtn');
-      btn.disabled = true; btn.textContent = 'Saving…';
-
+      var btn = document.getElementById('saveBtn'); btn.disabled = true; btn.textContent = 'Saving…';
       var params = 'action=talentUpdate&email=' + encodeURIComponent(currentEmail);
       params += '&displayName=' + encodeURIComponent(document.getElementById('editName').value);
       params += '&phone=' + encodeURIComponent(document.getElementById('editPhone').value);
       params += '&certs=' + encodeURIComponent(document.getElementById('editCerts').value);
       params += '&experience=' + encodeURIComponent(document.getElementById('editExperience').value);
+      params += '&formats=' + encodeURIComponent(getSelectedFormats());
+      params += '&lookingFor=' + encodeURIComponent(document.getElementById('editLookingFor').value);
       params += '&instagram=' + encodeURIComponent(document.getElementById('editInstagram').value);
       params += '&tiktok=' + encodeURIComponent(document.getElementById('editTiktok').value);
       params += '&notes=' + encodeURIComponent(document.getElementById('editNotes').value);
 
+      // Include zip + country for geocoding if zip is provided
+      var zip = document.getElementById('editZip').value.trim();
+      var country = document.getElementById('editCountry').value.trim();
+      if (zip) {
+        params += '&zip=' + encodeURIComponent(zip);
+        params += '&country=' + encodeURIComponent(country || 'United States');
+      }
+
       jsonp(ENDPOINT + '?' + params, function(data) {
         btn.disabled = false; btn.textContent = 'Save Changes';
         if (data.success && data.profile) {
-          currentProfile = data.profile;
-          isEditMode = false;
-          renderProfile(data.profile);
+          currentProfile = data.profile; isEditMode = false; renderProfile(data.profile);
           var status = document.getElementById('saveStatus');
           if (status) { status.textContent = 'Profile saved!'; status.className = 'save-status success'; setTimeout(function() { status.textContent = ''; }, 3000); }
         } else {
