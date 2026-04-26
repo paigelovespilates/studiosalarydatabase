@@ -210,7 +210,7 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
     }
     .card-name {
       font-family: 'Cormorant Garamond', serif;
@@ -245,7 +245,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.35rem;
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
     }
     .tag {
       font-size: 0.75rem;
@@ -258,32 +258,18 @@
       font-size: 0.825rem;
       color: var(--text-secondary);
       line-height: 1.45;
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
     }
-    .card-notes.collapsed {
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .read-more-btn {
-      background: none;
-      border: none;
+    .read-more-toggle {
       color: var(--text-secondary);
-      font-family: inherit;
-      font-size: 0.8rem;
-      font-weight: 400;
       font-style: italic;
       cursor: pointer;
-      padding: 0;
-      margin-bottom: 0.75rem;
-      text-decoration: none;
     }
-    .read-more-btn:hover { color: var(--accent); }
+    .read-more-toggle:hover { color: var(--accent); }
     .card-certs {
       font-size: 0.8rem;
       color: var(--text-secondary);
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
       line-height: 1.45;
     }
     .card-certs-label {
@@ -310,6 +296,21 @@
     }
     .card-social:hover { color: var(--accent); }
     .card-social svg { width: 14px; height: 14px; }
+    .card-contact {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.8rem;
+      color: var(--surface);
+      background: var(--accent);
+      text-decoration: none;
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      transition: background 0.2s;
+      margin-left: auto;
+    }
+    .card-contact:hover { background: var(--accent-hover); }
+    .card-contact svg { width: 13px; height: 13px; }
 
     .loading {
       text-align: center;
@@ -403,6 +404,13 @@
     function normalizeExperience(val) {
       if (!val) return '';
       return val.replace(/\s*-\s*/g, '-').replace(/\s+/g, ' ').trim();
+    }
+
+    function buildDisplayName(p) {
+      if (p.displayName) return p.displayName;
+      var loc = [p.city, p.state].filter(Boolean).join(', ');
+      if (loc) return 'Instructor \u00B7 ' + loc;
+      return 'Pilates Instructor';
     }
 
     function init() {
@@ -549,17 +557,19 @@
     }
 
     window.toggleNotes = function(cardId) {
-      var notes = document.getElementById('notes-' + cardId);
-      var btn = document.getElementById('readmore-' + cardId);
-      if (!notes || !btn) return;
-      if (notes.classList.contains('collapsed')) {
-        notes.classList.remove('collapsed');
-        btn.textContent = 'Read less';
+      var full = document.getElementById('full-' + cardId);
+      var short = document.getElementById('short-' + cardId);
+      if (!full || !short) return;
+      if (full.style.display === 'none') {
+        full.style.display = 'inline';
+        short.style.display = 'none';
       } else {
-        notes.classList.add('collapsed');
-        btn.textContent = 'Read more';
+        full.style.display = 'none';
+        short.style.display = 'inline';
       }
     };
+
+    var mailSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4l-10 8L2 4"/></svg>';
 
     function renderProfiles(profiles) {
       var container = document.getElementById('results');
@@ -569,11 +579,17 @@
       html += '<div class="card-grid">';
 
       profiles.forEach(function(p, idx) {
+        var name = buildDisplayName(p);
+        var hasRealName = !!p.displayName;
+
         html += '<div class="card">';
         html += '<div class="card-header"><div>';
-        html += '<div class="card-name">' + esc(p.displayName || 'Anonymous Instructor') + '</div>';
-        var loc = [p.city, p.state].filter(Boolean).join(', ');
-        if (loc) html += '<div class="card-location">' + esc(loc) + '</div>';
+        html += '<div class="card-name">' + esc(name) + '</div>';
+        // Only show location line if they have a real name (otherwise it's already in the name)
+        if (hasRealName) {
+          var loc = [p.city, p.state].filter(Boolean).join(', ');
+          if (loc) html += '<div class="card-location">' + esc(loc) + '</div>';
+        }
         if (p._distance !== undefined && p._distance < 99999) html += '<div class="card-distance">' + Math.round(p._distance) + ' mi away</div>';
         html += '</div>';
         if (p.experience) html += '<span class="card-experience">' + esc(p.experience) + '</span>';
@@ -586,11 +602,20 @@
           if (formatTags.length > 0) html += '<div class="card-tags">' + formatTags.join('') + '</div>';
         }
 
-        // Notes with expand/collapse
+        // Notes with inline read more/less
         if (p.notes) {
           var needsExpand = p.notes.length > 140;
-          html += '<div class="card-notes' + (needsExpand ? ' collapsed' : '') + '" id="notes-' + idx + '">' + esc(p.notes) + '</div>';
-          if (needsExpand) html += '<button class="read-more-btn" id="readmore-' + idx + '" onclick="toggleNotes(' + idx + ')">Read more</button>';
+          html += '<div class="card-notes">';
+          if (needsExpand) {
+            var truncated = p.notes.substring(0, 140);
+            var lastSpace = truncated.lastIndexOf(' ');
+            if (lastSpace > 100) truncated = truncated.substring(0, lastSpace);
+            html += '<span id="short-' + idx + '">' + esc(truncated) + '… <span class="read-more-toggle" onclick="toggleNotes(' + idx + ')">Read more</span></span>';
+            html += '<span id="full-' + idx + '" style="display:none;">' + esc(p.notes) + ' <span class="read-more-toggle" onclick="toggleNotes(' + idx + ')">Read less</span></span>';
+          } else {
+            html += esc(p.notes);
+          }
+          html += '</div>';
         }
 
         // Certification details as text below notes
@@ -599,21 +624,23 @@
           html += '<div class="card-certs"><span class="card-certs-label">Certification Details:</span> ' + esc(certsFormatted) + '</div>';
         }
 
-        // Footer: social links
-        if (p.instagram || p.tiktok) {
-          html += '<div class="card-footer">';
-          if (p.instagram) {
-            html += '<a class="card-social" href="https://instagram.com/' + encodeURIComponent(p.instagram) + '" target="_blank" rel="noopener">';
-            html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>';
-            html += '@' + esc(p.instagram) + '</a>';
-          }
-          if (p.tiktok) {
-            html += '<a class="card-social" href="https://tiktok.com/@' + encodeURIComponent(p.tiktok) + '" target="_blank" rel="noopener">';
-            html += '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V9.48a8.1 8.1 0 004.69 1.49v-3.4a4.85 4.85 0 01-.93.12 4.83 4.83 0 01-3.77z"/></svg>';
-            html += '@' + esc(p.tiktok) + '</a>';
-          }
-          html += '</div>';
+        // Footer: social links + contact button
+        html += '<div class="card-footer">';
+        if (p.instagram) {
+          html += '<a class="card-social" href="https://instagram.com/' + encodeURIComponent(p.instagram) + '" target="_blank" rel="noopener">';
+          html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>';
+          html += '@' + esc(p.instagram) + '</a>';
         }
+        if (p.tiktok) {
+          html += '<a class="card-social" href="https://tiktok.com/@' + encodeURIComponent(p.tiktok) + '" target="_blank" rel="noopener">';
+          html += '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V9.48a8.1 8.1 0 004.69 1.49v-3.4a4.85 4.85 0 01-.93.12 4.83 4.83 0 01-3.77z"/></svg>';
+          html += '@' + esc(p.tiktok) + '</a>';
+        }
+        if (p.email) {
+          html += '<a class="card-contact" href="mailto:' + encodeURIComponent(p.email) + '?subject=' + encodeURIComponent('Reaching out from PaigeLovesPilates Talent Directory') + '" target="_top">';
+          html += mailSvg + ' Contact</a>';
+        }
+        html += '</div>';
 
         html += '</div>';
       });
