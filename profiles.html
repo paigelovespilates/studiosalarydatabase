@@ -5,24 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>View Your Profile — Pilates Talent Directory</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #FAF8F5; --surface: #FFFFFF; --border: #E8E2DA; --text: #2C2825;
-      --text-secondary: #7A7067; --accent: #B8860B; --accent-light: #F5EDD6;
-      --accent-hover: #9A7009; --tag-bg: #F0EBE3; --tag-text: #5C5347;
+      --bg: #EDEBE4; --surface: #FFFFFF; --border: #D6D3CB; --text: #373930;
+      --text-secondary: #6B6A63; --accent: #373930; --accent-light: #E8E5DC;
+      --accent-hover: #1F1E18; --tag-bg: #E8E5DC; --tag-text: #4A4940;
       --green: #4A7C59; --green-bg: #EDF5EF; --red: #C0392B; --red-bg: #FDEDEB;
-      --radius: 10px; --shadow: 0 1px 3px rgba(44,40,37,0.06), 0 4px 12px rgba(44,40,37,0.04);
+      --radius: 8px; --shadow: 0 1px 3px rgba(55,57,48,0.06), 0 4px 12px rgba(55,57,48,0.04);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
-    .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 2rem 1.5rem 1.5rem; text-align: center; width: 100%; }
-    .header h1 { font-family: 'DM Serif Display', serif; font-size: 1.75rem; font-weight: 400; margin-bottom: 0.3rem; }
-    .header p { color: var(--text-secondary); font-size: 0.9rem; max-width: 440px; margin: 0 auto; }
+    .header { background: var(--accent); padding: 2rem 1.5rem 1.5rem; text-align: center; width: 100%; }
+    .header h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.75rem; font-weight: 600; color: #EDEBE4; margin-bottom: 0.3rem; }
+    .header p { color: #B0AFA8; font-size: 0.9rem; max-width: 440px; margin: 0 auto; }
     .container { width: 100%; max-width: 520px; padding: 2rem 1.5rem 3rem; }
     .step { display: none; } .step.active { display: block; }
-    .step-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); margin-bottom: 0.5rem; }
-    .step-title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 0.35rem; }
+    .step-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary); margin-bottom: 0.5rem; }
+    .step-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; margin-bottom: 0.35rem; }
     .step-desc { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.25rem; }
     .input-group { display: flex; gap: 0.6rem; }
     .input-group input { flex: 1; font-family: 'DM Sans', sans-serif; font-size: 1rem; padding: 0.7rem 0.9rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); outline: none; }
@@ -30,7 +30,7 @@
     .input-group input.code-input { text-align: center; font-size: 1.4rem; font-weight: 700; letter-spacing: 0.25em; }
     .btn { font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; padding: 0.7rem 1.4rem; border: none; border-radius: var(--radius); cursor: pointer; transition: background 0.15s, opacity 0.15s; white-space: nowrap; }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary { background: var(--accent); color: #EDEBE4; }
     .btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
     .btn-outline { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
     .btn-outline:hover:not(:disabled) { background: var(--accent-light); }
@@ -40,7 +40,7 @@
     .resend-link { color: var(--accent); cursor: pointer; text-decoration: underline; background: none; border: none; font-family: inherit; font-size: inherit; }
     .profile-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
     .profile-card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; }
-    .profile-name { font-family: 'DM Serif Display', serif; font-size: 1.35rem; }
+    .profile-name { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 600; }
     .profile-location { font-size: 0.825rem; color: var(--text-secondary); margin-top: 0.15rem; }
     .profile-visible-badge { font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 20px; flex-shrink: 0; margin-top: 0.15rem; }
     .profile-visible-badge.on { color: var(--green); background: var(--green-bg); }
@@ -52,15 +52,15 @@
     .profile-field-value.empty { color: var(--red); font-style: italic; font-size: 0.825rem; }
     .profile-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
     .profile-tag { font-size: 0.75rem; font-weight: 500; padding: 0.2rem 0.55rem; border-radius: 20px; background: var(--tag-bg); color: var(--tag-text); }
-    .profile-tag.cert { background: var(--accent-light); color: var(--accent-hover); }
+    .profile-tag.cert { background: var(--accent-light); color: var(--accent); }
     .profile-social-link { font-size: 0.85rem; color: var(--accent); text-decoration: none; }
     .profile-social-link:hover { text-decoration: underline; }
-    .profile-card-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); background: #FDFCFA; display: flex; gap: 0.75rem; flex-wrap: wrap; }
-    .missing-banner { background: var(--accent-light); border: 1px solid #E8D9A8; border-radius: var(--radius); padding: 0.85rem 1rem; margin-bottom: 1.25rem; font-size: 0.825rem; color: var(--accent-hover); line-height: 1.5; }
-    .missing-banner strong { font-weight: 600; }
+    .profile-card-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); background: #F5F3EE; display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .missing-banner { background: var(--accent-light); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.85rem 1rem; margin-bottom: 1.25rem; font-size: 0.825rem; color: var(--text-secondary); line-height: 1.5; }
+    .missing-banner strong { font-weight: 600; color: var(--text); }
     .edit-input { font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); outline: none; width: 100%; }
     .edit-input:focus { border-color: var(--accent); }
-    .edit-select { font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); outline: none; width: 100%; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A7067' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; padding-right: 2rem; }
+    .edit-select { font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); outline: none; width: 100%; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6A63' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; padding-right: 2rem; }
     .edit-select:focus { border-color: var(--accent); }
     .edit-textarea { font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); outline: none; width: 100%; min-height: 70px; resize: vertical; }
     .edit-textarea:focus { border-color: var(--accent); }
@@ -101,7 +101,13 @@
     var currentEmail = '', currentProfile = null, isEditMode = false, callbackCounter = 0;
 
     var FORMAT_OPTIONS = ['Mat Pilates', 'Reformer / Apparatus', 'Yoga', 'Sculpt'];
-    var LOOKING_FOR_OPTIONS = ['Sub Positions', 'Full Time Positions', 'Both - depends on the opportunity'];
+
+    var COUNTRY_OPTIONS = [
+      'United States', 'Canada', 'United Kingdom', 'Australia', 'New Zealand',
+      'Ireland', 'Germany', 'France', 'Spain', 'Italy', 'Netherlands',
+      'Belgium', 'Austria', 'Switzerland', 'Sweden', 'Norway', 'Denmark',
+      'Finland', 'Portugal', 'Japan', 'Singapore'
+    ];
 
     function jsonp(url, cb) {
       var cbName = '__cb' + (callbackCounter++);
@@ -182,13 +188,20 @@
       html += '<div class="profile-card-body">';
 
       if (isEditMode) {
-        // Location: zip + country
+        // Location: zip + country dropdown
         html += '<div class="profile-field"><div class="profile-field-label">Location</div>';
         var locDisplay = [p.city, p.state, p.country].filter(Boolean).join(', ');
         if (locDisplay) html += '<div class="profile-field-value" style="margin-bottom:0.5rem;font-size:0.825rem;color:var(--text-secondary);">Current: ' + esc(locDisplay) + '</div>';
         html += '<div class="edit-row">';
         html += '<input class="edit-input" id="editZip" value="" placeholder="Zip / Postal Code">';
-        html += '<input class="edit-input" id="editCountry" value="' + escAttr(p.country) + '" placeholder="Country">';
+        html += '<select class="edit-select" id="editCountry">';
+        html += '<option value="">Select country...</option>';
+        var currentCountry = (p.country || '').trim();
+        COUNTRY_OPTIONS.forEach(function(c) {
+          var selected = (currentCountry.toLowerCase() === c.toLowerCase()) ? ' selected' : '';
+          html += '<option value="' + escAttr(c) + '"' + selected + '>' + esc(c) + '</option>';
+        });
+        html += '</select>';
         html += '</div>';
         html += '<div style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.25rem;">Enter zip + country to update your location</div></div>';
 
@@ -204,14 +217,6 @@
           html += '<label class="checkbox-label' + (checked ? ' checked' : '') + '"><input type="checkbox" value="' + escAttr(opt) + '"' + (checked ? ' checked' : '') + ' onchange="toggleCheckbox(this)">' + esc(opt) + '</label>';
         });
         html += '</div></div>';
-
-        // Looking For: dropdown
-        html += '<div class="profile-field"><div class="profile-field-label">Looking For</div>';
-        html += '<select class="edit-select" id="editLookingFor"><option value="">Select...</option>';
-        LOOKING_FOR_OPTIONS.forEach(function(opt) {
-          html += '<option value="' + escAttr(opt) + '"' + (p.lookingFor === opt ? ' selected' : '') + '>' + esc(opt) + '</option>';
-        });
-        html += '</select></div>';
 
         html += editField('Instagram', 'editInstagram', p.instagram, 'Handle only, no @');
         html += editField('TikTok', 'editTiktok', p.tiktok, 'Handle only, no @');
@@ -234,8 +239,6 @@
           p.certs.split(',').forEach(function(c) { var t = c.trim(); if (t) html += '<span class="profile-tag cert">' + esc(t) + '</span>'; });
           html += '</div></div>';
         } else html += fieldRow('Certifications', '');
-
-        html += fieldRow('Looking For', p.lookingFor);
 
         if (p.instagram) html += '<div class="profile-field"><div class="profile-field-label">Instagram</div><a class="profile-social-link" href="https://instagram.com/' + esc(p.instagram) + '" target="_blank">@' + esc(p.instagram) + '</a></div>';
         else html += fieldRow('Instagram', '');
@@ -293,14 +296,14 @@
       params += '&certs=' + encodeURIComponent(document.getElementById('editCerts').value);
       params += '&experience=' + encodeURIComponent(document.getElementById('editExperience').value);
       params += '&formats=' + encodeURIComponent(getSelectedFormats());
-      params += '&lookingFor=' + encodeURIComponent(document.getElementById('editLookingFor').value);
       params += '&instagram=' + encodeURIComponent(document.getElementById('editInstagram').value);
       params += '&tiktok=' + encodeURIComponent(document.getElementById('editTiktok').value);
       params += '&notes=' + encodeURIComponent(document.getElementById('editNotes').value);
 
       // Include zip + country for geocoding if zip is provided
       var zip = document.getElementById('editZip').value.trim();
-      var country = document.getElementById('editCountry').value.trim();
+      var countryEl = document.getElementById('editCountry');
+      var country = countryEl.value.trim();
       if (zip) {
         params += '&zip=' + encodeURIComponent(zip);
         params += '&country=' + encodeURIComponent(country || 'United States');
