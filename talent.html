@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pilates Instructor Talent Directory</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #EDEBE4;
@@ -35,7 +36,6 @@
       min-height: 100vh;
     }
 
-    /* ── Header ── */
     .header {
       background: var(--accent);
       padding: 2rem 1.5rem 1.5rem;
@@ -45,6 +45,7 @@
       font-family: 'Cormorant Garamond', serif;
       font-size: 2rem;
       font-weight: 600;
+      font-style: normal;
       color: #EDEBE4;
       margin-bottom: 0.35rem;
       letter-spacing: -0.02em;
@@ -54,7 +55,6 @@
       font-size: 0.95rem;
     }
 
-    /* ── Filters ── */
     .filters {
       max-width: 1100px;
       margin: 1.5rem auto 0;
@@ -133,33 +133,31 @@
       gap: 0;
     }
     .near-me-group .filter-btn {
+      transition: border-radius 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .near-me-group .filter-btn.active {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
       border-right: none;
     }
     .radius-select {
       padding: 0.55rem 1.8rem 0.55rem 0.5rem;
-      border: 1px solid var(--border);
+      border: 1px solid var(--accent);
       border-radius: 0 var(--radius) var(--radius) 0;
-      background: var(--surface);
+      background: var(--accent);
       font-family: 'DM Sans', sans-serif;
       font-size: 0.875rem;
-      color: var(--text);
+      color: #EDEBE4;
       cursor: pointer;
       appearance: none;
       -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B6A63' d='M6 8L1.5 3.5h9z'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23EDEBE4' d='M6 8L1.5 3.5h9z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 0.55rem center;
-      transition: border-color 0.2s, background 0.2s;
+      display: none;
     }
-    .radius-select:hover { border-color: #B0AFA8; }
-    .radius-select:focus { outline: none; border-color: var(--accent); }
-    .near-me-group .filter-btn.active ~ .radius-select {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #EDEBE4;
-    }
+    .radius-select:focus { outline: none; }
+    .radius-select.visible { display: block; }
 
     .filter-summary {
       display: none;
@@ -184,7 +182,6 @@
       white-space: nowrap;
     }
 
-    /* ── Results ── */
     .results {
       max-width: 1100px;
       margin: 1.5rem auto 2rem;
@@ -201,7 +198,6 @@
       gap: 1rem;
     }
 
-    /* ── Cards ── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -220,6 +216,7 @@
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.15rem;
       font-weight: 600;
+      font-style: normal;
     }
     .card-location {
       font-size: 0.825rem;
@@ -257,15 +254,43 @@
       background: var(--tag-bg);
       color: var(--tag-text);
     }
-    .tag.cert {
-      background: var(--accent-light);
-      color: var(--accent);
-    }
     .card-notes {
       font-size: 0.825rem;
       color: var(--text-secondary);
       line-height: 1.45;
+      margin-bottom: 0.5rem;
+    }
+    .card-notes.collapsed {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .read-more-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0;
       margin-bottom: 0.75rem;
+      text-decoration: underline;
+    }
+    .read-more-btn:hover { color: var(--accent-hover); }
+    .card-certs {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+      line-height: 1.45;
+    }
+    .card-certs-label {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
     .card-footer {
       display: flex;
@@ -285,7 +310,6 @@
     .card-social:hover { color: var(--accent); }
     .card-social svg { width: 14px; height: 14px; }
 
-    /* ── Loading / Empty ── */
     .loading {
       text-align: center;
       padding: 4rem 1rem;
@@ -308,7 +332,6 @@
       font-size: 0.95rem;
     }
 
-    /* ── Responsive ── */
     @media (max-width: 768px) {
       .header h1 { font-size: 1.5rem; }
       .filter-row { flex-direction: column; }
@@ -335,7 +358,6 @@
       <select class="filter-control" id="filterCountry"><option value="">All Countries</option></select>
       <select class="filter-control" id="filterState"><option value="">All States</option></select>
       <select class="filter-control" id="filterFormat"><option value="">All Formats</option></select>
-      <select class="filter-control" id="filterCert"><option value="">All Certifications</option></select>
       <select class="filter-control" id="filterExperience"><option value="">All Experience</option></select>
 
       <div class="near-me-group">
@@ -377,6 +399,11 @@
     var nearMeActive = false;
     var sortByDistance = false;
 
+    function normalizeExperience(val) {
+      if (!val) return '';
+      return val.replace(/\s*-\s*/g, '-').replace(/\s+/g, ' ').trim();
+    }
+
     function init() {
       var script = document.createElement('script');
       script.src = ENDPOINT + '?action=talentBrowse&callback=handleBrowseResponse';
@@ -393,24 +420,25 @@
           '<div class="empty-state"><p>No profiles available yet.</p></div>';
         return;
       }
+      data.profiles.forEach(function(p) {
+        p.experience = normalizeExperience(p.experience);
+      });
       allProfiles = data.profiles;
       populateFilterDropdowns(allProfiles);
       renderProfiles(allProfiles);
     }
 
     function populateFilterDropdowns(profiles) {
-      var countries = {}, states = {}, formats = {}, certs = {}, experiences = {};
+      var countries = {}, states = {}, formats = {}, experiences = {};
       profiles.forEach(function(p) {
         if (p.country) countries[p.country] = true;
         if (p.state) states[p.state] = true;
         if (p.formats) { p.formats.split(',').forEach(function(f) { var t = f.trim(); if (t) formats[t] = true; }); }
-        if (p.certs) { p.certs.split(',').forEach(function(c) { var t = c.trim(); if (t) certs[t] = true; }); }
         if (p.experience) experiences[p.experience] = true;
       });
       fillSelect('filterCountry', countries, 'All Countries');
       fillSelect('filterState', states, 'All States');
       fillSelect('filterFormat', formats, 'All Formats');
-      fillSelect('filterCert', certs, 'All Certifications');
       fillSelect('filterExperience', experiences, 'All Experience');
     }
 
@@ -427,12 +455,24 @@
 
     function toggleNearMe() {
       var btn = document.getElementById('nearMeBtn');
-      if (nearMeActive) { nearMeActive = false; userLat = null; userLng = null; btn.classList.remove('active'); applyFilters(); return; }
+      var radiusSel = document.getElementById('radiusSelect');
+
+      if (nearMeActive) {
+        nearMeActive = false; userLat = null; userLng = null;
+        btn.classList.remove('active');
+        radiusSel.classList.remove('visible');
+        applyFilters();
+        return;
+      }
+
       if (!navigator.geolocation) { alert('Geolocation is not supported by your browser.'); return; }
       btn.innerHTML = nearMeSvg + ' Locating…';
       navigator.geolocation.getCurrentPosition(function(pos) {
         userLat = pos.coords.latitude; userLng = pos.coords.longitude; nearMeActive = true;
-        btn.classList.add('active'); btn.innerHTML = nearMeSvg + ' Near Me'; applyFilters();
+        btn.classList.add('active');
+        radiusSel.classList.add('visible');
+        btn.innerHTML = nearMeSvg + ' Near Me';
+        applyFilters();
       }, function() { btn.innerHTML = nearMeSvg + ' Near Me'; alert('Unable to get your location. Please enable location access.'); });
     }
 
@@ -456,7 +496,6 @@
       var country = document.getElementById('filterCountry').value;
       var state = document.getElementById('filterState').value;
       var format = document.getElementById('filterFormat').value.toLowerCase();
-      var cert = document.getElementById('filterCert').value.toLowerCase();
       var experience = document.getElementById('filterExperience').value.toLowerCase();
       var radiusMiles = parseInt(document.getElementById('radiusSelect').value, 10);
 
@@ -465,7 +504,6 @@
         if (country && (p.country || '') !== country) return false;
         if (state && (p.state || '') !== state) return false;
         if (format && (p.formats || '').toLowerCase().indexOf(format) === -1) return false;
-        if (cert && (p.certs || '').toLowerCase().indexOf(cert) === -1) return false;
         if (experience && (p.experience || '').toLowerCase() !== experience) return false;
         return true;
       });
@@ -481,7 +519,6 @@
       if (country) activeFilters.push(country);
       if (state) activeFilters.push(state);
       if (format) activeFilters.push(format);
-      if (cert) activeFilters.push(cert);
       if (experience) activeFilters.push(experience);
       if (nearMeActive) activeFilters.push('within ' + radiusMiles + ' mi');
       if (sortByDistance) activeFilters.push('sorted by distance');
@@ -500,15 +537,28 @@
       document.getElementById('filterCountry').value = '';
       document.getElementById('filterState').value = '';
       document.getElementById('filterFormat').value = '';
-      document.getElementById('filterCert').value = '';
       document.getElementById('filterExperience').value = '';
       document.getElementById('radiusSelect').value = '25';
       nearMeActive = false; sortByDistance = false; userLat = null; userLng = null;
       document.getElementById('nearMeBtn').classList.remove('active');
+      document.getElementById('radiusSelect').classList.remove('visible');
       document.getElementById('sortDistBtn').classList.remove('active');
       document.getElementById('filterSummary').style.display = 'none';
       renderProfiles(allProfiles);
     }
+
+    window.toggleNotes = function(cardId) {
+      var notes = document.getElementById('notes-' + cardId);
+      var btn = document.getElementById('readmore-' + cardId);
+      if (!notes || !btn) return;
+      if (notes.classList.contains('collapsed')) {
+        notes.classList.remove('collapsed');
+        btn.textContent = 'Read less';
+      } else {
+        notes.classList.add('collapsed');
+        btn.textContent = 'Read more';
+      }
+    };
 
     function renderProfiles(profiles) {
       var container = document.getElementById('results');
@@ -517,7 +567,7 @@
       var html = '<div class="results-count">' + profiles.length + ' instructor' + (profiles.length !== 1 ? 's' : '') + '</div>';
       html += '<div class="card-grid">';
 
-      profiles.forEach(function(p) {
+      profiles.forEach(function(p, idx) {
         html += '<div class="card">';
         html += '<div class="card-header"><div>';
         html += '<div class="card-name">' + esc(p.displayName || 'Anonymous Instructor') + '</div>';
@@ -528,16 +578,26 @@
         if (p.experience) html += '<span class="card-experience">' + esc(p.experience) + '</span>';
         html += '</div>';
 
-        var tags = [];
-        if (p.formats) { p.formats.split(',').forEach(function(f) { var t = f.trim(); if (t) tags.push('<span class="tag">' + esc(t) + '</span>'); }); }
-        if (p.certs) { p.certs.split(',').forEach(function(c) { var t = c.trim(); if (t) tags.push('<span class="tag cert">' + esc(t) + '</span>'); }); }
-        if (tags.length > 0) html += '<div class="card-tags">' + tags.join('') + '</div>';
-
-        if (p.notes) {
-          var noteText = p.notes.length > 140 ? p.notes.substring(0, 140) + '…' : p.notes;
-          html += '<div class="card-notes">' + esc(noteText) + '</div>';
+        // Format tags only
+        if (p.formats) {
+          var formatTags = [];
+          p.formats.split(',').forEach(function(f) { var t = f.trim(); if (t) formatTags.push('<span class="tag">' + esc(t) + '</span>'); });
+          if (formatTags.length > 0) html += '<div class="card-tags">' + formatTags.join('') + '</div>';
         }
 
+        // Notes with expand/collapse
+        if (p.notes) {
+          var needsExpand = p.notes.length > 140;
+          html += '<div class="card-notes' + (needsExpand ? ' collapsed' : '') + '" id="notes-' + idx + '">' + esc(p.notes) + '</div>';
+          if (needsExpand) html += '<button class="read-more-btn" id="readmore-' + idx + '" onclick="toggleNotes(' + idx + ')">Read more</button>';
+        }
+
+        // Certifications as text below notes
+        if (p.certs) {
+          html += '<div class="card-certs"><span class="card-certs-label">Certifications:</span> ' + esc(p.certs) + '</div>';
+        }
+
+        // Footer: social links
         if (p.instagram || p.tiktok) {
           html += '<div class="card-footer">';
           if (p.instagram) {
