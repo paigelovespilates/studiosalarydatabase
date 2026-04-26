@@ -5,24 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pilates Instructor Talent Directory</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #FAF8F5;
+      --bg: #EDEBE4;
       --surface: #FFFFFF;
-      --border: #E8E2DA;
-      --text: #2C2825;
-      --text-secondary: #7A7067;
-      --accent: #B8860B;
-      --accent-light: #F5EDD6;
-      --accent-hover: #9A7009;
-      --tag-bg: #F0EBE3;
-      --tag-text: #5C5347;
+      --border: #D6D3CB;
+      --text: #373930;
+      --text-secondary: #6B6A63;
+      --accent: #373930;
+      --accent-light: #E8E5DC;
+      --accent-hover: #1F1E18;
+      --tag-bg: #E8E5DC;
+      --tag-text: #4A4940;
       --green: #4A7C59;
       --green-bg: #EDF5EF;
-      --radius: 10px;
-      --shadow: 0 1px 3px rgba(44,40,37,0.06), 0 4px 12px rgba(44,40,37,0.04);
-      --shadow-hover: 0 2px 8px rgba(44,40,37,0.1), 0 8px 24px rgba(44,40,37,0.06);
+      --radius: 8px;
+      --shadow: 0 1px 3px rgba(55,57,48,0.06), 0 4px 12px rgba(55,57,48,0.04);
+      --shadow-hover: 0 2px 8px rgba(55,57,48,0.1), 0 8px 24px rgba(55,57,48,0.06);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -37,21 +37,20 @@
 
     /* ── Header ── */
     .header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
+      background: var(--accent);
       padding: 2rem 1.5rem 1.5rem;
       text-align: center;
     }
     .header h1 {
-      font-family: 'DM Serif Display', serif;
+      font-family: 'Cormorant Garamond', serif;
       font-size: 2rem;
-      font-weight: 400;
-      color: var(--text);
+      font-weight: 600;
+      color: #EDEBE4;
       margin-bottom: 0.35rem;
       letter-spacing: -0.02em;
     }
     .header p {
-      color: var(--text-secondary);
+      color: #B0AFA8;
       font-size: 0.95rem;
     }
 
@@ -68,7 +67,6 @@
       align-items: center;
     }
 
-    /* Shared style for selects and text input */
     .filter-control {
       padding: 0.55rem 0.85rem;
       border: 1px solid var(--border);
@@ -82,11 +80,11 @@
       appearance: none;
       -webkit-appearance: none;
     }
-    .filter-control:hover { border-color: #C8C0B6; }
+    .filter-control:hover { border-color: #B0AFA8; }
     .filter-control:focus { outline: none; border-color: var(--accent); }
 
     select.filter-control {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237A7067' d='M6 8L1.5 3.5h9z'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B6A63' d='M6 8L1.5 3.5h9z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 0.75rem center;
       padding-right: 2rem;
@@ -102,7 +100,6 @@
       opacity: 0.7;
     }
 
-    /* Near Me + Sort by Distance buttons */
     .filter-btn {
       display: inline-flex;
       align-items: center;
@@ -118,11 +115,11 @@
       transition: border-color 0.2s, background 0.2s;
       white-space: nowrap;
     }
-    .filter-btn:hover { border-color: #C8C0B6; }
+    .filter-btn:hover { border-color: #B0AFA8; }
     .filter-btn.active {
-      background: var(--accent-light);
+      background: var(--accent);
       border-color: var(--accent);
-      color: var(--accent-hover);
+      color: #EDEBE4;
     }
     .filter-btn svg {
       width: 14px;
@@ -130,7 +127,6 @@
       flex-shrink: 0;
     }
 
-    /* Near Me group — button + radius dropdown joined */
     .near-me-group {
       display: inline-flex;
       align-items: center;
@@ -152,21 +148,19 @@
       cursor: pointer;
       appearance: none;
       -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237A7067' d='M6 8L1.5 3.5h9z'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B6A63' d='M6 8L1.5 3.5h9z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 0.55rem center;
       transition: border-color 0.2s, background 0.2s;
     }
-    .radius-select:hover { border-color: #C8C0B6; }
+    .radius-select:hover { border-color: #B0AFA8; }
     .radius-select:focus { outline: none; border-color: var(--accent); }
-    /* When Near Me is active, highlight the radius dropdown too */
     .near-me-group .filter-btn.active ~ .radius-select {
-      background: var(--accent-light);
+      background: var(--accent);
       border-color: var(--accent);
-      color: var(--accent-hover);
+      color: #EDEBE4;
     }
 
-    /* Filter summary */
     .filter-summary {
       display: none;
       align-items: center;
@@ -223,9 +217,9 @@
       margin-bottom: 0.75rem;
     }
     .card-name {
-      font-family: 'DM Serif Display', serif;
+      font-family: 'Cormorant Garamond', serif;
       font-size: 1.15rem;
-      font-weight: 400;
+      font-weight: 600;
     }
     .card-location {
       font-size: 0.825rem;
@@ -265,7 +259,7 @@
     }
     .tag.cert {
       background: var(--accent-light);
-      color: var(--accent-hover);
+      color: var(--accent);
     }
     .card-notes {
       font-size: 0.825rem;
@@ -290,11 +284,6 @@
     }
     .card-social:hover { color: var(--accent); }
     .card-social svg { width: 14px; height: 14px; }
-    .card-looking-for {
-      font-size: 0.8rem;
-      color: var(--green);
-      font-weight: 500;
-    }
 
     /* ── Loading / Empty ── */
     .loading {
@@ -342,19 +331,13 @@
 
   <div class="filters">
     <div class="filter-row">
-      <!-- City search -->
       <input type="text" class="filter-control" id="filterCity" placeholder="Search city…">
-
-      <!-- Dropdowns matching studio DB -->
       <select class="filter-control" id="filterCountry"><option value="">All Countries</option></select>
       <select class="filter-control" id="filterState"><option value="">All States</option></select>
       <select class="filter-control" id="filterFormat"><option value="">All Formats</option></select>
-
-      <!-- Talent-specific -->
       <select class="filter-control" id="filterCert"><option value="">All Certifications</option></select>
       <select class="filter-control" id="filterExperience"><option value="">All Experience</option></select>
 
-      <!-- Near Me with radius dropdown -->
       <div class="near-me-group">
         <button class="filter-btn" id="nearMeBtn" onclick="toggleNearMe()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
@@ -368,7 +351,6 @@
         </select>
       </div>
 
-      <!-- Sort by Distance -->
       <button class="filter-btn" id="sortDistBtn" onclick="toggleSortDistance()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v18M7 3l-4 4M7 3l4 4M17 21V3M17 21l-4-4M17 21l4-4"/></svg>
         Sort by Distance
@@ -395,7 +377,6 @@
     var nearMeActive = false;
     var sortByDistance = false;
 
-    // ── Load data ──
     function init() {
       var script = document.createElement('script');
       script.src = ENDPOINT + '?action=talentBrowse&callback=handleBrowseResponse';
@@ -417,26 +398,15 @@
       renderProfiles(allProfiles);
     }
 
-    // ── Populate dropdowns from data ──
     function populateFilterDropdowns(profiles) {
       var countries = {}, states = {}, formats = {}, certs = {}, experiences = {};
-
       profiles.forEach(function(p) {
         if (p.country) countries[p.country] = true;
         if (p.state) states[p.state] = true;
-        if (p.formats) {
-          p.formats.split(',').forEach(function(f) {
-            var t = f.trim(); if (t) formats[t] = true;
-          });
-        }
-        if (p.certs) {
-          p.certs.split(',').forEach(function(c) {
-            var t = c.trim(); if (t) certs[t] = true;
-          });
-        }
+        if (p.formats) { p.formats.split(',').forEach(function(f) { var t = f.trim(); if (t) formats[t] = true; }); }
+        if (p.certs) { p.certs.split(',').forEach(function(c) { var t = c.trim(); if (t) certs[t] = true; }); }
         if (p.experience) experiences[p.experience] = true;
       });
-
       fillSelect('filterCountry', countries, 'All Countries');
       fillSelect('filterState', states, 'All States');
       fillSelect('filterFormat', formats, 'All Formats');
@@ -449,84 +419,44 @@
       el.innerHTML = '<option value="">' + placeholder + '</option>';
       Object.keys(obj).sort().forEach(function(key) {
         var opt = document.createElement('option');
-        opt.value = key;
-        opt.textContent = key;
-        el.appendChild(opt);
+        opt.value = key; opt.textContent = key; el.appendChild(opt);
       });
     }
 
-    // ── Near Me ──
     var nearMeSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>';
 
     function toggleNearMe() {
       var btn = document.getElementById('nearMeBtn');
-
-      if (nearMeActive) {
-        nearMeActive = false;
-        userLat = null;
-        userLng = null;
-        btn.classList.remove('active');
-        applyFilters();
-        return;
-      }
-
-      if (!navigator.geolocation) {
-        alert('Geolocation is not supported by your browser.');
-        return;
-      }
-
+      if (nearMeActive) { nearMeActive = false; userLat = null; userLng = null; btn.classList.remove('active'); applyFilters(); return; }
+      if (!navigator.geolocation) { alert('Geolocation is not supported by your browser.'); return; }
       btn.innerHTML = nearMeSvg + ' Locating…';
       navigator.geolocation.getCurrentPosition(function(pos) {
-        userLat = pos.coords.latitude;
-        userLng = pos.coords.longitude;
-        nearMeActive = true;
-        btn.classList.add('active');
-        btn.innerHTML = nearMeSvg + ' Near Me';
-        applyFilters();
-      }, function() {
-        btn.innerHTML = nearMeSvg + ' Near Me';
-        alert('Unable to get your location. Please enable location access.');
-      });
+        userLat = pos.coords.latitude; userLng = pos.coords.longitude; nearMeActive = true;
+        btn.classList.add('active'); btn.innerHTML = nearMeSvg + ' Near Me'; applyFilters();
+      }, function() { btn.innerHTML = nearMeSvg + ' Near Me'; alert('Unable to get your location. Please enable location access.'); });
     }
 
-    function onRadiusChange() {
-      if (!nearMeActive) {
-        toggleNearMe();
-      } else {
-        applyFilters();
-      }
-    }
+    function onRadiusChange() { if (!nearMeActive) { toggleNearMe(); } else { applyFilters(); } }
 
-    // ── Sort by Distance ──
     function toggleSortDistance() {
       sortByDistance = !sortByDistance;
       document.getElementById('sortDistBtn').classList.toggle('active', sortByDistance);
-
-      if (sortByDistance && !nearMeActive) {
-        toggleNearMe();
-        return;
-      }
+      if (sortByDistance && !nearMeActive) { toggleNearMe(); return; }
       applyFilters();
     }
 
-    // ── Haversine (miles) ──
     function haversine(lat1, lng1, lat2, lng2) {
-      var R = 3959;
-      var dLat = (lat2 - lat1) * Math.PI / 180;
-      var dLng = (lng2 - lng1) * Math.PI / 180;
-      var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLng/2) * Math.sin(dLng/2);
+      var R = 3959; var dLat = (lat2 - lat1) * Math.PI / 180; var dLng = (lng2 - lng1) * Math.PI / 180;
+      var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
       return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     }
 
-    // ── Filter logic ──
     function applyFilters() {
-      var city       = document.getElementById('filterCity').value.trim().toLowerCase();
-      var country    = document.getElementById('filterCountry').value;
-      var state      = document.getElementById('filterState').value;
-      var format     = document.getElementById('filterFormat').value.toLowerCase();
-      var cert       = document.getElementById('filterCert').value.toLowerCase();
+      var city = document.getElementById('filterCity').value.trim().toLowerCase();
+      var country = document.getElementById('filterCountry').value;
+      var state = document.getElementById('filterState').value;
+      var format = document.getElementById('filterFormat').value.toLowerCase();
+      var cert = document.getElementById('filterCert').value.toLowerCase();
       var experience = document.getElementById('filterExperience').value.toLowerCase();
       var radiusMiles = parseInt(document.getElementById('radiusSelect').value, 10);
 
@@ -540,32 +470,12 @@
         return true;
       });
 
-      // Calculate distances
       if (userLat !== null && userLng !== null) {
-        filtered.forEach(function(p) {
-          if (p.lat && p.lng) {
-            p._distance = haversine(userLat, userLng, p.lat, p.lng);
-          } else {
-            p._distance = 99999;
-          }
-        });
-
-        // Near Me: filter by selected radius
-        if (nearMeActive) {
-          filtered = filtered.filter(function(p) {
-            return p._distance <= radiusMiles;
-          });
-        }
-
-        // Sort by distance
-        if (sortByDistance) {
-          filtered.sort(function(a, b) {
-            return (a._distance || 99999) - (b._distance || 99999);
-          });
-        }
+        filtered.forEach(function(p) { p._distance = (p.lat && p.lng) ? haversine(userLat, userLng, p.lat, p.lng) : 99999; });
+        if (nearMeActive) { filtered = filtered.filter(function(p) { return p._distance <= radiusMiles; }); }
+        if (sortByDistance) { filtered.sort(function(a, b) { return (a._distance || 99999) - (b._distance || 99999); }); }
       }
 
-      // Filter summary
       var activeFilters = [];
       if (city) activeFilters.push('city: ' + city);
       if (country) activeFilters.push(country);
@@ -578,12 +488,9 @@
 
       var summary = document.getElementById('filterSummary');
       if (activeFilters.length > 0) {
-        document.getElementById('filterSummaryText').textContent =
-          filtered.length + ' instructor' + (filtered.length !== 1 ? 's' : '') + ' matching: ' + activeFilters.join(', ');
+        document.getElementById('filterSummaryText').textContent = filtered.length + ' instructor' + (filtered.length !== 1 ? 's' : '') + ' matching: ' + activeFilters.join(', ');
         summary.style.display = 'flex';
-      } else {
-        summary.style.display = 'none';
-      }
+      } else { summary.style.display = 'none'; }
 
       renderProfiles(filtered);
     }
@@ -596,69 +503,42 @@
       document.getElementById('filterCert').value = '';
       document.getElementById('filterExperience').value = '';
       document.getElementById('radiusSelect').value = '25';
-
-      nearMeActive = false;
-      sortByDistance = false;
-      userLat = null;
-      userLng = null;
+      nearMeActive = false; sortByDistance = false; userLat = null; userLng = null;
       document.getElementById('nearMeBtn').classList.remove('active');
       document.getElementById('sortDistBtn').classList.remove('active');
       document.getElementById('filterSummary').style.display = 'none';
-
       renderProfiles(allProfiles);
     }
 
-    // ── Render cards ──
     function renderProfiles(profiles) {
       var container = document.getElementById('results');
-
-      if (profiles.length === 0) {
-        container.innerHTML = '<div class="empty-state"><p>No instructors match your filters. Try broadening your search.</p></div>';
-        return;
-      }
+      if (profiles.length === 0) { container.innerHTML = '<div class="empty-state"><p>No instructors match your filters. Try broadening your search.</p></div>'; return; }
 
       var html = '<div class="results-count">' + profiles.length + ' instructor' + (profiles.length !== 1 ? 's' : '') + '</div>';
       html += '<div class="card-grid">';
 
       profiles.forEach(function(p) {
         html += '<div class="card">';
-
-        // Header
         html += '<div class="card-header"><div>';
         html += '<div class="card-name">' + esc(p.displayName || 'Anonymous Instructor') + '</div>';
         var loc = [p.city, p.state].filter(Boolean).join(', ');
         if (loc) html += '<div class="card-location">' + esc(loc) + '</div>';
-        if (p._distance !== undefined && p._distance < 99999) {
-          html += '<div class="card-distance">' + Math.round(p._distance) + ' mi away</div>';
-        }
+        if (p._distance !== undefined && p._distance < 99999) html += '<div class="card-distance">' + Math.round(p._distance) + ' mi away</div>';
         html += '</div>';
-        if (p.experience) {
-          html += '<span class="card-experience">' + esc(p.experience) + '</span>';
-        }
+        if (p.experience) html += '<span class="card-experience">' + esc(p.experience) + '</span>';
         html += '</div>';
 
-        // Tags
         var tags = [];
-        if (p.formats) {
-          p.formats.split(',').forEach(function(f) {
-            var t = f.trim(); if (t) tags.push('<span class="tag">' + esc(t) + '</span>');
-          });
-        }
-        if (p.certs) {
-          p.certs.split(',').forEach(function(c) {
-            var t = c.trim(); if (t) tags.push('<span class="tag cert">' + esc(t) + '</span>');
-          });
-        }
+        if (p.formats) { p.formats.split(',').forEach(function(f) { var t = f.trim(); if (t) tags.push('<span class="tag">' + esc(t) + '</span>'); }); }
+        if (p.certs) { p.certs.split(',').forEach(function(c) { var t = c.trim(); if (t) tags.push('<span class="tag cert">' + esc(t) + '</span>'); }); }
         if (tags.length > 0) html += '<div class="card-tags">' + tags.join('') + '</div>';
 
-        // Notes
         if (p.notes) {
           var noteText = p.notes.length > 140 ? p.notes.substring(0, 140) + '…' : p.notes;
           html += '<div class="card-notes">' + esc(noteText) + '</div>';
         }
 
-        // Footer
-        if (p.instagram || p.tiktok || p.lookingFor) {
+        if (p.instagram || p.tiktok) {
           html += '<div class="card-footer">';
           if (p.instagram) {
             html += '<a class="card-social" href="https://instagram.com/' + encodeURIComponent(p.instagram) + '" target="_blank" rel="noopener">';
@@ -670,9 +550,6 @@
             html += '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V9.48a8.1 8.1 0 004.69 1.49v-3.4a4.85 4.85 0 01-.93.12 4.83 4.83 0 01-3.77z"/></svg>';
             html += '@' + esc(p.tiktok) + '</a>';
           }
-          if (p.lookingFor) {
-            html += '<span class="card-looking-for">Looking for: ' + esc(p.lookingFor) + '</span>';
-          }
           html += '</div>';
         }
 
@@ -683,30 +560,13 @@
       container.innerHTML = html;
     }
 
-    function esc(str) {
-      if (!str) return '';
-      var div = document.createElement('div');
-      div.textContent = str;
-      return div.innerHTML;
-    }
+    function esc(str) { if (!str) return ''; var div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
 
-    // ── Auto-filter on dropdown change ──
-    document.querySelectorAll('select.filter-control').forEach(function(sel) {
-      sel.addEventListener('change', applyFilters);
-    });
+    document.querySelectorAll('select.filter-control').forEach(function(sel) { sel.addEventListener('change', applyFilters); });
+    var cityInput = document.getElementById('filterCity'); var cityTimeout;
+    cityInput.addEventListener('input', function() { clearTimeout(cityTimeout); cityTimeout = setTimeout(applyFilters, 300); });
+    cityInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') { clearTimeout(cityTimeout); applyFilters(); } });
 
-    // ── City input: live filter with debounce ──
-    var cityInput = document.getElementById('filterCity');
-    var cityTimeout;
-    cityInput.addEventListener('input', function() {
-      clearTimeout(cityTimeout);
-      cityTimeout = setTimeout(applyFilters, 300);
-    });
-    cityInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') { clearTimeout(cityTimeout); applyFilters(); }
-    });
-
-    // Init
     init();
   </script>
 </body>
