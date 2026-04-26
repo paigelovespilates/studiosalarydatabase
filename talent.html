@@ -42,267 +42,293 @@
       padding: 2rem 1.5rem 1.5rem;
       text-align: center;
     }
-
     .header h1 {
       font-family: 'DM Serif Display', serif;
       font-size: 2rem;
       font-weight: 400;
       color: var(--text);
       margin-bottom: 0.35rem;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.02em;
     }
-
     .header p {
       color: var(--text-secondary);
       font-size: 0.95rem;
-      max-width: 480px;
-      margin: 0 auto;
     }
 
     /* ── Filters ── */
     .filters {
-      max-width: 900px;
+      max-width: 1100px;
       margin: 1.5rem auto 0;
       padding: 0 1.5rem;
     }
-
     .filter-row {
       display: flex;
-      gap: 0.75rem;
       flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
     }
 
-    .filter-row select,
-    .filter-row input {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.875rem;
-      padding: 0.6rem 0.85rem;
+    /* Shared style for selects and text input */
+    .filter-control {
+      padding: 0.55rem 0.85rem;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       background: var(--surface);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
       color: var(--text);
-      outline: none;
-      transition: border-color 0.15s;
-      flex: 1;
-      min-width: 150px;
-    }
-
-    .filter-row select:focus,
-    .filter-row input:focus {
-      border-color: var(--accent);
-    }
-
-    .filter-row select {
       cursor: pointer;
+      transition: border-color 0.2s;
       appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A7067' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+      -webkit-appearance: none;
+    }
+    .filter-control:hover { border-color: #C8C0B6; }
+    .filter-control:focus { outline: none; border-color: var(--accent); }
+
+    select.filter-control {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237A7067' d='M6 8L1.5 3.5h9z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 0.75rem center;
       padding-right: 2rem;
+      min-width: 140px;
     }
 
-    .search-btn {
+    input[type="text"].filter-control {
+      cursor: text;
+      min-width: 160px;
+    }
+    input[type="text"].filter-control::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
+
+    /* Near Me + Sort by Distance buttons */
+    .filter-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
       font-family: 'DM Sans', sans-serif;
       font-size: 0.875rem;
-      font-weight: 600;
-      padding: 0.6rem 1.5rem;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
+      color: var(--text);
       cursor: pointer;
-      transition: background 0.15s;
+      transition: border-color 0.2s, background 0.2s;
       white-space: nowrap;
     }
-
-    .search-btn:hover { background: var(--accent-hover); }
-
-    .filter-summary {
-      margin-top: 0.75rem;
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+    .filter-btn:hover { border-color: #C8C0B6; }
+    .filter-btn.active {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent-hover);
+    }
+    .filter-btn svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
     }
 
-    .clear-btn {
+    /* Near Me group — button + radius dropdown joined */
+    .near-me-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+    }
+    .near-me-group .filter-btn {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right: none;
+    }
+    .radius-select {
+      padding: 0.55rem 1.8rem 0.55rem 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      background: var(--surface);
       font-family: 'DM Sans', sans-serif;
-      font-size: 0.8rem;
-      color: var(--accent);
+      font-size: 0.875rem;
+      color: var(--text);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237A7067' d='M6 8L1.5 3.5h9z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.55rem center;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .radius-select:hover { border-color: #C8C0B6; }
+    .radius-select:focus { outline: none; border-color: var(--accent); }
+    /* When Near Me is active, highlight the radius dropdown too */
+    .near-me-group .filter-btn.active ~ .radius-select {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent-hover);
+    }
+
+    /* Filter summary */
+    .filter-summary {
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+      padding: 0.6rem 1rem;
+      background: var(--accent-light);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+    .clear-btn {
       background: none;
       border: none;
+      color: var(--accent);
       cursor: pointer;
+      font-family: inherit;
+      font-size: 0.825rem;
+      font-weight: 500;
       text-decoration: underline;
+      white-space: nowrap;
     }
 
     /* ── Results ── */
     .results {
-      max-width: 900px;
-      margin: 1.5rem auto 3rem;
+      max-width: 1100px;
+      margin: 1.5rem auto 2rem;
       padding: 0 1.5rem;
     }
-
     .results-count {
       font-size: 0.85rem;
       color: var(--text-secondary);
       margin-bottom: 1rem;
     }
-
-    .loading {
-      text-align: center;
-      padding: 4rem 1rem;
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-    }
-
-    .loading-spinner {
-      display: inline-block;
-      width: 24px;
-      height: 24px;
-      border: 2.5px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      margin-bottom: 0.75rem;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .empty-state {
-      text-align: center;
-      padding: 4rem 1rem;
-      color: var(--text-secondary);
-    }
-
-    .empty-state p { font-size: 0.95rem; }
-
-    /* ── Cards ── */
     .card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 1rem;
     }
 
+    /* ── Cards ── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 1.25rem 1.35rem;
-      transition: box-shadow 0.2s, border-color 0.2s;
-      box-shadow: var(--shadow);
+      padding: 1.25rem;
+      transition: box-shadow 0.2s;
     }
-
-    .card:hover {
-      box-shadow: var(--shadow-hover);
-      border-color: #D4CDC4;
-    }
-
+    .card:hover { box-shadow: var(--shadow-hover); }
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 0.65rem;
+      margin-bottom: 0.75rem;
     }
-
     .card-name {
       font-family: 'DM Serif Display', serif;
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 400;
-      line-height: 1.3;
     }
-
     .card-location {
-      font-size: 0.8rem;
+      font-size: 0.825rem;
       color: var(--text-secondary);
       margin-top: 0.15rem;
     }
-
-    .card-experience {
+    .card-distance {
       font-size: 0.75rem;
+      color: var(--accent);
+      margin-top: 0.15rem;
+      font-weight: 500;
+    }
+    .card-experience {
+      font-size: 0.7rem;
       font-weight: 600;
-      color: var(--green);
-      background: var(--green-bg);
-      padding: 0.2rem 0.55rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.25rem 0.6rem;
       border-radius: 20px;
+      background: var(--green-bg);
+      color: var(--green);
       white-space: nowrap;
       flex-shrink: 0;
-      margin-top: 0.1rem;
     }
-
     .card-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 0.35rem;
-      margin-bottom: 0.65rem;
+      margin-bottom: 0.75rem;
     }
-
     .tag {
       font-size: 0.75rem;
-      font-weight: 500;
       padding: 0.2rem 0.55rem;
       border-radius: 20px;
       background: var(--tag-bg);
       color: var(--tag-text);
     }
-
     .tag.cert {
       background: var(--accent-light);
       color: var(--accent-hover);
     }
-
     .card-notes {
       font-size: 0.825rem;
       color: var(--text-secondary);
-      line-height: 1.5;
-      margin-bottom: 0.65rem;
+      line-height: 1.45;
+      margin-bottom: 0.75rem;
     }
-
-    .card-notes em {
-      font-style: normal;
-      color: var(--text);
-    }
-
     .card-footer {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 0.85rem;
-      padding-top: 0.5rem;
-      border-top: 1px solid var(--border);
+      gap: 0.75rem;
     }
-
-    .social-link {
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--accent);
-      text-decoration: none;
-      display: flex;
+    .card-social {
+      display: inline-flex;
       align-items: center;
       gap: 0.3rem;
-      transition: color 0.15s;
-    }
-
-    .social-link:hover { color: var(--accent-hover); }
-
-    .social-icon {
-      width: 14px;
-      height: 14px;
-      opacity: 0.7;
-    }
-
-    .card-looking-for {
-      margin-left: auto;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .card-social:hover { color: var(--accent); }
+    .card-social svg { width: 14px; height: 14px; }
+    .card-looking-for {
+      font-size: 0.8rem;
+      color: var(--green);
       font-weight: 500;
+    }
+
+    /* ── Loading / Empty ── */
+    .loading {
+      text-align: center;
+      padding: 4rem 1rem;
+      color: var(--text-secondary);
+    }
+    .loading-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
     }
 
     /* ── Responsive ── */
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
       .header h1 { font-size: 1.5rem; }
       .filter-row { flex-direction: column; }
-      .filter-row select,
-      .filter-row input { min-width: 100%; }
+      .filter-row select.filter-control,
+      .filter-row input.filter-control,
+      .filter-btn,
+      .near-me-group { min-width: 100%; width: 100%; }
+      .near-me-group .filter-btn { flex: 1; }
+      .near-me-group .radius-select { width: auto; }
       .card-grid { grid-template-columns: 1fr; }
     }
   </style>
@@ -316,14 +342,39 @@
 
   <div class="filters">
     <div class="filter-row">
-      <input type="text" id="filterCity" placeholder="City (e.g., Austin)">
-      <select id="filterState"><option value="">Any State</option></select>
-      <select id="filterFormat"><option value="">Any Format</option></select>
-      <select id="filterCert"><option value="">Any Certification</option></select>
-      <select id="filterExperience"><option value="">Any Experience</option></select>
-      <button class="search-btn" onclick="applyFilters()">Search</button>
+      <!-- City search -->
+      <input type="text" class="filter-control" id="filterCity" placeholder="Search city…">
+
+      <!-- Dropdowns matching studio DB -->
+      <select class="filter-control" id="filterCountry"><option value="">All Countries</option></select>
+      <select class="filter-control" id="filterState"><option value="">All States</option></select>
+      <select class="filter-control" id="filterFormat"><option value="">All Formats</option></select>
+
+      <!-- Talent-specific -->
+      <select class="filter-control" id="filterCert"><option value="">All Certifications</option></select>
+      <select class="filter-control" id="filterExperience"><option value="">All Experience</option></select>
+
+      <!-- Near Me with radius dropdown -->
+      <div class="near-me-group">
+        <button class="filter-btn" id="nearMeBtn" onclick="toggleNearMe()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          Near Me
+        </button>
+        <select class="radius-select" id="radiusSelect" onchange="onRadiusChange()">
+          <option value="10">10 mi</option>
+          <option value="25" selected>25 mi</option>
+          <option value="50">50 mi</option>
+          <option value="100">100 mi</option>
+        </select>
+      </div>
+
+      <!-- Sort by Distance -->
+      <button class="filter-btn" id="sortDistBtn" onclick="toggleSortDistance()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v18M7 3l-4 4M7 3l4 4M17 21V3M17 21l-4-4M17 21l4-4"/></svg>
+        Sort by Distance
+      </button>
     </div>
-    <div class="filter-summary" id="filterSummary" style="display:none;">
+    <div class="filter-summary" id="filterSummary">
       <span id="filterSummaryText"></span>
       <button class="clear-btn" onclick="clearFilters()">Clear all</button>
     </div>
@@ -339,8 +390,12 @@
   <script>
     var ENDPOINT = 'https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec';
     var allProfiles = [];
+    var userLat = null;
+    var userLng = null;
+    var nearMeActive = false;
+    var sortByDistance = false;
 
-    // ── Load data on page load ──
+    // ── Load data ──
     function init() {
       var script = document.createElement('script');
       script.src = ENDPOINT + '?action=talentBrowse&callback=handleBrowseResponse';
@@ -357,37 +412,36 @@
           '<div class="empty-state"><p>No profiles available yet.</p></div>';
         return;
       }
-
       allProfiles = data.profiles;
       populateFilterDropdowns(allProfiles);
       renderProfiles(allProfiles);
     }
 
-    // ── Populate filter dropdowns from data ──
+    // ── Populate dropdowns from data ──
     function populateFilterDropdowns(profiles) {
-      var states = {}, formats = {}, certs = {}, experiences = {};
+      var countries = {}, states = {}, formats = {}, certs = {}, experiences = {};
 
       profiles.forEach(function(p) {
+        if (p.country) countries[p.country] = true;
         if (p.state) states[p.state] = true;
         if (p.formats) {
           p.formats.split(',').forEach(function(f) {
-            var t = f.trim();
-            if (t) formats[t] = true;
+            var t = f.trim(); if (t) formats[t] = true;
           });
         }
         if (p.certs) {
           p.certs.split(',').forEach(function(c) {
-            var t = c.trim();
-            if (t) certs[t] = true;
+            var t = c.trim(); if (t) certs[t] = true;
           });
         }
         if (p.experience) experiences[p.experience] = true;
       });
 
-      fillSelect('filterState', states, 'Any State');
-      fillSelect('filterFormat', formats, 'Any Format');
-      fillSelect('filterCert', certs, 'Any Certification');
-      fillSelect('filterExperience', experiences, 'Any Experience');
+      fillSelect('filterCountry', countries, 'All Countries');
+      fillSelect('filterState', states, 'All States');
+      fillSelect('filterFormat', formats, 'All Formats');
+      fillSelect('filterCert', certs, 'All Certifications');
+      fillSelect('filterExperience', experiences, 'All Experience');
     }
 
     function fillSelect(id, obj, placeholder) {
@@ -401,16 +455,84 @@
       });
     }
 
-    // ── Filter logic (client-side, no re-fetch) ──
+    // ── Near Me ──
+    var nearMeSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>';
+
+    function toggleNearMe() {
+      var btn = document.getElementById('nearMeBtn');
+
+      if (nearMeActive) {
+        nearMeActive = false;
+        userLat = null;
+        userLng = null;
+        btn.classList.remove('active');
+        applyFilters();
+        return;
+      }
+
+      if (!navigator.geolocation) {
+        alert('Geolocation is not supported by your browser.');
+        return;
+      }
+
+      btn.innerHTML = nearMeSvg + ' Locating…';
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        userLat = pos.coords.latitude;
+        userLng = pos.coords.longitude;
+        nearMeActive = true;
+        btn.classList.add('active');
+        btn.innerHTML = nearMeSvg + ' Near Me';
+        applyFilters();
+      }, function() {
+        btn.innerHTML = nearMeSvg + ' Near Me';
+        alert('Unable to get your location. Please enable location access.');
+      });
+    }
+
+    function onRadiusChange() {
+      if (!nearMeActive) {
+        toggleNearMe();
+      } else {
+        applyFilters();
+      }
+    }
+
+    // ── Sort by Distance ──
+    function toggleSortDistance() {
+      sortByDistance = !sortByDistance;
+      document.getElementById('sortDistBtn').classList.toggle('active', sortByDistance);
+
+      if (sortByDistance && !nearMeActive) {
+        toggleNearMe();
+        return;
+      }
+      applyFilters();
+    }
+
+    // ── Haversine (miles) ──
+    function haversine(lat1, lng1, lat2, lng2) {
+      var R = 3959;
+      var dLat = (lat2 - lat1) * Math.PI / 180;
+      var dLng = (lng2 - lng1) * Math.PI / 180;
+      var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLng/2) * Math.sin(dLng/2);
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    // ── Filter logic ──
     function applyFilters() {
       var city       = document.getElementById('filterCity').value.trim().toLowerCase();
+      var country    = document.getElementById('filterCountry').value;
       var state      = document.getElementById('filterState').value;
       var format     = document.getElementById('filterFormat').value.toLowerCase();
       var cert       = document.getElementById('filterCert').value.toLowerCase();
       var experience = document.getElementById('filterExperience').value.toLowerCase();
+      var radiusMiles = parseInt(document.getElementById('radiusSelect').value, 10);
 
       var filtered = allProfiles.filter(function(p) {
         if (city && (p.city || '').toLowerCase().indexOf(city) === -1) return false;
+        if (country && (p.country || '') !== country) return false;
         if (state && (p.state || '') !== state) return false;
         if (format && (p.formats || '').toLowerCase().indexOf(format) === -1) return false;
         if (cert && (p.certs || '').toLowerCase().indexOf(cert) === -1) return false;
@@ -418,13 +540,41 @@
         return true;
       });
 
-      // Show filter summary
+      // Calculate distances
+      if (userLat !== null && userLng !== null) {
+        filtered.forEach(function(p) {
+          if (p.lat && p.lng) {
+            p._distance = haversine(userLat, userLng, p.lat, p.lng);
+          } else {
+            p._distance = 99999;
+          }
+        });
+
+        // Near Me: filter by selected radius
+        if (nearMeActive) {
+          filtered = filtered.filter(function(p) {
+            return p._distance <= radiusMiles;
+          });
+        }
+
+        // Sort by distance
+        if (sortByDistance) {
+          filtered.sort(function(a, b) {
+            return (a._distance || 99999) - (b._distance || 99999);
+          });
+        }
+      }
+
+      // Filter summary
       var activeFilters = [];
       if (city) activeFilters.push('city: ' + city);
+      if (country) activeFilters.push(country);
       if (state) activeFilters.push(state);
       if (format) activeFilters.push(format);
       if (cert) activeFilters.push(cert);
       if (experience) activeFilters.push(experience);
+      if (nearMeActive) activeFilters.push('within ' + radiusMiles + ' mi');
+      if (sortByDistance) activeFilters.push('sorted by distance');
 
       var summary = document.getElementById('filterSummary');
       if (activeFilters.length > 0) {
@@ -440,11 +590,21 @@
 
     function clearFilters() {
       document.getElementById('filterCity').value = '';
+      document.getElementById('filterCountry').value = '';
       document.getElementById('filterState').value = '';
       document.getElementById('filterFormat').value = '';
       document.getElementById('filterCert').value = '';
       document.getElementById('filterExperience').value = '';
+      document.getElementById('radiusSelect').value = '25';
+
+      nearMeActive = false;
+      sortByDistance = false;
+      userLat = null;
+      userLng = null;
+      document.getElementById('nearMeBtn').classList.remove('active');
+      document.getElementById('sortDistBtn').classList.remove('active');
       document.getElementById('filterSummary').style.display = 'none';
+
       renderProfiles(allProfiles);
     }
 
@@ -463,35 +623,33 @@
       profiles.forEach(function(p) {
         html += '<div class="card">';
 
-        // Header: name + experience badge
-        html += '<div class="card-header">';
-        html += '<div>';
-        html += '<div class="card-name">' + esc(p.displayName) + '</div>';
+        // Header
+        html += '<div class="card-header"><div>';
+        html += '<div class="card-name">' + esc(p.displayName || 'Anonymous Instructor') + '</div>';
         var loc = [p.city, p.state].filter(Boolean).join(', ');
         if (loc) html += '<div class="card-location">' + esc(loc) + '</div>';
+        if (p._distance !== undefined && p._distance < 99999) {
+          html += '<div class="card-distance">' + Math.round(p._distance) + ' mi away</div>';
+        }
         html += '</div>';
         if (p.experience) {
           html += '<span class="card-experience">' + esc(p.experience) + '</span>';
         }
         html += '</div>';
 
-        // Tags: formats + certs
+        // Tags
         var tags = [];
         if (p.formats) {
           p.formats.split(',').forEach(function(f) {
-            var t = f.trim();
-            if (t) tags.push('<span class="tag">' + esc(t) + '</span>');
+            var t = f.trim(); if (t) tags.push('<span class="tag">' + esc(t) + '</span>');
           });
         }
         if (p.certs) {
           p.certs.split(',').forEach(function(c) {
-            var t = c.trim();
-            if (t) tags.push('<span class="tag cert">' + esc(t) + '</span>');
+            var t = c.trim(); if (t) tags.push('<span class="tag cert">' + esc(t) + '</span>');
           });
         }
-        if (tags.length > 0) {
-          html += '<div class="card-tags">' + tags.join('') + '</div>';
-        }
+        if (tags.length > 0) html += '<div class="card-tags">' + tags.join('') + '</div>';
 
         // Notes
         if (p.notes) {
@@ -499,18 +657,17 @@
           html += '<div class="card-notes">' + esc(noteText) + '</div>';
         }
 
-        // Footer: socials + looking for
-        var hasFooter = p.instagram || p.tiktok || p.lookingFor;
-        if (hasFooter) {
+        // Footer
+        if (p.instagram || p.tiktok || p.lookingFor) {
           html += '<div class="card-footer">';
           if (p.instagram) {
-            html += '<a class="social-link" href="https://instagram.com/' + esc(p.instagram) + '" target="_blank" rel="noopener">';
-            html += '<svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>';
+            html += '<a class="card-social" href="https://instagram.com/' + encodeURIComponent(p.instagram) + '" target="_blank" rel="noopener">';
+            html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>';
             html += '@' + esc(p.instagram) + '</a>';
           }
           if (p.tiktok) {
-            html += '<a class="social-link" href="https://tiktok.com/@' + esc(p.tiktok) + '" target="_blank" rel="noopener">';
-            html += '<svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.46V13a8.28 8.28 0 005.58 2.17V11.7a4.83 4.83 0 01-3.77-1.24V6.69h3.77z"/></svg>';
+            html += '<a class="card-social" href="https://tiktok.com/@' + encodeURIComponent(p.tiktok) + '" target="_blank" rel="noopener">';
+            html += '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V9.48a8.1 8.1 0 004.69 1.49v-3.4a4.85 4.85 0 01-.93.12 4.83 4.83 0 01-3.77z"/></svg>';
             html += '@' + esc(p.tiktok) + '</a>';
           }
           if (p.lookingFor) {
@@ -533,9 +690,20 @@
       return div.innerHTML;
     }
 
-    // ── Enter key triggers search ──
-    document.getElementById('filterCity').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') applyFilters();
+    // ── Auto-filter on dropdown change ──
+    document.querySelectorAll('select.filter-control').forEach(function(sel) {
+      sel.addEventListener('change', applyFilters);
+    });
+
+    // ── City input: live filter with debounce ──
+    var cityInput = document.getElementById('filterCity');
+    var cityTimeout;
+    cityInput.addEventListener('input', function() {
+      clearTimeout(cityTimeout);
+      cityTimeout = setTimeout(applyFilters, 300);
+    });
+    cityInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { clearTimeout(cityTimeout); applyFilters(); }
     });
 
     // Init
