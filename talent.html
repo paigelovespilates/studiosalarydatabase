@@ -269,16 +269,17 @@
     .read-more-btn {
       background: none;
       border: none;
-      color: var(--accent);
+      color: var(--text-secondary);
       font-family: inherit;
       font-size: 0.8rem;
-      font-weight: 500;
+      font-weight: 400;
+      font-style: italic;
       cursor: pointer;
       padding: 0;
       margin-bottom: 0.75rem;
-      text-decoration: underline;
+      text-decoration: none;
     }
-    .read-more-btn:hover { color: var(--accent-hover); }
+    .read-more-btn:hover { color: var(--accent); }
     .card-certs {
       font-size: 0.8rem;
       color: var(--text-secondary);
@@ -592,9 +593,10 @@
           if (needsExpand) html += '<button class="read-more-btn" id="readmore-' + idx + '" onclick="toggleNotes(' + idx + ')">Read more</button>';
         }
 
-        // Certifications as text below notes
+        // Certification details as text below notes
         if (p.certs) {
-          html += '<div class="card-certs"><span class="card-certs-label">Certifications:</span> ' + esc(p.certs) + '</div>';
+          var certsFormatted = p.certs.split(',').map(function(c) { return c.trim(); }).join(', ');
+          html += '<div class="card-certs"><span class="card-certs-label">Certification Details:</span> ' + esc(certsFormatted) + '</div>';
         }
 
         // Footer: social links
