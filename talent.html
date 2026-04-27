@@ -317,6 +317,45 @@
     .card-contact:hover { background: var(--accent-hover); }
     .card-contact svg { width: 13px; height: 13px; }
 
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    .page-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.55rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
+    }
+    .page-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #EDEBE4;
+    }
+    .page-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .page-indicator {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      min-width: 100px;
+      text-align: center;
+    }
+
     .loading {
       text-align: center;
       padding: 4rem 1rem;
@@ -410,11 +449,24 @@
 
   <script>
     var ENDPOINT = 'https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec';
+    var PER_PAGE = 24;
     var allProfiles = [];
+    var filteredProfiles = [];
+    var currentPage = 1;
     var userLat = null;
     var userLng = null;
     var nearMeActive = false;
     var sortByDistance = false;
+
+    // Iframe auto-resize: post height to parent so Squarespace can size the iframe
+    function postHeightToParent() {
+      try {
+        var height = document.documentElement.scrollHeight;
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'talentDirectoryHeight', height: height }, '*');
+        }
+      } catch (e) { /* parent inaccessible, ignore */ }
+    }
 
     function normalizeExperience(val) {
       if (!val) return '';
@@ -434,6 +486,7 @@
       script.onerror = function() {
         document.getElementById('results').innerHTML =
           '<div class="empty-state"><p>Failed to load profiles. Please try again later.</p></div>';
+        postHeightToParent();
       };
       document.body.appendChild(script);
     }
@@ -442,6 +495,7 @@
       if (!data.success || !data.profiles) {
         document.getElementById('results').innerHTML =
           '<div class="empty-state"><p>No profiles available yet.</p></div>';
+        postHeightToParent();
         return;
       }
       data.profiles.forEach(function(p) {
@@ -449,7 +503,9 @@
       });
       allProfiles = data.profiles;
       populateFilterDropdowns(allProfiles);
-      renderProfiles(allProfiles);
+      filteredProfiles = allProfiles.slice();
+      currentPage = 1;
+      renderPage();
     }
 
     function populateFilterDropdowns(profiles) {
@@ -506,8 +562,6 @@
       sortByDistance = !sortByDistance;
       document.getElementById('sortDistBtn').classList.toggle('active', sortByDistance);
 
-      // If we need location for sorting but don't have it yet, get it silently
-      // without activating the near-me radius filter
       if (sortByDistance && userLat === null) {
         if (!navigator.geolocation) {
           alert('Geolocation is not supported by your browser.');
@@ -574,7 +628,10 @@
         summary.style.display = 'flex';
       } else { summary.style.display = 'none'; }
 
-      renderProfiles(filtered);
+      // Reset to page 1 whenever filters change
+      filteredProfiles = filtered;
+      currentPage = 1;
+      renderPage();
     }
 
     function clearFilters() {
@@ -589,7 +646,9 @@
       document.getElementById('radiusSelect').classList.remove('visible');
       document.getElementById('sortDistBtn').classList.remove('active');
       document.getElementById('filterSummary').style.display = 'none';
-      renderProfiles(allProfiles);
+      filteredProfiles = allProfiles.slice();
+      currentPage = 1;
+      renderPage();
     }
 
     window.toggleNotes = function(cardId) {
@@ -603,18 +662,48 @@
         full.style.display = 'none';
         short.style.display = 'inline';
       }
+      // Height changes after expand/collapse
+      postHeightToParent();
+    };
+
+    window.goToPage = function(newPage) {
+      var totalPages = Math.max(1, Math.ceil(filteredProfiles.length / PER_PAGE));
+      if (newPage < 1 || newPage > totalPages) return;
+      currentPage = newPage;
+      renderPage();
+      // Scroll iframe to top, and tell parent to scroll up too
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'talentDirectoryScrollTop' }, '*');
+        }
+      } catch (e) { /* ignore */ }
     };
 
     var mailSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4l-10 8L2 4"/></svg>';
 
-    function renderProfiles(profiles) {
+    function renderPage() {
       var container = document.getElementById('results');
-      if (profiles.length === 0) { container.innerHTML = '<div class="empty-state"><p>No instructors match your filters. Try broadening your search.</p></div>'; return; }
+      var total = filteredProfiles.length;
 
-      var html = '<div class="results-count">' + profiles.length + ' instructor' + (profiles.length !== 1 ? 's' : '') + '</div>';
+      if (total === 0) {
+        container.innerHTML = '<div class="empty-state"><p>No instructors match your filters. Try broadening your search.</p></div>';
+        postHeightToParent();
+        return;
+      }
+
+      var totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+      if (currentPage > totalPages) currentPage = totalPages;
+      var startIdx = (currentPage - 1) * PER_PAGE;
+      var endIdx = Math.min(startIdx + PER_PAGE, total);
+      var pageSlice = filteredProfiles.slice(startIdx, endIdx);
+
+      var html = '<div class="results-count">' + total + ' instructor' + (total !== 1 ? 's' : '') +
+                 ' \u00B7 showing ' + (startIdx + 1) + '\u2013' + endIdx + '</div>';
       html += '<div class="card-grid">';
 
-      profiles.forEach(function(p, idx) {
+      pageSlice.forEach(function(p, sliceIdx) {
+        var idx = startIdx + sliceIdx;
         var name = buildDisplayName(p);
         var hasRealName = !!p.displayName;
 
@@ -626,10 +715,8 @@
           if (loc) html += '<div class="card-location">' + esc(loc) + '</div>';
         }
         if (p._distance !== undefined && p._distance < 99999) html += '<div class="card-distance">' + Math.round(p._distance) + ' mi away</div>';
-        // Mobile pill: rendered inline under distance, hidden on desktop
         if (p.experience) html += '<span class="card-experience card-experience-mobile">' + esc(p.experience) + '</span>';
         html += '</div>';
-        // Desktop pill: top-right, hidden on mobile
         if (p.experience) html += '<span class="card-experience card-experience-desktop">' + esc(p.experience) + '</span>';
         html += '</div>';
 
@@ -680,7 +767,18 @@
       });
 
       html += '</div>';
+
+      // Pagination controls (only render if more than one page)
+      if (totalPages > 1) {
+        html += '<div class="pagination">';
+        html += '<button class="page-btn" onclick="goToPage(' + (currentPage - 1) + ')"' + (currentPage === 1 ? ' disabled' : '') + '>\u2190 Previous</button>';
+        html += '<span class="page-indicator">Page ' + currentPage + ' of ' + totalPages + '</span>';
+        html += '<button class="page-btn" onclick="goToPage(' + (currentPage + 1) + ')"' + (currentPage === totalPages ? ' disabled' : '') + '>Next \u2192</button>';
+        html += '</div>';
+      }
+
       container.innerHTML = html;
+      postHeightToParent();
     }
 
     function esc(str) { if (!str) return ''; var div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
@@ -689,6 +787,12 @@
     var cityInput = document.getElementById('filterCity'); var cityTimeout;
     cityInput.addEventListener('input', function() { clearTimeout(cityTimeout); cityTimeout = setTimeout(applyFilters, 300); });
     cityInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') { clearTimeout(cityTimeout); applyFilters(); } });
+
+    // Re-post height on window resize (orientation change, etc.)
+    window.addEventListener('resize', function() {
+      clearTimeout(window._resizeT);
+      window._resizeT = setTimeout(postHeightToParent, 150);
+    });
 
     init();
   </script>
