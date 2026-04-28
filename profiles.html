@@ -74,6 +74,14 @@
     .save-status { font-size: 0.825rem; margin-top: 0.5rem; }
     .save-status.success { color: var(--green); }
     .save-status.error { color: var(--red); }
+    /* Create form styles */
+    .create-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .create-card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); background: #F5F3EE; }
+    .create-card-header .profile-name { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; }
+    .create-card-header p { font-size: 0.825rem; color: var(--text-secondary); margin-top: 0.2rem; }
+    .create-card-body { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+    .create-card-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); background: #F5F3EE; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+    .field-required { color: var(--red); margin-left: 2px; }
     @media (max-width: 500px) { .header h1 { font-size: 1.4rem; } .input-group { flex-direction: column; } .container { padding: 1.5rem 1rem 3rem; } .edit-row { flex-direction: column; } }
   </style>
 </head>
@@ -92,6 +100,92 @@
       <div class="input-group"><input type="text" id="codeInput" class="code-input" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="one-time-code"><button class="btn btn-primary" id="verifyBtn" onclick="verifyCode()">Verify</button></div>
       <div class="error-msg" id="codeError"></div>
       <div class="resend-row">Didn't get it? <button class="resend-link" onclick="resendCode()">Resend code</button></div>
+    </div>
+    <!-- NEW: Create profile step for instructors with no existing profile -->
+    <div class="step" id="stepCreate">
+      <div class="step-label">New Profile</div>
+      <div class="step-title">Create your profile</div>
+      <div class="step-desc">You're not in the directory yet. Fill in a few details and you'll be set up in seconds.</div>
+      <div class="create-card">
+        <div class="create-card-header">
+          <div class="profile-name" id="createEmailDisplay"></div>
+          <p>Creating a new instructor profile</p>
+        </div>
+        <div class="create-card-body">
+          <div class="profile-field">
+            <div class="profile-field-label">Display Name</div>
+            <input class="edit-input" id="createName" placeholder="Your name as studios will see it">
+          </div>
+          <div class="profile-field">
+            <div class="profile-field-label">Location <span class="field-required">*</span></div>
+            <div class="edit-row">
+              <input class="edit-input" id="createZip" placeholder="Zip / Postal Code">
+              <select class="edit-select" id="createCountry">
+                <option value="">Select country...</option>
+                <option value="United States" selected>United States</option>
+                <option value="Canada">Canada</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="Australia">Australia</option>
+                <option value="New Zealand">New Zealand</option>
+                <option value="Ireland">Ireland</option>
+                <option value="Germany">Germany</option>
+                <option value="France">France</option>
+                <option value="Spain">Spain</option>
+                <option value="Italy">Italy</option>
+                <option value="Netherlands">Netherlands</option>
+                <option value="Belgium">Belgium</option>
+                <option value="Austria">Austria</option>
+                <option value="Switzerland">Switzerland</option>
+                <option value="Sweden">Sweden</option>
+                <option value="Norway">Norway</option>
+                <option value="Denmark">Denmark</option>
+                <option value="Finland">Finland</option>
+                <option value="Portugal">Portugal</option>
+                <option value="Japan">Japan</option>
+                <option value="Singapore">Singapore</option>
+              </select>
+            </div>
+          </div>
+          <div class="profile-field">
+            <div class="profile-field-label">Class Formats <span class="field-required">*</span></div>
+            <div class="checkbox-group" id="createFormats">
+              <label class="checkbox-label"><input type="checkbox" value="Mat Pilates" onchange="toggleCheckbox(this)">Mat Pilates</label>
+              <label class="checkbox-label"><input type="checkbox" value="Reformer / Apparatus" onchange="toggleCheckbox(this)">Reformer / Apparatus</label>
+              <label class="checkbox-label"><input type="checkbox" value="Yoga" onchange="toggleCheckbox(this)">Yoga</label>
+              <label class="checkbox-label"><input type="checkbox" value="Sculpt" onchange="toggleCheckbox(this)">Sculpt</label>
+            </div>
+          </div>
+          <div class="profile-field">
+            <div class="profile-field-label">Experience Level <span class="field-required">*</span></div>
+            <input class="edit-input" id="createExperience" placeholder="e.g., 3 years, 5+ years">
+          </div>
+          <div class="profile-field">
+            <div class="profile-field-label">Phone</div>
+            <input class="edit-input" id="createPhone" placeholder="Your phone number">
+          </div>
+          <div class="profile-field">
+            <div class="profile-field-label">Certifications</div>
+            <input class="edit-input" id="createCerts" placeholder="e.g., Balanced Body, Stott/Merrithew">
+          </div>
+          <div class="profile-field">
+            <div class="profile-field-label">Instagram</div>
+            <input class="edit-input" id="createInstagram" placeholder="Handle only, no @">
+          </div>
+          <div class="profile-field">
+            <div class="profile-field-label">TikTok</div>
+            <input class="edit-input" id="createTiktok" placeholder="Handle only, no @">
+          </div>
+          <div class="profile-field">
+            <div class="profile-field-label">Additional Notes</div>
+            <textarea class="edit-textarea" id="createNotes" placeholder="Anything else studios should know"></textarea>
+          </div>
+        </div>
+        <div class="create-card-footer">
+          <button class="btn btn-primary" id="createBtn" onclick="submitCreate()">Create Profile</button>
+          <button class="btn btn-outline" onclick="location.reload()">Start Over</button>
+          <div id="createStatus" class="save-status" style="width:100%;"></div>
+        </div>
+      </div>
     </div>
     <div class="step" id="stepProfile"></div>
   </div>
@@ -129,11 +223,20 @@
       var btn = document.getElementById('sendCodeBtn'); btn.disabled = true; btn.textContent = 'Sending…';
       jsonp(ENDPOINT + '?action=talentSendCode&email=' + encodeURIComponent(email), function(data) {
         btn.disabled = false; btn.textContent = 'Send Code';
-        if (data.success) { document.getElementById('codeSentTo').textContent = 'We sent a 6-digit code to ' + email + '.'; showStep('stepCode'); document.getElementById('codeInput').focus(); }
-        else if (data.error === 'not_found') showError('emailError', 'We don\'t have a profile for this email. Submit the Talent Directory form first.');
-        else showError('emailError', 'Something went wrong sending the code. Please try again.');
+        if (data.success) {
+          document.getElementById('codeSentTo').textContent = 'We sent a 6-digit code to ' + email + '.';
+          showStep('stepCode');
+          document.getElementById('codeInput').focus();
+        } else if (data.error === 'not_found') {
+          // No profile yet — offer inline creation instead of a dead-end error
+          document.getElementById('createEmailDisplay').textContent = email;
+          showStep('stepCreate');
+        } else {
+          showError('emailError', 'Something went wrong sending the code. Please try again.');
+        }
       });
     }
+
     function resendCode() {
       clearError('codeError'); document.getElementById('codeInput').value = '';
       jsonp(ENDPOINT + '?action=talentSendCode&email=' + encodeURIComponent(currentEmail), function(data) {
@@ -141,6 +244,7 @@
         else showError('codeError', 'Failed to resend. Please try again.');
       });
     }
+
     function verifyCode() {
       clearError('codeError');
       var code = document.getElementById('codeInput').value.trim();
@@ -155,6 +259,64 @@
       });
     }
 
+    // ── Create flow ────────────────────────────────────────────────────────────
+    function getCreateFormats() {
+      var boxes = document.querySelectorAll('#createFormats input[type="checkbox"]');
+      var sel = [];
+      boxes.forEach(function(cb) { if (cb.checked) sel.push(cb.value); });
+      return sel.join(', ');
+    }
+
+    function submitCreate() {
+      var btn = document.getElementById('createBtn');
+      var status = document.getElementById('createStatus');
+      status.textContent = ''; status.className = 'save-status';
+
+      var zip = document.getElementById('createZip').value.trim();
+      var country = document.getElementById('createCountry').value.trim();
+      var formats = getCreateFormats();
+      var experience = document.getElementById('createExperience').value.trim();
+
+      if (!zip) { status.textContent = 'Please enter your zip / postal code.'; status.className = 'save-status error'; return; }
+      if (!country) { status.textContent = 'Please select your country.'; status.className = 'save-status error'; return; }
+      if (!formats) { status.textContent = 'Please select at least one class format.'; status.className = 'save-status error'; return; }
+      if (!experience) { status.textContent = 'Please enter your experience level.'; status.className = 'save-status error'; return; }
+
+      btn.disabled = true; btn.textContent = 'Creating…';
+
+      var params = 'action=talentCreate&email=' + encodeURIComponent(currentEmail);
+      params += '&displayName=' + encodeURIComponent(document.getElementById('createName').value.trim());
+      params += '&phone=' + encodeURIComponent(document.getElementById('createPhone').value.trim());
+      params += '&certs=' + encodeURIComponent(document.getElementById('createCerts').value.trim());
+      params += '&experience=' + encodeURIComponent(experience);
+      params += '&formats=' + encodeURIComponent(formats);
+      params += '&instagram=' + encodeURIComponent(document.getElementById('createInstagram').value.trim());
+      params += '&tiktok=' + encodeURIComponent(document.getElementById('createTiktok').value.trim());
+      params += '&notes=' + encodeURIComponent(document.getElementById('createNotes').value.trim());
+      params += '&zip=' + encodeURIComponent(zip);
+      params += '&country=' + encodeURIComponent(country);
+
+      jsonp(ENDPOINT + '?' + params, function(data) {
+        btn.disabled = false; btn.textContent = 'Create Profile';
+        if (data.success && data.profile) {
+          currentProfile = data.profile;
+          isEditMode = false;
+          renderProfile(data.profile);
+          showStep('stepProfile');
+        } else if (data.error === 'already_exists') {
+          status.textContent = 'A profile already exists for this email. Refresh to sign in.';
+          status.className = 'save-status error';
+        } else if (data.error === 'Missing required fields') {
+          status.textContent = 'Please fill in all required fields (location, formats, experience).';
+          status.className = 'save-status error';
+        } else {
+          status.textContent = 'Something went wrong. Please try again.';
+          status.className = 'save-status error';
+        }
+      });
+    }
+
+    // ── Render existing profile ────────────────────────────────────────────────
     function renderProfile(p) {
       var container = document.getElementById('stepProfile');
       var missing = [];
@@ -300,7 +462,6 @@
       params += '&tiktok=' + encodeURIComponent(document.getElementById('editTiktok').value);
       params += '&notes=' + encodeURIComponent(document.getElementById('editNotes').value);
 
-      // Include zip + country for geocoding if zip is provided
       var zip = document.getElementById('editZip').value.trim();
       var countryEl = document.getElementById('editCountry');
       var country = countryEl.value.trim();
