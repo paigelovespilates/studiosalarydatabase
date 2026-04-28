@@ -390,6 +390,10 @@
         html += editField('Instagram', 'editInstagram', p.instagram, 'Handle only, no @');
         html += editField('TikTok', 'editTiktok', p.tiktok, 'Handle only, no @');
         html += '<div class="profile-field"><div class="profile-field-label">Additional Notes</div><textarea class="edit-textarea" id="editNotes" placeholder="Anything else studios should know">' + esc(p.notes) + '</textarea></div>';
+        html += '<div class="profile-field"><div class="profile-field-label">Directory Visibility</div>';
+html += '<label class="checkbox-label' + (p.visible ? ' checked' : '') + '" style="display:inline-flex;">';
+html += '<input type="checkbox" id="editVisible"' + (p.visible ? ' checked' : '') + ' onchange="toggleCheckbox(this)">';
+html += 'Show my profile in the Talent Directory</label></div>';
       } else {
         html += fieldRow('Email', p.email);
         html += fieldRow('Phone', p.phone);
@@ -466,6 +470,7 @@
       params += '&instagram=' + encodeURIComponent(document.getElementById('editInstagram').value);
       params += '&tiktok=' + encodeURIComponent(document.getElementById('editTiktok').value);
       params += '&notes=' + encodeURIComponent(document.getElementById('editNotes').value);
+      params += '&visible=' + encodeURIComponent(document.getElementById('editVisible').checked ? 'TRUE' : 'FALSE');
 
       var zip = document.getElementById('editZip').value.trim();
       var countryEl = document.getElementById('editCountry');
