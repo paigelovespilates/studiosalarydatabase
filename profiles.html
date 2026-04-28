@@ -391,8 +391,8 @@
         html += editField('TikTok', 'editTiktok', p.tiktok, 'Handle only, no @');
         html += '<div class="profile-field"><div class="profile-field-label">Additional Notes</div><textarea class="edit-textarea" id="editNotes" placeholder="Anything else studios should know">' + esc(p.notes) + '</textarea></div>';
         html += '<div class="profile-field"><div class="profile-field-label">Directory Visibility</div>';
-html += '<label class="checkbox-label' + (p.visible ? ' checked' : '') + '" style="display:inline-flex;">';
-html += '<input type="checkbox" id="editVisible"' + (p.visible ? ' checked' : '') + ' onchange="toggleCheckbox(this)">';
+html += '<label style="display:inline-flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;">';
+html += '<input type="checkbox" id="editVisible"' + (p.visible ? ' checked' : '') + ' style="width:16px;height:16px;cursor:pointer;">';
 html += 'Show my profile in the Talent Directory</label></div>';
       } else {
         html += fieldRow('Email', p.email);
