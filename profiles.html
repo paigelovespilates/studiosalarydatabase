@@ -74,7 +74,6 @@
     .save-status { font-size: 0.825rem; margin-top: 0.5rem; }
     .save-status.success { color: var(--green); }
     .save-status.error { color: var(--red); }
-    /* Create form styles */
     .create-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
     .create-card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); background: #F5F3EE; }
     .create-card-header .profile-name { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; }
@@ -101,7 +100,6 @@
       <div class="error-msg" id="codeError"></div>
       <div class="resend-row">Didn't get it? <button class="resend-link" onclick="resendCode()">Resend code</button></div>
     </div>
-    <!-- NEW: Create profile step for instructors with no existing profile -->
     <div class="step" id="stepCreate">
       <div class="step-label">New Profile</div>
       <div class="step-title">Create your profile</div>
@@ -157,14 +155,14 @@
           </div>
           <div class="profile-field">
             <div class="profile-field-label">Experience Level <span class="field-required">*</span></div>
-           <select class="edit-select" id="createExperience">
-  <option value="">Select experience level...</option>
-  <option value="Less than 1 Year">Less than 1 Year</option>
-  <option value="1-2 Years">1-2 Years</option>
-  <option value="3-5 Years">3-5 Years</option>
-  <option value="6-10 Years">6-10 Years</option>
-  <option value="10+ Years">10+ Years</option>
-</select>
+            <select class="edit-select" id="createExperience">
+              <option value="">Select experience level...</option>
+              <option value="Less than 1 Year">Less than 1 Year</option>
+              <option value="1-2 Years">1-2 Years</option>
+              <option value="3-5 Years">3-5 Years</option>
+              <option value="6-10 Years">6-10 Years</option>
+              <option value="10+ Years">10+ Years</option>
+            </select>
           </div>
           <div class="profile-field">
             <div class="profile-field-label">Phone</div>
@@ -234,10 +232,6 @@
           document.getElementById('codeSentTo').textContent = 'We sent a 6-digit code to ' + email + '.';
           showStep('stepCode');
           document.getElementById('codeInput').focus();
-        } else if (data.error === 'not_found') {
-          // No profile yet — offer inline creation instead of a dead-end error
-          document.getElementById('createEmailDisplay').textContent = email;
-          showStep('stepCreate');
         } else {
           showError('emailError', 'Something went wrong sending the code. Please try again.');
         }
@@ -259,14 +253,17 @@
       var btn = document.getElementById('verifyBtn'); btn.disabled = true; btn.textContent = 'Verifying…';
       jsonp(ENDPOINT + '?action=talentVerify&email=' + encodeURIComponent(currentEmail) + '&code=' + encodeURIComponent(code), function(data) {
         btn.disabled = false; btn.textContent = 'Verify';
-        if (data.success && data.profile) { currentProfile = data.profile; isEditMode = false; renderProfile(data.profile); showStep('stepProfile'); }
-        else if (data.error === 'invalid_code') showError('codeError', 'That code doesn\'t match. Please check and try again.');
+        if (data.success && data.newUser) {
+          document.getElementById('createEmailDisplay').textContent = currentEmail;
+          showStep('stepCreate');
+        } else if (data.success && data.profile) {
+          currentProfile = data.profile; isEditMode = false; renderProfile(data.profile); showStep('stepProfile');
+        } else if (data.error === 'invalid_code') showError('codeError', 'That code doesn\'t match. Please check and try again.');
         else if (data.error === 'expired_code') showError('codeError', 'That code has expired. Click "Resend code" to get a new one.');
         else showError('codeError', 'Verification failed. Please try again.');
       });
     }
 
-    // ── Create flow ────────────────────────────────────────────────────────────
     function getCreateFormats() {
       var boxes = document.querySelectorAll('#createFormats input[type="checkbox"]');
       var sel = [];
@@ -287,7 +284,7 @@
       if (!zip) { status.textContent = 'Please enter your zip / postal code.'; status.className = 'save-status error'; return; }
       if (!country) { status.textContent = 'Please select your country.'; status.className = 'save-status error'; return; }
       if (!formats) { status.textContent = 'Please select at least one class format.'; status.className = 'save-status error'; return; }
-      if (!experience) { status.textContent = 'Please enter your experience level.'; status.className = 'save-status error'; return; }
+      if (!experience) { status.textContent = 'Please select your experience level.'; status.className = 'save-status error'; return; }
 
       btn.disabled = true; btn.textContent = 'Creating…';
 
@@ -323,7 +320,6 @@
       });
     }
 
-    // ── Render existing profile ────────────────────────────────────────────────
     function renderProfile(p) {
       var container = document.getElementById('stepProfile');
       var missing = [];
@@ -341,7 +337,6 @@
       }
       html += '<div class="profile-card">';
 
-      // Header
       html += '<div class="profile-card-header"><div>';
       if (isEditMode) {
         html += '<div class="profile-field-label">Display Name</div>';
@@ -353,11 +348,9 @@
       }
       html += '</div><span class="profile-visible-badge ' + (p.visible ? 'on' : 'off') + '">' + (p.visible ? 'Visible' : 'Hidden') + '</span></div>';
 
-      // Body
       html += '<div class="profile-card-body">';
 
       if (isEditMode) {
-        // Location: zip + country dropdown
         html += '<div class="profile-field"><div class="profile-field-label">Location</div>';
         var locDisplay = [p.city, p.state, p.country].filter(Boolean).join(', ');
         if (locDisplay) html += '<div class="profile-field-value" style="margin-bottom:0.5rem;font-size:0.825rem;color:var(--text-secondary);">Current: ' + esc(locDisplay) + '</div>';
@@ -376,16 +369,16 @@
 
         html += editField('Phone', 'editPhone', p.phone, 'Your phone number');
         html += editField('Certifications', 'editCerts', p.certs, 'e.g., Balanced Body, Stott/Merrithew');
-        var expOptions = ['Less than 1 Year','1-2 Years','3-5 Years','6-10 Years','10+ Years'];
-html += '<div class="profile-field"><div class="profile-field-label">Experience Level</div><select class="edit-select" id="editExperience">';
-html += '<option value="">Select experience level...</option>';
-expOptions.forEach(function(opt) {
-  var selected = (p.experience === opt) ? ' selected' : '';
-  html += '<option value="' + escAttr(opt) + '"' + selected + '>' + esc(opt) + '</option>';
-});
-html += '</select></div>';
 
-        // Class Formats: checkboxes
+        var expOptions = ['Less than 1 Year','1-2 Years','3-5 Years','6-10 Years','10+ Years'];
+        html += '<div class="profile-field"><div class="profile-field-label">Experience Level</div><select class="edit-select" id="editExperience">';
+        html += '<option value="">Select experience level...</option>';
+        expOptions.forEach(function(opt) {
+          var selected = (p.experience === opt) ? ' selected' : '';
+          html += '<option value="' + escAttr(opt) + '"' + selected + '>' + esc(opt) + '</option>';
+        });
+        html += '</select></div>';
+
         html += '<div class="profile-field"><div class="profile-field-label">Class Formats</div><div class="checkbox-group" id="editFormats">';
         var currentFormats = (p.formats || '').split(',').map(function(f) { return f.trim().toLowerCase(); });
         FORMAT_OPTIONS.forEach(function(opt) {
@@ -398,7 +391,6 @@ html += '</select></div>';
         html += editField('TikTok', 'editTiktok', p.tiktok, 'Handle only, no @');
         html += '<div class="profile-field"><div class="profile-field-label">Additional Notes</div><textarea class="edit-textarea" id="editNotes" placeholder="Anything else studios should know">' + esc(p.notes) + '</textarea></div>';
       } else {
-        // View mode
         html += fieldRow('Email', p.email);
         html += fieldRow('Phone', p.phone);
 
@@ -426,7 +418,6 @@ html += '</select></div>';
 
       html += '<div id="saveStatus"></div></div>';
 
-      // Footer
       html += '<div class="profile-card-footer">';
       if (isEditMode) {
         html += '<button class="btn btn-primary" id="saveBtn" onclick="saveProfile()">Save Changes</button>';
