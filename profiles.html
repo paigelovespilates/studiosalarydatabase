@@ -157,7 +157,14 @@
           </div>
           <div class="profile-field">
             <div class="profile-field-label">Experience Level <span class="field-required">*</span></div>
-            <input class="edit-input" id="createExperience" placeholder="e.g., 3 years, 5+ years">
+           <select class="edit-select" id="createExperience">
+  <option value="">Select experience level...</option>
+  <option value="Less than 1 Year">Less than 1 Year</option>
+  <option value="1-2 Years">1-2 Years</option>
+  <option value="3-5 Years">3-5 Years</option>
+  <option value="6-10 Years">6-10 Years</option>
+  <option value="10+ Years">10+ Years</option>
+</select>
           </div>
           <div class="profile-field">
             <div class="profile-field-label">Phone</div>
@@ -369,7 +376,14 @@
 
         html += editField('Phone', 'editPhone', p.phone, 'Your phone number');
         html += editField('Certifications', 'editCerts', p.certs, 'e.g., Balanced Body, Stott/Merrithew');
-        html += editField('Experience Level', 'editExperience', p.experience, 'e.g., 5+ years');
+        var expOptions = ['Less than 1 Year','1-2 Years','3-5 Years','6-10 Years','10+ Years'];
+html += '<div class="profile-field"><div class="profile-field-label">Experience Level</div><select class="edit-select" id="editExperience">';
+html += '<option value="">Select experience level...</option>';
+expOptions.forEach(function(opt) {
+  var selected = (p.experience === opt) ? ' selected' : '';
+  html += '<option value="' + escAttr(opt) + '"' + selected + '>' + esc(opt) + '</option>';
+});
+html += '</select></div>';
 
         // Class Formats: checkboxes
         html += '<div class="profile-field"><div class="profile-field-label">Class Formats</div><div class="checkbox-group" id="editFormats">';
