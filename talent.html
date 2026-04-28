@@ -385,11 +385,29 @@
       .filter-row input.filter-control,
       .filter-btn,
       .near-me-group { min-width: 100%; width: 100%; }
-      .near-me-group .filter-btn { flex: 1; }
-      .near-me-group .radius-select {
+
+      /* Near Me group: button takes remaining space, radius dropdown gets fixed width.
+         Both stay within the row's 100% width. */
+      .near-me-group { display: flex; }
+      .near-me-group .filter-btn {
+        flex: 1 1 auto;
+        min-width: 0;
         width: auto;
-        min-width: 80px;
       }
+      .near-me-group .radius-select.visible {
+        flex: 0 0 auto;
+        width: 90px;
+        min-width: 90px;
+      }
+
+      /* Sort by Distance: outlined active state on mobile so it doesn't blend
+         into the solid dark Near Me button stacked above it. */
+      #sortDistBtn.active {
+        background: var(--surface);
+        color: var(--accent);
+        border: 1px solid var(--accent);
+      }
+
       .card-grid { grid-template-columns: 1fr; }
 
       /* Mobile pill: show inline, hide desktop top-right */
