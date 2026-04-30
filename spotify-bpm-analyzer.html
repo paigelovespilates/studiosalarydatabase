@@ -3,916 +3,686 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Playlist BPM Analyzer</title>
+<title>Playlist Playbook</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
-    --olive: #373930;
-    --linen: #EDEBE4;
-    --linen-dark: #E0DDD5;
-    --cream: #F7F5EF;
-    --terracotta: #B85C3C;
-    --sage: #7A8C6E;
-    --text: #2A2B26;
-    --muted: #8A8A7A;
-    --border: #D4D1C7;
-    --spotify: #1DB954;
+    --olive: #373930; --linen: #EDEBE4; --linen-dark: #E0DDD5; --cream: #F7F5EF;
+    --terracotta: #B85C3C; --sage: #7A8C6E; --text: #2A2B26; --muted: #8A8A7A;
+    --border: #D4D1C7; --spotify: #1DB954; --gold: #C9A84C;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--cream);
-    color: var(--text);
-    min-height: 100vh;
-  }
-
-  header {
-    background: var(--olive);
-    color: var(--linen);
-    padding: 28px 40px;
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
-  }
-
-  header h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 28px;
-    font-weight: 600;
-    letter-spacing: -0.5px;
-  }
-
-  header span {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: var(--sage);
-    text-transform: uppercase;
-  }
-
-  .container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 40px 24px;
-  }
-
-  /* AUTH SECTION */
-  #auth-section {
-    text-align: center;
-    padding: 80px 40px;
-  }
-
-  #auth-section h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 36px;
-    font-weight: 400;
-    font-style: italic;
-    margin-bottom: 12px;
-    color: var(--olive);
-  }
-
-  #auth-section p {
-    color: var(--muted);
-    font-size: 15px;
-    margin-bottom: 36px;
-    line-height: 1.6;
-  }
-
-  .btn-spotify {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--spotify);
-    color: white;
-    border: none;
-    padding: 14px 32px;
-    border-radius: 40px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s;
-    text-decoration: none;
-  }
-
-  .btn-spotify:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(29,185,84,0.3);
-  }
-
-  /* MAIN APP */
-  #app-section { display: none; }
-
-  .user-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--olive);
-    color: var(--linen);
-    padding: 10px 20px;
-    border-radius: 8px;
-    margin-bottom: 28px;
-    font-size: 13px;
-  }
-
-  .user-bar strong { font-weight: 600; }
-  .user-bar button {
-    background: none;
-    border: 1px solid rgba(237,235,228,0.3);
-    color: var(--linen);
-    padding: 4px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 12px;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .section-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
-
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+  header { background: var(--olive); color: var(--linen); padding: 18px 36px; display: flex; align-items: baseline; justify-content: space-between; }
+  header h1 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; }
+  header span { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--sage); }
+  .container { max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
+  .tab-bar { display: flex; margin-bottom: 24px; border-bottom: 2px solid var(--border); }
+  .tab { padding: 9px 22px; cursor: pointer; font-size: 11px; font-weight: 500; font-family: 'DM Mono', monospace; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color 0.15s, border-color 0.15s; }
+  .tab.active { color: var(--olive); border-bottom-color: var(--terracotta); }
+  /* AUTH */
+  #auth-section { text-align: center; padding: 70px 40px; }
+  #auth-section h2 { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 400; font-style: italic; margin-bottom: 10px; }
+  #auth-section p { color: var(--muted); font-size: 14px; margin-bottom: 32px; line-height: 1.6; }
+  .btn-spotify { display: inline-flex; align-items: center; gap: 10px; background: var(--spotify); color: white; border: none; padding: 13px 30px; border-radius: 40px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+  .btn-spotify:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(29,185,84,0.3); }
+  /* USER BAR */
+  .user-bar { display: flex; align-items: center; justify-content: space-between; background: var(--olive); color: var(--linen); padding: 9px 18px; border-radius: 7px; margin-bottom: 20px; font-size: 13px; }
+  .user-bar button { background: none; border: 1px solid rgba(237,235,228,0.3); color: var(--linen); padding: 3px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-family: 'DM Sans', sans-serif; }
   /* PLAYLIST GRID */
-  #playlists-section { margin-bottom: 40px; }
-
-  .playlist-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 12px;
-  }
-
-  .playlist-card {
-    background: white;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 14px;
-    cursor: pointer;
-    transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
-    position: relative;
-  }
-
-  .playlist-card:hover {
-    border-color: var(--olive);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(55,57,48,0.1);
-  }
-
-  .playlist-card.active {
-    border-color: var(--terracotta);
-    background: #FDF6F3;
-  }
-
-  .playlist-card img {
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    background: var(--linen-dark);
-  }
-
-  .playlist-card .playlist-name {
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.3;
-    margin-bottom: 4px;
-  }
-
-  .playlist-card .playlist-meta {
-    font-size: 11px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-  }
-
-  /* ANALYSIS SECTION */
-  #analysis-section {
-    display: none;
-    background: white;
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
-  .analysis-header {
-    background: var(--olive);
-    color: var(--linen);
-    padding: 20px 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .analysis-header h3 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    font-weight: 600;
-    font-style: italic;
-  }
-
-  .analysis-header .track-count {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--sage);
-    letter-spacing: 1.5px;
-  }
-
-  /* STATS ROW */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .stat-box {
-    padding: 20px 24px;
-    border-right: 1px solid var(--border);
-    text-align: center;
-  }
-
-  .stat-box:last-child { border-right: none; }
-
-  .stat-value {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 32px;
-    font-weight: 600;
-    color: var(--olive);
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-
-  .stat-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
+  .section-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .playlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 9px; margin-bottom: 24px; }
+  .playlist-card { background: white; border: 1.5px solid var(--border); border-radius: 7px; padding: 11px; cursor: pointer; transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s; position: relative; }
+  .playlist-card:hover { border-color: var(--olive); transform: translateY(-2px); box-shadow: 0 4px 14px rgba(55,57,48,0.1); }
+  .playlist-card.active { border-color: var(--terracotta); background: #FDF6F3; }
+  .playlist-card img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 4px; margin-bottom: 7px; background: var(--linen-dark); }
+  .playlist-card .pname { font-size: 11px; font-weight: 600; line-height: 1.3; margin-bottom: 2px; }
+  .playlist-card .pmeta { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .placeholder-img { width: 100%; aspect-ratio: 1; background: var(--linen-dark); border-radius: 4px; margin-bottom: 7px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+  /* PANELS */
+  .panel { background: white; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 24px; }
+  .panel-header { background: var(--olive); color: var(--linen); padding: 16px 22px; display: flex; align-items: center; justify-content: space-between; }
+  .panel-header h3 { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 600; font-style: italic; }
+  .panel-header .meta { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--sage); letter-spacing: 1.5px; }
   /* CHART */
-  .chart-area {
-    padding: 28px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .chart-area h4 {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 20px;
-  }
-
-  .chart-wrap {
-    position: relative;
-    height: 280px;
-  }
-
-  /* TRACK TABLE */
-  .track-table-wrap {
-    padding: 0 28px 28px;
-  }
-
-  .track-table-wrap h4 {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin: 24px 0 12px;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-
-  th {
-    text-align: left;
-    padding: 8px 12px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-    border-bottom: 1.5px solid var(--border);
-  }
-
-  td {
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--linen-dark);
-    vertical-align: middle;
-  }
-
+  .chart-area { padding: 20px 22px; border-bottom: 1px solid var(--border); }
+  .chart-area h4 { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .chart-wrap { position: relative; height: 220px; }
+  /* PLAYBOOK TABLE */
+  .table-wrap { padding: 0 22px 22px; }
+  .table-wrap h4 { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin: 18px 0 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { text-align: left; padding: 6px 9px; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); border-bottom: 1.5px solid var(--border); }
+  td { padding: 8px 9px; border-bottom: 1px solid var(--linen-dark); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: var(--cream); }
-
-  .bpm-cell {
-    font-family: 'DM Mono', monospace;
-    font-weight: 500;
-  }
-
-  .bpm-bar-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .bpm-bar {
-    height: 6px;
-    border-radius: 3px;
-    background: var(--terracotta);
-    opacity: 0.7;
-    min-width: 4px;
-  }
-
-  .track-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    width: 28px;
-  }
-
-  .energy-dot {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-  }
-
+  .mono { font-family: 'DM Mono', monospace; font-size: 11px; }
+  .muted { color: var(--muted); }
+  .key-badge { display: inline-block; padding: 2px 6px; border-radius: 3px; font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; }
+  .key-major { background: #EEF3EB; color: var(--sage); }
+  .key-minor { background: #F3EDEB; color: var(--terracotta); }
+  .energy-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; }
+  .bpm-bar { height: 4px; border-radius: 2px; background: var(--terracotta); opacity: 0.6; display: inline-block; }
+  /* MATCH SCORES */
+  .match-score { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; }
+  .match-great { background: #EEF3EB; color: var(--sage); border: 1.5px solid var(--sage); }
+  .match-good { background: #F5F2E8; color: var(--gold); border: 1.5px solid var(--gold); }
+  .match-ok { background: #F7F5EF; color: var(--muted); border: 1.5px solid var(--border); }
+  /* MATCHER PANEL */
+  .matcher-controls { padding: 16px 22px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .matcher-controls label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+  .matcher-controls select { padding: 6px 10px; border: 1.5px solid var(--border); border-radius: 5px; font-family: 'DM Sans', sans-serif; font-size: 13px; background: white; cursor: pointer; }
+  .matcher-controls select:focus { outline: none; border-color: var(--olive); }
+  /* LIKED SONGS TABLE */
+  .match-row { display: grid; grid-template-columns: 1fr 80px 80px 80px 60px 50px; gap: 0; border-bottom: 1px solid var(--linen-dark); align-items: center; }
+  .match-row:hover { background: var(--cream); }
+  .match-row:last-child { border-bottom: none; }
+  .match-row > div { padding: 9px 9px; }
+  .match-header { display: grid; grid-template-columns: 1fr 80px 80px 80px 60px 50px; border-bottom: 1.5px solid var(--border); background: var(--linen); }
+  .match-header > div { padding: 7px 9px; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
   /* EXPORT */
-  .export-bar {
-    padding: 16px 28px;
-    background: var(--linen);
-    display: flex;
-    gap: 10px;
-    border-top: 1px solid var(--border);
-  }
-
-  .btn {
-    padding: 9px 20px;
-    border-radius: 6px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    transition: opacity 0.15s;
-  }
-
+  .export-bar { padding: 12px 22px; background: var(--linen); display: flex; gap: 9px; border-top: 1px solid var(--border); }
+  .btn { padding: 7px 16px; border-radius: 5px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; cursor: pointer; border: none; transition: opacity 0.15s; }
   .btn:hover { opacity: 0.8; }
-
-  .btn-primary {
-    background: var(--olive);
-    color: var(--linen);
-  }
-
-  .btn-outline {
-    background: white;
-    color: var(--text);
-    border: 1.5px solid var(--border);
-  }
-
+  .btn-primary { background: var(--olive); color: var(--linen); }
+  .btn-outline { background: white; color: var(--text); border: 1.5px solid var(--border); }
   /* LOADING */
-  .loading {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--muted);
-    font-size: 13px;
-    padding: 20px 0;
-  }
-
-  .spinner {
-    width: 18px;
-    height: 18px;
-    border: 2px solid var(--border);
-    border-top-color: var(--olive);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-
+  .loading { display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: 12px; padding: 14px 0; }
+  .spinner { width: 15px; height: 15px; border: 2px solid var(--border); border-top-color: var(--olive); border-radius: 50%; animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  .error-msg {
-    background: #FDF0ED;
-    border: 1px solid #E8B4A0;
-    color: var(--terracotta);
-    padding: 12px 16px;
-    border-radius: 6px;
-    font-size: 13px;
-    margin: 12px 0;
-  }
-
-  .placeholder-img {
-    width: 100%;
-    aspect-ratio: 1;
-    background: var(--linen-dark);
-    border-radius: 4px;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-  }
+  .error-msg { background: #FDF0ED; border: 1px solid #E8B4A0; color: var(--terracotta); padding: 9px 13px; border-radius: 5px; font-size: 12px; margin: 8px 0; }
+  .empty-msg { color: var(--muted); font-size: 13px; padding: 24px; text-align: center; font-style: italic; }
+  /* PLAYBOOK SUMMARY CARDS */
+  .pos-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; padding: 20px 22px; }
+  .pos-card { border: 1.5px solid var(--border); border-radius: 8px; padding: 14px; background: var(--cream); }
+  .pos-card-num { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--olive); line-height: 1; margin-bottom: 6px; }
+  .pos-card-bpm { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .pos-card-range { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); margin-bottom: 6px; }
+  .pos-card-examples { font-size: 11px; color: var(--muted); line-height: 1.5; font-style: italic; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Playlist BPM Analyzer</h1>
-  <span>@paigelovespilates</span>
+  <div style="display:flex;align-items:baseline;gap:14px">
+    <h1>Playlist Playbook</h1>
+    <span>@PAIGELOVESPILATES</span>
+  </div>
+  <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--sage)" id="header-user"></div>
 </header>
 
 <div class="container">
 
   <!-- AUTH -->
   <div id="auth-section">
-    <h2>Connect your Spotify</h2>
-    <p>Analyze BPM by track position across your playlists.<br>See your energy arcs and build smarter class sequences.</p>
+    <h2>Your Pilates Playlist Formula</h2>
+    <p>Built from 17 of your class playlists.<br>Connect Spotify to match your Liked Songs to your positional playbook.</p>
     <button class="btn-spotify" onclick="login()">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
       Connect with Spotify
     </button>
-    <p style="margin-top:20px; font-size:12px; color:var(--muted)">You'll be redirected to Spotify to approve access, then brought back here.</p>
+    <div style="margin-top:20px">
+      <button class="btn-outline btn" onclick="showPlaybookOnly()">View Playbook Without Connecting</button>
+    </div>
   </div>
 
   <!-- APP -->
-  <div id="app-section">
+  <div id="app-section" style="display:none">
     <div class="user-bar">
       <span>Logged in as <strong id="username-display">—</strong></span>
       <button onclick="logout()">Disconnect</button>
     </div>
-
-    <div id="playlists-section">
-      <div class="section-label">Your Playlists</div>
-      <div id="playlists-loading" class="loading"><div class="spinner"></div> Loading playlists…</div>
-      <div id="playlist-grid" class="playlist-grid"></div>
-      <div id="playlist-error" class="error-msg" style="display:none"></div>
+    <div class="tab-bar">
+      <div class="tab active" id="tab-playbook" onclick="switchTab('playbook')">My Playbook</div>
+      <div class="tab" id="tab-matcher" onclick="switchTab('matcher')">Song Matcher</div>
+      <div class="tab" id="tab-single" onclick="switchTab('single')">Analyze a Playlist</div>
     </div>
+    <div id="tab-content"></div>
+  </div>
 
-    <div id="analysis-section">
-      <div class="analysis-header">
-        <div>
-          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--sage);margin-bottom:4px">ANALYZING</div>
-          <h3 id="analysis-title">—</h3>
-        </div>
-        <div class="track-count" id="analysis-track-count"></div>
-      </div>
-
-      <div class="stats-row">
-        <div class="stat-box">
-          <div class="stat-value" id="stat-avg">—</div>
-          <div class="stat-label">Avg BPM</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-value" id="stat-min">—</div>
-          <div class="stat-label">Min BPM</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-value" id="stat-max">—</div>
-          <div class="stat-label">Max BPM</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-value" id="stat-range">—</div>
-          <div class="stat-label">BPM Range</div>
-        </div>
-      </div>
-
-      <div class="chart-area">
-        <h4>BPM by Track Position</h4>
-        <div class="chart-wrap">
-          <canvas id="bpmChart"></canvas>
-        </div>
-      </div>
-
-      <div class="track-table-wrap">
-        <h4>Track Details</h4>
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Track</th>
-              <th>Artist</th>
-              <th>BPM</th>
-              <th style="width:120px">Intensity</th>
-              <th>Energy</th>
-            </tr>
-          </thead>
-          <tbody id="track-tbody"></tbody>
-        </table>
-      </div>
-
-      <div class="export-bar">
-        <button class="btn btn-primary" onclick="exportCSV()">Export CSV</button>
-        <button class="btn btn-outline" onclick="copyInsights()">Copy Insights</button>
-      </div>
+  <!-- PLAYBOOK ONLY (no auth) -->
+  <div id="playbook-only-section" style="display:none">
+    <div class="tab-bar">
+      <div class="tab active">My Playbook</div>
     </div>
+    <div id="playbook-only-content"></div>
   </div>
 
 </div>
 
 <script>
+// ── PLAYBOOK DATA (built from 17 playlists, 265 tracks) ──────────────
+const PLAYBOOK = [{"position": 1, "avgBpm": 111, "minBpm": 78, "maxBpm": 138, "avgEnergy": 65, "commonKey": "A266f min", "commonMode": "min", "examples": [{"name": "MILLION DOLLAR BABY", "artist": "Tommy Richman", "bpm": 138}, {"name": "Monalisa", "artist": "Lojay, Sarz, Chris Brown", "bpm": 113}, {"name": "adore u", "artist": "Fred again.., Obongjayar", "bpm": 124}], "count": 17, "allBpms": [138, 113, 124, 102, 95, 78, 136, 106, 123, 113, 109, 130, 105, 124, 113, 83, 95]}, {"position": 2, "avgBpm": 128, "minBpm": 122, "maxBpm": 140, "avgEnergy": 82, "commonKey": "C266f min", "commonMode": "min", "examples": [{"name": "Give It To Me - Full Vocal Mix", "artist": "Matt Sassari", "bpm": 126}, {"name": "If You Don't Want This", "artist": "ManLikeTwin", "bpm": 140}, {"name": "Playing With Fire", "artist": "ChaseWest, Hayley May", "bpm": 130}], "count": 17, "allBpms": [126, 140, 130, 125, 126, 122, 122, 130, 125, 140, 127, 122, 140, 122, 125, 128, 127]}, {"position": 3, "avgBpm": 125, "minBpm": 88, "maxBpm": 130, "avgEnergy": 85, "commonKey": "C266f maj", "commonMode": "maj", "examples": [{"name": "Don't Stop", "artist": "Prospa", "bpm": 128}, {"name": "Can't Get Enough", "artist": "J. Worra, Hayley May", "bpm": 127}, {"name": "Hit 'Em Up Style (Oops!)", "artist": "ESSEL, James Hurr", "bpm": 125}], "count": 17, "allBpms": [128, 127, 125, 88, 125, 128, 128, 130, 127, 127, 128, 125, 130, 127, 130, 125, 128]}, {"position": 4, "avgBpm": 117, "minBpm": 77, "maxBpm": 138, "avgEnergy": 79, "commonKey": "B min", "commonMode": "min", "examples": [{"name": "About You", "artist": "Sonny Fodera, Biscits", "bpm": 126}, {"name": "Dancing Clich00e9", "artist": "LF SYSTEM", "bpm": 128}, {"name": "Get Busy - Odd Mob Club Mix", "artist": "Sean Paul, Odd Mob", "bpm": 132}], "count": 17, "allBpms": [126, 128, 132, 124, 125, 130, 128, 77, 138, 128, 82, 104, 126, 110, 134, 98, 96]}, {"position": 5, "avgBpm": 126, "minBpm": 88, "maxBpm": 190, "avgEnergy": 74, "commonKey": "G maj", "commonMode": "maj", "examples": [{"name": "Drop It Low", "artist": "Ester Dean, Chris Brown", "bpm": 88}, {"name": "Maneater", "artist": "Nelly Furtado", "bpm": 133}, {"name": "Oh (feat. Ludacris)", "artist": "Ciara, Ludacris", "bpm": 128}], "count": 16, "allBpms": [88, 133, 128, 100, 127, 190, 128, 129, 126, 106, 124, 126, 130, 129, 129, 130]}, {"position": 6, "avgBpm": 127, "minBpm": 122, "maxBpm": 134, "avgEnergy": 85, "commonKey": "G maj", "commonMode": "maj", "examples": [{"name": "Can You Really Feel Me?", "artist": "CID", "bpm": 127}, {"name": "Be Randy", "artist": "Dom Dolla, Torren Foot", "bpm": 122}, {"name": "Whip Your Lovin' on Me Baby (Lovin' on Me) - Remix", "artist": "Remix Kingz", "bpm": 125}], "count": 17, "allBpms": [127, 122, 125, 127, 132, 125, 125, 126, 129, 130, 126, 125, 134, 128, 124, 130, 128]}, {"position": 7, "avgBpm": 130, "minBpm": 75, "maxBpm": 174, "avgEnergy": 73, "commonKey": "B min", "commonMode": "min", "examples": [{"name": "Dress Code", "artist": "Mau P", "bpm": 128}, {"name": "A Good Time", "artist": "Steven Williams, DjabaTheHot", "bpm": 126}, {"name": "Pull Up", "artist": "Discip", "bpm": 129}], "count": 17, "allBpms": [128, 126, 129, 129, 87, 125, 153, 145, 145, 129, 174, 120, 130, 75, 132, 130, 150]}, {"position": 8, "avgBpm": 130, "minBpm": 84, "maxBpm": 164, "avgEnergy": 69, "commonKey": "A266f min", "commonMode": "min", "examples": [{"name": "Bags", "artist": "Leikeli47", "bpm": 146}, {"name": "GHOST. (feat. Samara Cyn)", "artist": "Armani White, Samara Cyn", "bpm": 104}, {"name": "DON'T KILL THE PARTY (feat. Quavo PLAYBOOK_PLACEHOLDER Juicy J)", "artist": "Ty Dolla $ign, Quavo, Juicy J", "bpm": 124}], "count": 17, "allBpms": [146, 104, 124, 163, 125, 124, 126, 128, 130, 84, 128, 125, 150, 126, 164, 134, 123]}, {"position": 9, "avgBpm": 128, "minBpm": 124, "maxBpm": 134, "avgEnergy": 84, "commonKey": "C266f maj", "commonMode": "maj", "examples": [{"name": "Dame M00e1s (Gasolina)", "artist": "Andruss, Juos", "bpm": 130}, {"name": "MONEY", "artist": "MALARKEY", "bpm": 124}, {"name": "HYPNOSIS", "artist": "AYYBO, ero808", "bpm": 125}], "count": 17, "allBpms": [130, 124, 125, 126, 129, 130, 124, 132, 124, 127, 126, 130, 127, 124, 134, 130, 132]}, {"position": 10, "avgBpm": 121, "minBpm": 76, "maxBpm": 135, "avgEnergy": 79, "commonKey": "C maj", "commonMode": "maj", "examples": [{"name": "Block Rockin Beats", "artist": "ESSE", "bpm": 128}, {"name": "New Phone Who Dis", "artist": "Jake Silva, Frankie Sims", "bpm": 130}, {"name": "C.R.E.A.M.", "artist": "Lukas Vane", "bpm": 130}], "count": 17, "allBpms": [128, 130, 130, 125, 125, 130, 76, 105, 120, 126, 133, 135, 124, 84, 130, 129, 132]}, {"position": 11, "avgBpm": 131, "minBpm": 77, "maxBpm": 163, "avgEnergy": 76, "commonKey": "A maj", "commonMode": "maj", "examples": [{"name": "Otis00b2", "artist": "Fuzz", "bpm": 124}, {"name": "Laffy Taffy", "artist": "D4L", "bpm": 77}, {"name": "Diva - Homecoming Live", "artist": "Beyonc00e9", "bpm": 146}], "count": 17, "allBpms": [124, 77, 146, 122, 132, 154, 126, 129, 124, 135, 130, 128, 144, 132, 128, 129, 163]}, {"position": 12, "avgBpm": 123, "minBpm": 72, "maxBpm": 153, "avgEnergy": 82, "commonKey": "G maj", "commonMode": "maj", "examples": [{"name": "Work Dat", "artist": "Paisley Jensen", "bpm": 127}, {"name": "Lemme See Ya", "artist": "Cheyenne Giles, Kelland", "bpm": 134}, {"name": "Bailar Riddim", "artist": "Simon Fava, Yvvan Back", "bpm": 125}], "count": 17, "allBpms": [127, 134, 125, 128, 117, 132, 153, 126, 128, 120, 95, 72, 129, 125, 129, 132, 122]}, {"position": 13, "avgBpm": 130, "minBpm": 104, "maxBpm": 160, "avgEnergy": 84, "commonKey": "A266f min", "commonMode": "min", "examples": [{"name": "Chill Like That - Odd Mob Remix", "artist": "Sunday Scaries, PiCKUPLiNES, Odd Mob", "bpm": 132}, {"name": "Give Dem - Kaskade Remix", "artist": "Diplo, BLOND:ISH, Kaskade, Kah-Lo", "bpm": 126}, {"name": "Losing It", "artist": "FISHER", "bpm": 125}], "count": 17, "allBpms": [132, 126, 125, 132, 128, 127, 135, 160, 120, 104, 128, 140, 126, 154, 127, 117, 128]}, {"position": 14, "avgBpm": 131, "minBpm": 72, "maxBpm": 176, "avgEnergy": 85, "commonKey": "B min", "commonMode": "min", "examples": [{"name": "Hard in Da Paint", "artist": "Waka Flocka Flame", "bpm": 72}, {"name": "Bomb Intro / Pass That Dutch", "artist": "Missy Elliott", "bpm": 111}, {"name": "Lights Down Low (feat. Waka Flocka Flame)", "artist": "Maejor, Waka Flocka Flame", "bpm": 155}], "count": 15, "allBpms": [72, 111, 155, 130, 128, 130, 112, 129, 132, 128, 174, 128, 130, 128, 176]}, {"position": 15, "avgBpm": 122, "minBpm": 90, "maxBpm": 131, "avgEnergy": 79, "commonKey": "C266f min", "commonMode": "min", "examples": [{"name": "Work It", "artist": "Billon", "bpm": 123}, {"name": "Set Me Free", "artist": "Nic Fanciulli, Robert Courtois", "bpm": 128}, {"name": "Dance With the Groove", "artist": "James Kennedy", "bpm": 126}], "count": 12, "allBpms": [123, 128, 126, 90, 127, 102, 131, 130, 128, 130, 128, 125]}, {"position": 16, "avgBpm": 118, "minBpm": 85, "maxBpm": 144, "avgEnergy": 74, "commonKey": "B min", "commonMode": "min", "examples": [{"name": "Healing", "artist": "AC Slater, Jack Beats, Kate Wild", "bpm": 130}, {"name": "Ocean", "artist": "FISHER, AR/CO", "bpm": 128}, {"name": "Money Made Me A Savage - Calabria", "artist": "Ely Oaks, LAVINIA", "bpm": 144}], "count": 6, "allBpms": [130, 128, 144, 90, 128, 85]}, {"position": 17, "avgBpm": 102, "minBpm": 66, "maxBpm": 127, "avgEnergy": 52, "commonKey": "A min", "commonMode": "min", "examples": [{"name": "You Get Down", "artist": "James Hurr", "bpm": 126}, {"name": "JUST FOR FUN", "artist": "Beyonc00e9, Willie Jones", "bpm": 72}, {"name": "Work Song", "artist": "Hozier", "bpm": 121}], "count": 5, "allBpms": [126, 72, 121, 66, 127]}, {"position": 18, "avgBpm": 94, "minBpm": 66, "maxBpm": 150, "avgEnergy": 56, "commonKey": "G maj", "commonMode": "maj", "examples": [{"name": "DEVOTION", "artist": "Justin Bieber, Dijon", "bpm": 66}, {"name": "PROTECTOR", "artist": "Beyonc00e9, Rumi Carter", "bpm": 85}, {"name": "Orange Blossoms", "artist": "GoldFord", "bpm": 150}], "count": 4, "allBpms": [66, 85, 150, 73]}, {"position": 19, "avgBpm": 69, "minBpm": 66, "maxBpm": 72, "avgEnergy": 40, "commonKey": "A maj", "commonMode": "maj", "examples": [{"name": "JUST FOR FUN", "artist": "Beyonc00e9, Willie Jones", "bpm": 72}, {"name": "DEVOTION", "artist": "Justin Bieber, Dijon", "bpm": 66}], "count": 2, "allBpms": [72, 66]}];
+
 const CLIENT_ID = 'f18347f05a4e48baaf5e71740714a80e';
 const REDIRECT_URI = 'https://paigelovespilates.github.io/studiosalarydatabase/spotify-bpm-analyzer.html';
-const SCOPES = 'playlist-read-private playlist-read-collaborative user-read-private';
+const SCOPES = 'playlist-read-private playlist-read-collaborative user-read-private user-library-read';
+const KEY_NAMES = ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
 
 let accessToken = null;
+let currentTab = 'playbook';
 let currentChart = null;
-let currentTracks = [];
-let currentPlaylistName = '';
+let allPlaylists = [];
+let likedTracks = [];
+let selectedPosition = 'all';
 
-// ─── AUTH ───────────────────────────────────────────────
+// ── AUTH ──────────────────────────────────────────────────────────────
 function generateCodeVerifier() {
-  const array = new Uint8Array(32);
-  crypto.getRandomValues(array);
-  return btoa(String.fromCharCode(...array)).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
+  const a=new Uint8Array(32); crypto.getRandomValues(a);
+  return btoa(String.fromCharCode(...a)).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
 }
-
-async function generateCodeChallenge(verifier) {
-  const data = new TextEncoder().encode(verifier);
-  const digest = await crypto.subtle.digest('SHA-256', data);
-  return btoa(String.fromCharCode(...new Uint8Array(digest))).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
+async function generateCodeChallenge(v) {
+  const d=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));
+  return btoa(String.fromCharCode(...new Uint8Array(d))).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
 }
-
 async function login() {
-  const verifier = generateCodeVerifier();
-  const challenge = await generateCodeChallenge(verifier);
-  localStorage.setItem('pkce_verifier', verifier);
-
-  const params = new URLSearchParams({
-    client_id: CLIENT_ID,
-    response_type: 'code',
-    redirect_uri: REDIRECT_URI,
-    scope: SCOPES,
-    code_challenge_method: 'S256',
-    code_challenge: challenge,
-    state: 'bpm_analyzer'
-  });
-
-  window.location.href = 'https://accounts.spotify.com/authorize?' + params;
+  const v=generateCodeVerifier(); localStorage.setItem('pkce_verifier',v);
+  const c=await generateCodeChallenge(v);
+  const p=new URLSearchParams({client_id:CLIENT_ID,response_type:'code',redirect_uri:REDIRECT_URI,scope:SCOPES,code_challenge_method:'S256',code_challenge:c});
+  window.location.href='https://accounts.spotify.com/authorize?'+p;
 }
-
 async function handleCallback(code) {
-  const verifier = localStorage.getItem('pkce_verifier');
-  const body = new URLSearchParams({
-    grant_type: 'authorization_code',
-    code,
-    redirect_uri: REDIRECT_URI,
-    client_id: CLIENT_ID,
-    code_verifier: verifier
-  });
-
-  const res = await fetch('https://accounts.spotify.com/api/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body
-  });
-
-  const data = await res.json();
-  if (data.access_token) {
-    accessToken = data.access_token;
-    localStorage.setItem('spotify_token', accessToken);
-    localStorage.setItem('spotify_token_expiry', Date.now() + data.expires_in * 1000);
-    // Clean URL
-    window.history.replaceState({}, document.title, window.location.pathname);
+  const v=localStorage.getItem('pkce_verifier');
+  const body=new URLSearchParams({grant_type:'authorization_code',code,redirect_uri:REDIRECT_URI,client_id:CLIENT_ID,code_verifier:v});
+  const res=await fetch('https://accounts.spotify.com/api/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
+  const data=await res.json();
+  if(data.access_token){
+    accessToken=data.access_token;
+    localStorage.setItem('spotify_token',accessToken);
+    localStorage.setItem('spotify_token_expiry',Date.now()+data.expires_in*1000);
+    window.history.replaceState({},document.title,window.location.pathname);
     initApp();
-  } else {
-    showError('Auth failed: ' + JSON.stringify(data));
   }
 }
-
-function logout() {
-  localStorage.removeItem('spotify_token');
-  localStorage.removeItem('spotify_token_expiry');
-  localStorage.removeItem('pkce_verifier');
-  accessToken = null;
-  document.getElementById('auth-section').style.display = 'block';
-  document.getElementById('app-section').style.display = 'none';
+function logout(){
+  ['spotify_token','spotify_token_expiry','pkce_verifier'].forEach(k=>localStorage.removeItem(k));
+  accessToken=null;
+  document.getElementById('auth-section').style.display='block';
+  document.getElementById('app-section').style.display='none';
 }
+function isTokenValid(){const e=localStorage.getItem('spotify_token_expiry');return e&&Date.now()<+e;}
 
-function isTokenValid() {
-  const expiry = localStorage.getItem('spotify_token_expiry');
-  return expiry && Date.now() < parseInt(expiry);
-}
-
-// ─── INIT ───────────────────────────────────────────────
+// ── INIT ──────────────────────────────────────────────────────────────
 async function init() {
-  // Check for callback
-  const params = new URLSearchParams(window.location.search);
-  const code = params.get('code');
-
-  if (code) {
-    await handleCallback(code);
-    return;
-  }
-
-  const token = localStorage.getItem('spotify_token');
-  if (token && isTokenValid()) {
-    accessToken = token;
-    initApp();
-  } else {
-    document.getElementById('auth-section').style.display = 'block';
-  }
+  const code=new URLSearchParams(window.location.search).get('code');
+  if(code){await handleCallback(code);return;}
+  const token=localStorage.getItem('spotify_token');
+  if(token&&isTokenValid()){accessToken=token;initApp();}
+  else{document.getElementById('auth-section').style.display='block';}
+}
+async function initApp(){
+  document.getElementById('auth-section').style.display='none';
+  document.getElementById('app-section').style.display='block';
+  const user=await spotifyFetch('/me');
+  const name=user.display_name||user.id;
+  document.getElementById('username-display').textContent=name;
+  document.getElementById('header-user').textContent=name.toUpperCase();
+  switchTab('playbook');
+}
+function showPlaybookOnly(){
+  document.getElementById('auth-section').style.display='none';
+  document.getElementById('playbook-only-section').style.display='block';
+  document.getElementById('playbook-only-content').innerHTML=buildPlaybookHTML();
+  renderPlaybookChart('playbook-chart-canvas');
 }
 
-async function initApp() {
-  document.getElementById('auth-section').style.display = 'none';
-  document.getElementById('app-section').style.display = 'block';
-
-  // Get user
-  const user = await spotifyFetch('/me');
-  document.getElementById('username-display').textContent = user.display_name || user.id;
-
-  loadPlaylists();
-}
-
-// ─── SPOTIFY API ─────────────────────────────────────────
-async function spotifyFetch(endpoint) {
-  const res = await fetch('https://api.spotify.com/v1' + endpoint, {
-    headers: { 'Authorization': 'Bearer ' + accessToken }
+// ── TABS ──────────────────────────────────────────────────────────────
+function switchTab(tab){
+  currentTab=tab;
+  ['playbook','matcher','single'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active',t===tab);
   });
-  if (!res.ok) throw new Error(`Spotify API error ${res.status}`);
+  const el=document.getElementById('tab-content');
+  if(tab==='playbook'){el.innerHTML=buildPlaybookHTML();renderPlaybookChart('playbook-chart-canvas');}
+  else if(tab==='matcher'){el.innerHTML=buildMatcherHTML();loadPlaylists();}
+  else if(tab==='single'){el.innerHTML=buildSingleHTML();loadPlaylistsForSingle();}
+}
+
+// ── SPOTIFY API ───────────────────────────────────────────────────────
+async function spotifyFetch(endpoint){
+  const url=endpoint.startsWith('http')?endpoint:'https://api.spotify.com/v1'+endpoint;
+  const res=await fetch(url,{headers:{'Authorization':'Bearer '+accessToken}});
+  if(!res.ok) throw new Error('Spotify API error '+res.status);
   return res.json();
 }
-
-async function loadPlaylists() {
-  const grid = document.getElementById('playlist-grid');
-  const loading = document.getElementById('playlists-loading');
-  const errEl = document.getElementById('playlist-error');
-
-  loading.style.display = 'flex';
-  grid.innerHTML = '';
-  errEl.style.display = 'none';
-
-  try {
-    const data = await spotifyFetch('/me/playlists?limit=30');
-    loading.style.display = 'none';
-
-    data.items.filter(pl => pl && pl.id).forEach(pl => {
-      const card = document.createElement('div');
-      card.className = 'playlist-card';
-      card.dataset.id = pl.id;
-      card.dataset.name = pl.name;
-
-      const imgUrl = pl.images?.[0]?.url;
-      const trackCount = pl.tracks?.total ?? '?';
-      card.innerHTML = `
-        ${imgUrl
-          ? `<img src="${imgUrl}" alt="${pl.name}" loading="lazy">`
-          : `<div class="placeholder-img">🎵</div>`}
-        <div class="playlist-name">${pl.name}</div>
-        <div class="playlist-meta">${trackCount} tracks</div>
-      `;
-      card.addEventListener('click', () => analyzePlaylist(pl.id, pl.name, card));
-      grid.appendChild(card);
-    });
-  } catch(e) {
-    loading.style.display = 'none';
-    errEl.textContent = 'Could not load playlists: ' + e.message;
-    errEl.style.display = 'block';
+async function fetchAllTracks(playlistId){
+  let tracks=[],url=`/playlists/${playlistId}/tracks?limit=100&fields=next,items(track(id,name,artists,duration_ms))`;
+  while(url){const data=await spotifyFetch(url);tracks=tracks.concat((data.items||[]).filter(i=>i.track&&i.track.id));url=data.next||null;}
+  return tracks;
+}
+async function fetchAudioFeatures(ids){
+  let features=[];
+  for(let i=0;i<ids.length;i+=100){
+    const data=await spotifyFetch(`/audio-features?ids=${ids.slice(i,i+100).join(',')}`);
+    features=features.concat(data.audio_features||[]);
   }
+  return features;
 }
 
-// ─── ANALYSIS ────────────────────────────────────────────
-async function analyzePlaylist(id, name, cardEl) {
-  // Mark active card
-  document.querySelectorAll('.playlist-card').forEach(c => c.classList.remove('active'));
-  cardEl.classList.add('active');
-
-  const section = document.getElementById('analysis-section');
-  section.style.display = 'block';
-  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-  document.getElementById('analysis-title').textContent = name;
-  document.getElementById('analysis-track-count').textContent = 'Loading…';
-  document.getElementById('track-tbody').innerHTML = '<tr><td colspan="6"><div class="loading"><div class="spinner"></div> Fetching tracks & audio features…</div></td></tr>';
-
-  currentPlaylistName = name;
-
-  try {
-    // Fetch all tracks (paginate)
-    let tracks = [];
-    let url = `/playlists/${id}/tracks?limit=100&fields=next,items(track(id,name,artists,duration_ms))`;
-    while (url) {
-      const data = await spotifyFetch(url);
-      tracks = tracks.concat(data.items.filter(i => i.track && i.track.id));
-      url = data.next ? data.next.replace('https://api.spotify.com/v1', '') : null;
-    }
-
-    // Fetch audio features in batches of 100
-    const ids = tracks.map(t => t.track.id);
-    let features = [];
-    for (let i = 0; i < ids.length; i += 100) {
-      const batch = ids.slice(i, i+100).join(',');
-      const data = await spotifyFetch(`/audio-features?ids=${batch}`);
-      features = features.concat(data.audio_features || []);
-    }
-
-    // Merge
-    currentTracks = tracks.map((t, idx) => {
-      const f = features[idx] || {};
-      return {
-        position: idx + 1,
-        id: t.track.id,
-        name: t.track.name,
-        artist: t.track.artists.map(a => a.name).join(', '),
-        bpm: f.tempo ? Math.round(f.tempo) : null,
-        energy: f.energy ? Math.round(f.energy * 100) : null,
-        danceability: f.danceability,
-        duration: t.track.duration_ms
-      };
-    }).filter(t => t.bpm !== null);
-
-    renderAnalysis(name, currentTracks);
-
-  } catch(e) {
-    document.getElementById('track-tbody').innerHTML = `<tr><td colspan="6"><div class="error-msg">Error: ${e.message}</div></td></tr>`;
-  }
+// ── PLAYBOOK TAB ──────────────────────────────────────────────────────
+function buildPlaybookHTML(){
+  const bpms=PLAYBOOK.map(p=>p.avgBpm);
+  const gMin=Math.min(...bpms),gMax=Math.max(...bpms),gRange=gMax-gMin||1;
+  return `
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--sage);margin-bottom:3px">YOUR FORMULA</div>
+          <h3>Positional Playbook</h3>
+        </div>
+        <div class="meta">17 PLAYLISTS · 265 TRACKS</div>
+      </div>
+      <div class="chart-area">
+        <h4>Avg BPM by Track Position</h4>
+        <div class="chart-wrap"><canvas id="playbook-chart-canvas"></canvas></div>
+      </div>
+      <div class="table-wrap">
+        <h4>Position Guide</h4>
+        <table>
+          <thead><tr><th>#</th><th>Avg BPM</th><th>Range</th><th>Common Key</th><th>Energy</th><th>Intensity</th><th>Example Songs</th></tr></thead>
+          <tbody>
+            ${PLAYBOOK.map(p=>{
+              const mc=p.commonMode==='maj'?'key-major':'key-minor';
+              const ec=p.avgEnergy>70?'#B85C3C':p.avgEnergy>40?'#7A8C6E':'#D4D1C7';
+              const bw=Math.round(((p.avgBpm-gMin)/gRange)*70)+10;
+              const ex=p.examples.slice(0,2).map(e=>`<em style="font-size:11px;color:var(--muted)">${e.name}</em>`).join('<br>');
+              const conf=p.count>=15?'●●●':p.count>=8?'●●○':'●○○';
+              return `<tr>
+                <td class="mono" style="color:var(--olive);font-size:14px;font-family:'Cormorant Garamond',serif;font-weight:600">${p.position}</td>
+                <td class="mono">${p.avgBpm}</td>
+                <td class="mono muted" style="font-size:10px">${p.minBpm}–${p.maxBpm}</td>
+                <td><span class="key-badge ${mc}">${p.commonKey}</span></td>
+                <td><span class="energy-dot" style="background:${ec}"></span><span class="mono muted">${p.avgEnergy}%</span></td>
+                <td><div class="bpm-bar" style="width:${bw}px"></div></td>
+                <td>${ex}</td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="export-bar">
+        <button class="btn btn-primary" onclick="exportPlaybookCSV()">Export CSV</button>
+        <button class="btn btn-outline" onclick="copyPlaybook()">Copy as Text</button>
+      </div>
+    </div>`;
 }
 
-function renderAnalysis(name, tracks) {
-  const bpms = tracks.map(t => t.bpm);
-  const avg = Math.round(bpms.reduce((a,b) => a+b, 0) / bpms.length);
-  const min = Math.min(...bpms);
-  const max = Math.max(...bpms);
-
-  document.getElementById('analysis-track-count').textContent = `${tracks.length} TRACKS ANALYZED`;
-  document.getElementById('stat-avg').textContent = avg;
-  document.getElementById('stat-min').textContent = min;
-  document.getElementById('stat-max').textContent = max;
-  document.getElementById('stat-range').textContent = max - min;
-
-  renderChart(tracks);
-  renderTable(tracks, min, max);
-}
-
-function renderChart(tracks) {
-  const canvas = document.getElementById('bpmChart');
-  if (currentChart) { currentChart.destroy(); }
-
-  const labels = tracks.map(t => `#${t.position}`);
-  const bpms = tracks.map(t => t.bpm);
-  const energies = tracks.map(t => t.energy);
-
-  // Gradient
-  const ctx = canvas.getContext('2d');
-  const grad = ctx.createLinearGradient(0, 0, 0, 280);
-  grad.addColorStop(0, 'rgba(55,57,48,0.25)');
-  grad.addColorStop(1, 'rgba(55,57,48,0)');
-
-  currentChart = new Chart(canvas, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: 'BPM',
-          data: bpms,
-          borderColor: '#373930',
-          backgroundColor: grad,
-          borderWidth: 2,
-          pointBackgroundColor: '#B85C3C',
-          pointRadius: tracks.length > 30 ? 2 : 4,
-          pointHoverRadius: 6,
-          fill: true,
-          tension: 0.35,
-          yAxisID: 'y'
-        },
-        {
-          label: 'Energy %',
-          data: energies,
-          borderColor: '#7A8C6E',
-          borderWidth: 1.5,
-          borderDash: [4,3],
-          pointRadius: 0,
-          fill: false,
-          tension: 0.35,
-          yAxisID: 'y2'
-        }
+function renderPlaybookChart(canvasId){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  if(currentChart)currentChart.destroy();
+  const ctx=canvas.getContext('2d');
+  const grad=ctx.createLinearGradient(0,0,0,220);
+  grad.addColorStop(0,'rgba(55,57,48,0.2)');grad.addColorStop(1,'rgba(55,57,48,0)');
+  currentChart=new Chart(canvas,{
+    type:'line',
+    data:{
+      labels:PLAYBOOK.map(p=>`#${p.position}`),
+      datasets:[
+        {label:'Avg BPM',data:PLAYBOOK.map(p=>p.avgBpm),borderColor:'#373930',backgroundColor:grad,borderWidth:2.5,pointBackgroundColor:'#B85C3C',pointRadius:5,pointHoverRadius:7,fill:true,tension:0.4,yAxisID:'y'},
+        {label:'Max BPM',data:PLAYBOOK.map(p=>p.maxBpm),borderColor:'rgba(184,92,60,0.25)',borderWidth:1,borderDash:[3,3],pointRadius:0,fill:false,tension:0.4,yAxisID:'y'},
+        {label:'Min BPM',data:PLAYBOOK.map(p=>p.minBpm),borderColor:'rgba(122,140,110,0.25)',borderWidth:1,borderDash:[3,3],pointRadius:0,fill:'-1',backgroundColor:'rgba(122,140,110,0.05)',tension:0.4,yAxisID:'y'},
+        {label:'Avg Energy %',data:PLAYBOOK.map(p=>p.avgEnergy),borderColor:'#7A8C6E',borderWidth:1.5,borderDash:[4,3],pointRadius:0,fill:false,tension:0.4,yAxisID:'y2'}
       ]
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: {
-          labels: {
-            font: { family: 'DM Mono', size: 10 },
-            color: '#8A8A7A',
-            usePointStyle: true
-          }
-        },
-        tooltip: {
-          callbacks: {
-            title: (items) => {
-              const t = tracks[items[0].dataIndex];
-              return `#${t.position}: ${t.name}`;
-            },
-            afterTitle: (items) => {
-              return tracks[items[0].dataIndex].artist;
-            }
-          }
-        }
+    options:{
+      responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{labels:{font:{family:'DM Mono',size:10},color:'#8A8A7A',usePointStyle:true,filter:i=>i.text!=='Max BPM'&&i.text!=='Min BPM'}},
+        tooltip:{callbacks:{
+          title:items=>`Position #${PLAYBOOK[items[0].dataIndex].position}`,
+          afterBody:items=>{const p=PLAYBOOK[items[0].dataIndex];return[`Range: ${p.minBpm}–${p.maxBpm} BPM`,`Key: ${p.commonKey}`,`e.g. ${p.examples[0]?.name||''}`];}
+        }}
       },
-      scales: {
-        x: {
-          grid: { color: '#EDEBE4' },
-          ticks: { font: { family: 'DM Mono', size: 9 }, color: '#8A8A7A',
-            maxTicksLimit: 20 }
-        },
-        y: {
-          position: 'left',
-          grid: { color: '#EDEBE4' },
-          ticks: { font: { family: 'DM Mono', size: 10 }, color: '#8A8A7A' },
-          title: { display: true, text: 'BPM', font: { family: 'DM Mono', size: 9 }, color: '#8A8A7A' }
-        },
-        y2: {
-          position: 'right',
-          grid: { drawOnChartArea: false },
-          min: 0, max: 100,
-          ticks: { font: { family: 'DM Mono', size: 10 }, color: '#7A8C6E',
-            callback: v => v + '%' },
-          title: { display: true, text: 'ENERGY', font: { family: 'DM Mono', size: 9 }, color: '#7A8C6E' }
-        }
+      scales:{
+        x:{grid:{color:'#EDEBE4'},ticks:{font:{family:'DM Mono',size:9},color:'#8A8A7A'}},
+        y:{position:'left',grid:{color:'#EDEBE4'},ticks:{font:{family:'DM Mono',size:10},color:'#8A8A7A'},title:{display:true,text:'BPM',font:{family:'DM Mono',size:9},color:'#8A8A7A'}},
+        y2:{position:'right',grid:{drawOnChartArea:false},min:0,max:100,ticks:{font:{family:'DM Mono',size:10},color:'#7A8C6E',callback:v=>v+'%'},title:{display:true,text:'ENERGY',font:{family:'DM Mono',size:9},color:'#7A8C6E'}}
       }
     }
   });
 }
 
-function renderTable(tracks, minBpm, maxBpm) {
-  const bpmRange = maxBpm - minBpm || 1;
-  const tbody = document.getElementById('track-tbody');
-  tbody.innerHTML = tracks.map(t => {
-    const barWidth = Math.round(((t.bpm - minBpm) / bpmRange) * 100);
-    const energy = t.energy || 0;
-    const energyColor = energy > 70 ? '#B85C3C' : energy > 40 ? '#7A8C6E' : '#D4D1C7';
-    return `<tr>
-      <td class="track-num">${t.position}</td>
-      <td>${t.name}</td>
-      <td style="color:var(--muted);font-size:12px">${t.artist}</td>
-      <td class="bpm-cell">${t.bpm}</td>
-      <td>
-        <div class="bpm-bar-wrap">
-          <div class="bpm-bar" style="width:${barWidth}px"></div>
-          <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">${t.bpm}</span>
+// ── MATCHER TAB ───────────────────────────────────────────────────────
+function buildMatcherHTML(){
+  const posOptions=PLAYBOOK.map(p=>`<option value="${p.position}">Position #${p.position} — ~${p.avgBpm} BPM · ${p.commonKey}</option>`).join('');
+  return `
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--sage);margin-bottom:3px">WEEKLY WORKFLOW</div>
+          <h3>Song Matcher</h3>
         </div>
-      </td>
-      <td>
-        <span class="energy-dot" style="background:${energyColor}" title="${energy}%"></span>
-        <span style="font-family:'DM Mono',monospace;font-size:11px;margin-left:6px;color:var(--muted)">${energy}%</span>
-      </td>
+        <div class="meta" id="matcher-meta">LOADING PLAYLISTS…</div>
+      </div>
+      <div class="matcher-controls">
+        <div>
+          <label>Playlist</label><br>
+          <select id="playlist-select" onchange="loadTracksForMatcher()" style="margin-top:4px;min-width:200px">
+            <option value="">Loading…</option>
+          </select>
+        </div>
+        <div>
+          <label>Filter by Position</label><br>
+          <select id="position-select" onchange="filterMatcherByPosition()" style="margin-top:4px;min-width:220px">
+            <option value="all">Show all positions</option>
+            ${posOptions}
+          </select>
+        </div>
+      </div>
+      <div id="matcher-loading" class="loading" style="padding:14px 22px"><div class="spinner"></div> Loading…</div>
+      <div id="matcher-error" class="error-msg" style="display:none;margin:8px 22px"></div>
+      <div class="match-header">
+        <div>Track</div><div>BPM</div><div>Key</div><div>Energy</div><div>Best Fit</div><div>Score</div>
+      </div>
+      <div id="matcher-rows"></div>
+    </div>`;
+}
+
+async function loadPlaylists(){
+  try {
+    const data=await spotifyFetch('/me/playlists?limit=50');
+    allPlaylists=(data.items||[]).filter(p=>p&&p.id);
+    const sel=document.getElementById('playlist-select');
+    if(!sel)return;
+    sel.innerHTML=allPlaylists.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+    document.getElementById('matcher-meta').textContent=`${allPlaylists.length} PLAYLISTS`;
+    document.getElementById('matcher-loading').style.display='none';
+    loadTracksForMatcher();
+  } catch(e){
+    const err=document.getElementById('matcher-error');
+    if(err){err.textContent=e.message;err.style.display='block';}
+    const loading=document.getElementById('matcher-loading');
+    if(loading)loading.style.display='none';
+  }
+}
+
+async function loadTracksForMatcher(){
+  const sel=document.getElementById('playlist-select');
+  if(!sel)return;
+  const id=sel.value;
+  const loading=document.getElementById('matcher-loading');
+  const rows=document.getElementById('matcher-rows');
+  if(!id||!rows)return;
+  if(loading)loading.style.display='flex';
+  rows.innerHTML='';
+  try {
+    const rawTracks=await fetchAllTracks(id);
+    // Try audio features - gracefully handle 403
+    let features=[];
+    try { features=await fetchAudioFeatures(rawTracks.map(t=>t.track.id)); } catch(e){}
+
+    likedTracks=rawTracks.map((t,idx)=>{
+      const f=features[idx]||{};
+      const key=f.key>=0?KEY_NAMES[f.key]:'?';
+      const mode=f.mode===1?'maj':f.mode===0?'min':'?';
+      return {
+        name:t.track.name,
+        artist:t.track.artists.map(a=>a.name).join(', '),
+        bpm:f.tempo?Math.round(f.tempo):null,
+        energy:f.energy!=null?Math.round(f.energy*100):null,
+        key, mode, keyFull:key+' '+mode,
+        hasBpm:!!f.tempo
+      };
+    });
+    if(loading)loading.style.display='none';
+    renderMatcherRows();
+  } catch(e){
+    if(loading)loading.style.display='none';
+    const err=document.getElementById('matcher-error');
+    if(err){err.textContent='Could not load tracks: '+e.message;err.style.display='block';}
+  }
+}
+
+function filterMatcherByPosition(){
+  const sel=document.getElementById('position-select');
+  selectedPosition=sel?sel.value:'all';
+  renderMatcherRows();
+}
+
+function scoreTrackForPosition(track, pos){
+  if(!track.hasBpm) return null;
+  // BPM score: within range = 100, ±10 = 80, ±20 = 60, else proportional
+  const bpmDiff=Math.abs(track.bpm-pos.avgBpm);
+  const bpmScore=bpmDiff<=5?100:bpmDiff<=15?85:bpmDiff<=25?65:bpmDiff<=40?45:20;
+  // Key/mode score
+  const keyScore=track.keyFull===pos.commonKey?100:track.mode===pos.commonMode?60:30;
+  // Energy score
+  const energyDiff=track.energy!=null?Math.abs(track.energy-pos.avgEnergy):20;
+  const energyScore=energyDiff<=10?100:energyDiff<=20?75:energyDiff<=35?50:25;
+  // Weighted
+  return Math.round(bpmScore*0.5+keyScore*0.3+energyScore*0.2);
+}
+
+function bestPositionForTrack(track){
+  if(!track.hasBpm) return null;
+  let best=null,bestScore=0;
+  PLAYBOOK.forEach(pos=>{
+    const s=scoreTrackForPosition(track,pos);
+    if(s>bestScore){bestScore=s;best={position:pos.position,score:s};}
+  });
+  return best;
+}
+
+function renderMatcherRows(){
+  const rows=document.getElementById('matcher-rows');
+  if(!rows)return;
+
+  let tracks=[...likedTracks];
+
+  // If filtering by position, score and sort by that position
+  if(selectedPosition!=='all'){
+    const pos=PLAYBOOK.find(p=>p.position===parseInt(selectedPosition));
+    if(pos){
+      tracks=tracks.map(t=>({...t,posScore:scoreTrackForPosition(t,pos),bestPos:bestPositionForTrack(t)}))
+                   .sort((a,b)=>(b.posScore||0)-(a.posScore||0));
+    }
+  } else {
+    tracks=tracks.map(t=>({...t,bestPos:bestPositionForTrack(t)}));
+  }
+
+  if(!tracks.length){rows.innerHTML='<div class="empty-msg">No tracks loaded</div>';return;}
+
+  const hasBpmData=tracks.some(t=>t.hasBpm);
+
+  rows.innerHTML=tracks.map(t=>{
+    const modeClass=t.mode==='maj'?'key-major':'key-minor';
+    const ec=t.energy>70?'#B85C3C':t.energy>40?'#7A8C6E':'#D4D1C7';
+
+    let scoreEl='<span class="mono muted" style="font-size:10px">—</span>';
+    let bestFitEl='<span class="mono muted" style="font-size:10px">—</span>';
+
+    if(t.hasBpm){
+      const displayScore=selectedPosition!=='all'?t.posScore:t.bestPos?.score;
+      const scoreClass=displayScore>=80?'match-great':displayScore>=60?'match-good':'match-ok';
+      scoreEl=`<span class="match-score ${scoreClass}">${displayScore||'—'}</span>`;
+      if(t.bestPos){
+        bestFitEl=`<span class="mono" style="font-size:11px;color:var(--olive)">#${t.bestPos.position}</span>`;
+      }
+    }
+
+    return `<div class="match-row">
+      <div>
+        <div style="font-size:12px;font-weight:500">${t.name}</div>
+        <div style="font-size:11px;color:var(--muted)">${t.artist}</div>
+      </div>
+      <div class="mono">${t.bpm||'—'}</div>
+      <div>${t.hasBpm?`<span class="key-badge ${modeClass}">${t.keyFull}</span>`:'<span class="mono muted" style="font-size:10px">—</span>'}</div>
+      <div>${t.energy!=null?`<span class="energy-dot" style="background:${ec}"></span><span class="mono muted">${t.energy}%</span>`:'<span class="mono muted" style="font-size:10px">—</span>'}</div>
+      <div>${bestFitEl}</div>
+      <div>${scoreEl}</div>
+    </div>`;
+  }).join('');
+
+  if(!hasBpmData){
+    rows.innerHTML='<div class="empty-msg">BPM data not available for this playlist via Spotify API.<br>Use the Liked Songs playlist or try another playlist.</div>';
+  }
+}
+
+// ── SINGLE PLAYLIST TAB ───────────────────────────────────────────────
+function buildSingleHTML(){
+  return `
+    <div class="section-label">Select a playlist to analyze</div>
+    <div id="single-loading" class="loading"><div class="spinner"></div> Loading playlists…</div>
+    <div id="single-playlist-grid" class="playlist-grid"></div>
+    <div id="single-analysis" style="display:none">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--sage);margin-bottom:3px">ANALYZING</div>
+            <h3 id="single-title">—</h3>
+          </div>
+          <div class="meta" id="single-meta"></div>
+        </div>
+        <div class="chart-area">
+          <h4>BPM by Track Position</h4>
+          <div class="chart-wrap"><canvas id="single-chart"></canvas></div>
+        </div>
+        <div class="table-wrap">
+          <h4>Track Details</h4>
+          <table>
+            <thead><tr><th>#</th><th>Track</th><th>Artist</th><th>BPM</th><th>Key</th><th>Energy</th><th>Best Fit Position</th></tr></thead>
+            <tbody id="single-tbody"></tbody>
+          </table>
+        </div>
+        <div class="export-bar">
+          <button class="btn btn-primary" onclick="exportSingleCSV()">Export CSV</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+let singlePlaylists=[];
+let singleTracks=[];
+let singleChart=null;
+let singlePlaylistName='';
+
+async function loadPlaylistsForSingle(){
+  try {
+    if(allPlaylists.length){renderSingleGrid();return;}
+    const data=await spotifyFetch('/me/playlists?limit=50');
+    allPlaylists=(data.items||[]).filter(p=>p&&p.id);
+    document.getElementById('single-loading').style.display='none';
+    renderSingleGrid();
+  } catch(e){}
+}
+
+function renderSingleGrid(){
+  const grid=document.getElementById('single-playlist-grid');
+  const loading=document.getElementById('single-loading');
+  if(loading)loading.style.display='none';
+  if(!grid)return;
+  grid.innerHTML=allPlaylists.map(pl=>`
+    <div class="playlist-card" onclick="analyzeSinglePlaylist('${pl.id}','${pl.name.replace(/'/g,"\\'")}',this)">
+      ${pl.images?.[0]?.url?`<img src="${pl.images[0].url}" loading="lazy">`:`<div class="placeholder-img">🎵</div>`}
+      <div class="pname">${pl.name}</div>
+      <div class="pmeta">${pl.tracks?.total??'?'} tracks</div>
+    </div>`).join('');
+}
+
+async function analyzeSinglePlaylist(id,name,cardEl){
+  document.querySelectorAll('#single-playlist-grid .playlist-card').forEach(c=>c.classList.remove('active'));
+  cardEl.classList.add('active');
+  const analysis=document.getElementById('single-analysis');
+  analysis.style.display='block';
+  analysis.scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('single-title').textContent=name;
+  document.getElementById('single-meta').textContent='Loading…';
+  document.getElementById('single-tbody').innerHTML=`<tr><td colspan="7"><div class="loading"><div class="spinner"></div>Fetching tracks…</div></td></tr>`;
+  singlePlaylistName=name;
+  try {
+    const rawTracks=await fetchAllTracks(id);
+    let features=[];
+    try{features=await fetchAudioFeatures(rawTracks.map(t=>t.track.id));}catch(e){}
+    singleTracks=rawTracks.map((t,idx)=>{
+      const f=features[idx]||{};
+      const key=f.key>=0?KEY_NAMES[f.key]:'?';
+      const mode=f.mode===1?'maj':f.mode===0?'min':'?';
+      return {
+        position:idx+1,name:t.track.name,
+        artist:t.track.artists.map(a=>a.name).join(', '),
+        bpm:f.tempo?Math.round(f.tempo):null,
+        energy:f.energy!=null?Math.round(f.energy*100):null,
+        key,mode,keyFull:key+' '+mode,hasBpm:!!f.tempo
+      };
+    }).filter(t=>t.bpm);
+    renderSingleAnalysis(name,singleTracks);
+  } catch(e){
+    document.getElementById('single-tbody').innerHTML=`<tr><td colspan="7"><div class="error-msg">${e.message}</div></td></tr>`;
+  }
+}
+
+function renderSingleAnalysis(name,tracks){
+  document.getElementById('single-meta').textContent=`${tracks.length} TRACKS`;
+  // Chart
+  const canvas=document.getElementById('single-chart');
+  if(singleChart)singleChart.destroy();
+  const ctx=canvas.getContext('2d');
+  const grad=ctx.createLinearGradient(0,0,0,220);
+  grad.addColorStop(0,'rgba(55,57,48,0.2)');grad.addColorStop(1,'rgba(55,57,48,0)');
+  // Playbook avg line
+  const pbAvgs=tracks.map(t=>{const p=PLAYBOOK.find(pb=>pb.position===t.position);return p?p.avgBpm:null;});
+  singleChart=new Chart(canvas,{
+    type:'line',
+    data:{
+      labels:tracks.map(t=>`#${t.position}`),
+      datasets:[
+        {label:'This Playlist BPM',data:tracks.map(t=>t.bpm),borderColor:'#373930',backgroundColor:grad,borderWidth:2,pointBackgroundColor:'#B85C3C',pointRadius:4,pointHoverRadius:6,fill:true,tension:0.35,yAxisID:'y'},
+        {label:'Playbook Avg',data:pbAvgs,borderColor:'#7A8C6E',borderWidth:1.5,borderDash:[5,3],pointRadius:0,fill:false,tension:0.35,yAxisID:'y'}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{font:{family:'DM Mono',size:10},color:'#8A8A7A',usePointStyle:true}},
+        tooltip:{callbacks:{title:items=>`#${tracks[items[0].dataIndex].position}: ${tracks[items[0].dataIndex].name}`}}},
+      scales:{x:{grid:{color:'#EDEBE4'},ticks:{font:{family:'DM Mono',size:9},color:'#8A8A7A'}},
+        y:{grid:{color:'#EDEBE4'},ticks:{font:{family:'DM Mono',size:10},color:'#8A8A7A'},title:{display:true,text:'BPM',font:{family:'DM Mono',size:9},color:'#8A8A7A'}}}}
+  });
+  // Table
+  document.getElementById('single-tbody').innerHTML=tracks.map(t=>{
+    const modeClass=t.mode==='maj'?'key-major':'key-minor';
+    const ec=t.energy>70?'#B85C3C':t.energy>40?'#7A8C6E':'#D4D1C7';
+    const best=bestPositionForTrack(t);
+    const pbPos=PLAYBOOK.find(p=>p.position===t.position);
+    const bpmDiff=pbPos?t.bpm-pbPos.avgBpm:null;
+    const diffStr=bpmDiff!=null?(bpmDiff>0?`+${bpmDiff}`:`${bpmDiff}`):'';
+    const diffColor=Math.abs(bpmDiff)<10?'var(--sage)':Math.abs(bpmDiff)<20?'var(--gold)':'var(--terracotta)';
+    return `<tr>
+      <td class="mono muted">${t.position}</td>
+      <td style="font-size:12px">${t.name}</td>
+      <td class="muted" style="font-size:11px">${t.artist}</td>
+      <td class="mono">${t.bpm} ${bpmDiff!=null?`<span style="font-size:10px;color:${diffColor}">${diffStr}</span>`:''}</td>
+      <td><span class="key-badge ${modeClass}">${t.keyFull}</span></td>
+      <td><span class="energy-dot" style="background:${ec}"></span><span class="mono muted">${t.energy}%</span></td>
+      <td class="mono" style="color:var(--olive)">${best?`#${best.position} (${best.score}%)`:'—'}</td>
     </tr>`;
   }).join('');
 }
 
-// ─── EXPORT ──────────────────────────────────────────────
-function exportCSV() {
-  if (!currentTracks.length) return;
-  const rows = [['Position','Track','Artist','BPM','Energy %']];
-  currentTracks.forEach(t => rows.push([t.position, `"${t.name}"`, `"${t.artist}"`, t.bpm, t.energy]));
-  const csv = rows.map(r => r.join(',')).join('\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `${currentPlaylistName.replace(/[^a-z0-9]/gi,'_')}_bpm.csv`;
-  a.click();
+function exportSingleCSV(){
+  if(!singleTracks.length)return;
+  const rows=[['Position','Track','Artist','BPM','Key','Mode','Energy%','Best Fit Position']];
+  singleTracks.forEach(t=>{const b=bestPositionForTrack(t);rows.push([t.position,`"${t.name}"`,`"${t.artist}"`,t.bpm,t.key,t.mode,t.energy,b?b.position:'']);});
+  downloadCSV(rows,singlePlaylistName+'_analysis');
 }
 
-function copyInsights() {
-  if (!currentTracks.length) return;
-  const bpms = currentTracks.map(t => t.bpm);
-  const avg = Math.round(bpms.reduce((a,b)=>a+b,0)/bpms.length);
-  const min = Math.min(...bpms);
-  const max = Math.max(...bpms);
-
-  const top5 = [...currentTracks].sort((a,b)=>b.bpm-a.bpm).slice(0,5);
-  const low5 = [...currentTracks].sort((a,b)=>a.bpm-b.bpm).slice(0,5);
-
-  const text = `BPM Analysis — ${currentPlaylistName}
-—————————————————
-Tracks analyzed: ${currentTracks.length}
-Avg BPM: ${avg} | Range: ${min}–${max}
-
-Top 5 highest BPM:
-${top5.map(t=>`  #${t.position} ${t.name} — ${t.bpm} BPM`).join('\n')}
-
-Top 5 lowest BPM:
-${low5.map(t=>`  #${t.position} ${t.name} — ${t.bpm} BPM`).join('\n')}`;
-
-  navigator.clipboard.writeText(text).then(() => alert('Insights copied to clipboard!'));
+// ── EXPORTS ───────────────────────────────────────────────────────────
+function exportPlaybookCSV(){
+  const rows=[['Position','Avg BPM','Min BPM','Max BPM','Common Key','Avg Energy%','Example 1','Example 2','Example 3']];
+  PLAYBOOK.forEach(p=>rows.push([p.position,p.avgBpm,p.minBpm,p.maxBpm,p.commonKey,p.avgEnergy,...p.examples.map(e=>e.name)]));
+  downloadCSV(rows,'pilates_playbook');
+}
+function copyPlaybook(){
+  const text='Positional Playbook — @paigelovespilates\n'+'—'.repeat(40)+'\n'+
+    PLAYBOOK.map(p=>`#${String(p.position).padStart(2)} | ${p.avgBpm} BPM (${p.minBpm}–${p.maxBpm}) | ${p.commonKey} | ${p.avgEnergy}% energy | e.g. ${p.examples[0]?.name}`).join('\n');
+  navigator.clipboard.writeText(text).then(()=>alert('Copied!'));
+}
+function downloadCSV(rows,name){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'}));
+  a.download=name.replace(/[^a-z0-9]/gi,'_')+'.csv';a.click();
 }
 
-// ─── START ───────────────────────────────────────────────
 init();
 </script>
 </body>
