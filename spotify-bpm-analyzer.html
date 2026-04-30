@@ -657,19 +657,20 @@ async function loadPlaylists() {
     const data = await spotifyFetch('/me/playlists?limit=30');
     loading.style.display = 'none';
 
-    data.items.forEach(pl => {
+    data.items.filter(pl => pl && pl.id).forEach(pl => {
       const card = document.createElement('div');
       card.className = 'playlist-card';
       card.dataset.id = pl.id;
       card.dataset.name = pl.name;
 
       const imgUrl = pl.images?.[0]?.url;
+      const trackCount = pl.tracks?.total ?? '?';
       card.innerHTML = `
         ${imgUrl
           ? `<img src="${imgUrl}" alt="${pl.name}" loading="lazy">`
           : `<div class="placeholder-img">🎵</div>`}
         <div class="playlist-name">${pl.name}</div>
-        <div class="playlist-meta">${pl.tracks.total} tracks</div>
+        <div class="playlist-meta">${trackCount} tracks</div>
       `;
       card.addEventListener('click', () => analyzePlaylist(pl.id, pl.name, card));
       grid.appendChild(card);
