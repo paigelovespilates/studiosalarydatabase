@@ -762,14 +762,14 @@ function computeMetrics(range) {
       m.jobsPosted     = jobRows.length;
       m.jobAlerts      = alertRows.length;
       m.talentProfiles = talentRows.length;
-    } else if (range === '7') {
+   } else if (range === '7') {
       m.jobsPosted     = filterByDays(jobRows,   16, 7).length;
       m.jobAlerts      = filterByDays(alertRows, 12, 7).length;
-      m.talentProfiles = talentRows.length;
+      m.talentProfiles = filterByDays(talentRows, 20, 7).length;
     } else if (range === '30') {
       m.jobsPosted     = filterByDays(jobRows,   16, 30).length;
       m.jobAlerts      = filterByDays(alertRows, 12, 30).length;
-      m.talentProfiles = talentRows.length;
+      m.talentProfiles = filterByDays(talentRows, 20, 30).length;
     } else {
       var mo2 = range === 'thisMonth' ? 0 : -1;
       m.jobsPosted     = filterByMonth(jobRows,   16, mo2).length;
