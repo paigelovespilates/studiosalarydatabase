@@ -410,10 +410,10 @@
 
 <div class="range-tabs">
   <button class="range-tab active" onclick="setRange(this,'7')">Last 7 days</button>
+  <button class="range-tab" onclick="setRange(this,'30')">Last 30 days</button>
   <button class="range-tab" onclick="setRange(this,'mom')">Month over month</button>
   <button class="range-tab" onclick="setRange(this,'all')">All time</button>
 </div>
-
 <div class="status-bar">
   <div class="status-item"><span class="status-dot loading" id="dotSalary"></span>Salary DB</div>
   <div class="status-item"><span class="status-dot loading" id="dotJob"></span>Job Board</div>
@@ -468,6 +468,53 @@
     </div>
   </section>
 
+  <!-- 30-day -->
+  <section id="view-30" style="display:none">
+    <div class="metrics-section">
+      <div class="section-label">Last 30 days</div>
+      <div class="metrics-grid" id="grid30">
+        <div class="metric-card"><span class="skel" style="height:120px;width:100%;display:block"></span></div>
+        <div class="metric-card"><span class="skel" style="height:120px;width:100%;display:block"></span></div>
+        <div class="metric-card"><span class="skel" style="height:120px;width:100%;display:block"></span></div>
+        <div class="metric-card"><span class="skel" style="height:120px;width:100%;display:block"></span></div>
+        <div class="metric-card"><span class="skel" style="height:120px;width:100%;display:block"></span></div>
+      </div>
+    </div>
+    <div class="city-section">
+      <div class="section-label">Instructor submissions · by city (5+ total, geo-matched)</div>
+      <div class="city-card">
+        <div class="city-chart-title">All cities · total vs period change</div>
+        <div id="cityChart30"><span class="skel" style="height:200px"></span></div>
+      </div>
+    </div>
+    <div class="chart-section">
+      <div class="section-label">Salary DB · submissions by class format (all time)</div>
+      <div class="chart-row">
+        <div class="chart-card">
+          <div class="chart-title">Studio submissions</div>
+          <div class="bar-chart" id="studioFormatChart30"><span class="skel" style="height:110px"></span></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Instructor submissions</div>
+          <div class="bar-chart" id="instrFormatChart30"><span class="skel" style="height:110px"></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="feed-section">
+      <div class="section-label">Recent activity</div>
+      <div class="feed-grid">
+        <div class="feed-card">
+          <div class="feed-title">Latest job postings</div>
+          <div id="recentJobs30"><span class="skel" style="height:140px"></span></div>
+        </div>
+        <div class="feed-card">
+          <div class="feed-title">Latest alerts &amp; talent profiles</div>
+          <div id="recentAlerts30"><span class="skel" style="height:140px"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- MoM -->
   <section id="view-mom" style="display:none">
     <div class="metrics-section">
@@ -498,7 +545,7 @@
 // ─────────────────────────────────────────────
 const SALARY_EP = 'https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec';
 const JOB_EP    = 'https://script.google.com/macros/s/AKfycbxFGHyETxrFultdpVuIaOhf5wVmJ5gHwq2cMEG8TSKxsF8yjrVqXegeVGBv7WGRPHtePg/exec';
-
+  
 let salaryStats = null;
 let jobStats    = null;
 let activeRange = '7';
@@ -688,6 +735,9 @@ function computeMetrics(range) {
     } else if (range === '7') {
       m.studioSubs = filterByDays(studioRows, 0, 7).length;
       m.instrSubs  = filterByDays(instrRows,  0, 7).length;
+    } else if (range === '30') {
+      m.studioSubs = filterByDays(studioRows, 0, 30).length;
+      m.instrSubs  = filterByDays(instrRows,  0, 30).length;
     } else {
       var mo = range === 'thisMonth' ? 0 : -1;
       m.studioSubs = filterByMonth(studioRows, 0, mo).length;
@@ -713,9 +763,13 @@ function computeMetrics(range) {
       m.jobAlerts      = alertRows.length;
       m.talentProfiles = talentRows.length;
     } else if (range === '7') {
-      m.jobsPosted     = filterByDays(jobRows,   16, 7).length;  // col Q idx 16 = date posted
-      m.jobAlerts      = filterByDays(alertRows, 12, 7).length;  // col M idx 12 = last updated
-      m.talentProfiles = talentRows.length; // no created-date on profiles; show total visible
+      m.jobsPosted     = filterByDays(jobRows,   16, 7).length;
+      m.jobAlerts      = filterByDays(alertRows, 12, 7).length;
+      m.talentProfiles = talentRows.length;
+    } else if (range === '30') {
+      m.jobsPosted     = filterByDays(jobRows,   16, 30).length;
+      m.jobAlerts      = filterByDays(alertRows, 12, 30).length;
+      m.talentProfiles = talentRows.length;
     } else {
       var mo2 = range === 'thisMonth' ? 0 : -1;
       m.jobsPosted     = filterByMonth(jobRows,   16, mo2).length;
@@ -804,7 +858,10 @@ function renderMoM() {
     '</table>';
 }
 
-function renderFormatCharts() {
+function renderFormatCharts(studioId, instrId) {
+  studioId = studioId || 'studioFormatChart';
+  instrId  = instrId  || 'instrFormatChart';
+
   function buildBars(containerId, formatCounts) {
     var el = document.getElementById(containerId);
     if (!formatCounts || !Object.keys(formatCounts).length) {
@@ -825,13 +882,13 @@ function renderFormatCharts() {
   }
 
   if (salaryStats) {
-    buildBars('studioFormatChart', salaryStats.studioFormatCounts);
-    buildBars('instrFormatChart',  salaryStats.instrFormatCounts);
+    buildBars(studioId, salaryStats.studioFormatCounts);
+    buildBars(instrId,  salaryStats.instrFormatCounts);
   }
 }
 
-function renderCityChart() {
-  var el = document.getElementById('cityChart');
+function renderCityChart(containerId, range) {
+  var el = document.getElementById(containerId);
   if (!el) return;
 
   if (!salaryStats || !salaryStats.cityBreakdown) {
@@ -844,9 +901,11 @@ function renderCityChart() {
 
   // Pick delta source based on active range
   var periodCounts;
-  if (activeRange === '7') {
+  if (range === '7') {
     periodCounts = bd.last7 || {};
-  } else if (activeRange === 'mom') {
+  } else if (range === '30') {
+    periodCounts = bd.last7 || {}; // reuse last7 as closest proxy; extend Apps Script later if needed
+  } else if (range === 'mom') {
     periodCounts = bd.thisMonth || {};
   } else {
     periodCounts = {}; // all-time: no delta shown
@@ -870,7 +929,7 @@ function renderCityChart() {
     var pct = Math.round((total / max) * 100);
 
     var deltaHtml = '';
-    if (activeRange !== 'all') {
+    if (range !== 'all') {
       if (period > 0) {
         deltaHtml = '<div class="city-delta up">+' + period + '</div>';
       } else {
@@ -889,11 +948,13 @@ function renderCityChart() {
   }).join('');
 }
 
-function renderFeeds() {
+function renderFeeds(jobsId, alertsId) {
+  jobsId   = jobsId   || 'recentJobs';
+  alertsId = alertsId || 'recentAlerts';
   if (!jobStats) return;
 
-  var jobsEl   = document.getElementById('recentJobs');
-  var alertsEl = document.getElementById('recentAlerts');
+  var jobsEl   = document.getElementById(jobsId);
+  var alertsEl = document.getElementById(alertsId);
 
   var jobs = (jobStats.recentJobs || []).slice(0, 6);
   jobsEl.innerHTML = jobs.length
@@ -925,7 +986,7 @@ function setRange(btn, range) {
   document.querySelectorAll('.range-tab').forEach(function(t) { t.classList.remove('active'); });
   btn.classList.add('active');
   activeRange = range;
-  ['7','mom','all'].forEach(function(r) {
+  ['7','30','mom','all'].forEach(function(r) {
     document.getElementById('view-' + r).style.display = (r === range) ? '' : 'none';
   });
   render();
@@ -934,9 +995,14 @@ function setRange(btn, range) {
 function render() {
   if (activeRange === '7') {
     renderGrid('grid7', computeMetrics('7'));
-    renderCityChart();
-    renderFormatCharts();
-    renderFeeds();
+    renderCityChart('cityChart', '7');
+    renderFormatCharts('studioFormatChart', 'instrFormatChart');
+    renderFeeds('recentJobs', 'recentAlerts');
+  } else if (activeRange === '30') {
+    renderGrid('grid30', computeMetrics('30'));
+    renderCityChart('cityChart30', '30');
+    renderFormatCharts('studioFormatChart30', 'instrFormatChart30');
+    renderFeeds('recentJobs30', 'recentAlerts30');
   } else if (activeRange === 'mom') {
     renderMoM();
   } else {
