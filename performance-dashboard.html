@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Platform Performance — Paige Loves Pilates</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --olive: #373930;
+    --linen: #EDEBE4;
+    --linen-dark: #E0DDD5;
+    --linen-mid: #E8E5DC;
+    --accent: #7A7B6A;
+    --muted: #9A9B8A;
+    --border: #D4D1C8;
+    --up: #5A7A5A;
+    --down: #8A4A3A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--linen);
+    color: var(--olive);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--olive);
+    color: var(--linen);
+    padding: 36px 48px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .header-left h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: 0.01em;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .header-left p {
+    font-size: 0.72rem;
+    color: #7A7C6A;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .last-updated {
+    font-size: 0.7rem;
+    color: #6A6C5A;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .refresh-btn {
+    background: transparent;
+    border: 1px solid #4A4C40;
+    color: #A8AA99;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 7px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .refresh-btn:hover { border-color: #A8AA99; color: var(--linen); }
+  .refresh-btn:disabled { opacity: 0.4; pointer-events: none; }
+
+  /* ── Range tabs ── */
+  .range-tabs {
+    background: var(--olive);
+    padding: 0 48px;
+    display: flex;
+    border-top: 1px solid #3F4138;
+  }
+
+  .range-tab {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #5A5C4A;
+    padding: 13px 20px;
+    cursor: pointer;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: none;
+    transition: all 0.15s;
+  }
+
+  .range-tab.active { color: var(--linen); border-bottom-color: var(--linen-mid); }
+  .range-tab:hover:not(.active) { color: #8A8C7A; }
+
+  /* ── Status bar ── */
+  .status-bar {
+    background: #2E3028;
+    padding: 9px 48px;
+    display: flex;
+    gap: 28px;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #5A5C4A;
+  }
+
+  .status-item { display: flex; align-items: center; gap: 7px; }
+
+  .status-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #5A5C4A;
+    flex-shrink: 0;
+  }
+
+  .status-dot.ok      { background: #5A7A5A; }
+  .status-dot.err     { background: #8A4A3A; }
+  .status-dot.loading { background: #5A5C4A; animation: pulse 1.2s infinite; }
+
+  @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+
+  /* ── Main ── */
+  main { padding: 40px 48px; max-width: 1200px; }
+
+  .section-label {
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── Metric cards ── */
+  .metrics-section { margin-bottom: 48px; }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2px;
+  }
+
+  .metric-card {
+    background: white;
+    padding: 26px 22px 22px;
+    position: relative;
+  }
+
+  .metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--border);
+    transition: background 0.4s;
+  }
+
+  .metric-card.loaded::before { background: var(--olive); }
+
+  .metric-source {
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+
+  .metric-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--olive);
+    margin-bottom: 6px;
+    min-height: 2.8rem;
+    transition: opacity 0.3s;
+  }
+
+  .metric-value.pending { opacity: 0.15; }
+
+  .metric-label {
+    font-size: 0.75rem;
+    color: var(--accent);
+    margin-bottom: 14px;
+    line-height: 1.3;
+  }
+
+  .metric-delta {
+    font-size: 0.68rem;
+    font-weight: 500;
+    min-height: 1em;
+  }
+
+  .metric-delta.up   { color: var(--up); }
+  .metric-delta.down { color: var(--down); }
+  .metric-delta.flat { color: var(--muted); }
+
+  /* ── MoM table ── */
+  .mom-wrap { background: white; }
+
+  .mom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+  }
+
+  .mom-table th {
+    font-size: 0.63rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+
+  .mom-table th:not(:first-child) { text-align: right; }
+
+  .mom-table td {
+    padding: 13px 20px;
+    border-bottom: 1px solid var(--linen-dark);
+    color: var(--olive);
+  }
+
+  .mom-table td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
+  .mom-table tr:last-child td { border-bottom: none; }
+
+  .row-label    { font-weight: 400; }
+  .row-sublabel { font-size: 0.66rem; color: var(--muted); margin-top: 2px; }
+
+  .change-pill {
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    display: inline-block;
+  }
+
+  .change-pill.up   { background: #EBF2EB; color: var(--up); }
+  .change-pill.down { background: #F5EDEB; color: var(--down); }
+  .change-pill.flat { background: var(--linen-dark); color: var(--muted); }
+
+  /* ── Format charts ── */
+  .chart-section { margin-bottom: 48px; }
+
+  .chart-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .chart-card { background: white; padding: 26px 22px; }
+
+  .chart-title {
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .bar-chart { display: flex; flex-direction: column; gap: 11px; }
+
+  .bar-row {
+    display: grid;
+    grid-template-columns: 110px 1fr 36px;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .bar-label  { font-size: 0.7rem; color: var(--accent); text-align: right; }
+  .bar-track  { height: 5px; background: var(--linen-dark); overflow: hidden; }
+  .bar-fill   { height: 100%; background: var(--olive); transition: width 0.7s cubic-bezier(0.4,0,0.2,1); width: 0; }
+  .bar-count  { font-size: 0.7rem; font-weight: 500; color: var(--olive); text-align: right; }
+
+  /* ── Recent feed ── */
+  .feed-section { margin-bottom: 48px; }
+
+  .feed-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .feed-card  { background: white; padding: 26px 22px; }
+
+  .feed-title {
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+
+  .feed-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--linen-dark);
+    gap: 12px;
+  }
+
+  .feed-item:last-child { border-bottom: none; }
+
+  .feed-name  { font-size: 0.78rem; color: var(--olive); flex: 1; }
+  .feed-sub   { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+  .feed-date  { font-size: 0.66rem; color: var(--muted); white-space: nowrap; }
+  .feed-empty { font-size: 0.75rem; color: var(--muted); font-style: italic; padding: 8px 0; }
+
+  /* ── Skeleton ── */
+  @keyframes shimmer {
+    0%   { background-position: -600px 0; }
+    100% { background-position:  600px 0; }
+  }
+
+  .skel {
+    background: linear-gradient(90deg, var(--linen-dark) 25%, var(--linen-mid) 50%, var(--linen-dark) 75%);
+    background-size: 600px 100%;
+    animation: shimmer 1.6s infinite;
+    border-radius: 1px;
+    display: block;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    header { padding: 24px; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .range-tabs, .status-bar { padding: 0 24px; }
+    main { padding: 28px 24px; }
+    .metrics-grid { grid-template-columns: 1fr 1fr; }
+    .chart-row, .feed-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 500px) {
+    .metrics-grid { grid-template-columns: 1fr; }
+  }
+  /* ── City breakdown ── */
+  .city-section { margin-bottom: 48px; }
+
+  .city-card { background: white; padding: 26px 22px; }
+
+  .city-chart-title {
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .city-bar-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 36px 80px;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 0;
+  }
+
+  .city-bar-label { font-size: 0.72rem; color: var(--accent); text-align: right; }
+  .city-bar-track { height: 5px; background: var(--linen-dark); overflow: hidden; }
+  .city-bar-fill  { height: 100%; background: var(--olive); transition: width 0.7s cubic-bezier(0.4,0,0.2,1); width: 0; }
+  .city-bar-count { font-size: 0.72rem; font-weight: 500; color: var(--olive); text-align: right; }
+
+  .city-delta {
+    font-size: 0.66rem;
+    font-weight: 500;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .city-delta.up   { color: var(--up); }
+  .city-delta.down { color: var(--down); }
+  .city-delta.flat { color: var(--muted); }
+
+  @media (max-width: 600px) {
+    .city-bar-row { grid-template-columns: 100px 1fr 30px 60px; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>Platform Performance</h1>
+    <p>Paige Loves Pilates · Internal</p>
+  </div>
+  <div class="header-right">
+    <span class="last-updated" id="lastUpdated">—</span>
+    <button class="refresh-btn" id="refreshBtn" onclick="loadAll()">↻ Refresh</button>
+  </div>
+</header>
+
+<div class="range-tabs">
+  <button class="range-tab active" onclick="setRange(this,'7')">Last 7 days</button>
+  <button class="range-tab" onclick="setRange(this,'mom')">Month over month</button>
+  <button class="range-tab" onclick="setRange(this,'all')">All time</button>
+</div>
+
+<div class="status-bar">
+  <div class="status-item"><span class="status-dot loading" id="dotSalary"></span>Salary DB</div>
+  <div class="status-item"><span class="status-dot loading" id="dotJob"></span>Job Board</div>
+</div>
+
+<main>
+
+  <!-- 7-day -->
+  <section id="view-7">
+    <div class="metrics-section">
+      <div class="section-label">Last 7 days</div>
+      <div class="metrics-grid" id="grid7">
+        <div class="metric-card"><span class="skel" style="height:120px;width:100%;display:block"></span></div>
+        <div class="metric-card"><span class="skel" style="height:120px;width:100%;display:block"></span></div>
+        <div class="metric-card"><span class="skel" style="height:120px;width:100%;display:block"></span></div>
+        <div class="metric-card"><span class="skel" style="height:120px;width:100%;display:block"></span></div>
+        <div class="metric-card"><span class="skel" style="height:120px;width:100%;display:block"></span></div>
+      </div>
+    </div>
+    <div class="city-section">
+      <div class="section-label">Instructor submissions · by city (5+ total, geo-matched)</div>
+      <div class="city-card">
+        <div class="city-chart-title">All cities · total vs period change</div>
+        <div id="cityChart"><span class="skel" style="height:200px"></span></div>
+      </div>
+    </div>
+    <div class="chart-section">
+      <div class="section-label">Salary DB · submissions by class format (all time)</div>
+      <div class="chart-row">
+        <div class="chart-card">
+          <div class="chart-title">Studio submissions</div>
+          <div class="bar-chart" id="studioFormatChart"><span class="skel" style="height:110px"></span></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Instructor submissions</div>
+          <div class="bar-chart" id="instrFormatChart"><span class="skel" style="height:110px"></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="feed-section">
+      <div class="section-label">Recent activity</div>
+      <div class="feed-grid">
+        <div class="feed-card">
+          <div class="feed-title">Latest job postings</div>
+          <div id="recentJobs"><span class="skel" style="height:140px"></span></div>
+        </div>
+        <div class="feed-card">
+          <div class="feed-title">Latest alerts &amp; talent profiles</div>
+          <div id="recentAlerts"><span class="skel" style="height:140px"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MoM -->
+  <section id="view-mom" style="display:none">
+    <div class="metrics-section">
+      <div class="section-label">This month vs last month</div>
+      <div id="momWrap"><span class="skel" style="height:240px"></span></div>
+    </div>
+  </section>
+
+  <!-- All time -->
+  <section id="view-all" style="display:none">
+    <div class="metrics-section">
+      <div class="section-label">All time totals</div>
+      <div class="metrics-grid" id="gridAll">
+        <div class="metric-card"><span class="skel" style="height:120px;display:block"></span></div>
+        <div class="metric-card"><span class="skel" style="height:120px;display:block"></span></div>
+        <div class="metric-card"><span class="skel" style="height:120px;display:block"></span></div>
+        <div class="metric-card"><span class="skel" style="height:120px;display:block"></span></div>
+        <div class="metric-card"><span class="skel" style="height:120px;display:block"></span></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// ─────────────────────────────────────────────
+// Config
+// ─────────────────────────────────────────────
+const SALARY_EP = 'https://script.google.com/macros/s/AKfycbx6IjQ_PA67Zky5BsOZGObx8aXpEVl2gIbBlQkGdHxC7gkVbQwcX0oM9LezI2Zss0zv-w/exec';
+const JOB_EP    = 'https://script.google.com/macros/s/AKfycbwSFmZXGDvaffhqRlJz3-MKpjn6MPru6GniP78zL5MdVSMAHmJubeVsyRuVbib6CuVBog/exec';
+
+let salaryStats = null;
+let jobStats    = null;
+let activeRange = '7';
+
+// ─────────────────────────────────────────────
+// JSONP
+// ─────────────────────────────────────────────
+function jsonp(url, params, timeoutMs) {
+  timeoutMs = timeoutMs || 14000;
+  return new Promise(function(resolve, reject) {
+    var cb  = 'cb_' + Math.random().toString(36).slice(2);
+    var qs  = Object.entries(Object.assign({}, params, { callback: cb }))
+                    .map(function(kv) { return kv[0] + '=' + encodeURIComponent(kv[1]); }).join('&');
+    var el  = document.createElement('script');
+    var tid = setTimeout(function() { cleanup(); reject(new Error('Timeout')); }, timeoutMs);
+
+    window[cb] = function(data) { cleanup(); resolve(data); };
+    el.onerror  = function() { cleanup(); reject(new Error('Script load failed')); };
+    el.src = url + '?' + qs;
+    document.head.appendChild(el);
+
+    function cleanup() {
+      clearTimeout(tid);
+      delete window[cb];
+      if (el.parentNode) el.parentNode.removeChild(el);
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// Date helpers
+// ─────────────────────────────────────────────
+function parseDate(raw) {
+  if (raw == null || raw === '') return null;
+  // Excel serial date
+  if (typeof raw === 'number' && raw > 40000) {
+    return new Date(Date.UTC(1899, 11, 30) + raw * 86400000);
+  }
+  var d = new Date(raw);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function daysAgo(n) {
+  var d = new Date();
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() - n);
+  return d;
+}
+
+function startOfMonth(offset) {
+  offset = offset || 0;
+  var d = new Date();
+  d.setDate(1);
+  d.setHours(0, 0, 0, 0);
+  d.setMonth(d.getMonth() + offset);
+  return d;
+}
+
+function fmtDate(d) {
+  if (!d) return '—';
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function monthLabel(offset) {
+  offset = offset || 0;
+  var d = new Date();
+  d.setMonth(d.getMonth() + offset);
+  return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+}
+
+// ─────────────────────────────────────────────
+// Status dots
+// ─────────────────────────────────────────────
+function setDot(id, state) {
+  document.getElementById(id).className = 'status-dot ' + state;
+}
+
+// ─────────────────────────────────────────────
+// Load both endpoints
+// ─────────────────────────────────────────────
+function loadAll() {
+  var btn = document.getElementById('refreshBtn');
+  btn.disabled = true;
+  document.getElementById('lastUpdated').textContent = 'Loading…';
+  setDot('dotSalary', 'loading');
+  setDot('dotJob', 'loading');
+  salaryStats = null;
+  jobStats    = null;
+
+  Promise.allSettled([
+    jsonp(SALARY_EP, { action: 'stats' }),
+    jsonp(JOB_EP,    { action: 'stats' })
+  ]).then(function(results) {
+    var sr = results[0], jr = results[1];
+
+    if (sr.status === 'fulfilled') {
+      salaryStats = sr.value;
+      setDot('dotSalary', 'ok');
+    } else {
+      console.error('Salary endpoint error:', sr.reason);
+      setDot('dotSalary', 'err');
+    }
+
+    if (jr.status === 'fulfilled') {
+      jobStats = jr.value;
+      setDot('dotJob', 'ok');
+    } else {
+      console.error('Job endpoint error:', jr.reason);
+      setDot('dotJob', 'err');
+    }
+
+    document.getElementById('lastUpdated').textContent =
+      'Updated ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    btn.disabled = false;
+    render();
+  });
+}
+
+// ─────────────────────────────────────────────
+// Compute metrics
+//
+// Expected Apps Script response shape:
+//
+// salaryStats = {
+//   studioRows: [ [col1_date, …, col29_exclude], … ],
+//     — Studio Clean, 1 array per row, 0-indexed
+//     — col1  (idx 0)  = Submitted date
+//     — col29 (idx 28) = Exclude flag
+//     — col8  (idx 7)  = Class Format (for breakdown chart)
+//   instrRows: [ [col1_date, …, col21_exclude], … ],
+//     — Instructor Clean, 0-indexed
+//     — col1  (idx 0)  = Submitted date
+//     — col21 (idx 20) = Exclude flag
+//     — col7  (idx 6)  = Class Format (for breakdown chart)
+//   studioFormatCounts: { "Mat Pilates": 42, "Reformer": 18, … },
+//   instrFormatCounts:  { "Mat Pilates": 30, … }
+// }
+//
+// jobStats = {
+//   jobRows: [ […], … ],
+//     — JobPosting_Clean, 0-indexed
+//     — col C (idx 2)  = Studio Name
+//     — col D (idx 3)  = City
+//     — col Q (idx 16) = Date Posted
+//     — col R (idx 17) = "Y" / "N" live flag
+//   alertRows: [ […], … ],
+//     — Subscriptions sheet (1oR-u_nbAFs_b94Xtx3z841OpmGnDjrnQccyO7mgaW44)
+//     — col A (idx 0)  = Email
+//     — col B (idx 1)  = Country
+//     — col M (idx 12) = Last Updated date
+//   talentRows: [ […], … ],
+//     — talent_profiles sheet
+//     — col R (idx 17) = TRUE/FALSE visible flag
+//   recentJobs:   [ { studio, city, date }, … ],   // top ~6, pre-sorted newest first
+//   recentAlerts: [ { name, type, date }, … ]       // top ~6, pre-sorted newest first
+// }
+// ─────────────────────────────────────────────
+
+function filterByDays(rows, dateIdx, n) {
+  var cutoff = daysAgo(n);
+  return rows.filter(function(r) {
+    var d = parseDate(r[dateIdx]);
+    return d && d >= cutoff;
+  });
+}
+
+function filterByMonth(rows, dateIdx, offset) {
+  var start = startOfMonth(offset);
+  var end   = startOfMonth(offset + 1);
+  return rows.filter(function(r) {
+    var d = parseDate(r[dateIdx]);
+    return d && d >= start && d < end;
+  });
+}
+
+function computeMetrics(range) {
+  // range: '7' | 'thisMonth' | 'lastMonth' | 'all'
+  var m = { studioSubs: 0, instrSubs: 0, jobsPosted: 0, jobAlerts: 0, talentProfiles: 0 };
+
+  if (salaryStats) {
+    var studioRows = (salaryStats.studioRows || []).filter(function(r) { return !r[28]; }); // exclude col29
+    var instrRows  = (salaryStats.instrRows  || []).filter(function(r) { return !r[20]; }); // exclude col21
+
+    if (range === 'all') {
+      m.studioSubs = studioRows.length;
+      m.instrSubs  = instrRows.length;
+    } else if (range === '7') {
+      m.studioSubs = filterByDays(studioRows, 0, 7).length;
+      m.instrSubs  = filterByDays(instrRows,  0, 7).length;
+    } else {
+      var mo = range === 'thisMonth' ? 0 : -1;
+      m.studioSubs = filterByMonth(studioRows, 0, mo).length;
+      m.instrSubs  = filterByMonth(instrRows,  0, mo).length;
+    }
+  }
+
+  if (jobStats) {
+    // Jobs posted: col R = idx 17, must equal "Y"
+    var jobRows = (jobStats.jobRows || []).filter(function(r) {
+      return String(r[17] || '').trim().toUpperCase() === 'Y';
+    });
+    // Alerts: col M = idx 12 for date
+    var alertRows = (jobStats.alertRows || []);
+    // Talent profiles: col R = idx 17, must be truthy
+    var talentRows = (jobStats.talentRows || []).filter(function(r) {
+      var v = String(r[17] || '').trim().toLowerCase();
+      return v === 'true' || v === '1' || v === 'yes';
+    });
+
+    if (range === 'all') {
+      m.jobsPosted     = jobRows.length;
+      m.jobAlerts      = alertRows.length;
+      m.talentProfiles = talentRows.length;
+    } else if (range === '7') {
+      m.jobsPosted     = filterByDays(jobRows,   16, 7).length;  // col Q idx 16 = date posted
+      m.jobAlerts      = filterByDays(alertRows, 12, 7).length;  // col M idx 12 = last updated
+      m.talentProfiles = talentRows.length; // no created-date on profiles; show total visible
+    } else {
+      var mo2 = range === 'thisMonth' ? 0 : -1;
+      m.jobsPosted     = filterByMonth(jobRows,   16, mo2).length;
+      m.jobAlerts      = filterByMonth(alertRows, 12, mo2).length;
+      m.talentProfiles = talentRows.length;
+    }
+  }
+
+  return m;
+}
+
+// ─────────────────────────────────────────────
+// Render helpers
+// ─────────────────────────────────────────────
+function metricCard(value, label, source, delta) {
+  var isNull = (value === null || value === undefined);
+  var valStr = isNull ? '–' : value.toLocaleString();
+  var deltaHtml = '';
+  if (!isNull && delta != null) {
+    if (delta > 0) {
+      deltaHtml = '<div class="metric-delta up">↑ ' + delta + ' vs prev period</div>';
+    } else if (delta < 0) {
+      deltaHtml = '<div class="metric-delta down">↓ ' + Math.abs(delta) + ' vs prev period</div>';
+    } else {
+      deltaHtml = '<div class="metric-delta flat">No change</div>';
+    }
+  }
+  return '<div class="metric-card' + (isNull ? '' : ' loaded') + '">' +
+    '<div class="metric-source">' + source + '</div>' +
+    '<div class="metric-value' + (isNull ? ' pending' : '') + '">' + valStr + '</div>' +
+    '<div class="metric-label">' + label + '</div>' +
+    deltaHtml +
+    '</div>';
+}
+
+function renderGrid(containerId, metrics) {
+  var el = document.getElementById(containerId);
+  el.innerHTML = [
+    metricCard(metrics.instrSubs,      'Instructor submissions', 'Salary DB',  null),
+    metricCard(metrics.studioSubs,     'Studio submissions',     'Salary DB',  null),
+    metricCard(metrics.talentProfiles, 'Talent profiles (live)', 'Job Board',  null),
+    metricCard(metrics.jobAlerts,      'Job alerts initiated',   'Job Board',  null),
+    metricCard(metrics.jobsPosted,     'Jobs posted',            'Job Board',  null),
+  ].join('');
+}
+
+function renderMoM() {
+  var thisM = computeMetrics('thisMonth');
+  var lastM = computeMetrics('lastMonth');
+
+  var rows = [
+    { label: 'Instructor submissions', sub: 'Salary DB · Instructor Clean', key: 'instrSubs' },
+    { label: 'Studio submissions',     sub: 'Salary DB · Studio Clean',     key: 'studioSubs' },
+    { label: 'Talent profiles (live)', sub: 'Job Board · talent_profiles',  key: 'talentProfiles' },
+    { label: 'Job alerts initiated',   sub: 'Job Board · Subscriptions',    key: 'jobAlerts' },
+    { label: 'Jobs posted',            sub: 'Job Board · JobPosting_Clean', key: 'jobsPosted' },
+  ];
+
+  function changePill(cur, prev) {
+    if (prev === 0 && cur === 0) return '<span class="change-pill flat">—</span>';
+    if (prev === 0 && cur > 0)   return '<span class="change-pill up">New</span>';
+    var pct = Math.round(((cur - prev) / prev) * 100);
+    if (pct > 0)  return '<span class="change-pill up">↑ ' + pct + '%</span>';
+    if (pct < 0)  return '<span class="change-pill down">↓ ' + Math.abs(pct) + '%</span>';
+    return '<span class="change-pill flat">—</span>';
+  }
+
+  var trs = rows.map(function(r) {
+    return '<tr>' +
+      '<td><div class="row-label">' + r.label + '</div><div class="row-sublabel">' + r.sub + '</div></td>' +
+      '<td>' + lastM[r.key].toLocaleString() + '</td>' +
+      '<td>' + thisM[r.key].toLocaleString() + '</td>' +
+      '<td>' + changePill(thisM[r.key], lastM[r.key]) + '</td>' +
+      '</tr>';
+  }).join('');
+
+  document.getElementById('momWrap').innerHTML =
+    '<table class="mom-table">' +
+      '<thead><tr>' +
+        '<th>Metric</th>' +
+        '<th>' + monthLabel(-1) + '</th>' +
+        '<th>' + monthLabel(0)  + '</th>' +
+        '<th>Change</th>' +
+      '</tr></thead>' +
+      '<tbody>' + trs + '</tbody>' +
+    '</table>';
+}
+
+function renderFormatCharts() {
+  function buildBars(containerId, formatCounts) {
+    var el = document.getElementById(containerId);
+    if (!formatCounts || !Object.keys(formatCounts).length) {
+      el.innerHTML = '<div class="feed-empty">No data</div>';
+      return;
+    }
+    var sorted = Object.entries(formatCounts).sort(function(a,b) { return b[1]-a[1]; }).slice(0, 7);
+    var max = sorted[0][1];
+    el.innerHTML = sorted.map(function(entry) {
+      var fmt = entry[0], cnt = entry[1];
+      var pct = Math.round((cnt / max) * 100);
+      return '<div class="bar-row">' +
+        '<div class="bar-label">' + fmt + '</div>' +
+        '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
+        '<div class="bar-count">' + cnt + '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  if (salaryStats) {
+    buildBars('studioFormatChart', salaryStats.studioFormatCounts);
+    buildBars('instrFormatChart',  salaryStats.instrFormatCounts);
+  }
+}
+
+function renderCityChart() {
+  var el = document.getElementById('cityChart');
+  if (!el) return;
+
+  if (!salaryStats || !salaryStats.cityBreakdown) {
+    el.innerHTML = '<div class="feed-empty">No city data yet</div>';
+    return;
+  }
+
+  var bd = salaryStats.cityBreakdown;
+  var allCounts = bd.all || {};
+
+  // Pick delta source based on active range
+  var periodCounts;
+  if (activeRange === '7') {
+    periodCounts = bd.last7 || {};
+  } else if (activeRange === 'mom') {
+    periodCounts = bd.thisMonth || {};
+  } else {
+    periodCounts = {}; // all-time: no delta shown
+  }
+
+  // Sort by all-time descending
+  var cities = Object.keys(allCounts).sort(function(a, b) {
+    return allCounts[b] - allCounts[a];
+  });
+
+  if (!cities.length) {
+    el.innerHTML = '<div class="feed-empty">No cities with 5+ submissions yet</div>';
+    return;
+  }
+
+  var max = allCounts[cities[0]];
+
+  el.innerHTML = cities.map(function(city) {
+    var total = allCounts[city];
+    var period = periodCounts[city] || 0;
+    var pct = Math.round((total / max) * 100);
+
+    var deltaHtml = '';
+    if (activeRange !== 'all') {
+      if (period > 0) {
+        deltaHtml = '<div class="city-delta up">+' + period + '</div>';
+      } else {
+        deltaHtml = '<div class="city-delta flat">—</div>';
+      }
+    } else {
+      deltaHtml = '<div class="city-delta flat"></div>';
+    }
+
+    return '<div class="city-bar-row">' +
+      '<div class="city-bar-label">' + city + '</div>' +
+      '<div class="city-bar-track"><div class="city-bar-fill" style="width:' + pct + '%"></div></div>' +
+      '<div class="city-bar-count">' + total + '</div>' +
+      deltaHtml +
+      '</div>';
+  }).join('');
+}
+
+function renderFeeds() {
+  if (!jobStats) return;
+
+  var jobsEl   = document.getElementById('recentJobs');
+  var alertsEl = document.getElementById('recentAlerts');
+
+  var jobs = (jobStats.recentJobs || []).slice(0, 6);
+  jobsEl.innerHTML = jobs.length
+    ? jobs.map(function(j) {
+        return '<div class="feed-item">' +
+          '<div><div class="feed-name">' + (j.studio || '—') + '</div>' +
+          '<div class="feed-sub">' + (j.city || '') + '</div></div>' +
+          '<div class="feed-date">' + fmtDate(parseDate(j.date)) + '</div>' +
+          '</div>';
+      }).join('')
+    : '<div class="feed-empty">No recent postings</div>';
+
+  var alerts = (jobStats.recentAlerts || []).slice(0, 6);
+  alertsEl.innerHTML = alerts.length
+    ? alerts.map(function(a) {
+        return '<div class="feed-item">' +
+          '<div><div class="feed-name">' + (a.name || '—') + '</div>' +
+          '<div class="feed-sub">' + (a.type || '') + '</div></div>' +
+          '<div class="feed-date">' + fmtDate(parseDate(a.date)) + '</div>' +
+          '</div>';
+      }).join('')
+    : '<div class="feed-empty">No recent activity</div>';
+}
+
+// ─────────────────────────────────────────────
+// Range switching
+// ─────────────────────────────────────────────
+function setRange(btn, range) {
+  document.querySelectorAll('.range-tab').forEach(function(t) { t.classList.remove('active'); });
+  btn.classList.add('active');
+  activeRange = range;
+  ['7','mom','all'].forEach(function(r) {
+    document.getElementById('view-' + r).style.display = (r === range) ? '' : 'none';
+  });
+  render();
+}
+
+function render() {
+  if (activeRange === '7') {
+    renderGrid('grid7', computeMetrics('7'));
+    renderCityChart();
+    renderFormatCharts();
+    renderFeeds();
+  } else if (activeRange === 'mom') {
+    renderMoM();
+  } else {
+    renderGrid('gridAll', computeMetrics('all'));
+  }
+}
+
+// ─────────────────────────────────────────────
+// Boot
+// ─────────────────────────────────────────────
+loadAll();
+</script>
+</body>
+</html>
