@@ -183,18 +183,38 @@
     margin-bottom: 18px;
   }
 
+  .metric-value-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
   .metric-value {
     font-family: 'Cormorant Garamond', serif;
     font-size: 2.8rem;
     font-weight: 600;
     line-height: 1;
     color: var(--olive);
-    margin-bottom: 6px;
     min-height: 2.8rem;
     transition: opacity 0.3s;
   }
 
   .metric-value.pending { opacity: 0.15; }
+
+  .metric-pill {
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    display: inline-block;
+    white-space: nowrap;
+    transform: translateY(-6px);
+  }
+
+  .metric-pill.up   { background: #EBF2EB; color: var(--up); }
+  .metric-pill.down { background: #F5EDEB; color: var(--down); }
+  .metric-pill.flat { background: var(--linen-dark); color: var(--muted); }
 
   .metric-label {
     font-size: 0.75rem;
@@ -545,7 +565,7 @@
 // ─────────────────────────────────────────────
 const SALARY_EP = 'https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec';
 const JOB_EP    = 'https://script.google.com/macros/s/AKfycbxFGHyETxrFultdpVuIaOhf5wVmJ5gHwq2cMEG8TSKxsF8yjrVqXegeVGBv7WGRPHtePg/exec';
-  
+
 let salaryStats = null;
 let jobStats    = null;
 let activeRange = '7';
@@ -712,6 +732,17 @@ function filterByDays(rows, dateIdx, n) {
   });
 }
 
+function filterByDayRange(rows, dateIdx, startDaysAgo, endDaysAgo) {
+  // returns rows where (today - startDaysAgo) > date >= (today - endDaysAgo)
+  // i.e. the period [endDaysAgo .. startDaysAgo) days ago — older bound inclusive, newer bound exclusive
+  var newer = daysAgo(startDaysAgo); // e.g. 7 days ago
+  var older = daysAgo(endDaysAgo);   // e.g. 14 days ago
+  return rows.filter(function(r) {
+    var d = parseDate(r[dateIdx]);
+    return d && d >= older && d < newer;
+  });
+}
+
 function filterByMonth(rows, dateIdx, offset) {
   var start = startOfMonth(offset);
   var end   = startOfMonth(offset + 1);
@@ -722,7 +753,7 @@ function filterByMonth(rows, dateIdx, offset) {
 }
 
 function computeMetrics(range) {
-  // range: '7' | 'thisMonth' | 'lastMonth' | 'all'
+  // range: '7' | '30' | 'thisMonth' | 'lastMonth' | 'all'
   var m = { studioSubs: 0, instrSubs: 0, jobsPosted: 0, jobAlerts: 0, talentProfiles: 0 };
 
   if (salaryStats) {
@@ -781,38 +812,71 @@ function computeMetrics(range) {
   return m;
 }
 
+// Previous-period totals — for '7' = days 7–14 ago, for '30' = days 30–60 ago
+function computePrevMetrics(range) {
+  var n = range === '7' ? 7 : 30;
+  var m = { studioSubs: 0, instrSubs: 0, jobsPosted: 0, jobAlerts: 0, talentProfiles: 0 };
+
+  if (salaryStats) {
+    var studioRows = (salaryStats.studioRows || []).filter(function(r) { return !r[28]; });
+    var instrRows  = (salaryStats.instrRows  || []).filter(function(r) { return !r[20]; });
+    m.studioSubs = filterByDayRange(studioRows, 0, n, n * 2).length;
+    m.instrSubs  = filterByDayRange(instrRows,  0, n, n * 2).length;
+  }
+
+  if (jobStats) {
+    var jobRows = (jobStats.jobRows || []).filter(function(r) {
+      return String(r[17] || '').trim().toUpperCase() === 'Y';
+    });
+    var alertRows  = (jobStats.alertRows  || []);
+    var talentRows = (jobStats.talentRows || []).filter(function(r) {
+      var v = String(r[17] || '').trim().toLowerCase();
+      return v === 'true' || v === '1' || v === 'yes';
+    });
+    m.jobsPosted     = filterByDayRange(jobRows,    16, n, n * 2).length;
+    m.jobAlerts      = filterByDayRange(alertRows,  12, n, n * 2).length;
+    m.talentProfiles = filterByDayRange(talentRows, 20, n, n * 2).length;
+  }
+
+  return m;
+}
+
 // ─────────────────────────────────────────────
 // Render helpers
 // ─────────────────────────────────────────────
-function metricCard(value, label, source, delta) {
+function pctPill(cur, prev) {
+  if (cur === null || cur === undefined || prev === null || prev === undefined) return '';
+  if (prev === 0 && cur === 0) return '<span class="metric-pill flat">—</span>';
+  if (prev === 0 && cur > 0)   return '<span class="metric-pill up">New</span>';
+  var pct = Math.round(((cur - prev) / prev) * 100);
+  if (pct > 0)  return '<span class="metric-pill up">↑ '   + pct           + '%</span>';
+  if (pct < 0)  return '<span class="metric-pill down">↓ ' + Math.abs(pct) + '%</span>';
+  return '<span class="metric-pill flat">—</span>';
+}
+
+function metricCard(value, label, source, prev) {
   var isNull = (value === null || value === undefined);
   var valStr = isNull ? '–' : value.toLocaleString();
-  var deltaHtml = '';
-  if (!isNull && delta != null) {
-    if (delta > 0) {
-      deltaHtml = '<div class="metric-delta up">↑ ' + delta + ' vs prev period</div>';
-    } else if (delta < 0) {
-      deltaHtml = '<div class="metric-delta down">↓ ' + Math.abs(delta) + ' vs prev period</div>';
-    } else {
-      deltaHtml = '<div class="metric-delta flat">No change</div>';
-    }
-  }
+  var pillHtml = (!isNull && prev != null) ? pctPill(value, prev) : '';
   return '<div class="metric-card' + (isNull ? '' : ' loaded') + '">' +
     '<div class="metric-source">' + source + '</div>' +
-    '<div class="metric-value' + (isNull ? ' pending' : '') + '">' + valStr + '</div>' +
+    '<div class="metric-value-row">' +
+      '<div class="metric-value' + (isNull ? ' pending' : '') + '">' + valStr + '</div>' +
+      pillHtml +
+    '</div>' +
     '<div class="metric-label">' + label + '</div>' +
-    deltaHtml +
     '</div>';
 }
 
-function renderGrid(containerId, metrics) {
+function renderGrid(containerId, metrics, prev) {
   var el = document.getElementById(containerId);
+  prev = prev || {};
   el.innerHTML = [
-    metricCard(metrics.instrSubs,      'Instructor submissions', 'Salary DB',  null),
-    metricCard(metrics.studioSubs,     'Studio submissions',     'Salary DB',  null),
-    metricCard(metrics.talentProfiles, 'Talent profiles (live)', 'Job Board',  null),
-    metricCard(metrics.jobAlerts,      'Job alerts initiated',   'Job Board',  null),
-    metricCard(metrics.jobsPosted,     'Jobs posted',            'Job Board',  null),
+    metricCard(metrics.instrSubs,      'Instructor submissions', 'Salary DB',  prev.instrSubs),
+    metricCard(metrics.studioSubs,     'Studio submissions',     'Salary DB',  prev.studioSubs),
+    metricCard(metrics.talentProfiles, 'Talent profiles (live)', 'Job Board',  prev.talentProfiles),
+    metricCard(metrics.jobAlerts,      'Job alerts initiated',   'Job Board',  prev.jobAlerts),
+    metricCard(metrics.jobsPosted,     'Jobs posted',            'Job Board',  prev.jobsPosted),
   ].join('');
 }
 
@@ -994,19 +1058,19 @@ function setRange(btn, range) {
 
 function render() {
   if (activeRange === '7') {
-    renderGrid('grid7', computeMetrics('7'));
+    renderGrid('grid7', computeMetrics('7'), computePrevMetrics('7'));
     renderCityChart('cityChart', '7');
     renderFormatCharts('studioFormatChart', 'instrFormatChart');
     renderFeeds('recentJobs', 'recentAlerts');
   } else if (activeRange === '30') {
-    renderGrid('grid30', computeMetrics('30'));
+    renderGrid('grid30', computeMetrics('30'), computePrevMetrics('30'));
     renderCityChart('cityChart30', '30');
     renderFormatCharts('studioFormatChart30', 'instrFormatChart30');
     renderFeeds('recentJobs30', 'recentAlerts30');
   } else if (activeRange === 'mom') {
     renderMoM();
   } else {
-    renderGrid('gridAll', computeMetrics('all'));
+    renderGrid('gridAll', computeMetrics('all')); // all-time: no prev period
   }
 }
 
