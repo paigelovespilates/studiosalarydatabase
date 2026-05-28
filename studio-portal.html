@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instructor Network · Studio Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #EDEBE4;
+      --surface: #FFFFFF;
+      --border: #D6D3CB;
+      --text: #373930;
+      --text-secondary: #6B6A63;
+      --accent: #373930;
+      --accent-light: #E8E5DC;
+      --accent-hover: #1F1E18;
+      --tag-bg: #E8E5DC;
+      --tag-text: #4A4940;
+      --green: #4A7C59;
+      --green-bg: #EDF5EF;
+      --radius: 8px;
+      --shadow: 0 1px 3px rgba(55,57,48,0.06), 0 4px 12px rgba(55,57,48,0.04);
+      --shadow-hover: 0 2px 8px rgba(55,57,48,0.1), 0 8px 24px rgba(55,57,48,0.06);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--accent);
+      padding: 2rem 1.5rem 1.5rem;
+      text-align: center;
+    }
+    .header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: #EDEBE4;
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.02em;
+    }
+    .header p {
+      color: #B0AFA8;
+      font-size: 0.95rem;
+    }
+    .header-market {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #B0AFA8;
+      background: rgba(255,255,255,0.08);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+    }
+    .header-actions {
+      margin-top: 0.75rem;
+    }
+    .logout-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #B0AFA8;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      padding: 0.3rem 0.85rem;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .logout-btn:hover { border-color: rgba(255,255,255,0.4); color: #EDEBE4; }
+
+    /* ── AUTH SCREENS ── */
+    .auth-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      background: var(--bg);
+    }
+    .auth-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: var(--shadow);
+    }
+    .auth-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.02em;
+    }
+    .auth-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+    .auth-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-bottom: 0.4rem;
+    }
+    .auth-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text);
+      background: var(--bg);
+      transition: border-color 0.2s;
+      margin-bottom: 1.25rem;
+    }
+    .auth-input:focus { outline: none; border-color: var(--accent); }
+    .auth-input::placeholder { color: var(--text-secondary); opacity: 0.6; }
+    .auth-btn {
+      width: 100%;
+      padding: 0.85rem;
+      background: var(--accent);
+      color: #EDEBE4;
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .auth-btn:hover { background: var(--accent-hover); }
+    .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .auth-error {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      color: #B91C1C;
+      display: none;
+    }
+    .auth-hint {
+      margin-top: 1rem;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+    .auth-hint a {
+      color: var(--accent);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .code-inputs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .code-digit {
+      flex: 1;
+      padding: 0.85rem 0;
+      text-align: center;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--text);
+      background: var(--bg);
+      transition: border-color 0.2s;
+      width: 100%;
+      max-width: 52px;
+    }
+    .code-digit:focus { outline: none; border-color: var(--accent); }
+
+    /* ── MARKET SELECTOR ── */
+    .market-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      margin-bottom: 1.25rem;
+    }
+    .market-option {
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      text-align: left;
+    }
+    .market-option:hover { border-color: #B0AFA8; background: var(--accent-light); }
+    .market-option.selected {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #EDEBE4;
+    }
+
+    /* ── FILTERS ── */
+    .filters {
+      max-width: 1100px;
+      margin: 1.5rem auto 0;
+      padding: 0 1.5rem;
+    }
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .filter-control {
+      padding: 0.55rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .filter-control:hover { border-color: #B0AFA8; }
+    .filter-control:focus { outline: none; border-color: var(--accent); }
+    select.filter-control {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B6A63' d='M6 8L1.5 3.5h9z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      padding-right: 2rem;
+      min-width: 140px;
+    }
+    .filter-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+    .filter-btn:hover { border-color: #B0AFA8; }
+    .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #EDEBE4; }
+    .filter-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .near-me-group { display: inline-flex; align-items: center; gap: 0; }
+    .near-me-group .filter-btn.active { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: none; }
+    .radius-select {
+      padding: 0.55rem 1.8rem 0.55rem 0.5rem;
+      border: 1px solid var(--accent);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      background: var(--accent);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      color: #EDEBE4;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23EDEBE4' d='M6 8L1.5 3.5h9z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.55rem center;
+      display: none;
+    }
+    .radius-select:focus { outline: none; }
+    .radius-select.visible { display: block; }
+    .filter-summary {
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+      padding: 0.6rem 1rem;
+      background: var(--accent-light);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+    .clear-btn {
+      background: none; border: none; color: var(--accent); cursor: pointer;
+      font-family: inherit; font-size: 0.825rem; font-weight: 500;
+      text-decoration: underline; white-space: nowrap;
+    }
+
+    /* ── RESULTS ── */
+    .results { max-width: 1100px; margin: 1.5rem auto 2rem; padding: 0 1.5rem; }
+    .results-count { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; transition: box-shadow 0.2s; }
+    .card:hover { box-shadow: var(--shadow-hover); }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+    .card-name { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 600; }
+    .card-location { font-size: 0.825rem; color: var(--text-secondary); margin-top: 0.15rem; }
+    .card-distance { font-size: 0.75rem; color: var(--accent); margin-top: 0.15rem; font-weight: 500; }
+    .card-experience { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; padding: 0.25rem 0.6rem; border-radius: 20px; background: var(--green-bg); color: var(--green); white-space: nowrap; flex-shrink: 0; }
+    .card-experience-mobile { display: none; margin-top: 0.35rem; }
+    .card-experience-desktop { display: inline-block; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1rem; }
+    .tag { font-size: 0.75rem; padding: 0.2rem 0.55rem; border-radius: 20px; background: var(--tag-bg); color: var(--tag-text); }
+    .card-notes { font-size: 0.825rem; color: var(--text-secondary); line-height: 1.45; margin-bottom: 1rem; }
+    .read-more-toggle { color: var(--text-secondary); font-style: italic; cursor: pointer; }
+    .read-more-toggle:hover { color: var(--accent); }
+    .card-certs { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.45; }
+    .card-certs-label { font-weight: 600; color: var(--text); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .card-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+    .card-social { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+    .card-social:hover { color: var(--accent); }
+    .card-social svg { width: 14px; height: 14px; }
+    .card-contact { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; color: var(--surface); background: #5C5E52; text-decoration: none; padding: 0.35rem 0.75rem; border-radius: 20px; transition: background 0.2s; margin-left: auto; }
+    .card-contact:hover { background: var(--accent-hover); }
+    .card-contact svg { width: 13px; height: 13px; }
+
+    /* ── PAGINATION ── */
+    .pagination { display: flex; justify-content: center; align-items: center; gap: 0.75rem; margin-top: 2rem; flex-wrap: wrap; }
+    .page-btn { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.55rem 1rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); font-family: 'DM Sans', sans-serif; font-size: 0.875rem; color: var(--text); cursor: pointer; transition: border-color 0.2s, background 0.2s, color 0.2s; }
+    .page-btn:hover:not(:disabled) { border-color: var(--accent); background: var(--accent); color: #EDEBE4; }
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .page-indicator { font-size: 0.85rem; color: var(--text-secondary); min-width: 100px; text-align: center; }
+
+    /* ── LOADING / EMPTY ── */
+    .loading { text-align: center; padding: 4rem 1rem; color: var(--text-secondary); }
+    .loading-spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-secondary); font-size: 0.95rem; }
+
+    /* ── SCREEN VISIBILITY ── */
+    #screen-login, #screen-verify, #screen-market, #screen-directory { display: none; }
+    #screen-directory .header { display: none; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .auth-card { padding: 2rem 1.25rem; }
+      .market-grid { grid-template-columns: 1fr; }
+      .filter-row { flex-direction: column; }
+      .filter-row select.filter-control, .filter-btn, .near-me-group { min-width: 100%; width: 100%; }
+      .near-me-group { display: flex; }
+      .near-me-group .filter-btn { flex: 1 1 auto; min-width: 0; width: auto; }
+      .near-me-group .radius-select.visible { flex: 0 0 auto; width: 90px; min-width: 90px; }
+      #sortDistBtn.active { background: var(--surface); color: var(--accent); border: 1px solid var(--accent); }
+      .card-grid { grid-template-columns: 1fr; }
+      .card-experience-mobile { display: inline-block; }
+      .card-experience-desktop { display: none; }
+      .card-contact { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SCREEN 1: LOGIN                                        -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="screen-login">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">Instructor Network</div>
+      <div class="auth-subtitle">Studio portal · Enter your email to access your market</div>
+      <label class="auth-label" for="login-email">Studio email</label>
+      <input class="auth-input" type="email" id="login-email" placeholder="studio@example.com" autocomplete="email">
+      <button class="auth-btn" id="login-btn" onclick="sendCode()">Send verification code</button>
+      <div class="auth-error" id="login-error"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SCREEN 2: VERIFY CODE                                  -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="screen-verify">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">Check your inbox</div>
+      <div class="auth-subtitle" id="verify-subtitle">We sent a 6-digit code to your email.</div>
+      <label class="auth-label">Verification code</label>
+      <div class="code-inputs" id="code-inputs">
+        <input class="code-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+        <input class="code-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+        <input class="code-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+        <input class="code-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+        <input class="code-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+        <input class="code-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+      </div>
+      <button class="auth-btn" id="verify-btn" onclick="verifyCode()">Verify</button>
+      <div class="auth-error" id="verify-error"></div>
+      <div class="auth-hint">Didn't get it? <a onclick="resendCode()">Resend code</a> · <a onclick="showScreen('login')">Wrong email</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SCREEN 3: MARKET SELECTOR (first login only)           -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="screen-market">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">Choose your market</div>
+      <div class="auth-subtitle">Select the market your studio is in. You can contact us to change this later.</div>
+      <div class="market-grid" id="market-grid">
+        <div class="loading" style="grid-column:1/-1;padding:1rem;"><div class="loading-spinner" style="width:20px;height:20px;margin:0 auto;"></div></div>
+      </div>
+      <button class="auth-btn" id="market-btn" onclick="setMarket()" disabled>Continue</button>
+      <div class="auth-error" id="market-error"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SCREEN 4: DIRECTORY                                    -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="screen-directory">
+
+  <div class="header">
+    <h1>Instructor Network</h1>
+    <p>Find Pilates instructors for sub and regular teaching opportunities.</p>
+    <div id="header-market-badge" class="header-market"></div>
+    <div class="header-actions">
+      <button class="logout-btn" onclick="logout()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="filters">
+    <div class="filter-row">
+      <select class="filter-control" id="filterFormat"><option value="">All Formats</option></select>
+      <select class="filter-control" id="filterExperience"><option value="">All Experience</option></select>
+      <select class="filter-control" id="filterLookingFor"><option value="">All Availability</option></select>
+
+      <div class="near-me-group">
+        <button class="filter-btn" id="nearMeBtn" onclick="toggleNearMe()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          Near Me
+        </button>
+        <select class="radius-select" id="radiusSelect" onchange="onRadiusChange()">
+          <option value="10">10 mi</option>
+          <option value="25" selected>25 mi</option>
+          <option value="50">50 mi</option>
+          <option value="100">100 mi</option>
+        </select>
+      </div>
+
+      <button class="filter-btn" id="sortDistBtn" onclick="toggleSortDistance()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v18M7 3l-4 4M7 3l4 4M17 21V3M17 21l-4-4M17 21l4-4"/></svg>
+        Sort by Distance
+      </button>
+    </div>
+    <div class="filter-summary" id="filterSummary">
+      <span id="filterSummaryText"></span>
+      <button class="clear-btn" onclick="clearFilters()">Clear all</button>
+    </div>
+  </div>
+
+  <div class="results" id="results">
+    <div class="loading">
+      <div class="loading-spinner"></div>
+      <p>Loading instructor profiles…</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec';
+  var PER_PAGE = 24;
+
+  // ── Session state ──
+  var session = { email: null, market: null, studioName: null };
+  var allProfiles = [], filteredProfiles = [], currentPage = 1;
+  var userLat = null, userLng = null, nearMeActive = false, sortByDistance = false;
+  var selectedMarket = null;
+
+  // ── localStorage helpers ──
+  function saveSession() {
+    try { localStorage.setItem('plp_studio_session', JSON.stringify(session)); } catch(e) {}
+  }
+  function loadSession() {
+    try {
+      var s = localStorage.getItem('plp_studio_session');
+      if (s) { session = JSON.parse(s); return true; }
+    } catch(e) {}
+    return false;
+  }
+  function clearSession() {
+    try { localStorage.removeItem('plp_studio_session'); } catch(e) {}
+    session = { email: null, market: null, studioName: null };
+  }
+
+  // ── Screen routing ──
+  function showScreen(name) {
+    ['login','verify','market','directory'].forEach(function(s) {
+      document.getElementById('screen-' + s).style.display = 'none';
+    });
+    document.getElementById('screen-' + name).style.display = 'block';
+    if (name === 'directory') {
+      document.getElementById('screen-directory').querySelector('.header').style.display = 'block';
+    }
+  }
+
+  // ── JSONP helper ──
+  var _cbCount = 0;
+  function jsonp(url, cb) {
+    var name = '_plpcb' + (++_cbCount);
+    window[name] = function(data) {
+      delete window[name];
+      var s = document.getElementById('jsonp-' + name);
+      if (s) s.parentNode.removeChild(s);
+      cb(data);
+    };
+    var script = document.createElement('script');
+    script.id = 'jsonp-' + name;
+    script.src = url + (url.indexOf('?') > -1 ? '&' : '?') + 'callback=' + name;
+    script.onerror = function() {
+      delete window[name];
+      cb({ success: false, error: 'network_error' });
+    };
+    document.body.appendChild(script);
+  }
+
+  // ── Init ──
+  window.addEventListener('DOMContentLoaded', function() {
+    setupCodeInputs();
+    if (loadSession() && session.email && session.market) {
+      startDirectory();
+    } else {
+      showScreen('login');
+    }
+  });
+
+  // ── SCREEN 1: Login ──
+  function sendCode() {
+    var email = document.getElementById('login-email').value.trim().toLowerCase();
+    if (!email || email.indexOf('@') === -1) { showError('login-error', 'Please enter a valid email address.'); return; }
+    hideError('login-error');
+    var btn = document.getElementById('login-btn');
+    btn.disabled = true; btn.textContent = 'Sending…';
+    jsonp(ENDPOINT + '?action=studioSendCode&email=' + encodeURIComponent(email), function(data) {
+      btn.disabled = false; btn.textContent = 'Send verification code';
+      if (data.success) {
+        session.email = email;
+        document.getElementById('verify-subtitle').textContent = 'We sent a 6-digit code to ' + email;
+        showScreen('verify');
+        document.querySelector('.code-digit').focus();
+      } else {
+        var msg = data.error === 'subscription_not_found'
+          ? 'We couldn\'t find an active subscription for that email. Please check your email or contact paige@paigelovespilates.com.'
+          : 'Something went wrong. Please try again.';
+        showError('login-error', msg);
+      }
+    });
+  }
+
+  function resendCode() {
+    if (!session.email) { showScreen('login'); return; }
+    hideError('verify-error');
+    jsonp(ENDPOINT + '?action=studioSendCode&email=' + encodeURIComponent(session.email), function(data) {
+      if (!data.success) showError('verify-error', 'Failed to resend. Please try again.');
+    });
+  }
+
+  // ── SCREEN 2: Verify ──
+  function setupCodeInputs() {
+    var digits = document.querySelectorAll('.code-digit');
+    digits.forEach(function(input, i) {
+      input.addEventListener('input', function(e) {
+        var val = e.target.value.replace(/\D/g, '');
+        e.target.value = val ? val[val.length - 1] : '';
+        if (val && i < digits.length - 1) digits[i + 1].focus();
+        if (getCode().length === 6) verifyCode();
+      });
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Backspace' && !e.target.value && i > 0) digits[i - 1].focus();
+      });
+      input.addEventListener('paste', function(e) {
+        e.preventDefault();
+        var pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+        digits.forEach(function(d, j) { d.value = pasted[j] || ''; });
+        if (pasted.length === 6) verifyCode();
+        else if (pasted.length > 0) digits[Math.min(pasted.length, 5)].focus();
+      });
+    });
+  }
+
+  function getCode() {
+    return Array.from(document.querySelectorAll('.code-digit')).map(function(d) { return d.value; }).join('');
+  }
+
+  function clearCodeInputs() {
+    document.querySelectorAll('.code-digit').forEach(function(d) { d.value = ''; });
+  }
+
+  function verifyCode() {
+    var code = getCode();
+    if (code.length !== 6) { showError('verify-error', 'Please enter the full 6-digit code.'); return; }
+    hideError('verify-error');
+    var btn = document.getElementById('verify-btn');
+    btn.disabled = true; btn.textContent = 'Verifying…';
+    jsonp(ENDPOINT + '?action=studioVerify&email=' + encodeURIComponent(session.email) + '&code=' + encodeURIComponent(code), function(data) {
+      btn.disabled = false; btn.textContent = 'Verify';
+      if (data.success) {
+        session.studioName = data.studioName || '';
+        if (data.firstLogin || !data.market) {
+          loadMarkets();
+          showScreen('market');
+        } else {
+          session.market = data.market;
+          saveSession();
+          startDirectory();
+        }
+      } else {
+        clearCodeInputs();
+        document.querySelector('.code-digit').focus();
+        var msg = data.error === 'invalid_code' ? 'That code is incorrect. Please try again.'
+                : data.error === 'expired_code' ? 'That code has expired. Request a new one below.'
+                : 'Something went wrong. Please try again.';
+        showError('verify-error', msg);
+      }
+    });
+  }
+
+  // ── SCREEN 3: Market selector ──
+  function loadMarkets() {
+    jsonp(ENDPOINT + '?action=studioGetMarkets', function(data) {
+      var grid = document.getElementById('market-grid');
+      if (!data.success || !data.markets) {
+        grid.innerHTML = '<p style="color:#B91C1C;font-size:0.85rem;">Failed to load markets. Please refresh.</p>';
+        return;
+      }
+      grid.innerHTML = data.markets.map(function(m) {
+        return '<button class="market-option" data-key="' + m.key + '" onclick="selectMarket(\'' + m.key + '\', this)">' + m.label + '</button>';
+      }).join('');
+    });
+  }
+
+  function selectMarket(key, el) {
+    document.querySelectorAll('.market-option').forEach(function(b) { b.classList.remove('selected'); });
+    el.classList.add('selected');
+    selectedMarket = key;
+    document.getElementById('market-btn').disabled = false;
+  }
+
+  function setMarket() {
+    if (!selectedMarket) return;
+    hideError('market-error');
+    var btn = document.getElementById('market-btn');
+    btn.disabled = true; btn.textContent = 'Saving…';
+    jsonp(ENDPOINT + '?action=studioSetMarket&email=' + encodeURIComponent(session.email) + '&market=' + encodeURIComponent(selectedMarket), function(data) {
+      btn.disabled = false; btn.textContent = 'Continue';
+      if (data.success) {
+        session.market = data.market;
+        saveSession();
+        startDirectory();
+      } else {
+        showError('market-error', 'Failed to save market. Please try again.');
+      }
+    });
+  }
+
+  // ── SCREEN 4: Directory ──
+  function startDirectory() {
+    showScreen('directory');
+    // Show market badge and studio name in header
+    var badge = document.getElementById('header-market-badge');
+    if (session.market) badge.textContent = session.market.replace(/_/g, ' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+    loadProfiles();
+  }
+
+  function loadProfiles() {
+    document.getElementById('results').innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Loading instructor profiles…</p></div>';
+    jsonp(ENDPOINT + '?action=talentBrowse&market=' + encodeURIComponent(session.market) + '&email=' + encodeURIComponent(session.email), function(data) {
+      if (!data.success) {
+        if (data.error === 'subscription_inactive') {
+          clearSession();
+          showScreen('login');
+          showError('login-error', 'Your subscription has expired. Please renew to continue.');
+          return;
+        }
+        document.getElementById('results').innerHTML = '<div class="empty-state"><p>Failed to load profiles. Please refresh the page.</p></div>';
+        return;
+      }
+      allProfiles = data.profiles || [];
+      populateFilterDropdowns(allProfiles);
+      filteredProfiles = allProfiles.slice();
+      currentPage = 1;
+      renderPage();
+    });
+  }
+
+  function logout() {
+    clearSession();
+    allProfiles = []; filteredProfiles = [];
+    nearMeActive = false; sortByDistance = false; userLat = null; userLng = null;
+    showScreen('login');
+  }
+
+  // ── Filters ──
+  function normalizeExperience(val) {
+    if (!val) return '';
+    return val.replace(/\s*-\s*/g, '-').replace(/\s+/g, ' ').trim();
+  }
+
+  function populateFilterDropdowns(profiles) {
+    var formats = {}, experiences = {}, lookingFors = {};
+    profiles.forEach(function(p) {
+      if (p.formats) p.formats.split(',').forEach(function(f) { var t = f.trim(); if (t) formats[t] = true; });
+      if (p.experience) experiences[normalizeExperience(p.experience)] = true;
+      if (p.lookingFor) lookingFors[p.lookingFor.trim()] = true;
+    });
+    fillSelect('filterFormat', formats, 'All Formats');
+    fillSelect('filterExperience', experiences, 'All Experience');
+    fillSelect('filterLookingFor', lookingFors, 'All Availability');
+  }
+
+  function fillSelect(id, obj, placeholder) {
+    var el = document.getElementById(id);
+    el.innerHTML = '<option value="">' + placeholder + '</option>';
+    Object.keys(obj).sort().forEach(function(key) {
+      var opt = document.createElement('option');
+      opt.value = key; opt.textContent = key; el.appendChild(opt);
+    });
+  }
+
+  var nearMeSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>';
+
+  function toggleNearMe() {
+    var btn = document.getElementById('nearMeBtn');
+    var radiusSel = document.getElementById('radiusSelect');
+    if (nearMeActive) {
+      nearMeActive = false; userLat = null; userLng = null;
+      btn.classList.remove('active'); radiusSel.classList.remove('visible');
+      applyFilters(); return;
+    }
+    if (!navigator.geolocation) { alert('Geolocation is not supported by your browser.'); return; }
+    btn.innerHTML = nearMeSvg + ' Locating…';
+    navigator.geolocation.getCurrentPosition(function(pos) {
+      userLat = pos.coords.latitude; userLng = pos.coords.longitude; nearMeActive = true;
+      btn.classList.add('active'); radiusSel.classList.add('visible');
+      btn.innerHTML = nearMeSvg + ' Near Me';
+      applyFilters();
+    }, function() { btn.innerHTML = nearMeSvg + ' Near Me'; alert('Unable to get your location. Please enable location access.'); });
+  }
+
+  function onRadiusChange() { if (!nearMeActive) { toggleNearMe(); } else { applyFilters(); } }
+
+  function toggleSortDistance() {
+    sortByDistance = !sortByDistance;
+    document.getElementById('sortDistBtn').classList.toggle('active', sortByDistance);
+    if (sortByDistance && userLat === null) {
+      if (!navigator.geolocation) { alert('Geolocation is not supported by your browser.'); sortByDistance = false; document.getElementById('sortDistBtn').classList.remove('active'); return; }
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        userLat = pos.coords.latitude; userLng = pos.coords.longitude; applyFilters();
+      }, function() { sortByDistance = false; document.getElementById('sortDistBtn').classList.remove('active'); alert('Unable to get your location.'); });
+      return;
+    }
+    applyFilters();
+  }
+
+  function haversine(lat1, lng1, lat2, lng2) {
+    var R = 3959; var dLat = (lat2 - lat1) * Math.PI / 180; var dLng = (lng2 - lng1) * Math.PI / 180;
+    var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  }
+
+  function applyFilters() {
+    var format = document.getElementById('filterFormat').value.toLowerCase();
+    var experience = document.getElementById('filterExperience').value.toLowerCase();
+    var lookingFor = document.getElementById('filterLookingFor').value.toLowerCase();
+    var radiusMiles = parseInt(document.getElementById('radiusSelect').value, 10);
+
+    var filtered = allProfiles.filter(function(p) {
+      if (format && (p.formats || '').toLowerCase().indexOf(format) === -1) return false;
+      if (experience && normalizeExperience(p.experience || '').toLowerCase() !== experience) return false;
+      if (lookingFor && (p.lookingFor || '').toLowerCase().indexOf(lookingFor) === -1) return false;
+      return true;
+    });
+
+    if (userLat !== null && userLng !== null) {
+      filtered.forEach(function(p) { p._distance = (p.lat && p.lng) ? haversine(userLat, userLng, p.lat, p.lng) : 99999; });
+      if (nearMeActive) filtered = filtered.filter(function(p) { return p._distance <= radiusMiles; });
+      if (sortByDistance) filtered.sort(function(a, b) { return (a._distance || 99999) - (b._distance || 99999); });
+    }
+
+    var activeFilters = [];
+    if (format) activeFilters.push(format);
+    if (experience) activeFilters.push(experience);
+    if (lookingFor) activeFilters.push(lookingFor);
+    if (nearMeActive) activeFilters.push('within ' + radiusMiles + ' mi');
+    if (sortByDistance) activeFilters.push('sorted by distance');
+
+    var summary = document.getElementById('filterSummary');
+    if (activeFilters.length > 0) {
+      document.getElementById('filterSummaryText').textContent = filtered.length + ' instructor' + (filtered.length !== 1 ? 's' : '') + ' matching: ' + activeFilters.join(', ');
+      summary.style.display = 'flex';
+    } else { summary.style.display = 'none'; }
+
+    filteredProfiles = filtered;
+    currentPage = 1;
+    renderPage();
+  }
+
+  function clearFilters() {
+    document.getElementById('filterFormat').value = '';
+    document.getElementById('filterExperience').value = '';
+    document.getElementById('filterLookingFor').value = '';
+    document.getElementById('radiusSelect').value = '25';
+    nearMeActive = false; sortByDistance = false; userLat = null; userLng = null;
+    document.getElementById('nearMeBtn').classList.remove('active');
+    document.getElementById('radiusSelect').classList.remove('visible');
+    document.getElementById('sortDistBtn').classList.remove('active');
+    document.getElementById('filterSummary').style.display = 'none';
+    filteredProfiles = allProfiles.slice();
+    currentPage = 1;
+    renderPage();
+  }
+
+  // ── Render ──
+  function buildDisplayName(p) {
+    if (p.displayName) return p.displayName;
+    var loc = [p.city, p.state].filter(Boolean).join(', ');
+    return loc ? 'Instructor · ' + loc : 'Pilates Instructor';
+  }
+
+  window.toggleNotes = function(cardId) {
+    var full = document.getElementById('full-' + cardId);
+    var short = document.getElementById('short-' + cardId);
+    if (!full || !short) return;
+    if (full.style.display === 'none') { full.style.display = 'inline'; short.style.display = 'none'; }
+    else { full.style.display = 'none'; short.style.display = 'inline'; }
+  };
+
+  window.goToPage = function(newPage) {
+    var totalPages = Math.max(1, Math.ceil(filteredProfiles.length / PER_PAGE));
+    if (newPage < 1 || newPage > totalPages) return;
+    currentPage = newPage;
+    renderPage();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  var mailSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4l-10 8L2 4"/></svg>';
+
+  function renderPage() {
+    var container = document.getElementById('results');
+    var total = filteredProfiles.length;
+
+    if (total === 0) {
+      container.innerHTML = '<div class="empty-state"><p>No instructors match your filters. Try broadening your search.</p></div>';
+      return;
+    }
+
+    var totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+    if (currentPage > totalPages) currentPage = totalPages;
+    var startIdx = (currentPage - 1) * PER_PAGE;
+    var endIdx = Math.min(startIdx + PER_PAGE, total);
+    var pageSlice = filteredProfiles.slice(startIdx, endIdx);
+
+    var html = '<div class="results-count">' + total + ' instructor' + (total !== 1 ? 's' : '') + ' · showing ' + (startIdx + 1) + '–' + endIdx + '</div>';
+    html += '<div class="card-grid">';
+
+    pageSlice.forEach(function(p, sliceIdx) {
+      var idx = startIdx + sliceIdx;
+      var name = buildDisplayName(p);
+      var hasRealName = !!p.displayName;
+
+      html += '<div class="card">';
+      html += '<div class="card-header"><div>';
+      html += '<div class="card-name">' + esc(name) + '</div>';
+      if (hasRealName) { var loc = [p.city, p.state].filter(Boolean).join(', '); if (loc) html += '<div class="card-location">' + esc(loc) + '</div>'; }
+      if (p._distance !== undefined && p._distance < 99999) html += '<div class="card-distance">' + Math.round(p._distance) + ' mi away</div>';
+      if (p.experience) html += '<span class="card-experience card-experience-mobile">' + esc(normalizeExperience(p.experience)) + '</span>';
+      html += '</div>';
+      if (p.experience) html += '<span class="card-experience card-experience-desktop">' + esc(normalizeExperience(p.experience)) + '</span>';
+      html += '</div>';
+
+      if (p.formats) {
+        var formatTags = [];
+        p.formats.split(',').forEach(function(f) { var t = f.trim(); if (t) formatTags.push('<span class="tag">' + esc(t) + '</span>'); });
+        if (formatTags.length > 0) html += '<div class="card-tags">' + formatTags.join('') + '</div>';
+      }
+
+      if (p.lookingFor) html += '<div class="card-tags"><span class="tag" style="background:#EDF5EF;color:#4A7C59;">' + esc(p.lookingFor) + '</span></div>';
+
+      if (p.notes) {
+        var needsExpand = p.notes.length > 140;
+        html += '<div class="card-notes">';
+        if (needsExpand) {
+          var truncated = p.notes.substring(0, 140);
+          var lastSpace = truncated.lastIndexOf(' ');
+          if (lastSpace > 100) truncated = truncated.substring(0, lastSpace);
+          html += '<span id="short-' + idx + '">' + esc(truncated) + '… <span class="read-more-toggle" onclick="toggleNotes(' + idx + ')">Read more</span></span>';
+          html += '<span id="full-' + idx + '" style="display:none;">' + esc(p.notes) + ' <span class="read-more-toggle" onclick="toggleNotes(' + idx + ')">Read less</span></span>';
+        } else { html += esc(p.notes); }
+        html += '</div>';
+      }
+
+      if (p.certs) {
+        var certsFormatted = p.certs.split(',').map(function(c) { return c.trim(); }).join(', ');
+        html += '<div class="card-certs"><span class="card-certs-label">Certifications:</span> ' + esc(certsFormatted) + '</div>';
+      }
+
+      html += '<div class="card-footer">';
+      if (p.instagram) {
+        html += '<a class="card-social" href="https://instagram.com/' + encodeURIComponent(p.instagram) + '" target="_blank" rel="noopener">';
+        html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>';
+        html += '@' + esc(p.instagram) + '</a>';
+      }
+      if (p.tiktok) {
+        html += '<a class="card-social" href="https://tiktok.com/@' + encodeURIComponent(p.tiktok) + '" target="_blank" rel="noopener">';
+        html += '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V9.48a8.1 8.1 0 004.69 1.49v-3.4a4.85 4.85 0 01-.93.12 4.83 4.83 0 01-3.77z"/></svg>';
+        html += '@' + esc(p.tiktok) + '</a>';
+      }
+      if (p.email) {
+        html += '<a class="card-contact" href="mailto:' + encodeURIComponent(p.email) + '?subject=' + encodeURIComponent('Reaching out from Paige Loves Pilates Instructor Network') + '" target="_top">';
+        html += mailSvg + ' Contact</a>';
+      }
+      html += '</div></div>';
+    });
+
+    html += '</div>';
+
+    if (totalPages > 1) {
+      html += '<div class="pagination">';
+      html += '<button class="page-btn" onclick="goToPage(' + (currentPage - 1) + ')"' + (currentPage === 1 ? ' disabled' : '') + '>← Previous</button>';
+      html += '<span class="page-indicator">Page ' + currentPage + ' of ' + totalPages + '</span>';
+      html += '<button class="page-btn" onclick="goToPage(' + (currentPage + 1) + ')"' + (currentPage === totalPages ? ' disabled' : '') + '>Next →</button>';
+      html += '</div>';
+    }
+
+    container.innerHTML = html;
+  }
+
+  // ── Utilities ──
+  function esc(str) { if (!str) return ''; var div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
+  function showError(id, msg) { var el = document.getElementById(id); el.textContent = msg; el.style.display = 'block'; }
+  function hideError(id) { var el = document.getElementById(id); el.style.display = 'none'; }
+
+  // ── Filter event listeners ──
+  document.querySelectorAll('select.filter-control').forEach(function(sel) { sel.addEventListener('change', applyFilters); });
+
+  // ── Enter key on login ──
+  document.getElementById('login-email').addEventListener('keydown', function(e) { if (e.key === 'Enter') sendCode(); });
+</script>
+</body>
+</html>
