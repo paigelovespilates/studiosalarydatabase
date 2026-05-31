@@ -23,8 +23,7 @@
       --green-bg: #EDF5EF;
       --radius: 8px;
       --shadow: 0 1px 3px rgba(55,57,48,0.06), 0 4px 12px rgba(55,57,48,0.04);
-      --header-h: 110px;
-      --filters-h: 56px;
+      --modal-shadow: 0 -4px 32px rgba(55,57,48,0.12);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -54,406 +53,214 @@
       letter-spacing: -0.02em;
       line-height: 1;
     }
-    .header-left p {
-      color: #B0AFA8;
-      font-size: 0.8rem;
-      margin-top: 0.2rem;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
+    .header-left p { color: #B0AFA8; font-size: 0.8rem; margin-top: 0.2rem; }
+    .header-right { display: flex; align-items: center; gap: 0.75rem; }
     .header-market {
-      font-size: 0.72rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #B0AFA8;
-      background: rgba(255,255,255,0.08);
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
+      font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+      color: #B0AFA8; background: rgba(255,255,255,0.08); padding: 0.25rem 0.75rem; border-radius: 20px;
     }
     .logout-btn {
-      background: none;
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #B0AFA8;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.8rem;
-      padding: 0.3rem 0.85rem;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: border-color 0.2s, color 0.2s;
-      white-space: nowrap;
+      background: none; border: 1px solid rgba(255,255,255,0.2); color: #B0AFA8;
+      font-family: 'DM Sans', sans-serif; font-size: 0.8rem; padding: 0.3rem 0.85rem;
+      border-radius: 20px; cursor: pointer; transition: border-color 0.2s, color 0.2s; white-space: nowrap;
     }
     .logout-btn:hover { border-color: rgba(255,255,255,0.4); color: #EDEBE4; }
 
     /* ── AUTH SCREENS ── */
     .auth-wrap {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1.5rem;
-      background: var(--bg);
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 2rem 1.5rem; background: var(--bg);
     }
     .auth-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 2.5rem 2rem;
-      width: 100%;
-      max-width: 440px;
-      box-shadow: var(--shadow);
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 2.5rem 2rem; width: 100%; max-width: 440px; box-shadow: var(--shadow);
     }
-    .auth-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 0.25rem;
-      letter-spacing: -0.02em;
-    }
-    .auth-subtitle {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      margin-bottom: 2rem;
-    }
-    .auth-label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-secondary);
-      margin-bottom: 0.4rem;
-    }
+    .auth-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem; letter-spacing: -0.02em; }
+    .auth-subtitle { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 2rem; }
+    .auth-label { display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 0.4rem; }
     .auth-input {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.95rem;
-      color: var(--text);
-      background: var(--bg);
-      transition: border-color 0.2s;
-      margin-bottom: 1.25rem;
+      width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--text); background: var(--bg);
+      transition: border-color 0.2s; margin-bottom: 1.25rem;
     }
     .auth-input:focus { outline: none; border-color: var(--accent); }
     .auth-input::placeholder { color: var(--text-secondary); opacity: 0.6; }
     .auth-btn {
-      width: 100%;
-      padding: 0.85rem;
-      background: var(--accent);
-      color: #EDEBE4;
-      border: none;
-      border-radius: var(--radius);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.2s;
+      width: 100%; padding: 0.85rem; background: var(--accent); color: #EDEBE4; border: none;
+      border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+      font-weight: 500; cursor: pointer; transition: background 0.2s;
     }
     .auth-btn:hover { background: var(--accent-hover); }
     .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .auth-error {
-      margin-top: 1rem;
-      padding: 0.75rem 1rem;
-      background: #FEF2F2;
-      border: 1px solid #FECACA;
-      border-radius: var(--radius);
-      font-size: 0.85rem;
-      color: #B91C1C;
-      display: none;
+      margin-top: 1rem; padding: 0.75rem 1rem; background: #FEF2F2; border: 1px solid #FECACA;
+      border-radius: var(--radius); font-size: 0.85rem; color: #B91C1C; display: none;
     }
-    .auth-hint {
-      margin-top: 1rem;
-      font-size: 0.82rem;
-      color: var(--text-secondary);
-      text-align: center;
-    }
+    .auth-hint { margin-top: 1rem; font-size: 0.82rem; color: var(--text-secondary); text-align: center; }
     .auth-hint a { color: var(--accent); cursor: pointer; text-decoration: underline; }
     .code-inputs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
     .code-digit {
-      flex: 1;
-      padding: 0.85rem 0;
-      text-align: center;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: var(--text);
-      background: var(--bg);
-      transition: border-color 0.2s;
-      width: 100%;
-      max-width: 52px;
+      flex: 1; padding: 0.85rem 0; text-align: center; border: 1px solid var(--border);
+      border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 1.4rem;
+      font-weight: 600; color: var(--text); background: var(--bg); transition: border-color 0.2s;
+      width: 100%; max-width: 52px;
     }
     .code-digit:focus { outline: none; border-color: var(--accent); }
 
     /* ── MARKET SELECTOR ── */
-    .market-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.6rem;
-      margin-bottom: 1.25rem;
-    }
+    .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1.25rem; }
     .market-option {
-      padding: 0.85rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--bg);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.875rem;
-      color: var(--text);
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      text-align: left;
+      padding: 0.85rem 1rem; border: 1px solid var(--border); border-radius: var(--radius);
+      background: var(--bg); font-family: 'DM Sans', sans-serif; font-size: 0.875rem; color: var(--text);
+      cursor: pointer; transition: border-color 0.2s, background 0.2s; text-align: left;
     }
     .market-option:hover { border-color: #B0AFA8; background: var(--accent-light); }
     .market-option.selected { border-color: var(--accent); background: var(--accent); color: #EDEBE4; }
 
     /* ── DIRECTORY LAYOUT ── */
-    #screen-directory { display: none; flex-direction: column; height: 100vh; }
+    #screen-directory { display: none; flex-direction: column; min-height: 100vh; }
 
+    /* ── FILTERS — single scrollable row ── */
     .dir-filters {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
-      padding: 0.65rem 1rem;
+      padding: 0.6rem 1rem;
       display: flex;
-      flex-wrap: wrap;
       gap: 0.5rem;
       align-items: center;
+      overflow-x: auto;
       flex-shrink: 0;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
     }
+    .dir-filters::-webkit-scrollbar { display: none; }
     .filter-control {
-      padding: 0.45rem 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--bg);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.825rem;
-      color: var(--text);
-      cursor: pointer;
-      transition: border-color 0.2s;
-      appearance: none;
-      -webkit-appearance: none;
+      padding: 0.45rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius);
+      background: var(--bg); font-family: 'DM Sans', sans-serif; font-size: 0.825rem; color: var(--text);
+      cursor: pointer; transition: border-color 0.2s; appearance: none; -webkit-appearance: none;
+      white-space: nowrap; flex-shrink: 0;
     }
     .filter-control:focus { outline: none; border-color: var(--accent); }
     select.filter-control {
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B6A63' d='M6 8L1.5 3.5h9z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 0.6rem center;
-      padding-right: 1.75rem;
-      min-width: 130px;
+      background-repeat: no-repeat; background-position: right 0.6rem center;
+      padding-right: 1.75rem; min-width: 120px;
     }
     .filter-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.45rem 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--bg);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.825rem;
-      color: var(--text);
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.45rem 0.75rem;
+      border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg);
+      font-family: 'DM Sans', sans-serif; font-size: 0.825rem; color: var(--text);
+      cursor: pointer; transition: border-color 0.2s, background 0.2s; white-space: nowrap; flex-shrink: 0;
     }
     .filter-btn:hover { border-color: #B0AFA8; }
     .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #EDEBE4; }
     .filter-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
-    .near-me-group { display: inline-flex; align-items: center; }
+    .near-me-group { display: inline-flex; align-items: center; flex-shrink: 0; }
     .near-me-group .filter-btn.active { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: none; }
     .radius-select {
-      padding: 0.45rem 1.6rem 0.45rem 0.4rem;
-      border: 1px solid var(--accent);
-      border-radius: 0 var(--radius) var(--radius) 0;
-      background: var(--accent);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.825rem;
-      color: #EDEBE4;
-      cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
+      padding: 0.45rem 1.6rem 0.45rem 0.4rem; border: 1px solid var(--accent);
+      border-radius: 0 var(--radius) var(--radius) 0; background: var(--accent);
+      font-family: 'DM Sans', sans-serif; font-size: 0.825rem; color: #EDEBE4;
+      cursor: pointer; appearance: none; -webkit-appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23EDEBE4' d='M6 8L1.5 3.5h9z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 0.45rem center;
-      display: none;
+      background-repeat: no-repeat; background-position: right 0.45rem center; display: none;
     }
     .radius-select:focus { outline: none; }
     .radius-select.visible { display: block; }
-    .filter-count {
-      margin-left: auto;
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      white-space: nowrap;
-    }
+    .filter-count { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; flex-shrink: 0; margin-left: auto; padding-left: 0.5rem; }
 
-    /* ── TWO PANEL ── */
-    .dir-body {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
-
-    /* List panel */
-    .list-panel {
-      width: 300px;
-      flex-shrink: 0;
-      border-right: 1px solid var(--border);
-      background: var(--surface);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    .list-scroll {
-      flex: 1;
-      overflow-y: auto;
-    }
+    /* ── LIST ── */
+    .list-wrap { flex: 1; }
     .list-item {
-      padding: 0.85rem 1rem;
+      padding: 0.9rem 1.25rem;
       border-bottom: 1px solid var(--border);
+      background: var(--surface);
       cursor: pointer;
       transition: background 0.15s;
-      border-left: 2px solid transparent;
     }
     .list-item:hover { background: #F7F6F2; }
-    .list-item.active {
-      border-left-color: var(--accent);
-      background: var(--surface);
-    }
-    .list-item.active .list-location { font-weight: 600; }
-    .list-location {
-      font-size: 0.875rem;
-      color: var(--text);
-      margin-bottom: 0.15rem;
-    }
-    .list-formats {
-      font-size: 0.775rem;
-      color: var(--text-secondary);
-      margin-bottom: 0.15rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .list-meta {
-      font-size: 0.725rem;
-      color: var(--text-secondary);
-    }
-    .list-empty {
-      padding: 2rem 1rem;
-      text-align: center;
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-    }
-    .list-loading {
-      padding: 2rem 1rem;
-      text-align: center;
-      color: var(--text-secondary);
-    }
+    .list-location { font-size: 0.9rem; font-weight: 500; color: var(--text); margin-bottom: 0.15rem; }
+    .list-formats { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .list-meta { font-size: 0.75rem; color: var(--text-secondary); }
+    .list-empty { padding: 3rem 1.5rem; text-align: center; font-size: 0.875rem; color: var(--text-secondary); }
+    .list-loading { padding: 3rem 1rem; text-align: center; color: var(--text-secondary); }
 
-    /* Detail panel */
-    .detail-panel {
-      flex: 1;
+    /* ── MODAL / BOTTOM SHEET ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(55,57,48,0.4);
+      z-index: 100;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal-sheet {
+      background: var(--surface);
+      border-radius: 16px 16px 0 0;
+      width: 100%;
+      max-width: 640px;
+      max-height: 88vh;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-      background: var(--bg);
+      box-shadow: var(--modal-shadow);
+      animation: slideUp 0.25s ease;
     }
-    .detail-empty {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-secondary);
-      font-size: 0.875rem;
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+    .modal-handle {
+      width: 36px; height: 4px; background: var(--border); border-radius: 4px;
+      margin: 0.75rem auto 0;
+      flex-shrink: 0;
     }
-    .detail-content {
-      flex: 1;
-      overflow-y: auto;
-      display: none;
-    }
-    .detail-content.visible { display: flex; flex-direction: column; }
-    .detail-header {
-      background: var(--surface);
+    .modal-header {
+      padding: 1rem 1.25rem 0.75rem;
       border-bottom: 1px solid var(--border);
-      padding: 1.25rem 1.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-shrink: 0;
     }
-    .detail-name {
+    .modal-name {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.6rem;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: -0.02em;
-      line-height: 1.1;
+      font-size: 1.5rem; font-weight: 600; color: var(--text); letter-spacing: -0.02em; line-height: 1.1;
     }
-    .detail-sub {
-      font-size: 0.825rem;
-      color: var(--text-secondary);
-      margin-top: 0.25rem;
+    .modal-sub { font-size: 0.825rem; color: var(--text-secondary); margin-top: 0.2rem; }
+    .modal-close {
+      background: none; border: none; cursor: pointer; color: var(--text-secondary);
+      padding: 0.25rem; flex-shrink: 0; margin-left: 1rem; margin-top: 0.1rem;
     }
-    .detail-body {
-      padding: 1.25rem 1.5rem;
-      flex: 1;
-    }
-    .detail-section {
-      margin-bottom: 1.25rem;
-    }
-    .detail-section-label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-secondary);
-      margin-bottom: 0.4rem;
+    .modal-close svg { width: 18px; height: 18px; display: block; }
+    .modal-body { padding: 1rem 1.25rem; overflow-y: auto; flex: 1; }
+    .modal-section { margin-bottom: 1.1rem; }
+    .modal-section-label {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--text-secondary); margin-bottom: 0.35rem;
     }
     .tag { font-size: 0.75rem; padding: 0.2rem 0.55rem; border-radius: 20px; background: var(--tag-bg); color: var(--tag-text); display: inline-block; margin: 0.15rem 0.15rem 0.15rem 0; }
     .tag-green { background: var(--green-bg); color: var(--green); }
-    .detail-text {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      line-height: 1.55;
-    }
-    .detail-footer {
-      background: var(--surface);
+    .modal-text { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.55; }
+    .modal-footer {
+      padding: 0.85rem 1.25rem;
       border-top: 1px solid var(--border);
-      padding: 1rem 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
+      display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+      flex-shrink: 0;
     }
-    .detail-social {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      font-size: 0.825rem;
-      color: var(--text-secondary);
-      text-decoration: none;
-      transition: color 0.2s;
+    .modal-social {
+      display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.825rem;
+      color: var(--text-secondary); text-decoration: none; transition: color 0.2s;
     }
-    .detail-social:hover { color: var(--accent); }
-    .detail-social svg { width: 14px; height: 14px; }
-    .detail-contact {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-size: 0.875rem;
-      color: #EDEBE4;
-      background: #5C5E52;
-      text-decoration: none;
-      padding: 0.55rem 1.1rem;
-      border-radius: 20px;
-      transition: background 0.2s;
-      margin-left: auto;
+    .modal-social:hover { color: var(--accent); }
+    .modal-social svg { width: 14px; height: 14px; }
+    .modal-contact {
+      display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.875rem;
+      color: #EDEBE4; background: #5C5E52; text-decoration: none;
+      padding: 0.55rem 1.1rem; border-radius: 20px; transition: background 0.2s; margin-left: auto;
     }
-    .detail-contact:hover { background: var(--accent-hover); }
-    .detail-contact svg { width: 14px; height: 14px; }
+    .modal-contact:hover { background: var(--accent-hover); }
+    .modal-contact svg { width: 14px; height: 14px; }
 
     /* spinner */
     .loading-spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 0.75rem; }
@@ -462,63 +269,24 @@
     /* ── SCREEN VISIBILITY ── */
     #screen-login, #screen-verify, #screen-market { display: none; }
 
-    /* ── MOBILE ── */
-    @media (max-width: 768px) {
-      .auth-card { padding: 2rem 1.25rem; }
-      .market-grid { grid-template-columns: 1fr; }
+    /* ── DESKTOP modal centered ── */
+    @media (min-width: 640px) {
+      .modal-overlay { align-items: center; }
+      .modal-sheet { border-radius: 12px; max-height: 80vh; margin: 1rem; }
+    }
 
-      /* header compact */
+    /* ── MOBILE ── */
+    @media (max-width: 600px) {
       .header { padding: 0.85rem 1rem; }
       .header-left p { display: none; }
-
-      /* filters stacked */
-      .dir-filters {
-        padding: 0.5rem 0.75rem;
-        gap: 0.4rem;
-        overflow-x: auto;
-        flex-wrap: nowrap;
-      }
-      select.filter-control { min-width: 110px; }
-      .filter-count { display: none; }
-
-      /* full-width list, hidden detail by default */
-      .dir-body { position: relative; }
-      .list-panel { width: 100%; border-right: none; }
-      .detail-panel {
-        position: absolute;
-        inset: 0;
-        transform: translateX(100%);
-        transition: transform 0.25s ease;
-        z-index: 10;
-        background: var(--bg);
-      }
-      .detail-panel.mobile-open { transform: translateX(0); }
-
-      /* mobile back button */
-      .mobile-back {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.75rem 1rem;
-        background: var(--surface);
-        border-bottom: 1px solid var(--border);
-        cursor: pointer;
-        font-size: 0.875rem;
-        color: var(--text-secondary);
-        flex-shrink: 0;
-      }
-      .mobile-back svg { width: 16px; height: 16px; }
-    }
-    @media (min-width: 769px) {
-      .mobile-back { display: none; }
-      #screen-directory { display: none; }
-      #screen-directory.visible { display: flex !important; }
+      .auth-card { padding: 2rem 1.25rem; }
+      .market-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════ SCREEN 1: LOGIN ══════════════════════════ -->
+<!-- ══════════════ SCREEN 1: LOGIN ══════════════ -->
 <div id="screen-login">
   <div class="auth-wrap">
     <div class="auth-card">
@@ -532,7 +300,7 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════ SCREEN 2: VERIFY ════════════════════════ -->
+<!-- ══════════════ SCREEN 2: VERIFY ══════════════ -->
 <div id="screen-verify">
   <div class="auth-wrap">
     <div class="auth-card">
@@ -554,7 +322,7 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════ SCREEN 3: MARKET ════════════════════════ -->
+<!-- ══════════════ SCREEN 3: MARKET ══════════════ -->
 <div id="screen-market">
   <div class="auth-wrap">
     <div class="auth-card">
@@ -569,7 +337,7 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════ SCREEN 4: DIRECTORY ═════════════════════ -->
+<!-- ══════════════ SCREEN 4: DIRECTORY ══════════════ -->
 <div id="screen-directory">
 
   <div class="header">
@@ -606,25 +374,27 @@
     <span class="filter-count" id="filterCount"></span>
   </div>
 
-  <div class="dir-body">
+  <div class="list-wrap" id="listWrap">
+    <div class="list-loading"><div class="loading-spinner"></div><p style="font-size:0.85rem;">Loading…</p></div>
+  </div>
 
-    <div class="list-panel">
-      <div class="list-scroll" id="listScroll">
-        <div class="list-loading"><div class="loading-spinner"></div><p style="font-size:0.85rem;">Loading…</p></div>
+</div>
+
+<!-- ══════════════ MODAL ══════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal-sheet" id="modalSheet">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div>
+        <div class="modal-name" id="modalName"></div>
+        <div class="modal-sub" id="modalSub"></div>
       </div>
+      <button class="modal-close" onclick="closeModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
     </div>
-
-    <div class="detail-panel" id="detailPanel">
-      <div class="mobile-back" onclick="closeMobileDetail()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-        Back to list
-      </div>
-      <div class="detail-empty" id="detailEmpty">
-        <span>Select an instructor to view their profile</span>
-      </div>
-      <div class="detail-content" id="detailContent"></div>
-    </div>
-
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer" id="modalFooter"></div>
   </div>
 </div>
 
@@ -633,7 +403,6 @@
 
   var session = { email: null, market: null, studioName: null };
   var allProfiles = [], filteredProfiles = [];
-  var selectedIdx = -1;
   var userLat = null, userLng = null, nearMeActive = false, sortByDistance = false;
   var selectedMarket = null;
 
@@ -644,18 +413,11 @@
 
   // ── Screen routing ──
   function showScreen(name) {
-    ['login','verify','market'].forEach(function(s) {
-      document.getElementById('screen-' + s).style.display = 'none';
-    });
+    ['login','verify','market'].forEach(function(s) { document.getElementById('screen-' + s).style.display = 'none'; });
     var dir = document.getElementById('screen-directory');
     dir.style.display = 'none';
-    dir.classList.remove('visible');
-    if (name === 'directory') {
-      dir.style.display = 'flex';
-      dir.classList.add('visible');
-    } else {
-      document.getElementById('screen-' + name).style.display = 'block';
-    }
+    if (name === 'directory') { dir.style.display = 'flex'; }
+    else { document.getElementById('screen-' + name).style.display = 'block'; }
   }
 
   // ── JSONP ──
@@ -677,21 +439,20 @@
     else { showScreen('login'); }
   });
 
-  // ── Login ──
+  // ── LOGIN: show verify screen immediately, fire API in background ──
   function sendCode() {
     var email = document.getElementById('login-email').value.trim().toLowerCase();
     if (!email || email.indexOf('@') === -1) { showError('login-error', 'Please enter a valid email address.'); return; }
     hideError('login-error');
-    var btn = document.getElementById('login-btn');
-    btn.disabled = true; btn.textContent = 'Sending…';
+    session.email = email;
+    document.getElementById('verify-subtitle').textContent = 'We sent a 6-digit code to ' + email;
+    showScreen('verify');
+    document.querySelector('.code-digit').focus();
+    // Fire API in background — if subscription not found, bounce back with error
     jsonp(ENDPOINT + '?action=studioSendCode&email=' + encodeURIComponent(email), function(data) {
-      btn.disabled = false; btn.textContent = 'Send verification code';
-      if (data.success) {
-        session.email = email;
-        document.getElementById('verify-subtitle').textContent = 'We sent a 6-digit code to ' + email;
-        showScreen('verify');
-        document.querySelector('.code-digit').focus();
-      } else {
+      if (!data.success) {
+        session.email = null;
+        showScreen('login');
         var msg = data.error === 'subscription_not_found'
           ? 'We couldn\'t find an active subscription for that email. Please check your email or contact paige@paigelovespilates.com.'
           : 'Something went wrong. Please try again.';
@@ -708,7 +469,7 @@
     });
   }
 
-  // ── Verify ──
+  // ── VERIFY ──
   function setupCodeInputs() {
     var digits = document.querySelectorAll('.code-digit');
     digits.forEach(function(input, i) {
@@ -754,7 +515,7 @@
     });
   }
 
-  // ── Market ──
+  // ── MARKET ──
   function loadMarkets() {
     jsonp(ENDPOINT + '?action=studioGetMarkets', function(data) {
       var grid = document.getElementById('market-grid');
@@ -783,7 +544,7 @@
     });
   }
 
-  // ── Directory ──
+  // ── DIRECTORY ──
   function startDirectory() {
     showScreen('directory');
     var badge = document.getElementById('header-market-badge');
@@ -792,11 +553,11 @@
   }
 
   function loadProfiles() {
-    document.getElementById('listScroll').innerHTML = '<div class="list-loading"><div class="loading-spinner"></div><p style="font-size:0.85rem;">Loading…</p></div>';
+    document.getElementById('listWrap').innerHTML = '<div class="list-loading"><div class="loading-spinner"></div><p style="font-size:0.85rem;">Loading…</p></div>';
     jsonp(ENDPOINT + '?action=talentBrowse&market=' + encodeURIComponent(session.market) + '&email=' + encodeURIComponent(session.email), function(data) {
       if (!data.success) {
         if (data.error === 'subscription_inactive') { clearSession(); showScreen('login'); showError('login-error', 'Your subscription has expired. Please renew to continue.'); return; }
-        document.getElementById('listScroll').innerHTML = '<div class="list-empty">Failed to load profiles. Please refresh.</div>';
+        document.getElementById('listWrap').innerHTML = '<div class="list-empty">Failed to load profiles. Please refresh.</div>';
         return;
       }
       allProfiles = data.profiles || [];
@@ -807,12 +568,12 @@
   }
 
   function logout() {
-    clearSession(); allProfiles = []; filteredProfiles = []; selectedIdx = -1;
+    clearSession(); allProfiles = []; filteredProfiles = [];
     nearMeActive = false; sortByDistance = false; userLat = null; userLng = null;
     showScreen('login');
   }
 
-  // ── Filters ──
+  // ── FILTERS ──
   function normalizeExperience(val) { if (!val) return ''; return val.replace(/\s*-\s*/g, '-').replace(/\s+/g, ' ').trim(); }
 
   function populateFilterDropdowns(profiles) {
@@ -882,23 +643,21 @@
       if (sortByDistance) filtered.sort(function(a, b) { return (a._distance||99999)-(b._distance||99999); });
     }
     filteredProfiles = filtered;
-    selectedIdx = -1;
-    hideDetailContent();
     renderList();
   }
 
   document.querySelectorAll('select.filter-control').forEach(function(sel) { sel.addEventListener('change', applyFilters); });
 
-  // ── Render list ──
+  // ── RENDER LIST ──
   function buildLocationLabel(p) {
     if (p.displayName) return p.displayName;
     return [p.city, p.state].filter(Boolean).join(', ') || 'Instructor';
   }
 
   function renderList() {
-    var container = document.getElementById('listScroll');
-    var count = document.getElementById('filterCount');
-    count.textContent = filteredProfiles.length + ' instructor' + (filteredProfiles.length !== 1 ? 's' : '');
+    var container = document.getElementById('listWrap');
+    var countEl = document.getElementById('filterCount');
+    countEl.textContent = filteredProfiles.length + ' instructor' + (filteredProfiles.length !== 1 ? 's' : '');
 
     if (filteredProfiles.length === 0) {
       container.innerHTML = '<div class="list-empty">No instructors match your filters.</div>';
@@ -914,7 +673,7 @@
       var meta = [];
       if (p._distance !== undefined && p._distance < 99999) meta.push(Math.round(p._distance) + ' mi');
       if (p.experience) meta.push(normalizeExperience(p.experience));
-      html += '<div class="list-item' + (i === selectedIdx ? ' active' : '') + '" onclick="selectProfile(' + i + ')">';
+      html += '<div class="list-item" onclick="openModal(' + i + ')">';
       html += '<div class="list-location">' + esc(loc) + '</div>';
       if (subLoc) html += '<div class="list-formats">' + esc(subLoc) + '</div>';
       if (formats) html += '<div class="list-formats">' + esc(formats) + '</div>';
@@ -924,81 +683,65 @@
     container.innerHTML = html;
   }
 
-  // ── Select profile ──
-  function selectProfile(idx) {
-    selectedIdx = idx;
-    renderList();
-    renderDetail(filteredProfiles[idx]);
-    // mobile: open detail panel
-    document.getElementById('detailPanel').classList.add('mobile-open');
-  }
-
-  function closeMobileDetail() {
-    document.getElementById('detailPanel').classList.remove('mobile-open');
-  }
-
-  function hideDetailContent() {
-    document.getElementById('detailEmpty').style.display = 'flex';
-    var dc = document.getElementById('detailContent');
-    dc.classList.remove('visible');
-    dc.innerHTML = '';
-  }
-
+  // ── MODAL ──
   var mailSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4l-10 8L2 4"/></svg>';
   var igSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>';
   var tkSvg = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V9.48a8.1 8.1 0 004.69 1.49v-3.4a4.85 4.85 0 01-.93.12 4.83 4.83 0 01-3.77z"/></svg>';
 
-  function renderDetail(p) {
-    document.getElementById('detailEmpty').style.display = 'none';
-    var dc = document.getElementById('detailContent');
-    dc.classList.add('visible');
-
+  function openModal(idx) {
+    var p = filteredProfiles[idx];
     var nameLine = p.displayName || ([p.city, p.state].filter(Boolean).join(', ') || 'Instructor');
     var subParts = [];
     if (p.displayName && (p.city || p.state)) subParts.push([p.city, p.state].filter(Boolean).join(', '));
     if (p._distance !== undefined && p._distance < 99999) subParts.push(Math.round(p._distance) + ' mi away');
     if (p.experience) subParts.push(normalizeExperience(p.experience));
 
-    var html = '<div class="detail-header">';
-    html += '<div class="detail-name">' + esc(nameLine) + '</div>';
-    if (subParts.length) html += '<div class="detail-sub">' + esc(subParts.join(' · ')) + '</div>';
-    html += '</div>';
-    html += '<div class="detail-body">';
+    document.getElementById('modalName').textContent = nameLine;
+    document.getElementById('modalSub').textContent = subParts.join(' · ');
 
+    var body = '';
     if (p.formats) {
-      html += '<div class="detail-section"><div class="detail-section-label">Formats</div><div>';
-      p.formats.split(',').forEach(function(f) { var t = f.trim(); if (t) html += '<span class="tag">' + esc(t) + '</span>'; });
-      html += '</div></div>';
+      body += '<div class="modal-section"><div class="modal-section-label">Formats</div><div>';
+      p.formats.split(',').forEach(function(f) { var t = f.trim(); if (t) body += '<span class="tag">' + esc(t) + '</span>'; });
+      body += '</div></div>';
     }
-
     if (p.lookingFor) {
-      html += '<div class="detail-section"><div class="detail-section-label">Availability</div>';
-      html += '<span class="tag tag-green">' + esc(p.lookingFor) + '</span></div>';
+      body += '<div class="modal-section"><div class="modal-section-label">Availability</div>';
+      body += '<span class="tag tag-green">' + esc(p.lookingFor) + '</span></div>';
     }
-
     if (p.certs) {
-      html += '<div class="detail-section"><div class="detail-section-label">Certifications</div>';
-      html += '<div class="detail-text">' + esc(p.certs.split(',').map(function(c){return c.trim();}).join(', ')) + '</div></div>';
+      body += '<div class="modal-section"><div class="modal-section-label">Certifications</div>';
+      body += '<div class="modal-text">' + esc(p.certs.split(',').map(function(c){return c.trim();}).join(', ')) + '</div></div>';
     }
-
     if (p.notes) {
-      html += '<div class="detail-section"><div class="detail-section-label">About</div>';
-      html += '<div class="detail-text">' + esc(p.notes) + '</div></div>';
+      body += '<div class="modal-section"><div class="modal-section-label">About</div>';
+      body += '<div class="modal-text">' + esc(p.notes) + '</div></div>';
     }
+    document.getElementById('modalBody').innerHTML = body;
 
-    html += '</div>'; // detail-body
+    var footer = '';
+    if (p.instagram) footer += '<a class="modal-social" href="https://instagram.com/' + encodeURIComponent(p.instagram) + '" target="_blank" rel="noopener">' + igSvg + ' @' + esc(p.instagram) + '</a>';
+    if (p.tiktok) footer += '<a class="modal-social" href="https://tiktok.com/@' + encodeURIComponent(p.tiktok) + '" target="_blank" rel="noopener">' + tkSvg + ' @' + esc(p.tiktok) + '</a>';
+    if (p.email) footer += '<a class="modal-contact" href="mailto:' + encodeURIComponent(p.email) + '?subject=' + encodeURIComponent('Reaching out from Paige Loves Pilates Instructor Network') + '" target="_top">' + mailSvg + ' Contact instructor</a>';
+    document.getElementById('modalFooter').innerHTML = footer;
 
-    html += '<div class="detail-footer">';
-    if (p.instagram) html += '<a class="detail-social" href="https://instagram.com/' + encodeURIComponent(p.instagram) + '" target="_blank" rel="noopener">' + igSvg + ' @' + esc(p.instagram) + '</a>';
-    if (p.tiktok) html += '<a class="detail-social" href="https://tiktok.com/@' + encodeURIComponent(p.tiktok) + '" target="_blank" rel="noopener">' + tkSvg + ' @' + esc(p.tiktok) + '</a>';
-    if (p.email) html += '<a class="detail-contact" href="mailto:' + encodeURIComponent(p.email) + '?subject=' + encodeURIComponent('Reaching out from Paige Loves Pilates Instructor Network') + '" target="_top">' + mailSvg + ' Contact instructor</a>';
-    html += '</div>';
-
-    dc.innerHTML = html;
-    dc.scrollTop = 0;
+    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('modalBody').scrollTop = 0;
+    document.body.style.overflow = 'hidden';
   }
 
-  // ── Utilities ──
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  }
+
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
+  // ── UTILITIES ──
   function esc(str) { if (!str) return ''; var div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
   function showError(id, msg) { var el = document.getElementById(id); el.textContent = msg; el.style.display = 'block'; }
   function hideError(id) { document.getElementById(id).style.display = 'none'; }
