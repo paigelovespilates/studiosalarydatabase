@@ -361,6 +361,49 @@
     display: block;
   }
 
+  /* ── City / Market breakdown ── */
+  .city-section { margin-bottom: 48px; }
+  .city-card { background: white; padding: 26px 22px; }
+  .city-chart-title {
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .city-bar-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 36px 80px;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 0;
+  }
+  .city-bar-label { font-size: 0.72rem; color: var(--accent); text-align: right; }
+  .city-bar-track { height: 5px; background: var(--linen-dark); overflow: hidden; }
+  .city-bar-fill  { height: 100%; background: var(--olive); transition: width 0.7s cubic-bezier(0.4,0,0.2,1); width: 0; }
+  .city-bar-count { font-size: 0.72rem; font-weight: 500; color: var(--olive); text-align: right; }
+  .city-delta { font-size: 0.66rem; font-weight: 500; text-align: right; white-space: nowrap; }
+  .city-delta.up   { color: var(--up); }
+  .city-delta.down { color: var(--down); }
+  .city-delta.flat { color: var(--muted); }
+
+  /* ── Market section (reuses city styles) ── */
+  .market-section { margin-bottom: 48px; }
+  .market-card { background: white; padding: 26px 22px; }
+  .market-bar-row {
+    display: grid;
+    grid-template-columns: 180px 1fr 36px;
+    align-items: center;
+    gap: 12px;
+    padding: 5px 0;
+  }
+  .market-bar-label { font-size: 0.72rem; color: var(--accent); text-align: right; }
+  .market-bar-track { height: 5px; background: var(--linen-dark); overflow: hidden; }
+  .market-bar-fill  { height: 100%; background: var(--olive); transition: width 0.7s cubic-bezier(0.4,0,0.2,1); width: 0; }
+  .market-bar-fill.highlight { background: var(--up); }
+  .market-bar-count { font-size: 0.72rem; font-weight: 500; color: var(--olive); text-align: right; }
+  .market-total { font-size: 0.68rem; color: var(--muted); margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--linen-dark); }
+
   /* ── Responsive ── */
   @media (max-width: 900px) {
     header { padding: 24px; flex-direction: column; align-items: flex-start; gap: 16px; }
@@ -372,43 +415,8 @@
 
   @media (max-width: 500px) {
     .metrics-grid { grid-template-columns: 1fr; }
+    .market-bar-row { grid-template-columns: 120px 1fr 30px; }
   }
-  /* ── City breakdown ── */
-  .city-section { margin-bottom: 48px; }
-
-  .city-card { background: white; padding: 26px 22px; }
-
-  .city-chart-title {
-    font-size: 0.66rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 20px;
-  }
-
-  .city-bar-row {
-    display: grid;
-    grid-template-columns: 140px 1fr 36px 80px;
-    align-items: center;
-    gap: 12px;
-    padding: 4px 0;
-  }
-
-  .city-bar-label { font-size: 0.72rem; color: var(--accent); text-align: right; }
-  .city-bar-track { height: 5px; background: var(--linen-dark); overflow: hidden; }
-  .city-bar-fill  { height: 100%; background: var(--olive); transition: width 0.7s cubic-bezier(0.4,0,0.2,1); width: 0; }
-  .city-bar-count { font-size: 0.72rem; font-weight: 500; color: var(--olive); text-align: right; }
-
-  .city-delta {
-    font-size: 0.66rem;
-    font-weight: 500;
-    text-align: right;
-    white-space: nowrap;
-  }
-
-  .city-delta.up   { color: var(--up); }
-  .city-delta.down { color: var(--down); }
-  .city-delta.flat { color: var(--muted); }
 
   @media (max-width: 600px) {
     .city-bar-row { grid-template-columns: 100px 1fr 30px 60px; gap: 8px; }
@@ -451,6 +459,13 @@
         <div class="metric-card"><span class="skel" style="height:120px;width:100%;display:block"></span></div>
         <div class="metric-card"><span class="skel" style="height:120px;width:100%;display:block"></span></div>
         <div class="metric-card"><span class="skel" style="height:120px;width:100%;display:block"></span></div>
+      </div>
+    </div>
+    <div class="market-section">
+      <div class="section-label">Talent directory · instructors by market</div>
+      <div class="market-card">
+        <div class="city-chart-title">Visible profiles per market</div>
+        <div id="marketChart7"><span class="skel" style="height:200px"></span></div>
       </div>
     </div>
     <div class="city-section">
@@ -500,6 +515,13 @@
         <div class="metric-card"><span class="skel" style="height:120px;width:100%;display:block"></span></div>
       </div>
     </div>
+    <div class="market-section">
+      <div class="section-label">Talent directory · instructors by market</div>
+      <div class="market-card">
+        <div class="city-chart-title">Visible profiles per market</div>
+        <div id="marketChart30"><span class="skel" style="height:200px"></span></div>
+      </div>
+    </div>
     <div class="city-section">
       <div class="section-label">Instructor submissions · by city (5+ total, geo-matched)</div>
       <div class="city-card">
@@ -541,6 +563,13 @@
       <div class="section-label">This month vs last month</div>
       <div id="momWrap"><span class="skel" style="height:240px"></span></div>
     </div>
+    <div class="market-section">
+      <div class="section-label">Talent directory · instructors by market</div>
+      <div class="market-card">
+        <div class="city-chart-title">Visible profiles per market</div>
+        <div id="marketChartMom"><span class="skel" style="height:200px"></span></div>
+      </div>
+    </div>
   </section>
 
   <!-- All time -->
@@ -555,6 +584,13 @@
         <div class="metric-card"><span class="skel" style="height:120px;display:block"></span></div>
       </div>
     </div>
+    <div class="market-section">
+      <div class="section-label">Talent directory · instructors by market</div>
+      <div class="market-card">
+        <div class="city-chart-title">Visible profiles per market</div>
+        <div id="marketChartAll"><span class="skel" style="height:200px"></span></div>
+      </div>
+    </div>
   </section>
 
 </main>
@@ -563,12 +599,68 @@
 // ─────────────────────────────────────────────
 // Config
 // ─────────────────────────────────────────────
-const SALARY_EP = 'https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec';
-const JOB_EP    = 'https://script.google.com/macros/s/AKfycbxFGHyETxrFultdpVuIaOhf5wVmJ5gHwq2cMEG8TSKxsF8yjrVqXegeVGBv7WGRPHtePg/exec';
+var SALARY_EP = 'https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec';
+var JOB_EP    = 'https://script.google.com/macros/s/AKfycbxFGHyETxrFultdpVuIaOhf5wVmJ5gHwq2cMEG8TSKxsF8yjrVqXegeVGBv7WGRPHtePg/exec';
 
-let salaryStats = null;
-let jobStats    = null;
-let activeRange = '7';
+// Market config — mirrors getMarketConfig() in Code.gs
+var MARKETS = {
+  'Long Island':           { lat:  40.789, lng:  -73.135, radius: 40 },
+  'New York City':         { lat:  40.713, lng:  -74.006, radius: 40 },
+  'Sydney':                { lat: -33.869, lng:  151.208, radius: 40 },
+  'Melbourne':             { lat: -37.814, lng:  144.963, radius: 35 },
+  'Brisbane':              { lat: -27.470, lng:  153.026, radius: 40 },
+  'Auckland':              { lat: -36.849, lng:  174.763, radius: 40 },
+  'Chicago':               { lat:  41.878, lng:  -87.630, radius: 40 },
+  'Los Angeles':           { lat:  34.052, lng: -118.244, radius: 40 },
+  'San Francisco Bay Area':{ lat:  37.575, lng: -122.060, radius: 45 },
+  'Seattle':               { lat:  47.606, lng: -122.332, radius: 40 },
+  'Atlanta':               { lat:  33.749, lng:  -84.388, radius: 40 }
+};
+
+// Talent profile column indices (0-based from jobStats.talentRows)
+var T_LAT = 6, T_LNG = 7, T_VISIBLE = 17, T_CREATED = 20;
+
+var salaryStats = null;
+var jobStats    = null;
+var activeRange = '7';
+
+// ─────────────────────────────────────────────
+// Haversine (miles)
+// ─────────────────────────────────────────────
+function haversineMi(lat1, lng1, lat2, lng2) {
+  var R = 3959;
+  var dLat = (lat2 - lat1) * Math.PI / 180;
+  var dLng = (lng2 - lng1) * Math.PI / 180;
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+          Math.sin(dLng/2) * Math.sin(dLng/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+// ─────────────────────────────────────────────
+// Count talent profiles per market
+// ─────────────────────────────────────────────
+function countProfilesByMarket() {
+  if (!jobStats || !jobStats.talentRows) return {};
+  var visibleRows = jobStats.talentRows.filter(function(r) {
+    var v = String(r[T_VISIBLE] || '').trim().toLowerCase();
+    return v === 'true' || v === '1' || v === 'yes';
+  });
+
+  var counts = {};
+  Object.keys(MARKETS).forEach(function(name) {
+    var m = MARKETS[name];
+    var count = 0;
+    visibleRows.forEach(function(r) {
+      var lat = parseFloat(r[T_LAT]);
+      var lng = parseFloat(r[T_LNG]);
+      if (isNaN(lat) || isNaN(lng)) return;
+      if (haversineMi(m.lat, m.lng, lat, lng) <= m.radius) count++;
+    });
+    counts[name] = count;
+  });
+  return counts;
+}
 
 // ─────────────────────────────────────────────
 // JSONP
@@ -600,7 +692,6 @@ function jsonp(url, params, timeoutMs) {
 // ─────────────────────────────────────────────
 function parseDate(raw) {
   if (raw == null || raw === '') return null;
-  // Excel serial date
   if (typeof raw === 'number' && raw > 40000) {
     return new Date(Date.UTC(1899, 11, 30) + raw * 86400000);
   }
@@ -686,44 +777,7 @@ function loadAll() {
 
 // ─────────────────────────────────────────────
 // Compute metrics
-//
-// Expected Apps Script response shape:
-//
-// salaryStats = {
-//   studioRows: [ [col1_date, …, col29_exclude], … ],
-//     — Studio Clean, 1 array per row, 0-indexed
-//     — col1  (idx 0)  = Submitted date
-//     — col29 (idx 28) = Exclude flag
-//     — col8  (idx 7)  = Class Format (for breakdown chart)
-//   instrRows: [ [col1_date, …, col21_exclude], … ],
-//     — Instructor Clean, 0-indexed
-//     — col1  (idx 0)  = Submitted date
-//     — col21 (idx 20) = Exclude flag
-//     — col7  (idx 6)  = Class Format (for breakdown chart)
-//   studioFormatCounts: { "Mat Pilates": 42, "Reformer": 18, … },
-//   instrFormatCounts:  { "Mat Pilates": 30, … }
-// }
-//
-// jobStats = {
-//   jobRows: [ […], … ],
-//     — JobPosting_Clean, 0-indexed
-//     — col C (idx 2)  = Studio Name
-//     — col D (idx 3)  = City
-//     — col Q (idx 16) = Date Posted
-//     — col R (idx 17) = "Y" / "N" live flag
-//   alertRows: [ […], … ],
-//     — Subscriptions sheet (1oR-u_nbAFs_b94Xtx3z841OpmGnDjrnQccyO7mgaW44)
-//     — col A (idx 0)  = Email
-//     — col B (idx 1)  = Country
-//     — col M (idx 12) = Last Updated date
-//   talentRows: [ […], … ],
-//     — talent_profiles sheet
-//     — col R (idx 17) = TRUE/FALSE visible flag
-//   recentJobs:   [ { studio, city, date }, … ],   // top ~6, pre-sorted newest first
-//   recentAlerts: [ { name, type, date }, … ]       // top ~6, pre-sorted newest first
-// }
 // ─────────────────────────────────────────────
-
 function filterByDays(rows, dateIdx, n) {
   var cutoff = daysAgo(n);
   return rows.filter(function(r) {
@@ -733,10 +787,8 @@ function filterByDays(rows, dateIdx, n) {
 }
 
 function filterByDayRange(rows, dateIdx, startDaysAgo, endDaysAgo) {
-  // returns rows where (today - startDaysAgo) > date >= (today - endDaysAgo)
-  // i.e. the period [endDaysAgo .. startDaysAgo) days ago — older bound inclusive, newer bound exclusive
-  var newer = daysAgo(startDaysAgo); // e.g. 7 days ago
-  var older = daysAgo(endDaysAgo);   // e.g. 14 days ago
+  var newer = daysAgo(startDaysAgo);
+  var older = daysAgo(endDaysAgo);
   return rows.filter(function(r) {
     var d = parseDate(r[dateIdx]);
     return d && d >= older && d < newer;
@@ -753,12 +805,11 @@ function filterByMonth(rows, dateIdx, offset) {
 }
 
 function computeMetrics(range) {
-  // range: '7' | '30' | 'thisMonth' | 'lastMonth' | 'all'
   var m = { studioSubs: 0, instrSubs: 0, jobsPosted: 0, jobAlerts: 0, talentProfiles: 0 };
 
   if (salaryStats) {
-    var studioRows = (salaryStats.studioRows || []).filter(function(r) { return !r[28]; }); // exclude col29
-    var instrRows  = (salaryStats.instrRows  || []).filter(function(r) { return !r[20]; }); // exclude col21
+    var studioRows = (salaryStats.studioRows || []).filter(function(r) { return !r[28]; });
+    var instrRows  = (salaryStats.instrRows  || []).filter(function(r) { return !r[20]; });
 
     if (range === 'all') {
       m.studioSubs = studioRows.length;
@@ -777,13 +828,10 @@ function computeMetrics(range) {
   }
 
   if (jobStats) {
-    // Jobs posted: col R = idx 17, must equal "Y"
     var jobRows = (jobStats.jobRows || []).filter(function(r) {
       return String(r[17] || '').trim().toUpperCase() === 'Y';
     });
-    // Alerts: col M = idx 12 for date
     var alertRows = (jobStats.alertRows || []);
-    // Talent profiles: col R = idx 17, must be truthy
     var talentRows = (jobStats.talentRows || []).filter(function(r) {
       var v = String(r[17] || '').trim().toLowerCase();
       return v === 'true' || v === '1' || v === 'yes';
@@ -812,7 +860,6 @@ function computeMetrics(range) {
   return m;
 }
 
-// Previous-period totals — for '7' = days 7–14 ago, for '30' = days 30–60 ago
 function computePrevMetrics(range) {
   var n = range === '7' ? 7 : 30;
   var m = { studioSubs: 0, instrSubs: 0, jobsPosted: 0, jobAlerts: 0, talentProfiles: 0 };
@@ -963,19 +1010,17 @@ function renderCityChart(containerId, range) {
   var bd = salaryStats.cityBreakdown;
   var allCounts = bd.all || {};
 
-  // Pick delta source based on active range
   var periodCounts;
   if (range === '7') {
     periodCounts = bd.last7 || {};
   } else if (range === '30') {
-    periodCounts = bd.last7 || {}; // reuse last7 as closest proxy; extend Apps Script later if needed
+    periodCounts = bd.last7 || {};
   } else if (range === 'mom') {
     periodCounts = bd.thisMonth || {};
   } else {
-    periodCounts = {}; // all-time: no delta shown
+    periodCounts = {};
   }
 
-  // Sort by all-time descending
   var cities = Object.keys(allCounts).sort(function(a, b) {
     return allCounts[b] - allCounts[a];
   });
@@ -1010,6 +1055,40 @@ function renderCityChart(containerId, range) {
       deltaHtml +
       '</div>';
   }).join('');
+}
+
+// ─────────────────────────────────────────────
+// Render market chart
+// ─────────────────────────────────────────────
+function renderMarketChart(containerId) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+
+  var counts = countProfilesByMarket();
+  var entries = Object.entries(counts).sort(function(a, b) { return b[1] - a[1]; });
+
+  if (!entries.length) {
+    el.innerHTML = '<div class="feed-empty">No talent data available</div>';
+    return;
+  }
+
+  var max = entries[0][1] || 1;
+  var total = entries.reduce(function(sum, e) { return sum + e[1]; }, 0);
+
+  var html = entries.map(function(entry) {
+    var name = entry[0], count = entry[1];
+    var pct = Math.round((count / max) * 100);
+    var fillClass = count >= 5 ? 'market-bar-fill highlight' : 'market-bar-fill';
+    return '<div class="market-bar-row">' +
+      '<div class="market-bar-label">' + name + '</div>' +
+      '<div class="market-bar-track"><div class="' + fillClass + '" style="width:' + pct + '%"></div></div>' +
+      '<div class="market-bar-count">' + count + '</div>' +
+      '</div>';
+  }).join('');
+
+  html += '<div class="market-total">' + total + ' total visible profiles across all markets (profiles may appear in overlapping markets)</div>';
+
+  el.innerHTML = html;
 }
 
 function renderFeeds(jobsId, alertsId) {
@@ -1059,18 +1138,22 @@ function setRange(btn, range) {
 function render() {
   if (activeRange === '7') {
     renderGrid('grid7', computeMetrics('7'), computePrevMetrics('7'));
+    renderMarketChart('marketChart7');
     renderCityChart('cityChart', '7');
     renderFormatCharts('studioFormatChart', 'instrFormatChart');
     renderFeeds('recentJobs', 'recentAlerts');
   } else if (activeRange === '30') {
     renderGrid('grid30', computeMetrics('30'), computePrevMetrics('30'));
+    renderMarketChart('marketChart30');
     renderCityChart('cityChart30', '30');
     renderFormatCharts('studioFormatChart30', 'instrFormatChart30');
     renderFeeds('recentJobs30', 'recentAlerts30');
   } else if (activeRange === 'mom') {
     renderMoM();
+    renderMarketChart('marketChartMom');
   } else {
-    renderGrid('gridAll', computeMetrics('all')); // all-time: no prev period
+    renderGrid('gridAll', computeMetrics('all'));
+    renderMarketChart('marketChartAll');
   }
 }
 
