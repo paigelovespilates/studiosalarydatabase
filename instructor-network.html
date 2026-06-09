@@ -81,34 +81,38 @@
     margin-bottom: 16px;
   }
 
-  p:last-child { margin-bottom: 0; }
-
-  ul {
-    list-style: none;
-    margin: 0 0 16px;
-    padding: 0;
+  /* Included grid */
+  .included-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
   }
 
-  ul li {
-    font-size: 0.95rem;
-    line-height: 1.75;
-    padding-left: 16px;
-    position: relative;
+  .included-card {
+    background: white;
+    padding: 20px 22px;
+    border: 0.5px solid var(--border);
+  }
+
+  .included-card .card-title {
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
     color: var(--olive);
+    margin-bottom: 6px;
   }
 
-  ul li::before {
-    content: '—';
-    position: absolute;
-    left: 0;
-    color: var(--muted);
+  .included-card .card-desc {
+    font-size: 0.82rem;
+    color: var(--accent);
+    line-height: 1.55;
   }
 
   .price-block {
     background: var(--olive);
     color: var(--linen);
     padding: 28px 32px;
-    margin: 32px 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -144,12 +148,8 @@
 
   .cta-btn:hover { opacity: 0.85; }
 
-  /* Market table */
   .market-table { width: 100%; border-collapse: collapse; }
-
-  .market-table thead tr {
-    border-bottom: 1px solid var(--border);
-  }
+  .market-table thead tr { border-bottom: 1px solid var(--border); }
 
   .market-table th {
     font-size: 0.68rem;
@@ -212,6 +212,7 @@
   @media (max-width: 600px) {
     header { padding: 28px 24px; }
     main { padding: 36px 24px; }
+    .included-grid { grid-template-columns: 1fr; }
     .price-block { flex-direction: column; align-items: flex-start; }
   }
 </style>
@@ -221,41 +222,13 @@
 <header>
   <p class="eyebrow">Paige Loves Pilates</p>
   <h1>Instructor Network</h1>
-  <p class="sub">A direct line to local instructors — for studios that are done waiting and hoping the right person sees their post.</p>
+  <p class="sub">A direct line to local instructors - for studios that need help finding reliable talent to join their teams.</p>
 </header>
 
 <main>
 
   <div class="section">
-    <div class="section-label">What it is</div>
-    <p>When you need a new instructor, you post on your studio account, ask your current team, maybe put something on your personal page. And then you wait — hoping the right person sees it.</p>
-    <p>The Instructor Network gives you access to a wider pool of local instructors than your studio community alone can reach. Browse profiles directly — certifications, experience, availability, how far they're willing to travel, whether they're looking for subs or a recurring spot on your schedule. Find someone who fits. Reach out on your own terms.</p>
-    <p>Your membership also includes the Paige Loves Pilates Job Board. Post a role and it goes directly to instructors in your market via email and our broadcast channel — people who are actively looking and already engaged with this community.</p>
-    <p>Every job post requires compensation details. A transparent market is better for everyone.</p>
-  </div>
-
-  <div class="section">
-    <div class="section-label">What's included</div>
-    <ul>
-      <li>Full access to instructor profiles in your market</li>
-      <li>Unlimited job board postings</li>
-      <li>Direct email delivery to local instructors</li>
-      <li>New profiles added regularly as the community grows</li>
-    </ul>
-
-    <div class="price-block">
-      <div>
-        <div class="amount">$35 / month</div>
-        <div class="price-note">Cancel anytime. Founding Long Island members keep their current rate.</div>
-      </div>
-      <a class="cta-btn" href="https://buy.stripe.com/9B67sK1Px5acfYF1Ww9oc00" target="_blank">Get access</a>
-    </div>
-  </div>
-
-  <div class="section">
     <div class="section-label">Instructors by market</div>
-    <p>Counts update live from the talent directory.</p>
-    <br>
     <table class="market-table">
       <thead>
         <tr>
@@ -267,6 +240,37 @@
         <tr><td colspan="2" style="color:var(--muted);font-size:0.85rem;padding:16px 0;">Loading...</td></tr>
       </tbody>
     </table>
+  </div>
+
+  <div class="section">
+    <div class="section-label">What's included</div>
+
+    <div class="included-grid">
+      <div class="included-card">
+        <div class="card-title">Instructor directory</div>
+        <div class="card-desc">Browse profiles in your market — certifications, experience, availability, and how far they're willing to travel.</div>
+      </div>
+      <div class="included-card">
+        <div class="card-title">Direct contact</div>
+        <div class="card-desc">Reach out to instructors on your own terms. No middleman, no platform fees.</div>
+      </div>
+      <div class="included-card">
+        <div class="card-title">Job board access</div>
+        <div class="card-desc">Post open roles and get them delivered directly to local instructors via email — people who are actively looking.</div>
+      </div>
+      <div class="included-card">
+        <div class="card-title">Growing database</div>
+        <div class="card-desc">New instructor profiles added regularly as the community grows. Every post requires compensation details — a transparent market is better for everyone.</div>
+      </div>
+    </div>
+
+    <div class="price-block">
+      <div>
+        <div class="amount">$35 / month</div>
+        <div class="price-note">Cancel anytime. Founding Long Island members keep their current rate.</div>
+      </div>
+      <a class="cta-btn" href="https://buy.stripe.com/9B67sK1Px5acfYF1Ww9oc00" target="_blank">Get access</a>
+    </div>
   </div>
 
 </main>
