@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instructor Network — Paige Loves Pilates</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --olive: #373930;
+    --linen: #EDEBE4;
+    --linen-dark: #E0DDD5;
+    --linen-mid: #E8E5DC;
+    --accent: #7A7B6A;
+    --muted: #9A9B8A;
+    --border: #D4D1C8;
+    --up: #5A7A5A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--linen);
+    color: var(--olive);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--olive);
+    color: var(--linen);
+    padding: 36px 48px 28px;
+  }
+
+  header p.eyebrow {
+    font-size: 0.72rem;
+    color: #7A7C6A;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 2.4rem;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  header p.sub {
+    font-size: 1rem;
+    color: #A8AA99;
+    max-width: 560px;
+    line-height: 1.6;
+  }
+
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 52px 48px;
+  }
+
+  .section { margin-bottom: 52px; }
+
+  .section-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  p {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: var(--olive);
+    margin-bottom: 16px;
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  ul {
+    list-style: none;
+    margin: 0 0 16px;
+    padding: 0;
+  }
+
+  ul li {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    padding-left: 16px;
+    position: relative;
+    color: var(--olive);
+  }
+
+  ul li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+  }
+
+  .price-block {
+    background: var(--olive);
+    color: var(--linen);
+    padding: 28px 32px;
+    margin: 32px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .price-block .amount {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+
+  .price-block .price-note {
+    font-size: 0.78rem;
+    color: #7A7C6A;
+    margin-top: 4px;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: var(--linen);
+    color: var(--olive);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 12px 28px;
+    transition: opacity 0.2s;
+  }
+
+  .cta-btn:hover { opacity: 0.85; }
+
+  /* Market table */
+  .market-table { width: 100%; border-collapse: collapse; }
+
+  .market-table thead tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .market-table th {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+    padding: 0 0 10px;
+    text-align: left;
+  }
+
+  .market-table th:last-child { text-align: right; }
+
+  .market-table td {
+    padding: 13px 0;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--linen-dark);
+    color: var(--olive);
+  }
+
+  .market-table td:last-child {
+    text-align: right;
+    font-weight: 500;
+  }
+
+  .market-table tr:last-child td { border-bottom: none; }
+
+  .badge-soon {
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .region-row td {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 20px 0 6px;
+    border-bottom: none;
+  }
+
+  footer {
+    background: var(--olive);
+    color: #6A6C5A;
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    padding: 24px 48px;
+  }
+
+  footer a { color: #7A7C6A; text-decoration: none; }
+  footer a:hover { color: var(--linen); }
+
+  @media (max-width: 600px) {
+    header { padding: 28px 24px; }
+    main { padding: 36px 24px; }
+    .price-block { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="eyebrow">Paige Loves Pilates</p>
+  <h1>Instructor Network</h1>
+  <p class="sub">A direct line to local instructors — for studios that are done waiting and hoping the right person sees their post.</p>
+</header>
+
+<main>
+
+  <div class="section">
+    <div class="section-label">What it is</div>
+    <p>When you need a new instructor, you post on your studio account, ask your current team, maybe put something on your personal page. And then you wait — hoping the right person sees it.</p>
+    <p>The Instructor Network gives you access to a wider pool of local instructors than your studio community alone can reach. Browse profiles directly — certifications, experience, availability, how far they're willing to travel, whether they're looking for subs or a recurring spot on your schedule. Find someone who fits. Reach out on your own terms.</p>
+    <p>Your membership also includes the Paige Loves Pilates Job Board. Post a role and it goes directly to instructors in your market via email and our broadcast channel — people who are actively looking and already engaged with this community.</p>
+    <p>Every job post requires compensation details. A transparent market is better for everyone.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-label">What's included</div>
+    <ul>
+      <li>Full access to instructor profiles in your market</li>
+      <li>Unlimited job board postings</li>
+      <li>Direct email delivery to local instructors</li>
+      <li>New profiles added regularly as the community grows</li>
+    </ul>
+
+    <div class="price-block">
+      <div>
+        <div class="amount">$35 / month</div>
+        <div class="price-note">Cancel anytime. Founding Long Island members keep their current rate.</div>
+      </div>
+      <a class="cta-btn" href="https://buy.stripe.com/9B67sK1Px5acfYF1Ww9oc00" target="_blank">Get access</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Instructors by market</div>
+    <p>Counts update live from the talent directory.</p>
+    <br>
+    <table class="market-table">
+      <thead>
+        <tr>
+          <th>Market</th>
+          <th>Instructors</th>
+        </tr>
+      </thead>
+      <tbody id="market-tbody">
+        <tr><td colspan="2" style="color:var(--muted);font-size:0.85rem;padding:16px 0;">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  <a href="https://paigelovespilates.com">paigelovespilates.com</a> &nbsp;·&nbsp; Questions? <a href="mailto:paige@paigelovespilates.com">paige@paigelovespilates.com</a>
+</footer>
+
+<script>
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec";
+
+var MARKETS = [
+  { region: "United States" },
+  { label: "Long Island",            lat: 40.789,  lng: -73.135,  radius: 30,  live: true  },
+  { label: "New York City",           lat: 40.713,  lng: -74.006,  radius: 15,  live: true  },
+  { label: "Chicago",                 lat: 41.878,  lng: -87.630,  radius: 25,  live: false },
+  { label: "Los Angeles",             lat: 34.052,  lng: -118.244, radius: 40,  live: false },
+  { label: "San Francisco Bay Area",  lat: 37.774,  lng: -122.419, radius: 35,  live: false },
+  { label: "Seattle",                 lat: 47.608,  lng: -122.335, radius: 25,  live: false },
+  { label: "Atlanta",                 lat: 33.749,  lng: -84.388,  radius: 35,  live: false },
+  { region: "Australia & New Zealand" },
+  { label: "Sydney",                  lat: -33.869, lng: 151.208,  radius: 25,  live: true  },
+  { label: "Melbourne",               lat: -37.814, lng: 144.963,  radius: 25,  live: true  },
+  { label: "Brisbane",                lat: -27.470, lng: 153.026,  radius: 25,  live: true  },
+  { label: "Auckland",                lat: -36.849, lng: 174.763,  radius: 25,  live: true  },
+];
+
+function haversine(lat1, lng1, lat2, lng2) {
+  var R = 3958.8;
+  var dLat = (lat2 - lat1) * Math.PI / 180;
+  var dLng = (lng2 - lng1) * Math.PI / 180;
+  var a = Math.sin(dLat/2)*Math.sin(dLat/2) +
+          Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*
+          Math.sin(dLng/2)*Math.sin(dLng/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function buildRows() {
+  var tbody = document.getElementById('market-tbody');
+  tbody.innerHTML = '';
+  var idx = 0;
+  MARKETS.forEach(function(m) {
+    if (m.region) {
+      var tr = document.createElement('tr');
+      tr.className = 'region-row';
+      tr.innerHTML = '<td colspan="2">' + m.region + '</td>';
+      tbody.appendChild(tr);
+      return;
+    }
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + m.label + (m.live ? '' : '<span class="badge-soon">coming soon</span>') + '</td>' +
+                   '<td id="mc-' + idx + '">—</td>';
+    tbody.appendChild(tr);
+    fetchCount(m, idx);
+    idx++;
+  });
+}
+
+function fetchCount(market, idx) {
+  var url = SCRIPT_URL + '?action=talentBrowse&lat=' + market.lat + '&lng=' + market.lng + '&radius=' + market.radius;
+  fetch(url)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var profiles = data.profiles || [];
+      var count = profiles.filter(function(p) {
+        return p.lat && p.lng && haversine(market.lat, market.lng, p.lat, p.lng) <= market.radius;
+      }).length;
+      var el = document.getElementById('mc-' + idx);
+      if (el) el.textContent = count;
+    })
+    .catch(function() {});
+}
+
+buildRows();
+</script>
+</body>
+</html>
