@@ -436,7 +436,7 @@
   }
 
   function startDirectory() {
-    showScreen('directory');
+    showScreen('directory');window.scrollTo(0, 0);
     var badge = document.getElementById('header-market-badge');
     if (session.market) badge.textContent = session.market.replace(/_/g, ' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); });
     loadProfiles();
