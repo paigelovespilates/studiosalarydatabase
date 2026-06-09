@@ -10,11 +10,9 @@
     --olive: #373930;
     --linen: #EDEBE4;
     --linen-dark: #E0DDD5;
-    --linen-mid: #E8E5DC;
     --accent: #7A7B6A;
     --muted: #9A9B8A;
     --border: #D4D1C8;
-    --up: #5A7A5A;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,43 +22,9 @@
     color: var(--olive);
     font-family: 'DM Sans', sans-serif;
     font-weight: 300;
-    min-height: 100vh;
   }
 
-  header {
-    background: var(--olive);
-    color: var(--linen);
-    padding: 36px 48px 28px;
-  }
-
-  header p.eyebrow {
-    font-size: 0.72rem;
-    color: #7A7C6A;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-
-  header h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 600;
-    font-size: 2.4rem;
-    line-height: 1.1;
-    margin-bottom: 16px;
-  }
-
-  header p.sub {
-    font-size: 1rem;
-    color: #A8AA99;
-    max-width: 560px;
-    line-height: 1.6;
-  }
-
-  main {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 52px 48px;
-  }
+  main { max-width: 760px; margin: 0 auto; padding: 52px 48px; }
 
   .section { margin-bottom: 52px; }
 
@@ -74,40 +38,13 @@
     border-bottom: 1px solid var(--border);
   }
 
-  p {
-    font-size: 0.95rem;
-    line-height: 1.75;
-    color: var(--olive);
-    margin-bottom: 16px;
-  }
+  p { font-size: 0.95rem; line-height: 1.75; color: var(--olive); margin-bottom: 16px; }
 
-  /* Included grid */
-  .included-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 32px;
-  }
+  .included-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
 
-  .included-card {
-    background: white;
-    padding: 20px 22px;
-    border: 0.5px solid var(--border);
-  }
-
-  .included-card .card-title {
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    color: var(--olive);
-    margin-bottom: 6px;
-  }
-
-  .included-card .card-desc {
-    font-size: 0.82rem;
-    color: var(--accent);
-    line-height: 1.55;
-  }
+  .included-card { background: white; padding: 20px 22px; border: 0.5px solid var(--border); }
+  .included-card .card-title { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.04em; color: var(--olive); margin-bottom: 6px; }
+  .included-card .card-desc { font-size: 0.82rem; color: var(--accent); line-height: 1.55; }
 
   .price-block {
     background: var(--olive);
@@ -120,17 +57,8 @@
     flex-wrap: wrap;
   }
 
-  .price-block .amount {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2rem;
-    font-weight: 600;
-  }
-
-  .price-block .price-note {
-    font-size: 0.78rem;
-    color: #7A7C6A;
-    margin-top: 4px;
-  }
+  .price-block .amount { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; }
+  .price-block .price-note { font-size: 0.78rem; color: #7A7C6A; margin-top: 4px; }
 
   .cta-btn {
     display: inline-block;
@@ -150,67 +78,24 @@
 
   .market-table { width: 100%; border-collapse: collapse; }
   .market-table thead tr { border-bottom: 1px solid var(--border); }
-
   .market-table th {
-    font-size: 0.68rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-weight: 400;
-    padding: 0 0 10px;
-    text-align: left;
+    font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); font-weight: 400; padding: 0 0 10px; text-align: left;
   }
-
   .market-table th:last-child { text-align: right; }
-
-  .market-table td {
-    padding: 13px 0;
-    font-size: 0.9rem;
-    border-bottom: 1px solid var(--linen-dark);
-    color: var(--olive);
-  }
-
-  .market-table td:last-child {
-    text-align: right;
-    font-weight: 500;
-  }
-
+  .market-table td { padding: 13px 0; font-size: 0.9rem; border-bottom: 1px solid var(--linen-dark); color: var(--olive); }
+  .market-table td:last-child { text-align: right; font-weight: 500; }
   .market-table tr:last-child td { border-bottom: none; }
 
-  .badge-soon {
-    font-size: 0.65rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    padding: 2px 8px;
-    margin-left: 8px;
-    vertical-align: middle;
-  }
-
   .region-row td {
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding: 20px 0 6px;
-    border-bottom: none;
+    font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); padding: 20px 0 6px; border-bottom: none;
   }
 
-  footer {
-    background: var(--olive);
-    color: #6A6C5A;
-    text-align: center;
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    padding: 24px 48px;
-  }
-
-  footer a { color: #7A7C6A; text-decoration: none; }
-  footer a:hover { color: var(--linen); }
+  .soon-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .soon-pill { font-size: 0.75rem; color: var(--muted); border: 1px solid var(--border); padding: 4px 12px; }
 
   @media (max-width: 600px) {
-    header { padding: 28px 24px; }
     main { padding: 36px 24px; }
     .included-grid { grid-template-columns: 1fr; }
     .price-block { flex-direction: column; align-items: flex-start; }
@@ -218,33 +103,29 @@
 </style>
 </head>
 <body>
-
-<header>
-  <p class="eyebrow">Paige Loves Pilates</p>
-  <h1>Instructor Network</h1>
-  <p class="sub">A direct line to local instructors - for studios that need help finding reliable talent to join their teams.</p>
-</header>
-
 <main>
 
   <div class="section">
     <div class="section-label">Instructors by market</div>
+    <p>Before you subscribe, see how many instructors are already in your market. These are active profiles in the Paige Loves Pilates talent directory — real people looking for studio work near you.</p>
+    <br>
     <table class="market-table">
       <thead>
-        <tr>
-          <th>Market</th>
-          <th>Instructors</th>
-        </tr>
+        <tr><th>Market</th><th>Instructors</th></tr>
       </thead>
-      <tbody id="market-tbody">
+      <tbody id="live-tbody">
         <tr><td colspan="2" style="color:var(--muted);font-size:0.85rem;padding:16px 0;">Loading...</td></tr>
       </tbody>
     </table>
   </div>
 
+  <div class="section" id="soon-section" style="display:none;">
+    <div class="section-label">Coming soon</div>
+    <div class="soon-list" id="soon-list"></div>
+  </div>
+
   <div class="section">
     <div class="section-label">What's included</div>
-
     <div class="included-grid">
       <div class="included-card">
         <div class="card-title">Instructor directory</div>
@@ -263,7 +144,6 @@
         <div class="card-desc">New instructor profiles added regularly as the community grows. Every post requires compensation details — a transparent market is better for everyone.</div>
       </div>
     </div>
-
     <div class="price-block">
       <div>
         <div class="amount">$35 / month</div>
@@ -275,27 +155,22 @@
 
 </main>
 
-<footer>
-  <a href="https://paigelovespilates.com">paigelovespilates.com</a> &nbsp;·&nbsp; Questions? <a href="mailto:paige@paigelovespilates.com">paige@paigelovespilates.com</a>
-</footer>
-
 <script>
 var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec";
+var THRESHOLD = 10;
 
-var MARKETS = [
-  { region: "United States" },
-  { label: "Long Island",            lat: 40.789,  lng: -73.135,  radius: 30,  live: true  },
-  { label: "New York City",           lat: 40.713,  lng: -74.006,  radius: 15,  live: true  },
-  { label: "Chicago",                 lat: 41.878,  lng: -87.630,  radius: 25,  live: false },
-  { label: "Los Angeles",             lat: 34.052,  lng: -118.244, radius: 40,  live: false },
-  { label: "San Francisco Bay Area",  lat: 37.774,  lng: -122.419, radius: 35,  live: false },
-  { label: "Seattle",                 lat: 47.608,  lng: -122.335, radius: 25,  live: false },
-  { label: "Atlanta",                 lat: 33.749,  lng: -84.388,  radius: 35,  live: false },
-  { region: "Australia & New Zealand" },
-  { label: "Sydney",                  lat: -33.869, lng: 151.208,  radius: 25,  live: true  },
-  { label: "Melbourne",               lat: -37.814, lng: 144.963,  radius: 25,  live: true  },
-  { label: "Brisbane",                lat: -27.470, lng: 153.026,  radius: 25,  live: true  },
-  { label: "Auckland",                lat: -36.849, lng: 174.763,  radius: 25,  live: true  },
+var ALL_MARKETS = [
+  { label: "Long Island",           region: "United States",          lat: 40.789,  lng: -73.135,  radius: 30 },
+  { label: "New York City",          region: "United States",          lat: 40.713,  lng: -74.006,  radius: 15 },
+  { label: "Chicago",                region: "United States",          lat: 41.878,  lng: -87.630,  radius: 25 },
+  { label: "Los Angeles",            region: "United States",          lat: 34.052,  lng: -118.244, radius: 40 },
+  { label: "San Francisco Bay Area", region: "United States",          lat: 37.774,  lng: -122.419, radius: 35 },
+  { label: "Seattle",                region: "United States",          lat: 47.608,  lng: -122.335, radius: 25 },
+  { label: "Atlanta",                region: "United States",          lat: 33.749,  lng: -84.388,  radius: 35 },
+  { label: "Sydney",                 region: "Australia & New Zealand", lat: -33.869, lng: 151.208,  radius: 25 },
+  { label: "Melbourne",              region: "Australia & New Zealand", lat: -37.814, lng: 144.963,  radius: 25 },
+  { label: "Brisbane",               region: "Australia & New Zealand", lat: -27.470, lng: 153.026,  radius: 25 },
+  { label: "Auckland",               region: "Australia & New Zealand", lat: -36.849, lng: 174.763,  radius: 25 },
 ];
 
 function haversine(lat1, lng1, lat2, lng2) {
@@ -308,43 +183,56 @@ function haversine(lat1, lng1, lat2, lng2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
-function buildRows() {
-  var tbody = document.getElementById('market-tbody');
-  tbody.innerHTML = '';
-  var idx = 0;
-  MARKETS.forEach(function(m) {
-    if (m.region) {
-      var tr = document.createElement('tr');
-      tr.className = 'region-row';
-      tr.innerHTML = '<td colspan="2">' + m.region + '</td>';
-      tbody.appendChild(tr);
-      return;
-    }
-    var tr = document.createElement('tr');
-    tr.innerHTML = '<td>' + m.label + (m.live ? '' : '<span class="badge-soon">coming soon</span>') + '</td>' +
-                   '<td id="mc-' + idx + '">—</td>';
-    tbody.appendChild(tr);
-    fetchCount(m, idx);
-    idx++;
-  });
-}
-
-function fetchCount(market, idx) {
+function fetchCount(market) {
   var url = SCRIPT_URL + '?action=talentBrowse&lat=' + market.lat + '&lng=' + market.lng + '&radius=' + market.radius;
-  fetch(url)
+  return fetch(url)
     .then(function(r) { return r.json(); })
     .then(function(data) {
-      var profiles = data.profiles || [];
-      var count = profiles.filter(function(p) {
+      var count = (data.profiles || []).filter(function(p) {
         return p.lat && p.lng && haversine(market.lat, market.lng, p.lat, p.lng) <= market.radius;
       }).length;
-      var el = document.getElementById('mc-' + idx);
-      if (el) el.textContent = count;
+      return { market: market, count: count };
     })
-    .catch(function() {});
+    .catch(function() { return { market: market, count: 0 }; });
 }
 
-buildRows();
+Promise.all(ALL_MARKETS.map(fetchCount)).then(function(results) {
+  var live = results.filter(function(r) { return r.count >= THRESHOLD; });
+  var soon = results.filter(function(r) { return r.count < THRESHOLD; });
+
+  var tbody = document.getElementById('live-tbody');
+  tbody.innerHTML = '';
+
+  var regions = [];
+  live.forEach(function(r) {
+    if (regions.indexOf(r.market.region) === -1) regions.push(r.market.region);
+  });
+
+  regions.forEach(function(region) {
+    var tr = document.createElement('tr');
+    tr.className = 'region-row';
+    tr.innerHTML = '<td colspan="2">' + region + '</td>';
+    tbody.appendChild(tr);
+
+    live.filter(function(r) { return r.market.region === region; }).forEach(function(r) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + r.market.label + '</td><td>' + r.count + '</td>';
+      tbody.appendChild(tr);
+    });
+  });
+
+  if (soon.length) {
+    var soonSection = document.getElementById('soon-section');
+    var soonList = document.getElementById('soon-list');
+    soonSection.style.display = '';
+    soon.forEach(function(r) {
+      var pill = document.createElement('span');
+      pill.className = 'soon-pill';
+      pill.textContent = r.market.label;
+      soonList.appendChild(pill);
+    });
+  }
+});
 </script>
 </body>
 </html>
