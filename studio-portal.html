@@ -134,6 +134,7 @@
       scrollbar-width: none;
     }
     .dir-filters::-webkit-scrollbar { display: none; }
+
     .filter-control {
       padding: 0.45rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius);
       background: var(--bg); font-family: 'DM Sans', sans-serif; font-size: 0.825rem; color: var(--text);
@@ -281,6 +282,22 @@
       .header-left p { display: none; }
       .auth-card { padding: 2rem 1.25rem; }
       .market-grid { grid-template-columns: 1fr; }
+
+      /* Compact filters on mobile */
+      .dir-filters { padding: 0.5rem 0.75rem; gap: 0.35rem; }
+      select.filter-control {
+        min-width: 0;
+        font-size: 0.75rem;
+        padding: 0.4rem 1.4rem 0.4rem 0.5rem;
+        background-position: right 0.4rem center;
+      }
+      .filter-btn {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.55rem;
+        gap: 0.25rem;
+      }
+      .filter-btn svg { width: 11px; height: 11px; }
+      .filter-count { display: none; }
     }
   </style>
 </head>
@@ -448,7 +465,6 @@
     document.getElementById('verify-subtitle').textContent = 'We sent a 6-digit code to ' + email;
     showScreen('verify');
     document.querySelector('.code-digit').focus();
-    // Fire API in background — if subscription not found, bounce back with error
     jsonp(ENDPOINT + '?action=studioSendCode&email=' + encodeURIComponent(email), function(data) {
       if (!data.success) {
         session.email = null;
