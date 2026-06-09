@@ -165,17 +165,17 @@ var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMg
 var THRESHOLD = 10;
 
 var ALL_MARKETS = [
-  { label: "Long Island",           region: "United States",          lat: 40.789,  lng: -73.135,  radius: 30 },
-  { label: "New York City",          region: "United States",          lat: 40.713,  lng: -74.006,  radius: 15 },
-  { label: "Chicago",                region: "United States",          lat: 41.878,  lng: -87.630,  radius: 25 },
-  { label: "Los Angeles",            region: "United States",          lat: 34.052,  lng: -118.244, radius: 40 },
-  { label: "San Francisco Bay Area", region: "United States",          lat: 37.774,  lng: -122.419, radius: 35 },
-  { label: "Seattle",                region: "United States",          lat: 47.608,  lng: -122.335, radius: 25 },
-  { label: "Atlanta",                region: "United States",          lat: 33.749,  lng: -84.388,  radius: 35 },
-  { label: "Sydney",                 region: "Australia & New Zealand", lat: -33.869, lng: 151.208,  radius: 25 },
-  { label: "Melbourne",              region: "Australia & New Zealand", lat: -37.814, lng: 144.963,  radius: 25 },
-  { label: "Brisbane",               region: "Australia & New Zealand", lat: -27.470, lng: 153.026,  radius: 25 },
-  { label: "Auckland",               region: "Australia & New Zealand", lat: -36.849, lng: 174.763,  radius: 25 },
+  { label: "Long Island",           region: "United States",           lat: 40.789,  lng: -73.135,  radius: 30, default: 82 },
+  { label: "New York City",          region: "United States",           lat: 40.713,  lng: -74.006,  radius: 15, default: 35 },
+  { label: "Chicago",                region: "United States",           lat: 41.878,  lng: -87.630,  radius: 25, default: 12 },
+  { label: "Los Angeles",            region: "United States",           lat: 34.052,  lng: -118.244, radius: 40, default: 17 },
+  { label: "San Francisco Bay Area", region: "United States",           lat: 37.774,  lng: -122.419, radius: 35, default: 9  },
+  { label: "Seattle",                region: "United States",           lat: 47.608,  lng: -122.335, radius: 25, default: 10 },
+  { label: "Atlanta",                region: "United States",           lat: 33.749,  lng: -84.388,  radius: 35, default: 8  },
+  { label: "Sydney",                 region: "Australia & New Zealand", lat: -33.869, lng: 151.208,  radius: 25, default: 31 },
+  { label: "Melbourne",              region: "Australia & New Zealand", lat: -37.814, lng: 144.963,  radius: 25, default: 32 },
+  { label: "Brisbane",               region: "Australia & New Zealand", lat: -27.470, lng: 153.026,  radius: 25, default: 22 },
+  { label: "Auckland",               region: "Australia & New Zealand", lat: -36.849, lng: 174.763,  radius: 25, default: 8  },
 ];
 
 function haversine(lat1, lng1, lat2, lng2) {
@@ -201,7 +201,7 @@ function fetchCount(market) {
     .catch(function() { return { market: market, count: 0 }; });
 }
 
-Promise.all(ALL_MARKETS.map(fetchCount)).then(function(results) {
+function renderTable(results) {
   var live = results.filter(function(r) { return r.count >= THRESHOLD; });
   var soon = results.filter(function(r) { return r.count < THRESHOLD; });
 
@@ -226,9 +226,10 @@ Promise.all(ALL_MARKETS.map(fetchCount)).then(function(results) {
     });
   });
 
+  var soonSection = document.getElementById('soon-section');
+  var soonList = document.getElementById('soon-list');
+  soonList.innerHTML = '';
   if (soon.length) {
-    var soonSection = document.getElementById('soon-section');
-    var soonList = document.getElementById('soon-list');
     soonSection.style.display = '';
     soon.forEach(function(r) {
       var pill = document.createElement('span');
@@ -236,8 +237,15 @@ Promise.all(ALL_MARKETS.map(fetchCount)).then(function(results) {
       pill.textContent = r.market.label;
       soonList.appendChild(pill);
     });
+  } else {
+    soonSection.style.display = 'none';
   }
-});
+}
+
+var defaults = ALL_MARKETS.map(function(m) { return { market: m, count: m.default }; });
+renderTable(defaults);
+
+Promise.all(ALL_MARKETS.map(fetchCount)).then(renderTable);
 </script>
 </body>
 </html>
