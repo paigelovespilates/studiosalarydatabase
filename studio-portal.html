@@ -470,7 +470,7 @@
         session.email = null;
         showScreen('login');
         var msg = data.error === 'subscription_not_found'
-          ? 'We couldn\'t find an active subscription for that email. Please check your email or contact paige@paigelovespilates.com.'
+          ? 'We couldn\'t find an active subscription for that email. <a href="https://buy.stripe.com/9B67sK1Px5acfYF1Ww9oc00" target="_blank">Subscribe here</a> or contact paige@paigelovespilates.com.'
           : 'Something went wrong. Please try again.';
         showError('login-error', msg);
       }
