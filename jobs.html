@@ -23,11 +23,9 @@
 html { font-size: 16px; }
 body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--dark); -webkit-font-smoothing: antialiased; }
 
-/* ── Entrance/board toggle ── */
 #entrance { display: block; }
 #board    { display: none; }
 
-/* ── Entrance header ── */
 .e-header {
   background: var(--olive);
   padding: 52px 56px 52px;
@@ -65,7 +63,6 @@ body.manage-mode .e-close-btn { display: flex; }
 }
 .e-title em { font-style: italic; }
 
-/* ── Entrance body ── */
 .e-body { padding: 40px 56px 64px; max-width: 580px; }
 
 .e-intro {
@@ -76,13 +73,11 @@ body.manage-mode .e-close-btn { display: flex; }
   border-bottom: 1px solid var(--rule);
 }
 
-/* ── Manage alerts mode ── */
 body.manage-mode .e-intro-new  { display: block; }
 body.manage-mode .e-intro-first { display: none; }
 body:not(.manage-mode) .e-intro-new { display: none; }
 body:not(.manage-mode) .e-intro-first { display: block; }
 
-/* ── Near Me inline error ── */
 .nearme-error {
   display: none; font-size: 11px; color: #8B2020;
   background: #FAECEC; border: 1px solid #DEB8B8;
@@ -90,11 +85,9 @@ body:not(.manage-mode) .e-intro-first { display: block; }
   white-space: nowrap;
 }
 .nearme-error.visible { display: inline-block; }
-/* Each step is shown/hidden with display:block/none only — no CSS transitions */
 .step { display: none; margin-bottom: 36px; }
 .step.active { display: block; }
 
-/* Completed step summary */
 .step-done {
   display: none;
   padding: 12px 0;
@@ -119,14 +112,12 @@ body:not(.manage-mode) .e-intro-first { display: block; }
   font-size: 15px; font-style: italic; color: var(--mid); margin-left: auto;
 }
 
-/* Step question */
 .step-num  { font-size: 9px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
 .step-q    { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; color: var(--dark); margin-bottom: 18px; line-height: 1.2; }
 .step-hint { font-size: 12px; font-weight: 300; font-style: italic; color: var(--muted); margin-top: 8px; min-height: 18px; }
 .step-hint.ok    { color: var(--olive-m); }
 .step-hint.error { color: #c0392b; font-style: normal; }
 
-/* ── Inputs ── */
 .form-input {
   width: 100%; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 300;
   color: var(--dark); background: #fff; border: 1px solid var(--rule);
@@ -138,7 +129,6 @@ body:not(.manage-mode) .e-intro-first { display: block; }
 
 .loc-row { display: grid; grid-template-columns: 1fr 148px; gap: 10px; margin-bottom: 6px; }
 
-/* ── Radius ── */
 .radius-row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
 .radius-val { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; color: var(--olive); min-width: 44px; text-align: right; flex-shrink: 0; }
 .unit-toggle { display: flex; border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
@@ -147,7 +137,6 @@ body:not(.manage-mode) .e-intro-first { display: block; }
 input[type="range"] { flex: 1; -webkit-appearance: none; height: 1px; background: var(--rule); outline: none; }
 input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--olive); cursor: pointer; border: 2px solid #fff; box-shadow: 0 0 0 1px var(--olive); }
 
-/* ── Formats ── */
 .format-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 6px; }
 .fmt-opt { display: flex; align-items: center; gap: 10px; padding: 11px 14px; background: #fff; border: 1px solid var(--rule); border-radius: 2px; cursor: pointer; user-select: none; }
 .fmt-opt input { display: none; }
@@ -157,7 +146,6 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
 .fmt-opt:has(input:checked) { border-color: var(--olive); background: var(--linen); }
 .fmt-label { font-size: 13px; font-weight: 300; color: var(--dark); }
 
-/* ── Alert options ── */
 .alert-opts { display: flex; flex-direction: column; gap: 8px; }
 .alert-opt { display: flex; align-items: flex-start; gap: 14px; padding: 14px 16px; background: #fff; border: 1px solid var(--rule); border-radius: 2px; cursor: pointer; user-select: none; }
 .alert-opt input { display: none; }
@@ -168,7 +156,6 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
 .alert-title { font-size: 14px; font-weight: 400; color: var(--dark); margin-bottom: 2px; }
 .alert-desc  { font-size: 11px; font-weight: 300; color: var(--muted); line-height: 1.45; }
 
-/* ── Next button ── */
 .next-btn {
   display: inline-flex; align-items: center; gap: 10px;
   background: var(--olive); color: #EDEBE4; border: none; border-radius: 2px;
@@ -179,7 +166,6 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
 .next-btn:hover { background: #2a2c24; }
 .next-btn svg { width: 11px; height: 11px; stroke: rgba(237,235,228,0.7); stroke-width: 1.5; flex-shrink: 0; }
 
-/* ── Final submit ── */
 .form-status { font-size: 13px; padding: 11px 16px; border-radius: 2px; margin-bottom: 14px; display: none; line-height: 1.5; }
 .form-status.loading { display: block; color: var(--mid); background: var(--linen); }
 .form-status.error   { display: block; color: #8B2020; background: #FAECEC; border: 1px solid #DEB8B8; }
@@ -195,7 +181,6 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
 .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .submit-btn svg { width: 12px; height: 12px; stroke: rgba(237,235,228,0.7); stroke-width: 1.5; }
 
-/* ════════════ JOB BOARD ════════════ */
 .board-header { background: var(--olive); padding: 48px 56px 40px; }
 .board-header-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
 .board-subtitle { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(237,235,228,0.4); margin-bottom: 10px; }
@@ -269,7 +254,6 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
 .raise-hand-msg.success { display: block; color: #2d6b45; background: #E8F4EC; }
 .raise-hand-msg.error   { display: block; color: #8B2020; background: #FAECEC; }
 
-/* ── Raise your hand tooltip ── */
 .rh-tooltip-wrap { position: relative; display: inline-flex; align-items: center; gap: 6px; width: 100%; }
 .rh-tooltip-wrap .job-btn.job-btn-secondary { flex: 1; }
 .rh-tooltip {
@@ -313,7 +297,6 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
 .rh-info-btn:hover { border-color: var(--olive); color: var(--olive); }
 .empty-state { padding: 64px 0; text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic; color: var(--muted); }
 
-/* ── Mobile ── */
 @media (max-width: 600px) {
   .e-header { padding: 40px 24px 44px; }
   .e-body   { padding: 32px 24px 48px; }
@@ -331,9 +314,7 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
 </head>
 <body>
 
-<!-- ════════ ENTRANCE ════════ -->
 <div id="entrance">
-
   <div class="e-header">
     <div class="e-header-top">
       <div>
@@ -350,7 +331,6 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
     <p class="e-intro e-intro-first">Answer a few quick questions and we'll have the board ready for you, tailored to what you're looking for.</p>
     <p class="e-intro e-intro-new">Update your preferences below. Changes take effect next time an alert is sent.</p>
 
-    <!-- Completed step summaries (shown above active step) -->
     <div class="step-done" id="done-location">
       <div class="step-done-check"></div>
       <span class="step-done-label">Location</span>
@@ -372,7 +352,6 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
       <span class="step-done-value" id="done-alerts-val"></span>
     </div>
 
-    <!-- STEP 1: Location -->
     <div class="step active" id="step-location">
       <div class="step-num">Step 1 of 4</div>
       <div class="step-q">Where are you based?</div>
@@ -404,7 +383,6 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
       </button>
     </div>
 
-    <!-- STEP 2: Distance -->
     <div class="step" id="step-radius">
       <div class="step-num">Step 2 of 4</div>
       <div class="step-q">How far are you willing to travel?</div>
@@ -423,7 +401,6 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
       </button>
     </div>
 
-    <!-- STEP 3: Formats -->
     <div class="step" id="step-formats">
       <div class="step-num">Step 3 of 4</div>
       <div class="step-q">Which class formats do you teach?</div>
@@ -440,7 +417,6 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
       </button>
     </div>
 
-    <!-- STEP 4: Alert preference -->
     <div class="step" id="step-alerts">
       <div class="step-num">Step 4 of 4</div>
       <div class="step-q">How would you like to hear about new roles?</div>
@@ -468,7 +444,6 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
       </button>
     </div>
 
-    <!-- STEP 5: Email (only if alerts chosen) -->
     <div class="step" id="step-email">
       <div class="step-num">Almost done</div>
       <div class="step-q">Where should we send your alerts?</div>
@@ -480,7 +455,6 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
       </button>
     </div>
 
-    <!-- STEP 5b: Final submit (no-alert path) -->
     <div class="step" id="step-submit">
       <div class="form-status" id="formStatus"></div>
       <button type="button" class="submit-btn" id="submitBtn" onclick="handleSubmit()">
@@ -488,12 +462,9 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
         <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
     </div>
-
   </div>
-</div><!-- /entrance -->
+</div>
 
-
-<!-- ════════ JOB BOARD ════════ -->
 <div id="board">
   <div class="board-header">
     <div class="board-header-top">
@@ -511,7 +482,7 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
     <div class="filter-row-top">
       <div class="filter-search-wrap">
         <svg class="filter-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-        <input class="filter-input filter-search" id="jb-search" type="text" placeholder="Search studio or city…">
+        <input class="filter-input filter-search" id="jb-search" type="text" placeholder="Search studio or city\u2026">
       </div>
     </div>
     <div class="filter-row-bottom">
@@ -527,7 +498,7 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
           <option value="160">Within 100 mi</option>
         </select>
       </div>
-      <span class="nearme-error" id="jb-nearme-error">Location access denied — check your browser settings</span>
+      <span class="nearme-error" id="jb-nearme-error">Location access denied \u2014 check your browser settings</span>
       <button type="button" class="filter-sortdist" id="jb-sortdist" onclick="toggleSortDistance()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
         Sort by Distance
@@ -538,11 +509,10 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18p
     </div>
   </div>
   <div class="board-body">
-    <div class="board-status"><span id="jb-status">Loading…</span></div>
+    <div class="board-status"><span id="jb-status">Loading\u2026</span></div>
     <div class="jobs-grid" id="jb-grid"></div>
   </div>
 </div>
-
 
 <script>
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyG9ABlJnD7rghmsz_2p63zQOxKEwm1fBOOMIhNcXYBp2kGuy8lVQvk3BLDKOVxAVJm/exec';
@@ -551,35 +521,28 @@ const INTERESTS_ID    = '1zG59bNRfIQ_VtA5Se_vJWNyDr13sx_Ff11AwWDplNf0';
 const DONE_KEY        = 'plp_jobs_pref_done';
 const SKIP_KEY        = 'plp_jobs_pref_skipped';
 
-// ── localStorage helper (safe in iframe / Squarespace) ──
 function lsGet(k)   { try { return localStorage.getItem(k);    } catch(e) { return null; } }
 function lsSet(k,v) { try { localStorage.setItem(k,v);         } catch(e) {} }
 function lsRemove(k){ try { localStorage.removeItem(k);        } catch(e) {} }
 
-// ── Init (deferred so all functions are defined first) ──
 document.addEventListener('DOMContentLoaded', function() {
   if (lsGet(DONE_KEY) || lsGet(SKIP_KEY)) {
     document.getElementById('entrance').style.display = 'none';
     document.getElementById('board').style.display = 'block';
     initJobBoard();
-  } else {
-    // show entrance
   }
-
   const _emailEl = document.getElementById('pref-email');
   if (_emailEl) {
     _emailEl.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') { e.preventDefault(); nextEmail(); }
     });
   }
-
   ['jb-search','jb-format','jb-position','jb-radius'].forEach(function(id) {
     const el = document.getElementById(id);
     if (el) el.addEventListener(el.tagName === 'INPUT' ? 'input' : 'change', renderJobs);
   });
 });
 
-// ── Step navigation ───────────────────────────────
 let radiusUnit = 'mi';
 let alertChoice = '';
 
@@ -596,29 +559,17 @@ function markDone(doneId, val) {
   document.getElementById(doneId + '-val').textContent = val;
 }
 
-// STEP 1 ─ Location
 function nextLocation() {
   const country = document.getElementById('pref-country').value;
   const postal  = document.getElementById('pref-postal').value.trim();
   const hint    = document.getElementById('hint-location');
-
-  if (!country) {
-    hint.textContent = 'Please select your country.';
-    hint.className = 'step-hint error';
-    return;
-  }
-  if (postal.length < 3) {
-    hint.textContent = 'Please enter your postal code.';
-    hint.className = 'step-hint error';
-    return;
-  }
-
+  if (!country) { hint.textContent = 'Please select your country.'; hint.className = 'step-hint error'; return; }
+  if (postal.length < 3) { hint.textContent = 'Please enter your postal code.'; hint.className = 'step-hint error'; return; }
   hint.textContent = '';
-  markDone('done-location', postal.toUpperCase() + ' · ' + country.toUpperCase());
+  markDone('done-location', postal.toUpperCase() + ' \u00b7 ' + country.toUpperCase());
   showStep('step-radius');
 }
 
-// STEP 2 ─ Radius
 function setUnit(u) {
   radiusUnit = u;
   document.getElementById('btn-mi').classList.toggle('active', u === 'mi');
@@ -631,59 +582,39 @@ function nextRadius() {
   showStep('step-formats');
 }
 
-// STEP 3 ─ Formats
 function nextFormats() {
   const selected = Array.from(document.querySelectorAll('input[name="fmt"]:checked')).map(e => e.value);
   const hint = document.getElementById('hint-formats');
-  if (!selected.length) {
-    hint.textContent = 'Please select at least one format.';
-    hint.className = 'step-hint error';
-    return;
-  }
+  if (!selected.length) { hint.textContent = 'Please select at least one format.'; hint.className = 'step-hint error'; return; }
   hint.textContent = '';
   markDone('done-formats', selected.join(', '));
   showStep('step-alerts');
 }
 
-// STEP 4 ─ Alerts
 function nextAlerts() {
   const val  = document.querySelector('input[name="alertFreq"]:checked')?.value;
   const hint = document.getElementById('hint-alerts');
-  if (!val) {
-    hint.textContent = 'Please select an option.';
-    hint.className = 'step-hint error';
-    return;
-  }
+  if (!val) { hint.textContent = 'Please select an option.'; hint.className = 'step-hint error'; return; }
   hint.textContent = '';
   alertChoice = val;
   const labels = { realtime: 'As it happens', daily: 'Daily digest', none: 'No alerts' };
   markDone('done-alerts', labels[val]);
-
-  if (val === 'none') {
-    showStep('step-submit');
-    handleSubmit();
-  } else {
-    showStep('step-email');
-    setTimeout(() => document.getElementById('pref-email').focus(), 100);
-  }
+  if (val === 'none') { showStep('step-submit'); handleSubmit(); }
+  else { showStep('step-email'); setTimeout(() => document.getElementById('pref-email').focus(), 100); }
 }
 
-// STEP 5 ─ Email
 function nextEmail() {
   const email = document.getElementById('pref-email').value.trim();
   const hint  = document.getElementById('hint-email');
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    hint.textContent = 'Please enter a valid email address.';
-    hint.className = 'step-hint error';
-    document.getElementById('pref-email').classList.add('err');
-    return;
+    hint.textContent = 'Please enter a valid email address.'; hint.className = 'step-hint error';
+    document.getElementById('pref-email').classList.add('err'); return;
   }
   hint.textContent = '';
   document.getElementById('pref-email').classList.remove('err');
   handleSubmit();
 }
 
-// Expose everything onclick attributes need
 window.nextLocation      = nextLocation;
 window.nextRadius        = nextRadius;
 window.nextFormats       = nextFormats;
@@ -694,46 +625,22 @@ window.handleSubmit      = handleSubmit;
 window.showEntranceAgain = showEntranceAgain;
 window.goToBoard         = goToBoard;
 
-
-
-// ── Submit ────────────────────────────────────────
 async function handleSubmit() {
   const email      = alertChoice !== 'none' ? document.getElementById('pref-email').value.trim() : '';
   const country    = document.getElementById('pref-country').value;
   const postalCode = document.getElementById('pref-postal').value.trim();
   const formats    = Array.from(document.querySelectorAll('input[name="fmt"]:checked')).map(e => e.value);
   const radius     = parseInt(document.getElementById('pref-radius').value);
-
-  // Save prefs locally so we can pre-fill on return
-  lsSet('plp_jobs_prefs', JSON.stringify({
-    email, country, postalCode,
-    formats, radius, radiusUnit,
-    frequency: alertChoice || 'none'
-  }));
-
-  // Fire subscription via JSONP (Apps Script doesn't support CORS POST)
-  const params = new URLSearchParams({
-    action: 'subscribe',
-    email: email || 'no-alert@placeholder',
-    country,
-    postalCode,
-    classFormats: formats.join(', '),
-    distanceRadius: radius,
-    radiusUnit,
-    frequency: alertChoice || 'none',
-    timestamp: new Date().toISOString()
-  });
+  lsSet('plp_jobs_prefs', JSON.stringify({ email, country, postalCode, formats, radius, radiusUnit, frequency: alertChoice || 'none' }));
+  const params = new URLSearchParams({ action: 'subscribe', email: email || 'no-alert@placeholder', country, postalCode, classFormats: formats.join(', '), distanceRadius: radius, radiusUnit, frequency: alertChoice || 'none', timestamp: new Date().toISOString() });
   const s = document.createElement('script');
   s.src = APPS_SCRIPT_URL + '?' + params.toString();
-  s.onerror = () => s.remove();
-  s.onload  = () => s.remove();
+  s.onerror = () => s.remove(); s.onload = () => s.remove();
   document.body.appendChild(s);
-
   lsSet(DONE_KEY, '1');
   goToBoard();
 }
 
-// ── Board show/hide ───────────────────────────────
 function goToBoard() {
   document.body.classList.remove('manage-mode');
   document.getElementById('entrance').style.display = 'none';
@@ -743,52 +650,29 @@ function goToBoard() {
 }
 
 function showEntranceAgain() {
-  // Enter manage-mode — keep DONE_KEY so board is still accessible via X
   document.body.classList.add('manage-mode');
-
-  // Update header copy
   const titleEl = document.getElementById('e-title-text');
   if (titleEl) titleEl.innerHTML = 'Update your<br><em>alert preferences.</em>';
-
-  // Pre-fill from saved prefs
   const raw = lsGet('plp_jobs_prefs');
   if (raw) {
     try {
       const p = JSON.parse(raw);
       if (p.country)    document.getElementById('pref-country').value = p.country;
       if (p.postalCode) document.getElementById('pref-postal').value  = p.postalCode;
-      if (p.radius) {
-        document.getElementById('pref-radius').value = p.radius;
-        document.getElementById('radiusVal').textContent = p.radius;
-      }
+      if (p.radius) { document.getElementById('pref-radius').value = p.radius; document.getElementById('radiusVal').textContent = p.radius; }
       if (p.radiusUnit) setUnit(p.radiusUnit);
-      if (p.formats) {
-        document.querySelectorAll('input[name="fmt"]').forEach(cb => {
-          cb.checked = p.formats.includes(cb.value);
-        });
-      }
-      if (p.frequency) {
-        const radio = document.querySelector(`input[name="alertFreq"][value="${p.frequency}"]`);
-        if (radio) radio.checked = true;
-        alertChoice = p.frequency;
-      }
-      if (p.email) {
-        const emailEl = document.getElementById('pref-email');
-        if (emailEl) emailEl.value = p.email;
-      }
+      if (p.formats) { document.querySelectorAll('input[name="fmt"]').forEach(cb => { cb.checked = p.formats.includes(cb.value); }); }
+      if (p.frequency) { const radio = document.querySelector(`input[name="alertFreq"][value="${p.frequency}"]`); if (radio) radio.checked = true; alertChoice = p.frequency; }
+      if (p.email) { const emailEl = document.getElementById('pref-email'); if (emailEl) emailEl.value = p.email; }
     } catch(e) {}
   }
-
-  // Reset step UI — go straight to step 1, clear done summaries
   document.querySelectorAll('.step-done').forEach(el => el.classList.remove('visible'));
   showStep('step-location');
-
   document.getElementById('board').style.display = 'none';
   document.getElementById('entrance').style.display = 'block';
   try { window.scrollTo(0, 0); } catch(e) {}
 }
 
-// ── Job Board ─────────────────────────────────────
 let jobData = [], boardReady = false;
 
 function initJobBoard() {
@@ -827,12 +711,9 @@ function initJobBoard() {
 
 function setupFilters() {
   const fmts=new Set(), types=new Set();
-  jobData.forEach(j => {
-    if (j.format) fmts.add(j.format);
-    if (j.type)   types.add(j.type);
-  });
-  document.getElementById('jb-format').innerHTML   = '<option value="">All Formats</option>'        + [...fmts].sort().map(f=>`<option>${esc(f)}</option>`).join('');
-  document.getElementById('jb-position').innerHTML = '<option value="">Employment Type</option>'    + [...types].sort().map(t=>`<option>${esc(t)}</option>`).join('');
+  jobData.forEach(j => { if (j.format) fmts.add(j.format); if (j.type) types.add(j.type); });
+  document.getElementById('jb-format').innerHTML   = '<option value="">All Formats</option>'     + [...fmts].sort().map(f=>`<option>${esc(f)}</option>`).join('');
+  document.getElementById('jb-position').innerHTML = '<option value="">Employment Type</option>' + [...types].sort().map(t=>`<option>${esc(t)}</option>`).join('');
 }
 
 function getFiltered() {
@@ -852,16 +733,31 @@ function getFiltered() {
   });
 }
 
+// ── Currency helper ────────────────────────────────
+function formatPay(pay, country) {
+  if (!pay) return pay;
+  var p = pay.trim();
+  // Already has a recognisable currency prefix — leave it alone
+  if (/^[$\u00a3\u20ac\u00a5]/.test(p) || p.startsWith('NZ$') || p.startsWith('CA$') || p.startsWith('A$') || p.startsWith('S$') || p.startsWith('AED')) return p;
+  var c = (country || '').toLowerCase();
+  if (c === 'australia' || c === 'au') return 'A$' + p;
+  if (c === 'new zealand' || c === 'nz') return 'NZ$' + p;
+  if (c === 'canada' || c === 'ca') return 'CA$' + p;
+  if (c === 'united kingdom' || c === 'uk' || c === 'gb' || c === 'england') return '\u00a3' + p;
+  if (c === 'singapore' || c === 'sg') return 'S$' + p;
+  if (c === 'uae' || c === 'ae' || c === 'united arab emirates') return 'AED ' + p;
+  if (c === 'japan' || c === 'jp') return '\u00a5' + p;
+  if (['germany','de','france','fr','netherlands','nl','sweden','se','norway','no','denmark','dk','switzerland','ch','ireland','ie'].includes(c)) return '\u20ac' + p;
+  // Default USD
+  return '$' + p;
+}
+
 function renderJobs() {
   let filtered = getFiltered();
-
-  // Sort by distance if active and we have coords
   if (sortByDistance && userCoords) {
     filtered = filtered.map(j => ({
       ...j,
-      _dist: (j.lat && j.lng)
-        ? haversineKm(userCoords.lat, userCoords.lng, parseFloat(j.lat), parseFloat(j.lng))
-        : Infinity
+      _dist: (j.lat && j.lng) ? haversineKm(userCoords.lat, userCoords.lng, parseFloat(j.lat), parseFloat(j.lng)) : Infinity
     })).sort((a, b) => a._dist - b._dist);
   }
   const grid = document.getElementById('jb-grid');
@@ -877,7 +773,7 @@ function renderJobs() {
     const dbUrl = 'https://www.paigelovespilates.com/home-pay?studio=' + encodeURIComponent(job.studio);
     return `<div class="job-card">
       <a class="job-card-studio" href="${dbUrl}">${esc(job.studio)}</a>
-      <a class="job-card-db-link" href="${dbUrl}">→ See studio in Salary Database</a>
+      <a class="job-card-db-link" href="${dbUrl}">\u2192 See studio in Salary Database</a>
       <div class="job-card-location">${esc(loc)}</div>
       <div class="job-badges">
         ${job.type  ? `<span class="job-badge job-badge-type">${esc(job.type)}</span>` : ''}
@@ -887,20 +783,20 @@ function renderJobs() {
         ${job.schedule ? `<div class="job-detail-row"><span class="job-detail-label">Schedule</span><span>${esc(job.schedule)}</span></div>` : ''}
         <div class="job-detail-row"><span class="job-detail-label">Posted</span><span>${fmtDate(job.posted)}</span></div>
       </div>
-      ${job.pay   ? `<div class="job-pay">${esc(job.pay)}</div>` : ''}
+      ${job.pay   ? `<div class="job-pay">${esc(formatPay(job.pay, job.country))}</div>` : ''}
       ${job.notes ? `<div class="job-notes"><div class="job-notes-label">From the studio</div>${esc(job.notes)}</div>` : ''}
       <div class="job-card-cta">
         <a href="mailto:${esc(job.email)}" class="job-btn job-btn-primary">Reach out</a>
         <div class="rh-tooltip-wrap">
           <button class="job-btn job-btn-secondary" onclick="toggleRaiseHand('${job.id}')">Raise your hand</button>
           <button type="button" class="rh-info-btn" onclick="toggleTip(this)" aria-label="What does this mean?">?</button>
-          <div class="rh-tooltip">Let the studio know you're interested — we'll send them your email so they can reach out directly.</div>
+          <div class="rh-tooltip">Let the studio know you're interested \u2014 we'll send them your email so they can reach out directly.</div>
         </div>
       </div>
       <div class="raise-hand-form" id="rh-${job.id}">
         <div class="raise-hand-msg" id="rh-msg-${job.id}"></div>
         <input type="email" class="raise-hand-input" id="rh-email-${job.id}" placeholder="Your email address">
-        <div class="raise-hand-helper">We'll let the studio know you're interested — they'll reach out directly.</div>
+        <div class="raise-hand-helper">We'll let the studio know you're interested \u2014 they'll reach out directly.</div>
         <div class="raise-hand-btns">
           <button class="job-btn job-btn-secondary" onclick="toggleRaiseHand('${job.id}')">Cancel</button>
           <button class="job-btn job-btn-primary"   onclick="submitRaiseHand('${job.id}')">Raise hand</button>
@@ -920,7 +816,6 @@ function fmtDate(v) {
 
 function esc(t) { const d=document.createElement('div'); d.textContent=String(t||''); return d.innerHTML; }
 
-// ── Near Me ───────────────────────────────────────
 let nearMeActive   = false;
 let sortByDistance = false;
 let userCoords     = null;
@@ -931,9 +826,7 @@ function haversineKm(lat1, lon1, lat2, lon2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
-function getNearMeRadius() {
-  return parseFloat(document.getElementById('jb-radius')?.value || '40');
-}
+function getNearMeRadius() { return parseFloat(document.getElementById('jb-radius')?.value || '40'); }
 
 function showNearMeControls(city) {
   document.getElementById('jb-radius').classList.add('visible');
@@ -962,61 +855,33 @@ async function getCityFromCoords(lat, lng) {
 
 window.toggleNearMe = function() {
   const btn = document.getElementById('jb-nearme');
-  if (nearMeActive) {
-    nearMeActive   = false;
-    sortByDistance = false;
-    btn.classList.remove('active');
-    hideNearMeControls();
-    renderJobs();
-    return;
-  }
-  if (userCoords) {
-    nearMeActive = true;
-    btn.classList.add('active');
-    showNearMeControls();
-    renderJobs();
-    return;
-  }
-  btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Locating…`;
+  if (nearMeActive) { nearMeActive = false; sortByDistance = false; btn.classList.remove('active'); hideNearMeControls(); renderJobs(); return; }
+  if (userCoords) { nearMeActive = true; btn.classList.add('active'); showNearMeControls(); renderJobs(); return; }
+  btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Locating\u2026`;
   navigator.geolocation.getCurrentPosition(
     async pos => {
-      userCoords   = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-      nearMeActive = true;
-      btn.classList.add('active');
-      showNearMeControls();
-      renderJobs();
+      userCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      nearMeActive = true; btn.classList.add('active'); showNearMeControls(); renderJobs();
       const city = await getCityFromCoords(userCoords.lat, userCoords.lng);
       if (city) showNearMeControls(city);
     },
     () => {
       btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Near Me`;
       const errEl = document.getElementById('jb-nearme-error');
-      if (errEl) {
-        errEl.classList.add('visible');
-        setTimeout(() => errEl.classList.remove('visible'), 5000);
-      }
+      if (errEl) { errEl.classList.add('visible'); setTimeout(() => errEl.classList.remove('visible'), 5000); }
     }
   );
 };
 
 window.toggleSortDistance = function() {
   const btn = document.getElementById('jb-sortdist');
-  sortByDistance = !sortByDistance;
-  btn.classList.toggle('active', sortByDistance);
-  renderJobs();
+  sortByDistance = !sortByDistance; btn.classList.toggle('active', sortByDistance); renderJobs();
 };
 
 window.jobBoardClearFilters = function() {
-  ['jb-search','jb-format','jb-position'].forEach(id => {
-    const el=document.getElementById(id); if(el){el.value='';}
-  });
+  ['jb-search','jb-format','jb-position'].forEach(id => { const el=document.getElementById(id); if(el){el.value='';} });
   document.getElementById('jb-radius').value = '40';
-  if (nearMeActive) {
-    nearMeActive   = false;
-    sortByDistance = false;
-    document.getElementById('jb-nearme').classList.remove('active');
-    hideNearMeControls();
-  }
+  if (nearMeActive) { nearMeActive = false; sortByDistance = false; document.getElementById('jb-nearme').classList.remove('active'); hideNearMeControls(); }
   renderJobs();
 };
 
@@ -1025,12 +890,10 @@ window.toggleRaiseHand = function(id) { document.getElementById('rh-'+id)?.class
 window.toggleTip = function(btn) {
   const wrap = btn.closest('.rh-tooltip-wrap');
   const isOpen = wrap.classList.contains('tip-open');
-  // close all others first
   document.querySelectorAll('.rh-tooltip-wrap.tip-open').forEach(w => w.classList.remove('tip-open'));
   if (!isOpen) wrap.classList.add('tip-open');
 };
 
-// Close tooltip when tapping anywhere else
 document.addEventListener('click', function(e) {
   if (!e.target.closest('.rh-tooltip-wrap')) {
     document.querySelectorAll('.rh-tooltip-wrap.tip-open').forEach(w => w.classList.remove('tip-open'));
@@ -1041,9 +904,7 @@ window.submitRaiseHand = async function(jobId) {
   const emailEl=document.getElementById('rh-email-'+jobId);
   const msgEl  =document.getElementById('rh-msg-'+jobId);
   const email  =emailEl?.value.trim();
-  if (!email||!email.includes('@')) {
-    if(msgEl){msgEl.textContent='Please enter a valid email.';msgEl.className='raise-hand-msg error';} return;
-  }
+  if (!email||!email.includes('@')) { if(msgEl){msgEl.textContent='Please enter a valid email.';msgEl.className='raise-hand-msg error';} return; }
   if(msgEl) msgEl.className='raise-hand-msg';
   try {
     const resp =await fetch(`${JOBS_API}?action=recordInterest&jobId=${encodeURIComponent(jobId)}&email=${encodeURIComponent(email)}&spreadsheetId=${encodeURIComponent(INTERESTS_ID)}`);
@@ -1052,7 +913,7 @@ window.submitRaiseHand = async function(jobId) {
     if(!match) throw new Error('Invalid response');
     const json=JSON.parse(match[1]);
     if(json.success){
-      if(msgEl){msgEl.textContent=json.duplicate?'Already submitted!':'Done — the studio will be in touch.';msgEl.className='raise-hand-msg success';}
+      if(msgEl){msgEl.textContent=json.duplicate?'Already submitted!':'Done \u2014 the studio will be in touch.';msgEl.className='raise-hand-msg success';}
       if(emailEl) emailEl.value='';
       setTimeout(()=>{document.getElementById('rh-'+jobId)?.classList.remove('open');if(msgEl)msgEl.className='raise-hand-msg';},2200);
     } else throw new Error(json.error);
@@ -1060,8 +921,6 @@ window.submitRaiseHand = async function(jobId) {
     if(msgEl){msgEl.textContent='Error: '+err.message;msgEl.className='raise-hand-msg error';}
   }
 };
-
-
 </script>
 </body>
 </html>
