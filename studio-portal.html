@@ -26,12 +26,12 @@
       --modal-shadow: 0 -4px 32px rgba(55,57,48,0.12);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'DM Sans', sans-serif; background: transparent; color: var(--text); line-height: 1.5; min-height: 100vh; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; min-height: 100vh; }
 
     /* HEADER */
-    .header { background: var(--accent); padding: 1.25rem 1.5rem 0; display: flex; flex-direction: column; }
-    .header-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-bottom: 1rem; }
-    .header-left h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; color: #EDEBE4; letter-spacing: -0.02em; line-height: 1; }
+    .header { background: var(--accent); padding: 1rem 1.5rem 0; display: flex; flex-direction: column; }
+    .header-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-bottom: 0.75rem; }
+    .header-left h1 { font-family: 'DM Sans', sans-serif; font-size: 0.7rem; font-weight: 600; color: rgba(255,255,255,0.35); letter-spacing: 0.1em; text-transform: uppercase; line-height: 1; }
     .header-left p { color: #B0AFA8; font-size: 0.8rem; margin-top: 0.2rem; }
     .header-right { display: flex; align-items: center; gap: 0.75rem; }
     .header-market { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #B0AFA8; background: rgba(255,255,255,0.08); padding: 0.25rem 0.75rem; border-radius: 20px; }
@@ -74,15 +74,15 @@
     .tab-btn:hover:not(.active) { color: rgba(255,255,255,0.75); }
 
     /* FILTERS */
-    .dir-filters { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0.6rem 1rem; display: flex; gap: 0.5rem; align-items: center; flex-wrap: nowrap; overflow: hidden; }
-    .filter-control { padding: 0.45rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); font-family: 'DM Sans', sans-serif; font-size: 0.825rem; color: var(--text); cursor: pointer; transition: border-color 0.2s; appearance: none; -webkit-appearance: none; white-space: nowrap; flex-shrink: 1; min-width: 0; }
+    .dir-filters { background: var(--bg); border-bottom: 1px solid var(--border); padding: 0.65rem 1rem; display: flex; gap: 0.5rem; align-items: center; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; }
+    .filter-control { padding: 0.45rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); font-family: 'DM Sans', sans-serif; font-size: 0.825rem; color: var(--text); cursor: pointer; transition: border-color 0.2s; appearance: none; -webkit-appearance: none; white-space: nowrap; flex-shrink: 0; min-width: 0; }
     .filter-control:focus { outline: none; border-color: var(--accent); }
     select.filter-control { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B6A63' d='M6 8L1.5 3.5h9z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.5rem center; padding-right: 1.5rem; }
-    .filter-btn { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.45rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); font-family: 'DM Sans', sans-serif; font-size: 0.825rem; color: var(--text); cursor: pointer; transition: border-color 0.2s, background 0.2s; white-space: nowrap; flex-shrink: 0; }
+    .filter-btn { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.45rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); font-family: 'DM Sans', sans-serif; font-size: 0.825rem; color: var(--text); cursor: pointer; transition: border-color 0.2s, background 0.2s; white-space: nowrap; flex-shrink: 0; }
     .filter-btn:hover { border-color: #B0AFA8; }
     .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #EDEBE4; }
     .filter-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
-    .filter-more-btn { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.45rem 0.65rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); font-family: 'DM Sans', sans-serif; font-size: 0.825rem; color: var(--text); cursor: pointer; white-space: nowrap; flex-shrink: 0; margin-left: auto; }
+    .filter-more-btn { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.45rem 0.65rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); font-family: 'DM Sans', sans-serif; font-size: 0.825rem; color: var(--text); cursor: pointer; white-space: nowrap; flex-shrink: 0; margin-left: auto; }
     .filter-more-btn.has-active { background: var(--accent-light); border-color: #B0AFA8; font-weight: 600; }
     .filter-count { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; flex-shrink: 0; }
 
@@ -110,8 +110,8 @@
     .more-apply-btn { width: 100%; padding: 0.85rem; background: var(--accent); color: #EDEBE4; border: none; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; }
 
     /* LIST */
-    .list-wrap { flex: 1; }
-    .list-item { padding: 0.9rem 1.25rem; border-bottom: 1px solid var(--border); background: var(--surface); cursor: pointer; transition: background 0.15s; }
+    .list-wrap { flex: 1; background: var(--bg); }
+    .list-item { padding: 0.9rem 1.25rem 0.9rem 1.25rem; border-bottom: 1px solid var(--border); background: var(--surface); cursor: pointer; transition: background 0.15s; }
     .list-item:hover { background: #F7F6F2; }
     .list-location { font-size: 0.9rem; font-weight: 500; color: var(--text); margin-bottom: 0.15rem; }
     .list-formats { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -216,7 +216,7 @@
       .tally-sheet { border-radius: 12px; max-height: 85vh; margin: 1rem; }
     }
     @media (max-width: 600px) {
-      .header { padding: 0.85rem 1rem; }
+      .header { padding: 0.85rem 1rem 0; }
       .header-left p { display: none; }
       .header-top { padding-bottom: 0.75rem; }
       .auth-card { padding: 2rem 1.25rem; }
