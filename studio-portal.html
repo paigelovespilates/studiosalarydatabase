@@ -29,7 +29,8 @@
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; min-height: 100vh; }
 
     /* HEADER */
-    .header { background: var(--accent); padding: 1.25rem 1.5rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .header { background: var(--accent); padding: 1.25rem 1.5rem 0; display: flex; flex-direction: column; }
+    .header-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-bottom: 1rem; }
     .header-left h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; color: #EDEBE4; letter-spacing: -0.02em; line-height: 1; }
     .header-left p { color: #B0AFA8; font-size: 0.8rem; margin-top: 0.2rem; }
     .header-right { display: flex; align-items: center; gap: 0.75rem; }
@@ -67,10 +68,10 @@
     #screen-directory { display: none; flex-direction: column; min-height: 100vh; }
 
     /* TAB BAR */
-    .tab-bar { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; }
-    .tab-btn { flex: 1; padding: 0.75rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: color 0.2s, border-color 0.2s; }
-    .tab-btn.active { color: var(--text); border-bottom-color: var(--accent); }
-    .tab-btn:hover:not(.active) { color: var(--text); }
+    .tab-bar { display: flex; border-top: 1px solid rgba(255,255,255,0.1); }
+    .tab-btn { flex: 1; padding: 0.7rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; color: rgba(255,255,255,0.45); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: color 0.2s, border-color 0.2s; text-align: center; }
+    .tab-btn.active { color: #EDEBE4; border-bottom-color: #EDEBE4; }
+    .tab-btn:hover:not(.active) { color: rgba(255,255,255,0.75); }
 
     /* FILTERS */
     .dir-filters { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0.6rem 1rem; display: flex; gap: 0.5rem; align-items: center; flex-wrap: nowrap; overflow: hidden; }
@@ -217,6 +218,7 @@
     @media (max-width: 600px) {
       .header { padding: 0.85rem 1rem; }
       .header-left p { display: none; }
+      .header-top { padding-bottom: 0.75rem; }
       .auth-card { padding: 2rem 1.25rem; }
       .market-grid { grid-template-columns: 1fr; }
       .filter-count { display: none; }
@@ -282,21 +284,21 @@
 <!-- SCREEN 4: DIRECTORY -->
 <div id="screen-directory">
   <div class="header">
-    <div class="header-left">
-      <h1>Instructor Network</h1>
-      <p>Browse instructors in your market</p>
+    <div class="header-top">
+      <div class="header-left">
+        <h1>Instructor Network</h1>
+        <p>Browse instructors in your market</p>
+      </div>
+      <div class="header-right">
+        <div id="header-market-badge" class="header-market"></div>
+        <button class="logout-btn" onclick="logout()">Sign out</button>
+      </div>
     </div>
-    <div class="header-right">
-      <div id="header-market-badge" class="header-market"></div>
-      <button class="logout-btn" onclick="logout()">Sign out</button>
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-talent" onclick="switchTab('talent')">Talent directory</button>
+      <button class="tab-btn" id="tab-jobs" onclick="switchTab('jobs')">Job board</button>
+      <a class="tab-btn" href="https://paigelovespilates.github.io/studiosalarydatabase/" target="_blank" rel="noopener" style="text-decoration:none;">Salary database ↗</a>
     </div>
-  </div>
-
-  <!-- TAB BAR -->
-  <div class="tab-bar">
-    <button class="tab-btn active" id="tab-talent" onclick="switchTab('talent')">Talent directory</button>
-    <button class="tab-btn" id="tab-jobs" onclick="switchTab('jobs')">Job board</button>
-    <a class="tab-btn" href="https://paigelovespilates.github.io/studiosalarydatabase/" target="_blank" rel="noopener" style="text-decoration:none;">Salary database ↗</a>
   </div>
 
   <!-- TALENT TAB CONTENT -->
