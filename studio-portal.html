@@ -471,7 +471,22 @@
     document.getElementById('filterMoreBtn').classList.toggle('has-active', !!hasActive);
   }
 
-  function normalizeExperience(val) { if (!val) return ''; return val.replace(/\s*-\s*/g, '-').replace(/\s+/g, ' ').trim(); }
+  // Normalizes legacy experience level values from older form versions
+  // into the current canonical set used by the instructor signup form.
+  function normalizeExperience(val) {
+    if (!val) return '';
+    var v = val.trim();
+    var map = {
+      '0 - 12 months':     'Less than 1 Year',
+      '0-12 months':       'Less than 1 Year',
+      '1 - 3 years':       '3-5 Years',
+      '1-3 years':         '3-5 Years',
+      '3 - 5 years':       '3-5 Years',
+      'More than 5 years': '6-10 Years',
+      '3':                 '3-5 Years'
+    };
+    return map[v] || v;
+  }
 
   function populateFilterDropdowns(profiles) {
     var formats = {}, experiences = {}, lookingFors = {};
