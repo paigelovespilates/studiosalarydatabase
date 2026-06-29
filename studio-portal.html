@@ -66,6 +66,12 @@
     /* DIRECTORY */
     #screen-directory { display: none; flex-direction: column; min-height: 100vh; }
 
+    /* TAB BAR */
+    .tab-bar { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; }
+    .tab-btn { flex: 1; padding: 0.75rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: color 0.2s, border-color 0.2s; }
+    .tab-btn.active { color: var(--text); border-bottom-color: var(--accent); }
+    .tab-btn:hover:not(.active) { color: var(--text); }
+
     /* FILTERS */
     .dir-filters { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0.6rem 1rem; display: flex; gap: 0.5rem; align-items: center; flex-wrap: nowrap; overflow: hidden; }
     .filter-control { padding: 0.45rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); font-family: 'DM Sans', sans-serif; font-size: 0.825rem; color: var(--text); cursor: pointer; transition: border-color 0.2s; appearance: none; -webkit-appearance: none; white-space: nowrap; flex-shrink: 1; min-width: 0; }
@@ -137,6 +143,64 @@
     .modal-contact:hover { background: var(--accent-hover); }
     .modal-contact svg { width: 14px; height: 14px; }
 
+    /* JOB BOARD TAB */
+    .jobboard-wrap { flex: 1; padding: 1.25rem; max-width: 640px; width: 100%; margin: 0 auto; }
+    .jobboard-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem; }
+    .jobboard-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; letter-spacing: -0.02em; }
+    .post-role-btn { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.5rem 1rem; background: var(--accent); color: #EDEBE4; border: none; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
+    .post-role-btn:hover { background: var(--accent-hover); }
+    .post-role-btn svg { width: 14px; height: 14px; }
+
+    /* JOB CARDS */
+    .job-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.25rem; margin-bottom: 0.75rem; }
+    .job-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.5rem; }
+    .job-card-role { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+    .job-card-date { font-size: 0.75rem; color: var(--text-secondary); white-space: nowrap; flex-shrink: 0; margin-top: 0.15rem; }
+    .job-card-meta { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.1rem; }
+    .job-card-pay { font-size: 0.82rem; color: var(--green); font-weight: 500; margin-bottom: 0.75rem; }
+    .job-card-actions { display: flex; gap: 0.5rem; }
+    .job-edit-btn { padding: 0.4rem 0.85rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); font-family: 'DM Sans', sans-serif; font-size: 0.8rem; color: var(--text); cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+    .job-edit-btn:hover { border-color: #B0AFA8; background: var(--accent-light); }
+
+    /* TALLY EMPTY STATE */
+    .jobboard-empty { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem 1.5rem; text-align: center; }
+    .jobboard-empty-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .jobboard-empty-sub { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .tally-frame { width: 100%; border: none; border-radius: var(--radius); min-height: 520px; display: block; }
+    .tally-submitted-hint { margin-top: 1rem; text-align: center; }
+    .tally-submitted-hint button { background: none; border: none; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; color: var(--text-secondary); cursor: pointer; text-decoration: underline; }
+    .tally-submitted-hint button:hover { color: var(--text); }
+
+    /* TALLY MODAL (post another role) */
+    .tally-overlay { display: none; position: fixed; inset: 0; background: rgba(55,57,48,0.4); z-index: 150; align-items: flex-end; justify-content: center; }
+    .tally-overlay.open { display: flex; }
+    .tally-sheet { background: var(--surface); border-radius: 16px 16px 0 0; width: 100%; max-width: 640px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: var(--modal-shadow); animation: slideUp 0.25s ease; }
+    .tally-sheet-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem 0.75rem; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .tally-sheet-header h3 { font-size: 0.95rem; font-weight: 600; }
+    .tally-sheet-close { background: none; border: none; cursor: pointer; color: var(--text-secondary); padding: 0.25rem; }
+    .tally-sheet-close svg { width: 18px; height: 18px; display: block; }
+    .tally-sheet-body { flex: 1; overflow-y: auto; padding: 1rem 1.25rem; }
+    .tally-sheet-hint { margin-top: 1rem; font-size: 0.82rem; color: var(--text-secondary); text-align: center; }
+    .tally-sheet-hint button { background: none; border: none; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; color: var(--text-secondary); cursor: pointer; text-decoration: underline; }
+
+    /* EDIT FORM */
+    .edit-form-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 0.75rem; }
+    .edit-form-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem; }
+    .edit-field { margin-bottom: 1rem; }
+    .edit-label { display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 0.35rem; }
+    .edit-input { width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--border); border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--text); background: var(--bg); transition: border-color 0.2s; }
+    .edit-input:focus { outline: none; border-color: var(--accent); }
+    .edit-textarea { width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--border); border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--text); background: var(--bg); resize: vertical; min-height: 80px; transition: border-color 0.2s; }
+    .edit-textarea:focus { outline: none; border-color: var(--accent); }
+    .edit-actions { display: flex; gap: 0.5rem; margin-top: 1.25rem; }
+    .edit-save-btn { flex: 1; padding: 0.75rem; background: var(--accent); color: #EDEBE4; border: none; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .edit-save-btn:hover { background: var(--accent-hover); }
+    .edit-save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .edit-cancel-btn { padding: 0.75rem 1.25rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--text); cursor: pointer; transition: border-color 0.2s; }
+    .edit-cancel-btn:hover { border-color: #B0AFA8; }
+    .edit-success { margin-top: 0.75rem; padding: 0.6rem 0.85rem; background: var(--green-bg); border: 1px solid #B6D9C1; border-radius: var(--radius); font-size: 0.82rem; color: var(--green); display: none; }
+    .edit-error { margin-top: 0.75rem; padding: 0.6rem 0.85rem; background: #FEF2F2; border: 1px solid #FECACA; border-radius: var(--radius); font-size: 0.82rem; color: #B91C1C; display: none; }
+
     .loading-spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 0.75rem; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -147,6 +211,8 @@
       .modal-sheet { border-radius: 12px; max-height: 80vh; margin: 1rem; }
       .more-overlay { align-items: center; }
       .more-sheet { border-radius: 12px; margin: 1rem; }
+      .tally-overlay { align-items: center; }
+      .tally-sheet { border-radius: 12px; max-height: 85vh; margin: 1rem; }
     }
     @media (max-width: 600px) {
       .header { padding: 0.85rem 1rem; }
@@ -156,6 +222,7 @@
       .filter-count { display: none; }
       select.filter-control { font-size: 0.8rem; }
       .filter-btn { font-size: 0.8rem; padding: 0.45rem 0.6rem; }
+      .jobboard-wrap { padding: 1rem; }
     }
   </style>
 </head>
@@ -225,22 +292,47 @@
     </div>
   </div>
 
-  <div class="dir-filters">
-    <select class="filter-control" id="filterFormat"><option value="">Format</option></select>
-    <select class="filter-control" id="filterExperience"><option value="">Experience</option></select>
-    <button class="filter-btn" id="sortDistBtn" onclick="toggleSortDistance()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v18M7 3l-4 4M7 3l4 4M17 21V3M17 21l-4-4M17 21l4-4"/></svg>
-      Distance
-    </button>
-    <span class="filter-count" id="filterCount"></span>
-    <button class="filter-more-btn" id="filterMoreBtn" onclick="openMoreFilters()">
-      Filters
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 8L1.5 3.5h9z" fill="#6B6A63"/></svg>
-    </button>
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-talent" onclick="switchTab('talent')">Talent directory</button>
+    <button class="tab-btn" id="tab-jobs" onclick="switchTab('jobs')">Job board</button>
+    <a class="tab-btn" href="https://paigelovespilates.github.io/studiosalarydatabase/" target="_blank" rel="noopener" style="text-decoration:none;">Salary database ↗</a>
   </div>
 
-  <div class="list-wrap" id="listWrap">
-    <div class="list-loading"><div class="loading-spinner"></div><p style="font-size:0.85rem;">Loading…</p></div>
+  <!-- TALENT TAB CONTENT -->
+  <div id="tab-content-talent">
+    <div class="dir-filters">
+      <select class="filter-control" id="filterFormat"><option value="">Format</option></select>
+      <select class="filter-control" id="filterExperience"><option value="">Experience</option></select>
+      <button class="filter-btn" id="sortDistBtn" onclick="toggleSortDistance()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v18M7 3l-4 4M7 3l4 4M17 21V3M17 21l-4-4M17 21l4-4"/></svg>
+        Distance
+      </button>
+      <span class="filter-count" id="filterCount"></span>
+      <button class="filter-more-btn" id="filterMoreBtn" onclick="openMoreFilters()">
+        Filters
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 8L1.5 3.5h9z" fill="#6B6A63"/></svg>
+      </button>
+    </div>
+    <div class="list-wrap" id="listWrap">
+      <div class="list-loading"><div class="loading-spinner"></div><p style="font-size:0.85rem;">Loading…</p></div>
+    </div>
+  </div>
+
+  <!-- JOB BOARD TAB CONTENT -->
+  <div id="tab-content-jobs" style="display:none;">
+    <div class="jobboard-wrap">
+      <div class="jobboard-top">
+        <div class="jobboard-title">Your job postings</div>
+        <button class="post-role-btn" id="postRoleBtn" onclick="openTallySheet()" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Post another role
+        </button>
+      </div>
+      <div id="jobboard-content">
+        <div class="list-loading"><div class="loading-spinner"></div><p style="font-size:0.85rem;">Loading…</p></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -299,12 +391,34 @@
   </div>
 </div>
 
+<!-- TALLY SHEET (post another role) -->
+<div class="tally-overlay" id="tallyOverlay" onclick="handleTallyOverlayClick(event)">
+  <div class="tally-sheet">
+    <div class="tally-sheet-header">
+      <h3>Post a role</h3>
+      <button class="tally-sheet-close" onclick="closeTallySheet()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="tally-sheet-body">
+      <iframe src="https://tally.so/r/dWPV7V" class="tally-frame" id="tallyFrameSheet"></iframe>
+      <div class="tally-sheet-hint">
+        <button onclick="closeTallySheetAndRefresh()">I just submitted — show my postings</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   var ENDPOINT = 'https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec';
+  var JOBS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec';
   var session = { email: null, market: null, studioName: null };
   var allProfiles = [], filteredProfiles = [];
   var userLat = null, userLng = null, nearMeActive = false, sortByDistance = false;
   var selectedMarket = null;
+  var activeTab = 'talent';
+  var jobsLoaded = false;
+  var editingJobId = null;
 
   function saveSession() { try { localStorage.setItem('plp_studio_session', JSON.stringify(session)); } catch(e) {} }
   function loadSession() { try { var s = localStorage.getItem('plp_studio_session'); if (s) { session = JSON.parse(s); return true; } } catch(e) {} return false; }
@@ -329,12 +443,169 @@
     document.body.appendChild(script);
   }
 
+  // Plain fetch for new JSON endpoints (no JSONP needed — same deployment supports both)
+  function apiFetch(params, cb) {
+    var url = JOBS_ENDPOINT + '?' + Object.keys(params).map(function(k) {
+      return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+    }).join('&');
+    fetch(url)
+      .then(function(r) { return r.json(); })
+      .then(cb)
+      .catch(function() { cb({ success: false, error: 'network_error' }); });
+  }
+
   window.addEventListener('DOMContentLoaded', function() {
     setupCodeInputs();
     if (loadSession() && session.email && session.market) { startDirectory(); }
     else { showScreen('login'); }
   });
 
+  // ── TAB SWITCHING ──
+  function switchTab(tab) {
+    activeTab = tab;
+    document.getElementById('tab-talent').classList.toggle('active', tab === 'talent');
+    document.getElementById('tab-jobs').classList.toggle('active', tab === 'jobs');
+    document.getElementById('tab-content-talent').style.display = tab === 'talent' ? 'block' : 'none';
+    document.getElementById('tab-content-jobs').style.display = tab === 'jobs' ? 'block' : 'none';
+    if (tab === 'jobs' && !jobsLoaded) { loadJobPostings(); }
+  }
+
+  // ── JOB BOARD ──
+  function loadJobPostings() {
+    jobsLoaded = false;
+    editingJobId = null;
+    document.getElementById('jobboard-content').innerHTML = '<div class="list-loading"><div class="loading-spinner"></div><p style="font-size:0.85rem;">Loading…</p></div>';
+    document.getElementById('postRoleBtn').style.display = 'none';
+
+    apiFetch({ action: 'jobsGetMyPostings', email: session.email }, function(data) {
+      jobsLoaded = true;
+      if (!data.success) {
+        document.getElementById('jobboard-content').innerHTML = '<div class="list-empty">Failed to load postings. Please refresh.</div>';
+        return;
+      }
+      renderJobBoard(data.jobs || []);
+    });
+  }
+
+  function renderJobBoard(jobs) {
+    var container = document.getElementById('jobboard-content');
+    var postBtn = document.getElementById('postRoleBtn');
+
+    if (!jobs.length) {
+      postBtn.style.display = 'none';
+      container.innerHTML =
+        '<div class="jobboard-empty">' +
+          '<div class="jobboard-empty-title">No postings yet</div>' +
+          '<div class="jobboard-empty-sub">Post a role and it goes directly to instructors in your market.</div>' +
+          '<iframe src="https://tally.so/r/dWPV7V" class="tally-frame" id="tallyFrameInline"></iframe>' +
+          '<div class="tally-submitted-hint"><button onclick="loadJobPostings()">I just submitted — show my postings</button></div>' +
+        '</div>';
+      return;
+    }
+
+    postBtn.style.display = 'inline-flex';
+
+    var html = '';
+    jobs.forEach(function(job) {
+      var dateStr = '';
+      if (job.posted) {
+        var d = new Date(job.posted);
+        if (!isNaN(d)) dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      }
+      html += '<div class="job-card" id="job-card-' + esc(job.id) + '">';
+      html += '<div class="job-card-header">';
+      html += '<div class="job-card-role">' + esc(job.role || 'Open role') + '</div>';
+      if (dateStr) html += '<div class="job-card-date">Posted ' + esc(dateStr) + '</div>';
+      html += '</div>';
+      if (job.format) html += '<div class="job-card-meta">' + esc(job.format) + '</div>';
+      if (job.days) html += '<div class="job-card-meta">' + esc(job.days) + '</div>';
+      if (job.pay) html += '<div class="job-card-pay">' + esc(job.pay) + '</div>';
+      html += '<div class="job-card-actions">';
+      html += '<button class="job-edit-btn" onclick="openEditForm(' + JSON.stringify(job).replace(/</g,'\\u003c') + ')">Edit posting</button>';
+      html += '</div>';
+      html += '</div>';
+    });
+    container.innerHTML = html;
+  }
+
+  function openEditForm(job) {
+    editingJobId = job.id;
+    var cardEl = document.getElementById('job-card-' + job.id);
+    if (!cardEl) return;
+
+    cardEl.innerHTML =
+      '<div class="edit-form-wrap" id="edit-form-inner" style="border:none;padding:0;margin:0;">' +
+        '<div class="edit-form-title">Edit posting</div>' +
+        '<div class="edit-field"><label class="edit-label">Role / position type</label><input class="edit-input" id="edit-role" value="' + esc(job.role) + '"></div>' +
+        '<div class="edit-field"><label class="edit-label">Class formats</label><input class="edit-input" id="edit-format" value="' + esc(job.format) + '"></div>' +
+        '<div class="edit-field"><label class="edit-label">Days / times needed</label><input class="edit-input" id="edit-days" value="' + esc(job.days) + '"></div>' +
+        '<div class="edit-field"><label class="edit-label">Pay</label><input class="edit-input" id="edit-pay" value="' + esc(job.pay) + '"></div>' +
+        '<div class="edit-field"><label class="edit-label">Notes</label><textarea class="edit-textarea" id="edit-notes">' + esc(job.notes) + '</textarea></div>' +
+        '<div class="edit-field"><label class="edit-label">Alternate contact (optional)</label><input class="edit-input" id="edit-contactOther" value="' + esc(job.contactOther) + '"></div>' +
+        '<div class="edit-actions">' +
+          '<button class="edit-cancel-btn" onclick="cancelEdit()">Cancel</button>' +
+          '<button class="edit-save-btn" id="edit-save-btn" onclick="saveEdit(\'' + esc(job.id) + '\')">Save changes</button>' +
+        '</div>' +
+        '<div class="edit-success" id="edit-success">Changes saved.</div>' +
+        '<div class="edit-error" id="edit-error"></div>' +
+      '</div>';
+  }
+
+  function cancelEdit() {
+    editingJobId = null;
+    jobsLoaded = false;
+    loadJobPostings();
+  }
+
+  function saveEdit(jobId) {
+    var btn = document.getElementById('edit-save-btn');
+    btn.disabled = true; btn.textContent = 'Saving…';
+    document.getElementById('edit-success').style.display = 'none';
+    document.getElementById('edit-error').style.display = 'none';
+
+    apiFetch({
+      action: 'jobsUpdatePosting',
+      jobId: jobId,
+      email: session.email,
+      role: document.getElementById('edit-role').value,
+      format: document.getElementById('edit-format').value,
+      days: document.getElementById('edit-days').value,
+      pay: document.getElementById('edit-pay').value,
+      notes: document.getElementById('edit-notes').value,
+      contactOther: document.getElementById('edit-contactOther').value
+    }, function(data) {
+      btn.disabled = false; btn.textContent = 'Save changes';
+      if (data.success) {
+        document.getElementById('edit-success').style.display = 'block';
+        setTimeout(function() { cancelEdit(); }, 1200);
+      } else {
+        document.getElementById('edit-error').textContent = 'Failed to save. Please try again.';
+        document.getElementById('edit-error').style.display = 'block';
+      }
+    });
+  }
+
+  function openTallySheet() {
+    document.getElementById('tallyOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeTallySheet() {
+    document.getElementById('tallyOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function closeTallySheetAndRefresh() {
+    closeTallySheet();
+    jobsLoaded = false;
+    loadJobPostings();
+  }
+
+  function handleTallyOverlayClick(e) {
+    if (e.target === document.getElementById('tallyOverlay')) closeTallySheet();
+  }
+
+  // ── AUTH ──
   function sendCode() {
     var email = document.getElementById('login-email').value.trim().toLowerCase();
     if (!email || email.indexOf('@') === -1) { showError('login-error', 'Please enter a valid email address.'); return; }
@@ -359,7 +630,8 @@
     if (!session.email) { showScreen('login'); return; }
     hideError('verify-error');
     jsonp(ENDPOINT + '?action=studioSendCode&email=' + encodeURIComponent(session.email), function(data) {
-      if (!data.success) showError('verify-error', 'Failed to resend. Please try again.'); });
+      if (!data.success) showError('verify-error', 'Failed to resend. Please try again.');
+    });
   }
 
   function setupCodeInputs() {
@@ -436,9 +708,12 @@
   }
 
   function startDirectory() {
-    showScreen('directory');window.scrollTo(0, 0);
+    showScreen('directory'); window.scrollTo(0, 0);
     var badge = document.getElementById('header-market-badge');
     if (session.market) badge.textContent = session.market.replace(/_/g, ' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+    // Reset to talent tab on each login
+    activeTab = 'talent'; jobsLoaded = false;
+    switchTab('talent');
     loadProfiles();
   }
 
@@ -460,6 +735,7 @@
   function logout() {
     clearSession(); allProfiles = []; filteredProfiles = [];
     nearMeActive = false; sortByDistance = false; userLat = null; userLng = null;
+    jobsLoaded = false; activeTab = 'talent';
     showScreen('login');
   }
 
@@ -471,8 +747,6 @@
     document.getElementById('filterMoreBtn').classList.toggle('has-active', !!hasActive);
   }
 
-  // Normalizes legacy experience level values from older form versions
-  // into the current canonical set used by the instructor signup form.
   function normalizeExperience(val) {
     if (!val) return '';
     var v = val.trim();
@@ -626,7 +900,7 @@
 
   function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow = ''; }
   function handleOverlayClick(e) { if (e.target === document.getElementById('modalOverlay')) closeModal(); }
-  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeModal(); closeMoreFilters(); } });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeModal(); closeMoreFilters(); closeTallySheet(); } });
 
   function esc(str) { if (!str) return ''; var div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
   function showError(id, msg) { var el = document.getElementById(id); el.innerHTML = msg; el.style.display = 'block'; }
