@@ -26,7 +26,7 @@
       --modal-shadow: 0 -4px 32px rgba(55,57,48,0.12);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; min-height: 100vh; }
+    body { font-family: 'DM Sans', sans-serif; background: transparent; color: var(--text); line-height: 1.5; min-height: 100vh; }
 
     /* HEADER */
     .header { background: var(--accent); padding: 1.25rem 1.5rem 0; display: flex; flex-direction: column; }
@@ -286,8 +286,7 @@
   <div class="header">
     <div class="header-top">
       <div class="header-left">
-        <h1>Instructor Network</h1>
-        <p>Browse instructors in your market</p>
+        <h1>Studio Portal</h1>
       </div>
       <div class="header-right">
         <div id="header-market-badge" class="header-market"></div>
@@ -295,7 +294,7 @@
       </div>
     </div>
     <div class="tab-bar">
-      <button class="tab-btn active" id="tab-talent" onclick="switchTab('talent')">Talent directory</button>
+      <button class="tab-btn active" id="tab-talent" onclick="switchTab('talent')">Instructor Network</button>
       <button class="tab-btn" id="tab-jobs" onclick="switchTab('jobs')">Job board</button>
       <a class="tab-btn" href="https://paigelovespilates.github.io/studiosalarydatabase/" target="_blank" rel="noopener" style="text-decoration:none;">Salary database ↗</a>
     </div>
