@@ -89,21 +89,46 @@
       flex-shrink: 0;
     }
 
+    .credits-content {
+      flex: 1;
+      min-width: 0;
+    }
+
     .credits-banner p {
       font-size: 12px;
       line-height: 1.7;
       color: var(--linen-alt);
       font-weight: 300;
       font-style: italic;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .credits-banner p.expanded {
+      -webkit-line-clamp: unset;
+      overflow: visible;
+    }
+
+    .credits-toggle {
+      background: none;
+      border: none;
+      color: var(--linen);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 6px 0 0;
     }
 
     .filter-section {
       background: var(--cream);
       border-bottom: 1px solid rgba(55,57,48,0.1);
       padding: 24px 40px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
     }
 
     .filter-inner {
@@ -332,7 +357,10 @@
 <div class="credits-banner">
   <div class="credits-inner">
     <span class="credits-label">Cue Credits</span>
-    <p>I need to give credit to the wonderful instructors who have inspired me with their cues. It is difficult to attribute each cue to one person, as they have accumulated over more than a decade of experiences. However, I must give thanks to Alycea Ungaro, Melissa Castro-Schmidt, Amy Havens, Juan Estrada, and Sonje Mayo, as they are the instructors who have had a tremendous influence over my teaching.</p>
+    <div class="credits-content">
+      <p id="creditsText">I need to give credit to the wonderful instructors who have inspired me with their cues. It is difficult to attribute each cue to one person, as they have accumulated over more than a decade of experiences. However, I must give thanks to Alycea Ungaro, Melissa Castro-Schmidt, Amy Havens, Juan Estrada, and Sonje Mayo, as they are the instructors who have had a tremendous influence over my teaching.</p>
+      <button class="credits-toggle" id="creditsToggle">Read more</button>
+    </div>
   </div>
 </div>
 
@@ -737,6 +765,8 @@ const pillContainer = document.getElementById('pillContainer');
 const searchInput = document.getElementById('searchInput');
 const resultsCount = document.getElementById('resultsCount');
 const emptyState = document.getElementById('emptyState');
+const creditsText = document.getElementById('creditsText');
+const creditsToggle = document.getElementById('creditsToggle');
 
 let activeFilter = 'Hundred';
 let searchQuery = '';
@@ -851,6 +881,13 @@ function applyFilters() {
   resultsCount.textContent = `${total} exercise${total !== 1 ? 's' : ''}`;
   emptyState.style.display = visible === 0 ? 'block' : 'none';
 }
+
+function toggleCredits() {
+  const expanded = creditsText.classList.toggle('expanded');
+  creditsToggle.textContent = expanded ? 'Read less' : 'Read more';
+}
+window.toggleCredits = toggleCredits;
+creditsToggle.addEventListener('click', toggleCredits);
 
 searchInput.addEventListener('input', e => {
   searchQuery = e.target.value;
