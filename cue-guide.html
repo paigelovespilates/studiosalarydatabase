@@ -25,132 +25,6 @@
       min-height: 100vh;
     }
 
-    /* ── Login gate ── */
-    #loginGate {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
-
-    .login-card {
-      width: 100%;
-      max-width: 420px;
-      background: var(--olive);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .login-step { padding: 40px 32px 36px; }
-
-    .login-eyebrow {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--grey);
-      margin-bottom: 14px;
-    }
-
-    .login-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 30px;
-      font-weight: 400;
-      color: var(--linen);
-      line-height: 1.15;
-      margin-bottom: 8px;
-    }
-
-    .login-title em { color: var(--grey); font-style: italic; }
-
-    .login-sub {
-      font-size: 12px;
-      color: var(--grey);
-      font-weight: 300;
-      line-height: 1.6;
-      margin-bottom: 28px;
-    }
-
-    .login-sub span { color: var(--linen); }
-
-    .login-label {
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--grey);
-      font-weight: 500;
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .login-input {
-      width: 100%;
-      background: var(--olive-mid);
-      border: 1px solid rgba(237,235,228,0.2);
-      border-radius: 6px;
-      padding: 11px 14px;
-      color: var(--linen);
-      font-size: 13px;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
-      outline: none;
-      margin-bottom: 8px;
-    }
-
-    .login-input::placeholder { color: var(--grey); }
-
-    .login-error {
-      font-size: 11px;
-      color: #D4537E;
-      font-weight: 400;
-      min-height: 14px;
-      margin-bottom: 16px;
-    }
-
-    .login-btn {
-      width: 100%;
-      background: var(--linen);
-      color: var(--olive);
-      border: none;
-      border-radius: 6px;
-      padding: 12px;
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
-
-    .login-btn:disabled { opacity: 0.6; cursor: default; }
-
-    .login-link {
-      text-align: center;
-      font-size: 11px;
-      color: var(--grey);
-      cursor: pointer;
-      text-decoration: underline;
-    }
-
-    .code-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-
-    .code-box {
-      width: 100%;
-      text-align: center;
-      background: var(--olive-mid);
-      border: 1px solid rgba(237,235,228,0.2);
-      border-radius: 6px;
-      padding: 12px 0;
-      color: var(--linen);
-      font-size: 16px;
-      font-family: 'DM Sans', sans-serif;
-    }
-
     header {
       background: var(--olive);
       color: var(--linen);
@@ -220,12 +94,13 @@
       line-height: 1.7;
       color: var(--linen-alt);
       font-weight: 300;
+      font-style: italic;
     }
 
     .filter-section {
       background: var(--cream);
       border-bottom: 1px solid rgba(55,57,48,0.1);
-      padding: 20px 40px;
+      padding: 24px 40px;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -235,65 +110,55 @@
       max-width: 900px;
       margin: 0 auto;
       display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 14px;
     }
 
-    .filter-label {
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--grey);
-      font-weight: 500;
-      flex-shrink: 0;
+    .search-wrap input {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      padding: 9px 16px;
+      border: 1px solid rgba(55,57,48,0.2);
+      background: transparent;
+      color: var(--olive);
+      border-radius: 20px;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.15s;
     }
+
+    .search-wrap input::placeholder { color: var(--grey); }
+    .search-wrap input:focus { border-color: var(--olive); }
 
     .filter-pills {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
       gap: 8px;
-      flex-wrap: wrap;
     }
 
     .pill {
       font-family: 'DM Sans', sans-serif;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 400;
-      letter-spacing: 0.03em;
-      padding: 6px 14px;
-      border-radius: 20px;
+      letter-spacing: 0.02em;
+      padding: 11px 10px;
+      border-radius: 10px;
       border: 1px solid rgba(55,57,48,0.2);
       background: transparent;
       color: var(--olive);
       cursor: pointer;
       transition: all 0.15s ease;
-      white-space: nowrap;
+      text-align: center;
+      line-height: 1.3;
     }
 
     .pill:hover, .pill.active {
       background: var(--olive);
       color: var(--linen);
       border-color: var(--olive);
+      font-weight: 500;
     }
-
-    .search-wrap { margin-left: auto; }
-
-    .search-wrap input {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 12px;
-      font-weight: 300;
-      padding: 7px 14px;
-      border: 1px solid rgba(55,57,48,0.2);
-      background: transparent;
-      color: var(--olive);
-      border-radius: 20px;
-      outline: none;
-      width: 180px;
-      transition: border-color 0.15s;
-    }
-
-    .search-wrap input::placeholder { color: var(--grey); }
-    .search-wrap input:focus { border-color: var(--olive); }
 
     main {
       max-width: 900px;
@@ -448,75 +313,36 @@
 
     @media (max-width: 600px) {
       header { padding: 32px 20px 28px; }
-      .filter-section { padding: 16px 20px; }
+      .filter-section { padding: 18px 20px; }
       main { padding: 28px 20px 60px; }
-      .search-wrap { width: 100%; }
-      .search-wrap input { width: 100%; }
+      .filter-pills { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
     }
   </style>
 </head>
 <body>
 
-<!-- ── Login gate ── -->
-<div id="loginGate">
-  <div class="login-card">
-
-    <div id="loginStep1" class="login-step">
-      <div class="login-eyebrow">paigelovespilates.com</div>
-      <div class="login-title">Cue Guide<br><em>reviewer access</em></div>
-      <p class="login-sub">Enter the email you gave Paige to get your access code.</p>
-      <label class="login-label" for="emailInput">Email</label>
-      <input id="emailInput" class="login-input" type="email" placeholder="you@example.com" autocomplete="email" />
-      <div id="step1Error" class="login-error"></div>
-      <button id="sendCodeBtn" class="login-btn">Send code</button>
-    </div>
-
-    <div id="loginStep2" class="login-step" style="display:none;">
-      <div class="login-eyebrow">paigelovespilates.com</div>
-      <div class="login-title">Check your<br><em>inbox</em></div>
-      <p class="login-sub">We sent a 6-digit code to <span id="emailEcho"></span>.</p>
-      <div class="code-row">
-        <input class="code-box" maxlength="1" inputmode="numeric" />
-        <input class="code-box" maxlength="1" inputmode="numeric" />
-        <input class="code-box" maxlength="1" inputmode="numeric" />
-        <input class="code-box" maxlength="1" inputmode="numeric" />
-        <input class="code-box" maxlength="1" inputmode="numeric" />
-        <input class="code-box" maxlength="1" inputmode="numeric" />
-      </div>
-      <div id="step2Error" class="login-error"></div>
-      <button id="verifyBtn" class="login-btn">Verify</button>
-      <div id="backToEmail" class="login-link">Use a different email</div>
-    </div>
-
-  </div>
-</div>
-
-<!-- ── Guide content (hidden until verified) ── -->
-<div id="guideContent" style="display:none;">
-
 <header>
   <div class="header-inner">
     <div class="eyebrow">paigelovespilates.com</div>
     <h1>Classical Pilates<br><em>Cue Guide</em></h1>
-    <p>Teaching language that reveals internal work — for instructors who want to say the right thing.</p>
+    <p>A teaching solution for instructors who want to sound like the instructor they know they can be.</p>
   </div>
 </header>
 
 <div class="credits-banner">
   <div class="credits-inner">
     <span class="credits-label">Cue Credits</span>
-    <p>I need to give credit to the wonderful instructors who have inspired me with their cues. It is difficult to attribute each cue to one person, as they have accumulated over more than a decade of experiences. However, I must give thanks to Alycea Ungaro, Melissa, Amy Havens, Juan Estrada, and Sonje, as they are the instructors who have had a tremendous influence over my teaching.</p>
+    <p>I need to give credit to the wonderful instructors who have inspired me with their cues. It is difficult to attribute each cue to one person, as they have accumulated over more than a decade of experiences. However, I must give thanks to Alycea Ungaro, Melissa Castro-Schmidt, Amy Havens, Juan Estrada, and Sonje Mayo, as they are the instructors who have had a tremendous influence over my teaching.</p>
   </div>
 </div>
 
 <div class="filter-section">
   <div class="filter-inner">
-    <span class="filter-label">Filter</span>
-    <div class="filter-pills" id="pillContainer">
-      <button class="pill active" data-filter="all">All</button>
-    </div>
     <div class="search-wrap">
       <input type="text" id="searchInput" placeholder="Search cues&hellip;" />
+    </div>
+    <div class="filter-pills" id="pillContainer">
+      <button class="pill" data-filter="all">All</button>
     </div>
   </div>
 </div>
@@ -532,9 +358,6 @@
 <footer>
   <a href="https://paigelovespilates.com">@paigelovespilates</a> &nbsp;&middot;&nbsp; For instructors, by an instructor
 </footer>
-
-</div>
-<!-- /guideContent -->
 
 <script>
 const EXERCISES = [
@@ -915,7 +738,7 @@ const searchInput = document.getElementById('searchInput');
 const resultsCount = document.getElementById('resultsCount');
 const emptyState = document.getElementById('emptyState');
 
-let activeFilter = 'all';
+let activeFilter = 'Hundred';
 let searchQuery = '';
 
 function buildPills() {
@@ -1034,176 +857,11 @@ searchInput.addEventListener('input', e => {
   applyFilters();
 });
 
+document.querySelector('.pill[data-filter="all"]').addEventListener('click', () => setFilter('all'));
+
 buildPills();
 buildCards();
-applyFilters();
-
-// ═══════════════════════════════════════════════════════════════════════════
-// LOGIN GATE — email + code access for Cue Guide reviewers
-// ═══════════════════════════════════════════════════════════════════════════
-
-var CUE_GUIDE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec';
-var cueGuideJsonpCounter = 0;
-
-function cueGuideJsonp(params, onSuccess, onError) {
-  cueGuideJsonpCounter++;
-  var cbName = 'cueGuideCb' + cueGuideJsonpCounter;
-  var qs = Object.keys(params).map(function(k) {
-    return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
-  }).join('&');
-  var script = document.createElement('script');
-  var timeoutId = setTimeout(function() {
-    cleanup();
-    onError && onError();
-  }, 15000);
-  function cleanup() {
-    clearTimeout(timeoutId);
-    delete window[cbName];
-    if (script.parentNode) script.parentNode.removeChild(script);
-  }
-  window[cbName] = function(data) {
-    cleanup();
-    onSuccess(data);
-  };
-  script.onerror = function() {
-    cleanup();
-    onError && onError();
-  };
-  script.src = CUE_GUIDE_APPS_SCRIPT_URL + '?' + qs + '&callback=' + cbName;
-  document.body.appendChild(script);
-}
-
-function cueGuideGetSession() {
-  try {
-    var raw = localStorage.getItem('cueGuideSession');
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch (err) { return null; }
-}
-
-function cueGuideSetSession(session) {
-  try { localStorage.setItem('cueGuideSession', JSON.stringify(session)); }
-  catch (err) { /* cross-origin iframe storage access can throw — ignore */ }
-}
-
-function cueGuideUnlock() {
-  document.getElementById('loginGate').style.display = 'none';
-  document.getElementById('guideContent').style.display = 'block';
-}
-
-function cueGuideShowStep(step) {
-  document.getElementById('loginStep1').style.display = step === 1 ? 'block' : 'none';
-  document.getElementById('loginStep2').style.display = step === 2 ? 'block' : 'none';
-}
-
-var cueGuideCurrentEmail = '';
-
-function cueGuideSendCode() {
-  var emailInput = document.getElementById('emailInput');
-  var errEl = document.getElementById('step1Error');
-  var email = emailInput.value.trim().toLowerCase();
-  errEl.textContent = '';
-  if (!email || email.indexOf('@') === -1) {
-    errEl.textContent = 'Enter a valid email address.';
-    return;
-  }
-  var btn = document.getElementById('sendCodeBtn');
-  btn.disabled = true;
-  btn.textContent = 'Sending…';
-  cueGuideJsonp({ action: 'cueGuideSendCode', email: email }, function(data) {
-    btn.disabled = false;
-    btn.textContent = 'Send code';
-    if (data.success) {
-      cueGuideCurrentEmail = email;
-      document.getElementById('emailEcho').textContent = email;
-      document.querySelectorAll('.code-box').forEach(function(box) { box.value = ''; });
-      cueGuideShowStep(2);
-      var firstBox = document.querySelector('.code-box');
-      if (firstBox) firstBox.focus();
-    } else if (data.error === 'not_approved') {
-      errEl.textContent = "That email isn't on the reviewer list. Contact Paige if you think this is a mistake.";
-    } else {
-      errEl.textContent = 'Something went wrong sending the code. Try again.';
-    }
-  }, function() {
-    btn.disabled = false;
-    btn.textContent = 'Send code';
-    errEl.textContent = 'Could not reach the server. Try again.';
-  });
-}
-
-function cueGuideVerify() {
-  var errEl = document.getElementById('step2Error');
-  var boxes = document.querySelectorAll('.code-box');
-  var code = Array.prototype.map.call(boxes, function(b) { return b.value; }).join('');
-  errEl.textContent = '';
-  if (code.length !== 6) {
-    errEl.textContent = 'Enter the full 6-digit code.';
-    return;
-  }
-  var btn = document.getElementById('verifyBtn');
-  btn.disabled = true;
-  btn.textContent = 'Verifying…';
-  cueGuideJsonp({ action: 'cueGuideVerify', email: cueGuideCurrentEmail, code: code }, function(data) {
-    btn.disabled = false;
-    btn.textContent = 'Verify';
-    if (data.success) {
-      cueGuideSetSession({ email: cueGuideCurrentEmail, name: data.name || '' });
-      cueGuideUnlock();
-    } else if (data.error === 'invalid_code') {
-      errEl.textContent = 'That code is incorrect.';
-    } else if (data.error === 'expired_code') {
-      errEl.textContent = 'That code expired. Go back and send a new one.';
-    } else if (data.error === 'not_approved') {
-      errEl.textContent = "That email isn't on the reviewer list.";
-    } else {
-      errEl.textContent = 'Something went wrong. Try again.';
-    }
-  }, function() {
-    btn.disabled = false;
-    btn.textContent = 'Verify';
-    errEl.textContent = 'Could not reach the server. Try again.';
-  });
-}
-
-function cueGuideSetupCodeBoxes() {
-  var boxes = document.querySelectorAll('.code-box');
-  boxes.forEach(function(box, i) {
-    box.addEventListener('input', function() {
-      box.value = box.value.replace(/[^0-9]/g, '').slice(0, 1);
-      if (box.value && i < boxes.length - 1) boxes[i + 1].focus();
-    });
-    box.addEventListener('keydown', function(e) {
-      if (e.key === 'Backspace' && !box.value && i > 0) boxes[i - 1].focus();
-    });
-    box.addEventListener('paste', function(e) {
-      e.preventDefault();
-      var pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '');
-      for (var j = 0; j < boxes.length; j++) { boxes[j].value = pasted[j] || ''; }
-      var lastFilled = Math.min(pasted.length, boxes.length) - 1;
-      if (lastFilled >= 0) boxes[lastFilled].focus();
-    });
-  });
-}
-
-document.getElementById('sendCodeBtn').addEventListener('click', cueGuideSendCode);
-document.getElementById('verifyBtn').addEventListener('click', cueGuideVerify);
-document.getElementById('backToEmail').addEventListener('click', function() {
-  document.getElementById('step2Error').textContent = '';
-  cueGuideShowStep(1);
-});
-document.getElementById('emailInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') cueGuideSendCode();
-});
-cueGuideSetupCodeBoxes();
-
-// On load: skip straight to the guide if a session is already stored
-(function cueGuideInit() {
-  var session = cueGuideGetSession();
-  if (session && session.email) {
-    cueGuideUnlock();
-  }
-})();
+setFilter('Hundred');
 </script>
 </body>
 </html>
