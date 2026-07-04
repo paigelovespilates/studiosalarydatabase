@@ -402,6 +402,30 @@
       font-weight: 500;
     }
 
+    .setup-block {
+      margin-bottom: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(55,57,48,0.06);
+    }
+
+    .setup-label {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--grey);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .setup-text {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--olive-mid);
+      font-weight: 300;
+      font-style: italic;
+    }
+
     .cue-list { list-style: none; display: flex; flex-direction: column; }
 
     .cue-item {
@@ -699,6 +723,7 @@ const EXERCISES = [
   {
     name: "Hundred",
     video: "https://pilatesology.com/pilatesology-encyclopedia-the-hundred/",
+    setup: "Lie down with your legs in tabletop. Lift your head, neck and shoulders off of the mat, rising to the tips of your shoulder blades. Arms extend long in front of you, belly button height off the floor as the legs extend out in front of you. Start to pump your arms vigorously.",
     groups: [
       { label: "Powerhouse", cues: [
         { text: "Draw your naval to the lowest point of your low back" },
@@ -725,6 +750,7 @@ const EXERCISES = [
   {
     name: "Roll Up",
     video: "https://pilatesology.com/pilatesology-encyclopedia-the-roll-up/",
+    setup: "Start lying down. Legs extend long, connected from heels to inner thighs. Flex the feet and root your legs down as your arms reach up overhead.",
     groups: [
       { label: "Spinal articulation", cues: [
         { text: "Nod your chin towards your chest as you start to peel yourself up" },
@@ -748,6 +774,7 @@ const EXERCISES = [
   {
     name: "Roll Over",
     video: "https://pilatesology.com/pilatesology-encyclopedia-the-roll-over/",
+    setup: "Start lying down. Legs extend out to a 45 degree angle in front of you, arms and fingers reaching long on the mat. Backs of the shoulders and triceps are rooted heavy down on the mat.",
     groups: [
       { label: "Arms", cues: [
         { text: "Make your arms get longer as the legs reach back and start to lower down" },
@@ -768,6 +795,7 @@ const EXERCISES = [
   {
     name: "Single Leg Circles",
     video: "https://pilatesology.com/pilatesology-encyclopedia-leg-circles/",
+    setup: "Start lying down, left leg down, long on the mat, foot flexed. Right toe is pointed up to the ceiling with an external rotation of the foot. Both hips are rooted heavy down, and arms are pressing into the mat.",
     groups: [
       { label: "Supporting leg", cues: [
         { text: "Stand on the lower (non-circling) leg to keep yourself rooted to the floor" },
@@ -790,6 +818,7 @@ const EXERCISES = [
   {
     name: "Rolling Like a Ball",
     video: "https://pilatesology.com/pilatesology-encyclopedia-rolling-like-a-ball/",
+    setup: "Start seated. Bend your knees and wrap your arms around your legs, grabbing hold of the ankles. Knees are pressing into the crook of your elbows. Lift your feet off the mat, and roll back slightly to your sitz bones and find balance. Round your shoulders so they're over your hips.",
     groups: [
       { label: "Shape", cues: [
         { text: "Hold an egg under your chin — don't crack the egg but don't drop it either" },
@@ -812,6 +841,7 @@ const EXERCISES = [
   {
     name: "Single Leg Stretch",
     video: "https://pilatesology.com/pilatesology-encyclopedia-single-leg-stretch/",
+    setup: "Start lying down with your legs in tabletop. Find your chest curl, and place your right hand on your right ankle, left hand on your right knee. Opposite leg extends long towards the mat.",
     groups: [
       { label: "Hand placement", cues: [
         { text: "Outside hand holds the ankle, inside hand holds the knee" },
@@ -833,6 +863,7 @@ const EXERCISES = [
   {
     name: "Double Leg Stretch",
     video: "https://pilatesology.com/pilatesology-encyclopedia-double-leg-stretch/",
+    setup: "Start lying down with your legs in tabletop. Find your chest curl, and reach both hands on to your ankles.",
     groups: [
       { label: "Ribs", cues: [
         { text: "Ribs draw together and pull down as the arms reach back" },
@@ -853,6 +884,7 @@ const EXERCISES = [
   {
     name: "Single Straight Leg Stretch",
     video: "https://pilatesology.com/pilatesology-encyclopedia-single-straight-leg-stretch/",
+    setup: "Start lying down with your legs in tabletop. Find your chest curl, and extend both legs straight up towards the ceiling with feet in pilates stance. Place both hands on your right ankle, as your left leg extends long towards the mat.",
     cues: [
       { text: "Loosen the grip of the hands and work the grip of the abs to pull the leg closer to the chest" },
       { text: "Stop the shoulders from rounding forward by holding the torso as still as you can as the legs switch" },
@@ -863,6 +895,7 @@ const EXERCISES = [
   {
     name: "Double Straight Leg Stretch (Lower/Lift)",
     video: "https://pilatesology.com/pilatesology-encyclopedia-double-straight-leg-stretch/",
+    setup: "Start lying down with your legs in tabletop. Find your chest curl, hands coming behind your head, palm over palm. Both legs extend up towards the ceiling in pilates stance.",
     cues: [
       { text: "Legs only go as low as your ribs can stay pulling in" },
       { text: "Lower for 3, strike and lift the legs for a count of one" },
@@ -874,6 +907,7 @@ const EXERCISES = [
   {
     name: "Criss Cross",
     video: "https://pilatesology.com/pilatesology-encyclopedia-criss-cross/",
+    setup: "Start lying down with your legs in tabletop. Find your chest curl, hands coming behind your head, palm over palm. Draw your right elbow to your left knee, right leg extending long in front of you.",
     cues: [
       { text: "As you twist, can you send the bottom rib further underneath you to help you deepen the twist" },
       { text: "Come higher as you pass through center before switching sides" },
@@ -883,6 +917,7 @@ const EXERCISES = [
   {
     name: "Spine Stretch Forward",
     video: "https://pilatesology.com/pilatesology-encyclopedia-spine-stretch-forward/",
+    setup: "Start seated. Legs extend long on the mat, about mat distance apart. Sit up tall through the crown of the head, arms extending long in front of you, shoulder height.",
     groups: [
       { label: "Arms", cues: [
         { text: "Imagine gliding your arms over a tabletop as you reach and stretch forward" },
@@ -900,6 +935,7 @@ const EXERCISES = [
   {
     name: "Open Leg Rocker",
     video: "https://pilatesology.com/pilatesology-encyclopedia-open-leg-rocker/",
+    setup: "Start seated, legs long in front of you, as wide as the mat. Start to roll back, lifting your legs up off the mat, grabbing hold of each ankle. Balance on your sitz bones to begin.",
     cues: [
       { text: "Roll only to the tips of the shoulder blades, never the neck" },
       { text: "Roll back halfway (from spine stretch forward), throw your legs up and catch your ankles, tuck your tailbone under and roll back" },
@@ -909,6 +945,7 @@ const EXERCISES = [
   {
     name: "Corkscrew",
     video: "https://pilatesology.com/pilatesology-encyclopedia-the-corkscrew/",
+    setup: "Start lying down with your legs connected, toes pointing up the ceiling in pilates stance. Arms are pressing firmly down into the mat.",
     cues: [
       { text: "Your obliques are your brakes" },
       { text: "Feel the inner thighs engage by opening your feet into Pilates stance and squeezing the heels" },
@@ -919,6 +956,7 @@ const EXERCISES = [
   {
     name: "Saw",
     video: "https://pilatesology.com/pilatesology-encyclopedia-the-saw/",
+    setup: "Start seated, with your legs about mat distance apart. Arms are extended out to the side, shoulder height. Lift up through the waist to find a nice, long spine.",
     cues: [
       { text: "Like you're sawing off your pinky toe with your pinky finger" },
       { text: "Roll the spine up, then unwind through center" },
@@ -938,6 +976,7 @@ const EXERCISES = [
   {
     name: "Single Leg Kicks",
     video: "https://pilatesology.com/pilatesology-encyclopedia-single-leg-kicks/",
+    setup: "Start lying down on your stomach. Forearms press down into the mat, in the shape of \"11\", fists in each hand. Press down through the forearms to lift the torso up and away from the mat, drawing the low back, being sure not to arch your low back. Legs are long on the mat, resting about hip distance apart or drawn together.",
     cues: [
       { text: "Can you lift your knee up and away from the mat as you kick to feel the hamstrings a little more?" },
       { text: "Try to keep your hips and torso completely still as you kick" },
@@ -948,6 +987,7 @@ const EXERCISES = [
   {
     name: "Double Leg Kicks",
     video: "https://pilatesology.com/pilatesology-encyclopedia-double-leg-kicks/",
+    setup: "Start lying down on your stomach, resting on your right cheek. Hold your hands behind your back, elbows bent so that your hands can rest on your low back. Legs are connected and are reaching long on the mat.",
     cues: [
       { text: "Imagine a thumbtack under your belly button as the legs stretch back — keep the abs pulling up and away from the mat" },
       { text: "Press the legs down to help your arms stretch back, reaching towards your heels" },
@@ -957,6 +997,7 @@ const EXERCISES = [
   {
     name: "Neck Pull",
     video: "https://pilatesology.com/pilatesology-encyclopedia-neck-pull/",
+    setup: "Start seated with your legs long in front of you. Legs open about hip distance apart. Hands come behind your head, palm over palm, elbows wide. Sit up tall through the crown of the head.",
     cues: [
       { text: "Hinge back only as far as you can go without your ribs flaring out" },
       { text: "Press from the heels to the hamstrings to root the legs down as you roll up" },
@@ -967,6 +1008,7 @@ const EXERCISES = [
   {
     name: "Spine Twist",
     video: "https://pilatesology.com/pilatesology-encyclopedia-the-spine-twist/",
+    setup: "Start seated with your legs connected, feet flexed, in front of you. Arms are extended out to T.",
     cues: [
       { text: "As you twist to the right, feel your left foot trying to get longer than the other — don't let it" },
       { text: "Get taller as you unwind the twist" },
@@ -976,6 +1018,7 @@ const EXERCISES = [
   {
     name: "Side Kicks",
     video: "https://pilatesology.com/pilatesology-encyclopedia-side-kicks-front-back/",
+    setup: "Start lying down on your left side body, lining your body up with the back side of your mat. Legs are extended an angle in front of you, feet reaching for the top corner of the mat. Head can be propped up (more advanced) on one hand, with the top hand resting behind your head, elbow pointed up, or head can be down, resting on your tricep with the top hand resting softly on the mat for added stability.",
     cues: [
       { text: "Booty reaches back as the leg stretches forward or up (opposition)" },
       { text: "Lift the bottom rib cage up and away from the floor" },
@@ -984,6 +1027,7 @@ const EXERCISES = [
   {
     name: "Teaser",
     video: "https://pilatesology.com/pilatesology-encyclopedia-teaser-1-2-3/",
+    setup: "Start lying down, legs together, extended long on the mat. Arms reach back behind you.",
     groups: [
       { label: "Shape", cues: [
         { text: "Keep the c-curve shape in your low back as the chest stretches forward and up" },
@@ -1009,6 +1053,7 @@ const EXERCISES = [
   {
     name: "Seal",
     video: "https://pilatesology.com/pilatesology-encyclopedia-seal/",
+    setup: "Start seated. Bend your knees and reach your arms towards your feet, grabbing hold of the ankles. Elbows press into the inside of the knee, knee pressing into elbows. Lift your feet off the mat, and roll back slightly to your sitz bones and find balance.",
     groups: [
       { label: "Shape", cues: [
         { text: "Press your arms into your legs as your legs press into your arms" },
@@ -1029,6 +1074,7 @@ const EXERCISES = [
   {
     name: "Front Support/Plank",
     video: null,
+    setup: "Start lying down on your stomach. Hands come underneath your shoulders, press yourself up into plank, legs lengthened long towards the back of the mat, feet in pilates stance. Palms press down into the mat, neck is lengthened with your gaze in front of you, a few inches in front of your mat.",
     cues: [
       { text: "Find length through the glutes to keep the spine in neutral" },
       { text: "Draw your armpits towards your waist (great for finding stability)" },
@@ -1038,6 +1084,7 @@ const EXERCISES = [
   {
     name: "Lateral Breathing",
     video: null,
+    setup: "Start lying down with your knees bent, feet flat on the floor.",
     cues: [
       { text: "Ribs expand east to west during inhale, exhale pull them back into the midline, corseting the waist" },
       { text: "As you exhale, imagine pulling the belly button straight up the midline to engage the pelvic floor" },
@@ -1048,6 +1095,7 @@ const EXERCISES = [
   {
     name: "Marching",
     video: null,
+    setup: "Start lying down with your legs in tabletop. Head is down, arms are down, fingers reaching to the top of the mat.",
     cues: [
       { text: "Move your leg through mud as it lowers, resist the leg as it comes back up" },
       { text: "Tailbone drops heavier down as the leg pulls up" },
@@ -1058,6 +1106,7 @@ const EXERCISES = [
   {
     name: "Bridges",
     video: null,
+    setup: "Start lying down with your knees bent, feet flat on the mat. Arms are long, fingers reaching towards the top of the mat.",
     cues: [
       { text: "Keep your feet firm on the mat, but imagine dragging your heels closer to your seat" },
       { text: "Lift through heart center to open the chest" },
@@ -1131,6 +1180,11 @@ function buildCards() {
           Reference
         </a>` : ''}
       </div>
+      ${ex.setup ? `
+      <div class="setup-block">
+        <span class="setup-label">Setup</span>
+        <p class="setup-text">${ex.setup}</p>
+      </div>` : ''}
       <ul class="cue-list">
         ${cueListHTML}
         ${breathing.length ? `
