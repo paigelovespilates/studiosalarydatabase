@@ -394,14 +394,6 @@
 
     .video-link svg { flex-shrink: 0; }
 
-    .cue-count-badge {
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--grey);
-      font-weight: 500;
-    }
-
     .setup-block {
       margin-bottom: 18px;
       padding-bottom: 16px;
@@ -426,6 +418,49 @@
       font-style: italic;
     }
 
+    /* View switcher */
+    .view-switcher-wrap { margin-bottom: 20px; }
+
+    .view-switcher-label {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .view-switcher {
+      display: flex;
+      background: var(--cream);
+      border: 1px solid rgba(55,57,48,0.15);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 3px;
+      max-width: 360px;
+    }
+
+    .view-tab {
+      flex: 1;
+      text-align: center;
+      padding: 9px 10px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: var(--olive-mid);
+      cursor: pointer;
+    }
+
+    .view-tab.active { background: var(--olive); color: var(--linen); }
+
+    .view-panel { display: none; }
+    .view-panel.active { display: block; }
+
     .cue-list { list-style: none; display: flex; flex-direction: column; }
 
     .cue-item {
@@ -437,8 +472,6 @@
     }
 
     .cue-item:last-child { border-bottom: none; }
-    .cue-list .breathing-divider-wrapper:first-of-type { border-bottom: none; }
-    .cue-item.pre-breathing { border-bottom: none; }
 
     .cue-bullet {
       width: 5px;
@@ -466,23 +499,11 @@
       text-transform: uppercase;
       color: var(--grey);
       display: block;
-      padding: 12px 0 2px;
+      padding: 14px 0 6px;
       border-top: 1px solid rgba(55,57,48,0.06);
     }
 
-    .cat-label:first-child { border-top: none; padding-top: 8px; }
-
-    .breathing-divider {
-      margin: 8px 0 4px;
-    }
-
-    .breathing-divider-label {
-      font-size: 9px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--grey);
-      font-weight: 500;
-    }
+    .cat-label:first-child { border-top: none; padding-top: 0; }
 
     .empty-state {
       text-align: center;
@@ -718,167 +739,116 @@ setupCodeBoxes();
   } catch (e) {}
 })();
 
-/* ---------- Cue Guide content ---------- */
+/* ---------- Cue Guide content ----------
+   Data model: each cue has { text, type, phase, breathing }.
+   - type:  existing "Cue Type" grouping (e.g. Powerhouse, Opposition, Imagery).
+            null/undefined = no type tag exists yet for this cue (renders flat, no header).
+   - phase: "Phase of Exercise" grouping, pulled from the Notion cues doc's
+            "As you X:" / "General setup cue:" tags. Breathing cues are always
+            phase: "Breathing" AND type: "Breathing" so both views end with a
+            Breathing section, matching how the guide already worked.
+*/
 const EXERCISES = [
   {
     name: "Hundred",
     video: "https://pilatesology.com/pilatesology-encyclopedia-the-hundred/",
     setup: "Lie down with your legs in tabletop. Lift your head, neck and shoulders off of the mat, rising to the tips of your shoulder blades. Arms extend long in front of you, belly button height off the floor as the legs extend out in front of you. Start to pump your arms vigorously.",
-    groups: [
-      { label: "Powerhouse", cues: [
-        { text: "Draw your naval to the lowest point of your low back" },
-        { text: "Instead of thinking about rising higher, can you deepen the crease of your breastbone" },
-      ]},
-      { label: "Legs & seat", cues: [
-        { text: "Pull your seat up into the back of the ribs to find more length in the legs" },
-        { text: "Squeeze your heels together to power through the midline" },
-        { text: "Rotate the backs of the legs towards one another to get the inner thighs engaged" },
-      ]},
-      { label: "Arms", cues: [
-        { text: "Pump your arms from your back body, not your wrist" },
-        { text: "Imagine you're bouncing a basketball as the arms pump" },
-        { text: "Pump the arms vigorously, belly button height off the mat" },
-      ]},
-      { label: "Focus point", cues: [
-        { text: "Eyes on inner thighs as you breathe" },
-      ]},
-    ],
     cues: [
-      { text: "Inhale two, three, four, five — exhale two, three, four, five. 20, two, three, four, five…", breathing: true },
+      { text: "Draw your naval to the lowest point of your low back", type: "Powerhouse", phase: "General Setup" },
+      { text: "Instead of thinking about rising higher, can you deepen the crease of your breastbone", type: "Powerhouse", phase: "General Setup" },
+      { text: "Pull your seat up into the back of the ribs to find more length in the legs", type: "Legs & seat", phase: "General Setup" },
+      { text: "Squeeze your heels together to power through the midline", type: "Legs & seat", phase: "General Setup" },
+      { text: "Rotate the backs of the legs towards one another to get the inner thighs engaged", type: "Legs & seat", phase: "General Setup" },
+      { text: "Pump your arms from your back body, not your wrist", type: "Arms", phase: "General Setup" },
+      { text: "Imagine you're bouncing a basketball as the arms pump", type: "Arms", phase: "General Setup" },
+      { text: "Eyes on inner thighs as you breathe", type: "Focus point", phase: "General Setup" },
+      { text: "Inhale two, three, four, five — exhale two, three, four, five. 20, two, three, four, five…", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
     name: "Roll Up",
     video: "https://pilatesology.com/pilatesology-encyclopedia-the-roll-up/",
     setup: "Start lying down. Legs extend long, connected from heels to inner thighs. Flex the feet and root your legs down as your arms reach up overhead.",
-    groups: [
-      { label: "Spinal articulation", cues: [
-        { text: "Nod your chin towards your chest as you start to peel yourself up" },
-        { text: "Waist down to the mat, ribs down to the mat, shoulders down to the mat (cue to help with spinal articulation down)" },
-        { text: "As your arms reach back behind you, can you drop your ribs into the mat?" },
-      ]},
-      { label: "Legs & feet", cues: [
-        { text: "Flex your feet and ground down through your legs as you come up" },
-        { text: "Keep your thighs long and reaching towards your toes so that your heels don't move as you roll up" },
-        { text: "Find more length through the legs as you start to articulate the spine down" },
-      ]},
-      { label: "Opposition", cues: [
-        { text: "Heels reach forward as belly button pulls back" },
-        { text: "Press down through the legs to find a deeper c-curve between the arms and legs" },
-      ]},
-    ],
     cues: [
-      { text: "Inhale as you roll up, exhale stretch. Inhale tailbone tucks under, exhale lower all the way down (2-part breathing)", breathing: true },
+      { text: "Nod your chin towards your chest as you start to peel yourself up", type: "Spinal articulation", phase: "As You Roll Up" },
+      { text: "Waist down to the mat, ribs down to the mat, shoulders down to the mat (cue to help with spinal articulation down)", type: "Spinal articulation", phase: "As You Lower Down" },
+      { text: "As your arms reach back behind you, can you drop your ribs into the mat?", type: "Spinal articulation", phase: "As You Lower Down" },
+      { text: "Flex your feet and ground down through your legs as you come up", type: "Legs & feet", phase: "As You Roll Up" },
+      { text: "Keep your thighs long and reaching towards your toes so that your heels don't move as you roll up", type: "Legs & feet", phase: "As You Roll Up" },
+      { text: "Find more length through the legs as you start to articulate the spine down", type: "Legs & feet", phase: "As You Lower Down" },
+      { text: "Heels reach forward as belly button pulls back", type: "Opposition", phase: "As You Stretch Forward" },
+      { text: "Press down through the legs to find a deeper c-curve between the arms and legs", type: "Opposition", phase: "As You Stretch Forward" },
+      { text: "Inhale as you roll up, exhale stretch. Inhale tailbone tucks under, exhale lower all the way down (2-part breathing)", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
     name: "Roll Over",
     video: "https://pilatesology.com/pilatesology-encyclopedia-the-roll-over/",
     setup: "Start lying down. Legs extend out to a 45 degree angle in front of you, arms and fingers reaching long on the mat. Backs of the shoulders and triceps are rooted heavy down on the mat.",
-    groups: [
-      { label: "Arms", cues: [
-        { text: "Make your arms get longer as the legs reach back and start to lower down" },
-        { text: "Press the backs of the shoulders heavy down into the mat as you lower the legs back down" },
-      ]},
-      { label: "Legs", cues: [
-        { text: "Heels reach further behind you as tailbone stretches forward" },
-        { text: "Keep squeezing the inner thighs towards each other to maintain control as you articulate down" },
-      ]},
-      { label: "Head & neck", cues: [
-        { text: "Press down the crown of the head to keep the chin pulling away from the neck" },
-      ]},
-    ],
     cues: [
-      { text: "Inhale legs reach over and back, exhale lower down", breathing: true },
+      { text: "Make your arms get longer as the legs reach back and start to lower down", type: "Arms", phase: "As You Reach The Legs Back And Over" },
+      { text: "Press the backs of the shoulders heavy down into the mat as you lower the legs back down", type: "Arms", phase: "As You Lower The Legs Down" },
+      { text: "Heels reach further behind you as tailbone stretches forward", type: "Legs", phase: "As You Reach The Legs Back And Over" },
+      { text: "Keep squeezing the inner thighs towards each other to maintain control as you articulate down (legs may be hip distance apart or connected)", type: "Legs", phase: "As You Lower The Legs Down" },
+      { text: "Press down the crown of the head to keep the chin pulling away from the neck", type: "Head & neck", phase: "As You Reach The Legs Back And Over" },
+      { text: "Inhale legs reach over and back, exhale lower down", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
     name: "Single Leg Circles",
     video: "https://pilatesology.com/pilatesology-encyclopedia-leg-circles/",
     setup: "Start lying down, left leg down, long on the mat, foot flexed. Right toe is pointed up to the ceiling with an external rotation of the foot. Both hips are rooted heavy down, and arms are pressing into the mat.",
-    groups: [
-      { label: "Supporting leg", cues: [
-        { text: "Stand on the lower (non-circling) leg to keep yourself rooted to the floor" },
-        { text: "Flex the foot of the bottom leg to feel a deeper stretch of the hip flexor and find more length through the supporting leg" },
-        { text: "Press the crown of the head heavier into the mat to untuck the chin and relax the shoulders" },
-      ]},
-      { label: "Working leg", cues: [
-        { text: "Strike the leg as it comes up (at the top of the circle)" },
-        { text: "Scoop through the low belly to help lift the leg (at the top of the circle)" },
-        { text: "As the leg crosses the body, reach the hip down and further away from the toes to find more stretch and opposition" },
-      ]},
-      { label: "Imagery", cues: [
-        { text: "The direction of the leg is UP and across, not just over — lift before you circle, then over" },
-      ]},
-    ],
     cues: [
-      { text: "Inhale cross the body and lower, exhale scoop and lift up", breathing: true },
+      { text: "Stand on the lower (non-circling) leg to keep yourself rooted to the floor", type: "Supporting leg", phase: "General Setup" },
+      { text: "Flex the foot of the bottom leg to feel a deeper stretch of the hip flexor and find more length through the supporting leg", type: "Supporting leg", phase: "General Setup" },
+      { text: "Press the crown of the head heavier into the mat to untuck the chin and relax the shoulders", type: "Supporting leg", phase: "General Setup" },
+      { text: "Strike the leg as it comes up (at the top of the circle)", type: "Working leg", phase: "As The Leg Rises At The Top Of The Circle" },
+      { text: "Scoop through the low belly to help lift the leg (at the top of the circle)", type: "Working leg", phase: "As The Leg Rises At The Top Of The Circle" },
+      { text: "As the leg crosses the body, reach the hip down and further away from the toes to find more stretch and opposition", type: "Working leg", phase: "As You Begin The Circle" },
+      { text: "The direction of the leg is UP (towards the opposite shoulder) and across, not just over.", type: "Imagery", phase: "As You Begin The Circle" },
+      { text: "Inhale cross the body and lower, exhale scoop and lift up", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
     name: "Rolling Like a Ball",
     video: "https://pilatesology.com/pilatesology-encyclopedia-rolling-like-a-ball/",
     setup: "Start seated. Bend your knees and wrap your arms around your legs, grabbing hold of the ankles. Knees are pressing into the crook of your elbows. Lift your feet off the mat, and roll back slightly to your sitz bones and find balance. Round your shoulders so they're over your hips.",
-    groups: [
-      { label: "Shape", cues: [
-        { text: "Hold an egg under your chin — don't crack the egg but don't drop it either" },
-        { text: "Draw your seat to your heels and heels to your seat" },
-        { text: "Get the ball tighter and smaller with every rep" },
-        { text: "Reach the mid-spine further away as you round and scoop over the knees" },
-      ]},
-      { label: "Momentum", cues: [
-        { text: "Don't let your feet drift away from your seat as you roll back" },
-        { text: "Imagine massaging each vertebrae of your spine as you roll" },
-      ]},
-      { label: "Balance", cues: [
-        { text: "Every time you come up to balance, can you lift your knees a little higher" },
-      ]},
-    ],
     cues: [
-      { text: "Inhale as you roll back, exhale scoop and come forward to balance", breathing: true },
+      { text: "Hold an egg under your chin — don't crack the egg but don't drop it either", type: "Shape", phase: "General Setup" },
+      { text: "Draw your seat to your heels and heels to your seat", type: "Shape", phase: "General Setup" },
+      { text: "Get the ball tighter and smaller with every rep", type: "Shape", phase: "General Setup" },
+      { text: "Reach the mid-spine further away as you round and scoop over the knees", type: "Shape", phase: "As You Roll Back" },
+      { text: "Don't let your feet drift away from your seat as you roll back", type: "Momentum", phase: "As You Roll Back" },
+      { text: "Imagine massaging each vertebrae of your spine as you roll", type: "Momentum", phase: "As You Roll Back" },
+      { text: "As you come up to balance, can you lift your knees a little higher?", type: "Balance", phase: "As You Find Balance" },
+      { text: "Inhale as you roll back, exhale scoop and come forward to balance", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
     name: "Single Leg Stretch",
     video: "https://pilatesology.com/pilatesology-encyclopedia-single-leg-stretch/",
     setup: "Start lying down with your legs in tabletop. Find your chest curl, and place your right hand on your right ankle, left hand on your right knee. Opposite leg extends long towards the mat.",
-    groups: [
-      { label: "Hand placement", cues: [
-        { text: "Outside hand holds the ankle, inside hand holds the knee" },
-      ]},
-      { label: "Knee tracking", cues: [
-        { text: "As the knee pulls in, think about it tracking your cheekbone" },
-        { text: "Think about getting your knee in line with your cheekbone — every time the knee pulls in, reach it towards your cheekbone" },
-        { text: "Can you make the second pull a little deeper than the first?" },
-      ]},
-      { label: "Torso", cues: [
-        { text: "Goal is to get the leg going long to float as low as your hip" },
-        { text: "Your abs are holding up your head — relax the shoulders" },
-      ]},
-    ],
     cues: [
-      { text: "Inhale prepare, exhale as the knee pulls into the chest. Inhale as the legs pass, exhale switch", breathing: true },
+      { text: "Outside hand holds the ankle, inside hand holds the knee", type: "Hand placement", phase: "General Setup" },
+      { text: "As the knee pulls in, think about it tracking your cheekbone", type: "Knee tracking", phase: "As One Knee Pulls In" },
+      { text: "Think about getting your knee in line with your cheekbone. Every time the knee pulls in, reach it towards your cheekbone.", type: "Knee tracking", phase: "As One Knee Pulls In" },
+      { text: "Can you make the second pull a little deeper than the first?", type: "Knee tracking", phase: "As One Knee Pulls In" },
+      { text: "Goal is to get the leg (the one extending out and long) to float as low as your hip", type: "Torso", phase: "As One Knee Pulls In" },
+      { text: "Your abs are holding up your head — relax the shoulders", type: "Torso", phase: "General Setup" },
+      { text: "Inhale prepare, exhale as the knee pulls into the chest. Inhale as the legs pass, exhale switch", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
     name: "Double Leg Stretch",
     video: "https://pilatesology.com/pilatesology-encyclopedia-double-leg-stretch/",
     setup: "Start lying down with your legs in tabletop. Find your chest curl, and reach both hands on to your ankles.",
-    groups: [
-      { label: "Ribs", cues: [
-        { text: "Ribs draw together and pull down as the arms reach back" },
-        { text: "As the knees come in, imagine squeezing all the air out of the body" },
-      ]},
-      { label: "Legs & seat", cues: [
-        { text: "Drop the tailbone heavier down as the legs extend" },
-        { text: "Keep the backs of the thighs squeezing together as the legs extend" },
-      ]},
-      { label: "Imagery", cues: [
-        { text: "Imagine pulling the edge of your seat up into your back and see how that allows you to find more length in the legs (during the stretch)" },
-      ]},
-    ],
     cues: [
-      { text: "Inhale prepare, exhale stretch and reach out, inhale scoop and pull in, exhale stretch", breathing: true },
+      { text: "Ribs draw together and pull down as the arms reach back", type: "Ribs", phase: "As You Stretch" },
+      { text: "As the knees come in, imagine squeezing all the air out of the body", type: "Ribs", phase: "As You Pull In" },
+      { text: "Drop the tailbone heavier down as the legs extend", type: "Legs & seat", phase: "As You Stretch" },
+      { text: "Keep the backs of the thighs squeezing together as the legs extend", type: "Legs & seat", phase: "As You Stretch" },
+      { text: "Imagine pulling the edge of your seat up into your back and see how that allows you to find more length in the legs (during the stretch)", type: "Imagery", phase: "As You Stretch" },
+      { text: "Inhale prepare, exhale stretch and reach out, inhale scoop and pull in, exhale stretch.", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
@@ -886,10 +856,10 @@ const EXERCISES = [
     video: "https://pilatesology.com/pilatesology-encyclopedia-single-straight-leg-stretch/",
     setup: "Start lying down with your legs in tabletop. Find your chest curl, and extend both legs straight up towards the ceiling with feet in pilates stance. Place both hands on your right ankle, as your left leg extends long towards the mat.",
     cues: [
-      { text: "Loosen the grip of the hands and work the grip of the abs to pull the leg closer to the chest" },
-      { text: "Stop the shoulders from rounding forward by holding the torso as still as you can as the legs switch" },
-      { text: "Press the hip down as you stretch the leg towards your chest" },
-      { text: "Inhale walk the hands up to the ankle, exhale pull pull, inhale switch. Exhale pull, pull, inhale switch", breathing: true },
+      { text: "Loosen the grip of the hands and work the grip of the abs to pull the leg closer to the chest", phase: "As The Leg Pulls In" },
+      { text: "Stop the shoulders from rounding forward by holding the torso as still as you can as the legs switch", phase: "General Setup" },
+      { text: "Press the hip down into the mat as you stretch the leg towards your chest", phase: "As The Leg Pulls In" },
+      { text: "Inhale walk the hands up to the ankle, exhale pull pull, inhale switch. Exhale pull, pull, inhale switch", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
@@ -897,11 +867,11 @@ const EXERCISES = [
     video: "https://pilatesology.com/pilatesology-encyclopedia-double-straight-leg-stretch/",
     setup: "Start lying down with your legs in tabletop. Find your chest curl, hands coming behind your head, palm over palm. Both legs extend up towards the ceiling in pilates stance.",
     cues: [
-      { text: "Legs only go as low as your ribs can stay pulling in" },
-      { text: "Lower for 3, strike and lift the legs for a count of one" },
-      { text: "Hips reach down heavier as legs lift up" },
-      { text: "If your back arches as the legs lower, you've gone too far" },
-      { text: "Inhale legs lower down, exhale scoop and lift the legs back up", breathing: true },
+      { text: "Legs only go as low as your ribs can stay pulling in", phase: "As You Lower Your Legs" },
+      { text: "Lower for 3, strike and lift the legs for a count of one", phase: "General Setup" },
+      { text: "Hips reach down heavier as legs lift up", phase: "As You Lift Your Legs" },
+      { text: "If your back arches as the legs lower, you've gone too far", phase: "As You Lower Your Legs" },
+      { text: "Inhale legs lower down, exhale scoop and lift the legs back up", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
@@ -909,27 +879,22 @@ const EXERCISES = [
     video: "https://pilatesology.com/pilatesology-encyclopedia-criss-cross/",
     setup: "Start lying down with your legs in tabletop. Find your chest curl, hands coming behind your head, palm over palm. Draw your right elbow to your left knee, right leg extending long in front of you.",
     cues: [
-      { text: "As you twist, can you send the bottom rib further underneath you to help you deepen the twist" },
-      { text: "Come higher as you pass through center before switching sides" },
-      { text: "Inhale prepare (in center curl), exhale knee to elbow. Inhale center, exhale switch.", breathing: true },
+      { text: "As you twist, can you send the bottom rib further underneath you to help you deepen the twist", phase: "As You Twist" },
+      { text: "Come higher as you pass through center before switching sides", phase: "As You Switch Sides" },
+      { text: "Inhale prepare (in center curl), exhale knee to elbow. Inhale center, exhale switch.", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
     name: "Spine Stretch Forward",
     video: "https://pilatesology.com/pilatesology-encyclopedia-spine-stretch-forward/",
     setup: "Start seated. Legs extend long on the mat, about mat distance apart. Sit up tall through the crown of the head, arms extending long in front of you, shoulder height.",
-    groups: [
-      { label: "Arms", cues: [
-        { text: "Imagine gliding your arms over a tabletop as you reach and stretch forward" },
-        { text: "Glide the arms over the top of the table surface, don't let them sink down" },
-      ]},
-      { label: "Opposition", cues: [
-        { text: "Heels reach forward as the belly button pulls back (opposition)" },
-        { text: "Hold the stretch, and think about pulling your belly button up as your ribs press down" },
-      ]},
-    ],
     cues: [
-      { text: "Inhale reach, exhale hold and stretch. Inhale roll up, exhale stack the spine and grow taller", breathing: true },
+      { text: "Imagine gliding your arms over a tabletop as you reach and stretch forward", type: "Arms", phase: "As You Stretch Forward" },
+      { text: "Glide the arms over the top of the table surface, don't let them sink down", type: "Arms", phase: "As You Stretch Forward" },
+      { text: "Heels reach forward as the belly button pulls back (opposition)", type: "Opposition", phase: "As You Pause For The Stretch" },
+      { text: "Hold the stretch, and think about pulling your belly button up in your ribs, your ribs down into your waist", type: "Opposition", phase: "As You Pause For The Stretch" },
+      { text: "Lift up and out from the waist to get taller through the crown of the head", phase: "As You Reset/Sit Up" },
+      { text: "Inhale reach, exhale hold and stretch. Inhale roll up, exhale stack the spine and grow taller", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
@@ -937,9 +902,9 @@ const EXERCISES = [
     video: "https://pilatesology.com/pilatesology-encyclopedia-open-leg-rocker/",
     setup: "Start seated, legs long in front of you, as wide as the mat. Start to roll back, lifting your legs up off the mat, grabbing hold of each ankle. Balance on your sitz bones to begin.",
     cues: [
-      { text: "Roll only to the tips of the shoulder blades, never the neck" },
-      { text: "Roll back halfway (from spine stretch forward), throw your legs up and catch your ankles, tuck your tailbone under and roll back" },
-      { text: "Inhale roll back, exhale come forward", breathing: true },
+      { text: "Roll only to the tips of the shoulder blades, never the neck", phase: "General Setup" },
+      { text: "Roll back halfway (from spine stretch forward), throw your legs up and catch your ankles, tuck your tailbone under and roll back", phase: "General Setup" },
+      { text: "Inhale roll back, exhale come forward", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
@@ -947,10 +912,10 @@ const EXERCISES = [
     video: "https://pilatesology.com/pilatesology-encyclopedia-the-corkscrew/",
     setup: "Start lying down with your legs connected, toes pointing up the ceiling in pilates stance. Arms are pressing firmly down into the mat.",
     cues: [
-      { text: "Your obliques are your brakes" },
-      { text: "Feel the inner thighs engage by opening your feet into Pilates stance and squeezing the heels" },
-      { text: "Press your triceps heavy into the mat and lengthen through the fingertips to find greater stability" },
-      { text: "Inhale send the legs down and around, exhale scoop and lift the legs back, pausing to reverse as you reach center", breathing: true },
+      { text: "Your obliques are your brakes", phase: "General Setup" },
+      { text: "Feel the inner thighs engage by opening your feet into Pilates stance and squeezing the heels", phase: "General Setup" },
+      { text: "Press your triceps heavy into the mat and lengthen through the fingertips to find greater stability", phase: "General Setup" },
+      { text: "Inhale send the legs down and around, exhale scoop and lift the legs back, pausing to reverse as you reach center", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
@@ -958,19 +923,18 @@ const EXERCISES = [
     video: "https://pilatesology.com/pilatesology-encyclopedia-the-saw/",
     setup: "Start seated, with your legs about mat distance apart. Arms are extended out to the side, shoulder height. Lift up through the waist to find a nice, long spine.",
     cues: [
-      { text: "Like you're sawing off your pinky toe with your pinky finger" },
-      { text: "Roll the spine up, then unwind through center" },
-      { text: "Twist through the waist and get taller through the crown of the head as the opposite hip roots down to the mat" },
+      { text: "Like you're sawing off your pinky toe with your pinky finger", phase: "As You Reach" },
+      { text: "Roll the spine up, then unwind through center", phase: "As You Switch Sides" },
+      { text: "Twist through the waist and get taller through the crown of the head (before you reach for your toe)", phase: "As You Twist" },
+      { text: "As you twist to the lift, can you reach your right hip further down into the mat?", phase: "As You Twist" },
     ]
   },
   {
     name: "Neck Roll",
     video: "https://pilatesology.com/pilatesology-encyclopedia-neck-roll/",
     cues: [
-      { text: "Get taller as you lower down" },
-      { text: "Reach more through the crown of your head as your chest lowers back towards the mat" },
-      { text: "As you begin to lift yourself up, see how long you can go without pressing into your hands to help you lift" },
-      { text: "Inhale start to lift your chest forward and away from the mat, exhale press into your hands to lift your powerhouse; inhale lengthen the spine as you lower down, exhale release", breathing: true },
+      { text: "See how long you can go without pressing down into your hands for help to rise.", phase: "As You Lift The Chest" },
+      { text: "Inhale start to lift your chest forward and away from the mat, exhale press into your hands to lift your powerhouse; inhale lengthen the spine as you lower down, exhale release", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
@@ -978,10 +942,10 @@ const EXERCISES = [
     video: "https://pilatesology.com/pilatesology-encyclopedia-single-leg-kicks/",
     setup: "Start lying down on your stomach. Forearms press down into the mat, in the shape of \"11\", fists in each hand. Press down through the forearms to lift the torso up and away from the mat, drawing the low back, being sure not to arch your low back. Legs are long on the mat, resting about hip distance apart or drawn together.",
     cues: [
-      { text: "Can you lift your knee up and away from the mat as you kick to feel the hamstrings a little more?" },
-      { text: "Try to keep your hips and torso completely still as you kick" },
-      { text: "Press down through the elbows to keep the chest lifted and open" },
-      { text: "Inhale prepare, exhale kick kick. Inhale legs switch, exhale kick kick.", breathing: true },
+      { text: "Can you lift your knee up and away from the mat as you kick to feel the hamstrings a little more?", phase: "As The Heel Draws To The Seat" },
+      { text: "Try to keep your hips and torso completely still as you kick", phase: "General Setup" },
+      { text: "Press down through the forearms and elbows to keep the chest lifted and open", phase: "General Setup" },
+      { text: "Inhale prepare, exhale kick kick. Inhale legs switch, exhale kick kick.", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
@@ -989,9 +953,9 @@ const EXERCISES = [
     video: "https://pilatesology.com/pilatesology-encyclopedia-double-leg-kicks/",
     setup: "Start lying down on your stomach, resting on your right cheek. Hold your hands behind your back, elbows bent so that your hands can rest on your low back. Legs are connected and are reaching long on the mat.",
     cues: [
-      { text: "Imagine a thumbtack under your belly button as the legs stretch back — keep the abs pulling up and away from the mat" },
-      { text: "Press the legs down to help your arms stretch back, reaching towards your heels" },
-      { text: "Inhale kick, exhale reach and stretch", breathing: true },
+      { text: "Imagine a thumbtack under your belly button. Keep the abs pulling up and away from the mat to avoid the thumbtack", phase: "General Setup" },
+      { text: "Press the legs down and into the mat to help your arms stretch further back.", phase: "As You Stretch" },
+      { text: "Inhale kick, exhale reach and stretch", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
@@ -999,10 +963,11 @@ const EXERCISES = [
     video: "https://pilatesology.com/pilatesology-encyclopedia-neck-pull/",
     setup: "Start seated with your legs long in front of you. Legs open about hip distance apart. Hands come behind your head, palm over palm, elbows wide. Sit up tall through the crown of the head.",
     cues: [
-      { text: "Hinge back only as far as you can go without your ribs flaring out" },
-      { text: "Press from the heels to the hamstrings to root the legs down as you roll up" },
-      { text: "Get taller through the crown as you hinge back" },
-      { text: "Inhale hinge; when you can't hinge anymore, exhale tuck the tailbone and lower all the way down. Inhale roll up, exhale stack the spine and reset.", breathing: true },
+      { text: "Get taller as you hinge back - it's a lift up AND back, not just a hinge back.", phase: "As You Hinge" },
+      { text: "Hinge back only as far as you can go without your ribs flaring out", phase: "As You Hinge" },
+      { text: "Get taller through the crown as you hinge back", phase: "As You Hinge" },
+      { text: "Press the hamstrings heavier down into the mat to help you root the legs and roll up", phase: "As You Roll Up" },
+      { text: "Inhale hinge; when you can't hinge anymore, exhale tuck the tailbone and lower all the way down. Inhale roll up, exhale stack the spine and reset.", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
@@ -1010,9 +975,9 @@ const EXERCISES = [
     video: "https://pilatesology.com/pilatesology-encyclopedia-the-spine-twist/",
     setup: "Start seated with your legs connected, feet flexed, in front of you. Arms are extended out to T.",
     cues: [
-      { text: "As you twist to the right, feel your left foot trying to get longer than the other — don't let it" },
-      { text: "Get taller as you unwind the twist" },
-      { text: "Keep both feet stacked, don't let one pass the other" },
+      { text: "As you twist (to the right), feel your (left) opposite foot trying to get longer than the other. Don't let it.", phase: "As You Twist" },
+      { text: "Keep both feet connected and stacked, don't let one pass the other", phase: "As You Twist" },
+      { text: "Lift up and out of the waist to get taller", phase: "As You Unwind The Twist" },
     ]
   },
   {
@@ -1020,55 +985,37 @@ const EXERCISES = [
     video: "https://pilatesology.com/pilatesology-encyclopedia-side-kicks-front-back/",
     setup: "Start lying down on your left side body, lining your body up with the back side of your mat. Legs are extended an angle in front of you, feet reaching for the top corner of the mat. Head can be propped up (more advanced) on one hand, with the top hand resting behind your head, elbow pointed up, or head can be down, resting on your tricep with the top hand resting softly on the mat for added stability.",
     cues: [
-      { text: "Booty reaches back as the leg stretches forward or up (opposition)" },
-      { text: "Lift the bottom rib cage up and away from the floor" },
+      { text: "Booty reaches back as the leg stretches forward or up (opposition)", phase: "General Setup" },
+      { text: "Lift the bottom rib cage up and away from the floor", phase: "General Setup" },
     ]
   },
   {
     name: "Teaser",
     video: "https://pilatesology.com/pilatesology-encyclopedia-teaser-1-2-3/",
     setup: "Start lying down, legs together, extended long on the mat. Arms reach back behind you.",
-    groups: [
-      { label: "Shape", cues: [
-        { text: "Keep the c-curve shape in your low back as the chest stretches forward and up" },
-        { text: "Ribs press down to the waist as you hold the shape steady" },
-      ]},
-      { label: "Legs", cues: [
-        { text: "Legs stay at 45 — it's cheating if you lift them higher than that!" },
-        { text: "Legs are long and loose — not gripping — as you rise up" },
-        { text: "Inner thighs wrap and squeeze towards each other as you roll up" },
-      ]},
-      { label: "Arms", cues: [
-        { text: "Keeping your arms parallel to your legs, as you lift up, imagine pressing the tops of your arms up and into a flat surface" },
-      ]},
-      { label: "Common corrections", cues: [
-        { text: "Imagine grabbing on to something heavy and pulling it down to find more strength in your center as you lower down" },
-        { text: "Stare at your legs. As you start to lower down, don't let those legs move — not even an inch!" },
-      ]},
-    ],
     cues: [
-      { text: "Inhale arms and head reach up, exhale rise, inhale prepare, exhale lower all the way down", breathing: true },
+      { text: "Keep the c-curve shape in your low back as you rise up and lift the chest", type: "Shape", phase: "As You Balance At The Top" },
+      { text: "Ribs press down to the waist as you hold the shape steady", type: "Shape", phase: "As You Balance At The Top" },
+      { text: "Legs stay at 45 - it's cheating if you lift them higher than that!", type: "Legs", phase: "As You Roll Up" },
+      { text: "Legs are long and loose - avoid gripping the hip flexors - as you rise up", type: "Legs", phase: "As You Roll Up" },
+      { text: "Inner thighs wrap and squeeze towards each other as you roll up", type: "Legs", phase: "As You Roll Up" },
+      { text: "imagine pressing the tops of your arms up and into a flat surface, while keeping them parallel to your legs", type: "Arms", phase: "As You Balance At The Top" },
+      { text: "Imagine grabbing on to something heavy and pulling it down as you lower back to the mat. Use this to find more strength in your center as you lower down", type: "Common corrections", phase: "As You Roll Down" },
+      { text: "Stare at your legs. As you start to lower down, don't let those legs move — not even an inch!", type: "Common corrections", phase: "As You Roll Down" },
+      { text: "Inhale arms and head reach up, exhale rise, inhale prepare, exhale lower all the way down", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
     name: "Seal",
     video: "https://pilatesology.com/pilatesology-encyclopedia-seal/",
     setup: "Start seated. Bend your knees and reach your arms towards your feet, grabbing hold of the ankles. Elbows press into the inside of the knee, knee pressing into elbows. Lift your feet off the mat, and roll back slightly to your sitz bones and find balance.",
-    groups: [
-      { label: "Shape", cues: [
-        { text: "Press your arms into your legs as your legs press into your arms" },
-        { text: "Can you lengthen your c-curve a little more? The less collapsed you are, the better you'll be able to roll" },
-        { text: "Can you bring your shoulders a little more forward so that they're over your hips? (While in balance position)" },
-      ]},
-      { label: "Momentum", cues: [
-        { text: "Imprint your spine and imagine pressing it down heavier into the mat as you roll back" },
-      ]},
-      { label: "Imagery", cues: [
-        { text: "The clapping of the legs is a massage for your hips and pelvis — it's not just a silly looking clap of the feet!" },
-      ]},
-    ],
     cues: [
-      { text: "Inhale roll back (2, 3 — for the clapping of the feet), exhale come forward (2, 3 — for the clapping of the feet)", breathing: true },
+      { text: "Press your arms into your legs as your legs press into your arms", type: "Shape", phase: "General Setup" },
+      { text: "Can you lengthen your c-curve a little more? The less collapsed you are, the better you'll be able to roll", type: "Shape", phase: "General Setup" },
+      { text: "Can you bring your shoulders a little more forward so that they're over your hips?", type: "Shape", phase: "As You Balance" },
+      { text: "Imprint your spine and imagine pressing it down heavier into the mat as you roll back", type: "Momentum", phase: "As You Roll Back" },
+      { text: "The clapping of the legs is a massage for your hips and pelvis — it's not just a silly looking clap of the feet!", type: "Imagery", phase: "As You Clap" },
+      { text: "Inhale roll back (2, 3 — for the clapping of the feet), exhale come forward (2, 3 — for the clapping of the feet)", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
@@ -1076,9 +1023,9 @@ const EXERCISES = [
     video: null,
     setup: "Start lying down on your stomach. Hands come underneath your shoulders, press yourself up into plank, legs lengthened long towards the back of the mat, feet in pilates stance. Palms press down into the mat, neck is lengthened with your gaze in front of you, a few inches in front of your mat.",
     cues: [
-      { text: "Find length through the glutes to keep the spine in neutral" },
-      { text: "Draw your armpits towards your waist (great for finding stability)" },
-      { text: "Lift the chin to keep the neck long" },
+      { text: "Find length through the glutes to keep the spine in neutral", phase: "General Setup" },
+      { text: "Draw your armpits towards your waist", phase: "General Setup" },
+      { text: "Lift the chin to keep the neck long", phase: "General Setup" },
     ]
   },
   {
@@ -1086,10 +1033,10 @@ const EXERCISES = [
     video: null,
     setup: "Start lying down with your knees bent, feet flat on the floor.",
     cues: [
-      { text: "Ribs expand east to west during inhale, exhale pull them back into the midline, corseting the waist" },
-      { text: "As you exhale, imagine pulling the belly button straight up the midline to engage the pelvic floor" },
-      { text: "As you exhale, lift your stomach through the crown of your head" },
-      { text: "Drop the ribs into the spine (during the exhale)" },
+      { text: "Ribs expand east to west during inhale, exhale pull them back into the midline, corseting the waist", phase: "General Setup" },
+      { text: "As you exhale, imagine pulling the belly button straight up the midline to engage the pelvic floor", phase: "General Setup" },
+      { text: "As you exhale, lift your stomach through the crown of your head", phase: "General Setup" },
+      { text: "Drop the ribs into the spine (during the exhale)", phase: "General Setup" },
     ]
   },
   {
@@ -1097,10 +1044,10 @@ const EXERCISES = [
     video: null,
     setup: "Start lying down with your legs in tabletop. Head is down, arms are down, fingers reaching to the top of the mat.",
     cues: [
-      { text: "Move your leg through mud as it lowers, resist the leg as it comes back up" },
-      { text: "Tailbone drops heavier down as the leg pulls up" },
-      { text: "Imagine moving the leg through concrete as it lowers and lifts" },
-      { text: "Inhale lower, exhale lift and pull up", breathing: true },
+      { text: "Move your leg through mud as it lowers, resist the leg as it comes back up", phase: "General Setup" },
+      { text: "Tailbone drops heavier down as the leg pulls up", phase: "General Setup" },
+      { text: "Imagine moving the leg through concrete as it lowers and lifts", phase: "General Setup" },
+      { text: "Inhale lower, exhale lift and pull up", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
   {
@@ -1108,10 +1055,10 @@ const EXERCISES = [
     video: null,
     setup: "Start lying down with your knees bent, feet flat on the mat. Arms are long, fingers reaching towards the top of the mat.",
     cues: [
-      { text: "Keep your feet firm on the mat, but imagine dragging your heels closer to your seat" },
-      { text: "Lift through heart center to open the chest" },
-      { text: "Firmly press down through the heels as well as all ten toes" },
-      { text: "Inhale tailbone tucks under as you start to roll up, exhale hold at the top. Inhale start to articulate your spine down, reaching the upper back, mid back, and low back all the way down to the mat as you exhale down.", breathing: true },
+      { text: "Keep your feet firm on the mat, but imagine dragging your heels closer to your seat", phase: "General Setup" },
+      { text: "Lift through heart center to open the chest", phase: "General Setup" },
+      { text: "Firmly press down through the heels as well as all ten toes", phase: "General Setup" },
+      { text: "Inhale tailbone tucks under as you start to roll up, exhale hold at the top. Inhale start to articulate your spine down, reaching the upper back, mid back, and low back all the way down to the mat as you exhale down.", type: "Breathing", phase: "Breathing", breathing: true },
     ]
   },
 ];
@@ -1126,6 +1073,7 @@ const creditsToggle = document.getElementById('creditsToggle');
 
 let activeFilter = 'Hundred';
 let searchQuery = '';
+let currentView = 'phase'; // 'phase' (default) or 'type'
 
 function buildPills() {
   EXERCISES.forEach(ex => {
@@ -1138,37 +1086,41 @@ function buildPills() {
   });
 }
 
+// Groups cues by the given key ('phase' or 'type'), preserving first-seen order.
+// A falsy key value renders with no header (flat), matching legacy behavior
+// for exercises that never had Cue Type groups.
+function groupCues(cues, key) {
+  const order = [];
+  const map = {};
+  cues.forEach(c => {
+    const k = c[key] || '';
+    if (!(k in map)) { map[k] = []; order.push(k); }
+    map[k].push(c);
+  });
+  return order.map(k => ({ label: k, cues: map[k] }));
+}
+
+function renderCueListHTML(cues, key) {
+  const groups = groupCues(cues, key);
+  let html = '';
+  groups.forEach(g => {
+    if (g.label) html += `<span class="cat-label">${g.label}</span>`;
+    g.cues.forEach(c => {
+      html += `
+        <li class="cue-item${c.breathing ? ' breathing' : ''}" data-cue="${c.text.toLowerCase().replace(/"/g, '&quot;')}">
+          <div class="cue-bullet"></div>
+          <span class="cue-text">${c.text}</span>
+        </li>`;
+    });
+  });
+  return html;
+}
+
 function buildCards() {
   EXERCISES.forEach(ex => {
     const block = document.createElement('div');
     block.className = 'exercise-block';
     block.dataset.exercise = ex.name;
-
-    const breathing = ex.cues.filter(c => c.breathing);
-
-    let cueListHTML = '';
-
-    if (ex.groups) {
-      ex.groups.forEach(group => {
-        cueListHTML += `<span class="cat-label">${group.label}</span>`;
-        group.cues.forEach(c => {
-          cueListHTML += `
-            <li class="cue-item" data-cue="${c.text.toLowerCase().replace(/"/g, '&quot;')}">
-              <div class="cue-bullet"></div>
-              <span class="cue-text">${c.text}</span>
-            </li>`;
-        });
-      });
-    } else {
-      const nonBreathing = ex.cues.filter(c => !c.breathing);
-      nonBreathing.forEach((c, i) => {
-        cueListHTML += `
-          <li class="cue-item${breathing.length && i === nonBreathing.length - 1 ? ' pre-breathing' : ''}" data-cue="${c.text.toLowerCase().replace(/"/g, '&quot;')}">
-            <div class="cue-bullet"></div>
-            <span class="cue-text">${c.text}</span>
-          </li>`;
-      });
-    }
 
     block.innerHTML = `
       <div class="exercise-header">
@@ -1185,24 +1137,42 @@ function buildCards() {
         <span class="setup-label">Setup</span>
         <p class="setup-text">${ex.setup}</p>
       </div>` : ''}
-      <ul class="cue-list">
-        ${cueListHTML}
-        ${breathing.length ? `
-        <li style="list-style:none;padding:0;">
-          <div class="breathing-divider">
-            <span class="breathing-divider-label">Breathing</span>
-          </div>
-        </li>
-        ${breathing.map(c => `
-          <li class="cue-item breathing" data-cue="${c.text.toLowerCase().replace(/"/g, '&quot;')}">
-            <div class="cue-bullet"></div>
-            <span class="cue-text">${c.text}</span>
-          </li>`).join('')}` : ''}
-      </ul>
+      <div class="view-switcher-wrap">
+        <span class="view-switcher-label">View cues by</span>
+        <div class="view-switcher">
+          <button class="view-tab" data-view="phase">Phase of Exercise</button>
+          <button class="view-tab" data-view="type">Cue Type</button>
+        </div>
+      </div>
+      <div class="view-panel" data-view-panel="phase">
+        <ul class="cue-list">${renderCueListHTML(ex.cues, 'phase')}</ul>
+      </div>
+      <div class="view-panel" data-view-panel="type">
+        <ul class="cue-list">${renderCueListHTML(ex.cues, 'type')}</ul>
+      </div>
     `;
     grid.appendChild(block);
   });
+  applyViewToDOM();
 }
+
+// Global view toggle — applies to every exercise block at once, so your
+// chosen grouping style sticks as you browse between exercises via the pills.
+function applyViewToDOM() {
+  document.querySelectorAll('.view-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.view === currentView);
+  });
+  document.querySelectorAll('.view-panel').forEach(panel => {
+    panel.classList.toggle('active', panel.dataset.viewPanel === currentView);
+  });
+}
+
+document.addEventListener('click', function(e) {
+  const tab = e.target.closest('.view-tab');
+  if (!tab) return;
+  currentView = tab.dataset.view;
+  applyViewToDOM();
+});
 
 function setFilter(name) {
   activeFilter = name;
