@@ -58,6 +58,7 @@
     text-decoration:none;
     border:1px solid var(--olive);
     transition:transform .18s ease, background .18s ease;
+    cursor:pointer;
   }
   .btn:hover{background:#2a2b24;transform:translateY(-1px);}
   .btn.ghost{
@@ -261,7 +262,7 @@
 <nav>
   <div class="wrap">
     <div class="wordmark">Paige Loves Pilates <span>· Cue Guide</span></div>
-    <a href="#get" class="btn small ghost">Get the guide</a>
+    <a href="#get" class="btn small ghost" onclick="return scrollToGuide(event)">Get the guide</a>
   </div>
 </nav>
 
@@ -271,7 +272,7 @@
     <h1>You know the exercises.<br>Do you know what to <em>say?</em></h1>
     <p class="sub">The gap between finishing training and teaching with authority isn't technique. It's the cues that don't come when you need them — and it's the only thing standing between you and the instructor you're capable of being.</p>
     <div class="hero-cta">
-      <a href="#get" class="btn">Get the Cue Guide — $45</a>
+      <a href="#get" class="btn" onclick="return scrollToGuide(event)">Get the Cue Guide — $45</a>
       <small>One-time purchase · instant access</small>
     </div>
   </div>
@@ -513,6 +514,32 @@ setTimeout(postHeight, 1000);
 
 // Resend on window resize
 window.addEventListener('resize', postHeight);
+</script>
+
+<script>
+// Cross-iframe scroll fix for the two #get anchor buttons.
+// Native #anchor scrolling only scrolls *inside this iframe's own document*.
+// Since this page's height is resized to match its own content exactly
+// (see postHeight above), there's no internal scroll room left, so the
+// native jump visually does nothing. Instead, we tell the parent
+// Squarespace page (via postMessage) to scroll itself — the Code Injection
+// script on paigelovespilates.com listens for {type:'scrollToGet'} and
+// performs the actual window.scrollTo().
+window.scrollToGuide = function(e){
+  if (e) e.preventDefault();
+  var target = document.getElementById('get');
+  if (!target) return false;
+  if (window.parent === window) {
+    // Not embedded (e.g. viewed directly on GitHub Pages) — just scroll locally.
+    target.scrollIntoView({behavior:'smooth'});
+  } else {
+    var top = target.getBoundingClientRect().top;
+    try {
+      window.parent.postMessage({type:'scrollToGet', top: top}, '*');
+    } catch(err) {}
+  }
+  return false;
+};
 </script>
 
 </body>
