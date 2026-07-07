@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Cue Guide — Paige Loves Pilates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --olive:#373930;
+    --olive-70: rgba(55,57,48,0.7);
+    --olive-45: rgba(55,57,48,0.45);
+    --olive-12: rgba(55,57,48,0.12);
+    --olive-08: rgba(55,57,48,0.08);
+    --linen:#EDEBE4;
+    --linen2:#E8E5DC;
+    --page-bg:#EEEDEB;
+    --serif: 'Cormorant Garamond', serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--page-bg);
+    color:var(--olive);
+    font-family:var(--sans);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{display:block;max-width:100%;}
+  a{color:inherit;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  .eyebrow{
+    font-family:var(--sans);
+    font-size:12.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--olive-70);
+    font-weight:700;
+    margin:0 0 14px;
+  }
+  h1,h2,h3{font-family:var(--serif);font-weight:600;margin:0;color:var(--olive);}
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:var(--olive);
+    color:var(--linen);
+    font-family:var(--sans);
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:.02em;
+    padding:16px 30px;
+    border-radius:2px;
+    text-decoration:none;
+    border:1px solid var(--olive);
+    transition:transform .18s ease, background .18s ease;
+  }
+  .btn:hover{background:#2a2b24;transform:translateY(-1px);}
+  .btn.ghost{
+    background:transparent;
+    color:var(--olive);
+    border:1px solid var(--olive-45);
+  }
+  .btn.ghost:hover{background:var(--olive-08);}
+  .btn.small{padding:10px 18px;font-size:13px;}
+
+  /* ---------- Nav ---------- */
+  nav{
+    position:sticky;top:0;z-index:40;
+    background:rgba(238,237,235,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--olive-12);
+  }
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;}
+  .wordmark{font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:.01em;}
+  .wordmark span{font-style:italic;font-weight:500;color:var(--olive-70);}
+
+  /* ---------- Hero ---------- */
+  header.hero{padding:96px 0 64px;}
+  .hero .wrap{max-width:760px;text-align:center;}
+  .hero h1{font-size:clamp(38px,6vw,60px);line-height:1.08;letter-spacing:-.01em;}
+  .hero h1 em{font-style:italic;color:var(--olive-70);}
+  .hero p.sub{
+    font-size:19px;
+    color:var(--olive-70);
+    max-width:520px;
+    margin:24px auto 34px;
+    line-height:1.6;
+  }
+  .hero-cta{display:flex;flex-direction:column;align-items:center;gap:10px;}
+  .hero-cta small{font-size:13px;color:var(--olive-45);}
+
+  /* ---------- Cue Flip signature ---------- */
+  section.flip{padding:20px 0 80px;}
+  .flip-intro{text-align:center;max-width:600px;margin:0 auto 44px;}
+  .flip-intro h2{font-size:clamp(28px,4vw,38px);}
+  .flip-intro p{color:var(--olive-70);font-size:16px;margin-top:14px;}
+
+  .flip-card{
+    background:var(--olive);
+    color:var(--linen);
+    border-radius:4px;
+    max-width:640px;
+    margin:0 auto;
+    padding:52px 48px;
+    text-align:center;
+    position:relative;
+    min-height:220px;
+  }
+  .flip-label{
+    font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    color:rgba(237,235,228,0.55);font-weight:700;margin-bottom:18px;
+  }
+  .flip-line{
+    font-family:var(--serif);
+    font-size:clamp(20px,3vw,27px);
+    line-height:1.5;
+    transition:opacity .5s ease;
+  }
+  .flip-nervous{
+    color:rgba(237,235,228,0.4);
+    text-decoration:line-through;
+    text-decoration-thickness:1px;
+    font-style:italic;
+    margin-bottom:14px;
+  }
+  .flip-confident{font-style:italic;color:var(--linen);}
+  .flip-exercise{
+    margin-top:26px;
+    font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+    color:rgba(237,235,228,0.5);
+  }
+  .flip-dots{display:flex;gap:8px;justify-content:center;margin-top:30px;}
+  .flip-dots span{
+    width:6px;height:6px;border-radius:50%;
+    background:rgba(237,235,228,0.3);
+    transition:background .3s ease;
+  }
+  .flip-dots span.active{background:var(--linen);}
+
+  /* ---------- Pain section ---------- */
+  section.pain{padding:70px 0;background:var(--linen2);}
+  .pain-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;
+  }
+  .pain-grid h2{font-size:clamp(28px,4vw,36px);line-height:1.15;max-width:420px;}
+  .pain-list{display:flex;flex-direction:column;gap:26px;}
+  .pain-item{border-left:2px solid var(--olive-12);padding-left:20px;}
+  .pain-item p{margin:0;color:var(--olive-70);font-size:15.5px;line-height:1.65;}
+  .pain-item strong{display:block;color:var(--olive);font-weight:700;font-size:15px;margin-bottom:6px;}
+  .stat-note{
+    margin-top:32px;font-size:13.5px;color:var(--olive-45);
+    border-top:1px solid var(--olive-12);padding-top:18px;
+  }
+
+  /* ---------- What's inside ---------- */
+  section.inside{padding:80px 0;}
+  .inside-head{text-align:center;max-width:600px;margin:0 auto 50px;}
+  .inside-head h2{font-size:clamp(28px,4vw,38px);}
+  .inside-head p{color:var(--olive-70);margin-top:14px;font-size:16px;}
+  .feature-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+    background:var(--olive-12);
+  }
+  .feature{
+    background:var(--page-bg);padding:36px 30px;
+  }
+  .feature .num{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--olive-45);margin-bottom:14px;}
+  .feature h3{font-size:19px;margin-bottom:10px;}
+  .feature p{margin:0;font-size:14.5px;color:var(--olive-70);line-height:1.6;}
+  .credit-line{
+    text-align:center;margin-top:40px;font-size:13.5px;color:var(--olive-45);
+  }
+
+  /* ---------- Testimonials ---------- */
+  section.proof{padding:80px 0;background:var(--olive);color:var(--linen);}
+  .proof-head{text-align:center;max-width:560px;margin:0 auto 50px;}
+  .proof-head .eyebrow{color:rgba(237,235,228,0.55);}
+  .proof-head h2{color:var(--linen);font-size:clamp(28px,4vw,36px);}
+  .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+  .testi{
+    background:rgba(237,235,228,0.06);
+    border:1px solid rgba(237,235,228,0.14);
+    border-radius:4px;
+    padding:30px 26px;
+    display:flex;flex-direction:column;justify-content:space-between;
+  }
+  .testi p.quote{
+    font-family:var(--serif);font-style:italic;font-size:17px;line-height:1.55;
+    color:var(--linen);margin:0 0 20px;
+  }
+  .testi .attr{font-size:12.5px;letter-spacing:.04em;color:rgba(237,235,228,0.6);}
+
+  /* ---------- Price ---------- */
+  section.price{padding:90px 0;background:var(--linen2);}
+  .price-card{
+    max-width:600px;margin:0 auto;text-align:center;
+    background:var(--page-bg);
+    border:1px solid var(--olive-12);
+    border-radius:6px;
+    padding:56px 48px;
+  }
+  .price-amount{font-family:var(--serif);font-size:64px;line-height:1;margin:18px 0 6px;}
+  .price-amount sup{font-size:24px;top:-.6em;}
+  .price-sub{color:var(--olive-70);font-size:14.5px;margin-bottom:34px;}
+  .price-bullets{
+    display:flex;flex-direction:column;gap:12px;text-align:left;
+    max-width:380px;margin:0 auto 36px;font-size:15px;color:var(--olive-70);
+  }
+  .price-bullets div{display:flex;gap:10px;align-items:flex-start;}
+  .price-bullets div::before{content:"—";color:var(--olive-45);flex-shrink:0;}
+
+  /* ---------- FAQ ---------- */
+  section.faq{padding:80px 0 100px;}
+  .faq-head{text-align:center;margin-bottom:44px;}
+  .faq-head h2{font-size:clamp(26px,4vw,32px);}
+  details{
+    border-bottom:1px solid var(--olive-12);
+    padding:22px 0;
+    max-width:680px;margin:0 auto;
+  }
+  summary{
+    cursor:pointer;font-weight:700;font-size:16px;
+    display:flex;justify-content:space-between;align-items:center;
+    list-style:none;
+  }
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";font-size:20px;color:var(--olive-45);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{color:var(--olive-70);font-size:15px;margin:14px 0 0;line-height:1.65;max-width:600px;}
+
+  /* ---------- Final CTA ---------- */
+  section.final{padding:90px 0;text-align:center;background:var(--olive);color:var(--linen);}
+  section.final h2{color:var(--linen);font-size:clamp(30px,5vw,42px);max-width:560px;margin:0 auto 20px;}
+  section.final p{color:rgba(237,235,228,0.7);font-size:16px;margin-bottom:34px;}
+  .final .btn{background:var(--linen);color:var(--olive);border-color:var(--linen);}
+  .final .btn:hover{background:#ffffff;}
+
+  footer{padding:32px 0;text-align:center;font-size:12.5px;color:var(--olive-45);}
+
+  @media (max-width:820px){
+    .pain-grid{grid-template-columns:1fr;gap:36px;}
+    .feature-grid{grid-template-columns:1fr;}
+    .testi-grid{grid-template-columns:1fr;}
+    .flip-card{padding:40px 26px;}
+    .price-card{padding:44px 28px;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    .flip-line{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="wordmark">Paige Loves Pilates <span>· Cue Guide</span></div>
+    <a href="#get" class="btn small ghost">Get the guide</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">For instructors building their voice</p>
+    <h1>You know the exercises.<br>Do you know what to <em>say?</em></h1>
+    <p class="sub">The gap between finishing training and teaching with authority isn't technique. It's the cues that don't come when you need them — and it's the only thing standing between you and the instructor you're capable of being.</p>
+    <div class="hero-cta">
+      <a href="#get" class="btn">Get the Cue Guide — $45</a>
+      <small>One-time purchase · instant access</small>
+    </div>
+  </div>
+</header>
+
+<section class="flip">
+  <div class="wrap">
+    <div class="flip-intro">
+      <h2>This is the shift.</h2>
+      <p>Not relying on counting to fill the space. Not scripting every detail in your class plan. Just you, the prepared instructor — because the cues are ready for you right when you need them.</p>
+    </div>
+
+    <div class="flip-card">
+      <div class="flip-label">In the room</div>
+      <div id="flipContent">
+        <div class="flip-line flip-nervous" id="flipNervous">"Um — so like, pull your belly button in, I guess?"</div>
+        <div class="flip-line flip-confident" id="flipConfident">"Draw your navel to your spine and hold it there through every rep."</div>
+      </div>
+      <div class="flip-exercise" id="flipExercise">The Hundred</div>
+      <div class="flip-dots" id="flipDots">
+        <span class="active"></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pain">
+  <div class="wrap pain-grid">
+    <h2>Nervous isn't a personality trait. It's a vocabulary gap.</h2>
+    <div class="pain-list">
+      <div class="pain-item">
+        <strong>You freeze mid-class.</strong>
+        <p>You know exactly what the client's body should be doing. Then you open your mouth and end up counting reps because your mind goes blank.</p>
+      </div>
+      <div class="pain-item">
+        <strong>You default to repeating yourself.</strong>
+        <p>Same three phrases, every class, every exercise. Clients notice the loop even when they can't name it.</p>
+      </div>
+      <div class="pain-item">
+        <strong>You know the "how." Nobody taught you the "what to say."</strong>
+        <p>Certifications teach form. They rarely teach the language that gets a client's body to actually respond to you.</p>
+      </div>
+      <div class="stat-note">Most instructors who've reviewed this guide are within their first two years of teaching, or just certified. If that's you, this was built for exactly where you are right now.</div>
+    </div>
+  </div>
+</section>
+
+<section class="inside">
+  <div class="wrap">
+    <div class="inside-head">
+      <p class="eyebrow">What's inside</p>
+      <h2>Every exercise. Every phase. The exact words.</h2>
+      <p>26 Beginner & Intermediate Classical Mat Exercises, broken down into the cues you actually need, organized the way you move through a class.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="num">01</div>
+        <h3>Two ways to browse</h3>
+        <p>Toggle between Phase of Exercise (setup → execution → breath) and Cue Type (Opposition, Imagery, Breath) — whichever matches how you're studying or teaching that day.</p>
+      </div>
+      <div class="feature">
+        <div class="num">02</div>
+        <h3>Setup, covered first</h3>
+        <p>Every exercise opens with the exact setup language, so clients are positioned correctly before you ever cue the movement itself.</p>
+      </div>
+      <div class="feature">
+        <div class="num">03</div>
+        <h3>Reference videos</h3>
+        <p>Linked Pilatesology videos for every exercise, so you can confirm the movement while the cue language is fresh.</p>
+      </div>
+      <div class="feature">
+        <div class="num">04</div>
+        <h3>Imagery and opposition cues</h3>
+        <p>Not just anatomical instruction — the felt-sense language and opposition cues that make a cue actually land in someone's body.</p>
+      </div>
+      <div class="feature">
+        <div class="num">05</div>
+        <h3>Breath, built in</h3>
+        <p>Breath pattern woven into the cue sequence for each exercise, not bolted on as an afterthought.</p>
+      </div>
+      <div class="feature">
+        <div class="num">06</div>
+        <h3>Built to reference mid-class</h3>
+        <p>Searchable, fast, and organized to be opened on your phone between clients — not read once and shelved.</p>
+      </div>
+    </div>
+    <p class="credit-line">Built with classical cueing input from Melissa Castro-Schmidt and Sonje Mayo.</p>
+  </div>
+</section>
+
+<section class="proof">
+  <div class="wrap">
+    <div class="proof-head">
+      <p class="eyebrow">From the instructors who tested it</p>
+      <h2>What changes when the words are already there</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi">
+        <p class="quote">"I now have a solid foundation of cues to draw from and adapt to different clients and situations. It helped me feel more confident, made my instruction flow more naturally."</p>
+        <div class="attr">— Newly certified instructor</div>
+      </div>
+      <div class="testi">
+        <p class="quote">"As a new instructor, I feel as though I know the exercise but struggle with cueing in ways that feel authentic to me and also meet the needs of who I am instructing. I love how you provided cues for all the various cue types."</p>
+        <div class="attr">— Instructor, first year teaching</div>
+      </div>
+      <div class="testi">
+        <p class="quote">"So concise and clear. I love that the cues give real self-checks instead of just prescribing a fixed range of motion, and the breath pattern ties the whole movement together really nicely."</p>
+        <div class="attr">— Instructor</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="price" id="get">
+  <div class="wrap">
+    <div class="price-card">
+      <p class="eyebrow">One-time purchase</p>
+      <div class="price-amount"><sup>$</sup>45</div>
+      <p class="price-sub">The cost of one group class. Reference it for every class you teach.</p>
+      <div class="price-bullets">
+        <div>Lifetime access — no subscription, no expiring login</div>
+        <div>26 classical exercises, fully cued</div>
+        <div>Works on your phone, mid-class</div>
+        <div>Confirmation email with login sent instantly after purchase</div>
+      </div>
+      <a class="btn" href="https://buy.stripe.com/9B6aEW3XFgSUbIpat29oc01" target="_top">Get instant access</a>
+    </div>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="wrap">
+    <div class="faq-head">
+      <p class="eyebrow">Before you buy</p>
+      <h2>Questions instructors actually asked</h2>
+    </div>
+
+    <details open>
+      <summary>Does this replace my training manual?</summary>
+      <p>No — it sits alongside it. Your training manual and certification cover form and technique. This guide covers language: the specific words that turn correct technique into a cue a client can actually respond to.</p>
+    </details>
+    <details>
+      <summary>I'm not brand new — is this still useful for me?</summary>
+      <p>Yes, with a caveat: it's built with new and early-career instructors as the priority, so if you're several years in with a well-established cueing style, treat it as a way to refresh your language and pick up variations, not a first introduction.</p>
+    </details>
+    <details>
+      <summary>Is $45 worth it if I'm just starting out?</summary>
+      <p>Only you can weigh that against your own budget. What reviewers told us: it's the cost of a single class, and it's meant to be referenced for every class after — not read once. If you're teaching regularly, it pays for itself quickly in prep time alone.</p>
+    </details>
+    <details>
+      <summary>How do I access it after I buy?</summary>
+      <p>You'll get a confirmation email immediately after checkout with your login link. Access doesn't expire.</p>
+    </details>
+    <details>
+      <summary>Does it cover the reformer, or just mat work?</summary>
+      <p>The current guide is mat-based, classical Pilates only.</p>
+    </details>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2>Stop reaching for the right words. Start being the instructor who knows what to say and when to say it.</h2>
+    <p>26 exercises. Every cue. One-time $45.</p>
+    <a class="btn" href="https://buy.stripe.com/9B6aEW3XFgSUbIpat29oc01" target="_top">Get the Cue Guide</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© Paige Loves Pilates</div>
+</footer>
+
+<script>
+(function(){
+  var pairs = [
+    {
+      nervous: '"Belly button to spine"',
+      confident: '"Draw your belly button to the lowest point on your low back to help you corset the waist"',
+      exercise: 'The Hundred'
+    },
+    {
+      nervous: '"Roll up, and then roll back down"',
+      confident: '"Find opposition by reaching your heels forward as your belly button pulls back behind you."',
+      exercise: 'Roll-Up'
+    },
+    {
+      nervous: '"Balance there and hold."',
+      confident: '"With your arms parallel to your legs, hold balance while lifting the chest and keeping the c-curve in your low back."',
+      exercise: 'Teaser'
+    }
+  ];
+
+  var i = 0;
+  var nervousEl = document.getElementById('flipNervous');
+  var confidentEl = document.getElementById('flipConfident');
+  var exerciseEl = document.getElementById('flipExercise');
+  var dots = document.querySelectorAll('#flipDots span');
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function render(idx){
+    var p = pairs[idx];
+    nervousEl.textContent = p.nervous;
+    confidentEl.textContent = p.confident;
+    exerciseEl.textContent = p.exercise;
+    dots.forEach(function(d, di){ d.classList.toggle('active', di === idx); });
+  }
+
+  render(0);
+
+  if(!reduceMotion){
+    setInterval(function(){
+      i = (i + 1) % pairs.length;
+      var content = document.getElementById('flipContent');
+      content.style.opacity = 0;
+      setTimeout(function(){
+        render(i);
+        content.style.opacity = 1;
+      }, 260);
+    }, 4200);
+  }
+})();
+</script>
+
+</body>
+</html>
