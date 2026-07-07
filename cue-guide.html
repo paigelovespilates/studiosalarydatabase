@@ -13,7 +13,6 @@
       --linen: #EDEBE4;
       --linen-alt: #E8E5DC;
       --grey: #918F86;
-      --cream: #F7F5EE;
       --olive-mid: #5A5C4F;
     }
 
@@ -274,8 +273,8 @@
     }
 
     .filter-section {
-      background: var(--cream);
-      border-bottom: 1px solid rgba(55,57,48,0.1);
+      background: #EEEDEB;
+      border-bottom: 1px solid rgba(55,57,48,0.08);
       padding: 24px 40px;
     }
 
@@ -431,7 +430,7 @@
 
     .view-switcher {
       display: flex;
-      background: var(--cream);
+      background: var(--linen-alt);
       border: 1px solid rgba(55,57,48,0.15);
       border-radius: 10px;
       padding: 3px;
@@ -680,8 +679,11 @@ function jsonp(url, cb) {
 function unlockGuide() {
   document.getElementById('loginGate').style.display = 'none';
   document.getElementById('mainContent').style.display = 'block';
-  scrollParentToTop();
   reportHeightToParent();
+  requestAnimationFrame(function() {
+    reportHeightToParent();
+    scrollParentToTop();
+  });
 }
 
 function setupCodeBoxes() {
