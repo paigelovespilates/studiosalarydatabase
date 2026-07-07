@@ -27,11 +27,9 @@
 
     /* Login gate */
     #loginGate {
-      min-height: 100vh;
       display: flex;
-      align-items: center;
       justify-content: center;
-      padding: 24px;
+      padding: 48px 24px 40px;
     }
 
     .login-card {
@@ -620,6 +618,48 @@
 </div>
 
 <script>
+/* ---------- Iframe auto-resize & scroll-to-top (Squarespace embed) ----------
+   Requires a matching listener in Squarespace Code Injection on the page
+   that embeds this iframe. Messages are namespaced with source:'plpCueGuide'
+   so they don't collide with any other embed's postMessage traffic. */
+var __plpLastHeight = 0;
+
+function reportHeightToParent() {
+  try {
+    var h = Math.max(
+      document.documentElement.scrollHeight,
+      document.body ? document.body.scrollHeight : 0
+    );
+    if (h !== __plpLastHeight) {
+      __plpLastHeight = h;
+      window.parent.postMessage({ source: 'plpCueGuide', type: 'resize', height: h }, '*');
+    }
+  } catch (e) {}
+}
+
+function scrollParentToTop() {
+  try {
+    window.parent.postMessage({ source: 'plpCueGuide', type: 'scrollToTop' }, '*');
+  } catch (e) {}
+}
+
+window.addEventListener('load', reportHeightToParent);
+window.addEventListener('resize', reportHeightToParent);
+
+if (window.ResizeObserver) {
+  var __plpResizeObserver = new ResizeObserver(function() { reportHeightToParent(); });
+  window.addEventListener('DOMContentLoaded', function() {
+    __plpResizeObserver.observe(document.body);
+  });
+  // In case DOMContentLoaded already fired by the time this runs:
+  if (document.readyState === 'interactive' || document.readyState === 'complete') {
+    __plpResizeObserver.observe(document.body);
+  }
+} else {
+  // Fallback for older browsers without ResizeObserver support
+  setInterval(reportHeightToParent, 500);
+}
+
 /* ---------- Login gate ---------- */
 var ENDPOINT = 'https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec';
 var jsonpCounter = 0;
@@ -640,6 +680,8 @@ function jsonp(url, cb) {
 function unlockGuide() {
   document.getElementById('loginGate').style.display = 'none';
   document.getElementById('mainContent').style.display = 'block';
+  scrollParentToTop();
+  reportHeightToParent();
 }
 
 function setupCodeBoxes() {
@@ -687,6 +729,7 @@ function sendCode() {
       document.getElementById('stepCode').style.display = 'block';
       document.querySelectorAll('.code-box').forEach(function(b) { b.value = ''; });
       document.querySelectorAll('.code-box')[0].focus();
+      reportHeightToParent();
     } else {
       errEl.textContent = "We couldn't find that email on our reviewer list. Email paige@paigelovespilates.com if this seems wrong.";
     }
@@ -725,6 +768,7 @@ document.getElementById('resendBtn').addEventListener('click', function() { send
 document.getElementById('backBtn').addEventListener('click', function() {
   document.getElementById('stepCode').style.display = 'none';
   document.getElementById('stepEmail').style.display = 'block';
+  reportHeightToParent();
 });
 document.getElementById('emailInput').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') sendCode();
@@ -1229,6 +1273,7 @@ document.querySelector('.pill[data-filter="all"]').addEventListener('click', () 
 buildPills();
 buildCards();
 setFilter('Hundred');
+reportHeightToParent();
 </script>
 </body>
 </html>
