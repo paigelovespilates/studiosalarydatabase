@@ -496,7 +496,7 @@
 
 // Tell parent Squarespace iframe to resize
 function postHeight() {
-  var height = document.documentElement.scrollHeight + 40; // +40px buffer for safety
+  var height = document.documentElement.scrollHeight;
   if (window.parent !== window) {
     window.parent.postMessage({type: 'resize', height: height}, '*');
   }
