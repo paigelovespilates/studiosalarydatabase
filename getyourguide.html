@@ -493,6 +493,23 @@
     }, 4200);
   }
 })();
+
+  // Tell parent Squarespace iframe to resize
+function postHeight() {
+  var height = document.documentElement.scrollHeight;
+  if (window.parent !== window) {
+    window.parent.postMessage({type: 'resize', height: height}, '*');
+  }
+}
+
+// Send height on load
+window.addEventListener('load', postHeight);
+
+// Resend on any window resize
+window.addEventListener('resize', postHeight);
+
+// Resend after content settles (for slow network)
+setTimeout(postHeight, 500);
 </script>
 
 </body>
