@@ -535,7 +535,7 @@ window.scrollToGuide = function(e){
   } else {
     var top = target.getBoundingClientRect().top;
     try {
-      window.parent.postMessage({type:'scrollToGet', top: top}, '*');
+     window.parent.postMessage({type:'scrollTo', top: top}, '*');
     } catch(err) {}
   }
   return false;
