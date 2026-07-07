@@ -494,22 +494,25 @@
   }
 })();
 
-  // Tell parent Squarespace iframe to resize
+// Tell parent Squarespace iframe to resize
 function postHeight() {
-  var height = document.documentElement.scrollHeight;
+  var height = document.documentElement.scrollHeight + 40; // +40px buffer for safety
   if (window.parent !== window) {
     window.parent.postMessage({type: 'resize', height: height}, '*');
   }
 }
 
-// Send height on load
+// Send height on load and multiple times as content settles
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', postHeight);
+}
 window.addEventListener('load', postHeight);
-
-// Resend on any window resize
-window.addEventListener('resize', postHeight);
-
-// Resend after content settles (for slow network)
+setTimeout(postHeight, 100);
 setTimeout(postHeight, 500);
+setTimeout(postHeight, 1000);
+
+// Resend on window resize
+window.addEventListener('resize', postHeight);
 </script>
 
 </body>
