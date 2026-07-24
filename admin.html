@@ -8,13 +8,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: 'DM Sans', sans-serif;
       background: #f5f4f0;
       min-height: 100vh;
     }
-
     /* ── Password gate ───────────────────────────────────────── */
     #gate {
       display: flex;
@@ -23,7 +21,6 @@
       min-height: 100vh;
       padding: 24px;
     }
-
     .gate-card {
       background: #fff;
       border: 0.5px solid #ddd;
@@ -33,7 +30,6 @@
       max-width: 360px;
       text-align: center;
     }
-
     .gate-card h1 {
       font-family: 'Cormorant Garamond', serif;
       font-size: 26px;
@@ -41,13 +37,11 @@
       color: #1a1a1a;
       margin-bottom: 6px;
     }
-
     .gate-card p {
       font-size: 13px;
       color: #888;
       margin-bottom: 28px;
     }
-
     .gate-input {
       width: 100%;
       font-family: 'DM Sans', sans-serif;
@@ -63,7 +57,6 @@
     }
     .gate-input:focus { border-color: #373930; background: #fff; }
     .gate-input.error { border-color: #c0392b; background: #fef8f8; }
-
     .gate-btn {
       width: 100%;
       font-family: 'DM Sans', sans-serif;
@@ -78,17 +71,14 @@
       transition: background 0.15s;
     }
     .gate-btn:hover { background: #4a4d40; }
-
     .gate-error {
       font-size: 12px;
       color: #c0392b;
       margin-top: 10px;
       min-height: 16px;
     }
-
     /* ── Main app ────────────────────────────────────────────── */
     #app { display: none; }
-
     .adm-header {
       background: #373930;
       color: #EDEBE4;
@@ -97,7 +87,6 @@
       top: 0;
       z-index: 100;
     }
-
     .adm-header h1 {
       font-family: 'Cormorant Garamond', serif;
       font-size: 22px;
@@ -105,14 +94,12 @@
       color: #EDEBE4;
       margin-bottom: 12px;
     }
-
     .adm-controls {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
       align-items: center;
     }
-
     .adm-controls input[type=text],
     .adm-controls select {
       background: rgba(237,235,228,0.12);
@@ -129,7 +116,6 @@
     .adm-controls input:focus,
     .adm-controls select:focus { border-color: rgba(237,235,228,0.6); }
     .adm-controls select option { background: #373930; }
-
     .adm-stats {
       background: rgba(55,57,48,0.07);
       padding: 6px 24px;
@@ -140,14 +126,12 @@
       flex-wrap: wrap;
     }
     .adm-stats span { color: #373930; font-weight: 500; }
-
     .adm-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
       gap: 12px;
       padding: 16px;
     }
-
     .adm-tile {
       background: #fff;
       border: 0.5px solid #ddd;
@@ -156,7 +140,6 @@
       transition: opacity 0.3s;
     }
     .adm-tile.excluded { opacity: 0.45; }
-
     .adm-tile-header {
       display: flex;
       align-items: flex-start;
@@ -173,7 +156,6 @@
     }
     .adm-tile-location { font-size: 12px; color: #888; margin-bottom: 8px; }
     .adm-tile-rawname  { font-size: 11px; color: #aaa; margin-top: 2px; font-style: italic; }
-
     .adm-tile-badges { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
     .adm-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
     .adm-badge-studio     { background: #EDEBE4; color: #373930; }
@@ -215,7 +197,6 @@
       border-top-color: #2a2a22;
     }
     .adm-badge-scoring { background: #f5f4f0; color: #aaa; border: 0.5px solid #ddd; font-style: italic; }
-
     .adm-story-meta {
       font-family: 'DM Sans', sans-serif;
       font-size: 11px;
@@ -280,7 +261,6 @@
       letter-spacing: 0.02em;
     }
     .adm-story-open-btn:hover { background: #373930; color: #EDEBE4; border-color: #373930; }
-
     .adm-edit-section {
       border-top: 0.5px solid #e8e8e5;
       margin-top: 10px;
@@ -305,7 +285,6 @@
     }
     .adm-edit-input:focus { border-color: #888; background: #fff; }
     .adm-edit-input.dirty { border-color: #b87c2a; background: #fdf8f0; color: #5a3d0a; }
-
     .adm-btn-save {
       font-family: 'DM Sans', sans-serif;
       font-size: 11px;
@@ -321,7 +300,6 @@
     }
     .adm-btn-save:hover { background: #2d6b45; color: #fff; }
     .adm-btn-save:disabled { opacity: 0.45; cursor: not-allowed; }
-
     .adm-tile-footer {
       display: flex;
       align-items: center;
@@ -331,7 +309,6 @@
       border-top: 0.5px solid #e8e8e5;
     }
     .adm-tile-date { font-size: 11px; color: #aaa; }
-
     .adm-btn-expand {
       font-family: 'DM Sans', sans-serif;
       font-size: 11px;
@@ -347,7 +324,6 @@
     }
     .adm-btn-expand:hover { border-color: #555; color: #333; }
     .adm-btn-expand.open  { border-color: #373930; color: #373930; }
-
     .adm-details {
       border-top: 0.5px solid #e8e8e5;
       padding: 12px 16px;
@@ -388,7 +364,6 @@
       border-top: 0.5px solid #f0f0ee;
       padding-top: 8px;
     }
-
     .adm-btn-exclude {
       font-family: 'DM Sans', sans-serif;
       font-size: 12px;
@@ -405,7 +380,6 @@
     .adm-btn-exclude.undo { border-color: #bbb; color: #888; }
     .adm-btn-exclude.undo:hover { border-color: #555; color: #333; }
     .adm-btn-exclude:disabled { opacity: 0.5; cursor: not-allowed; }
-
     .adm-row-chip {
       font-size: 10px;
       color: #aaa;
@@ -415,7 +389,6 @@
       flex-shrink: 0;
       margin-top: 2px;
     }
-
     .adm-spinner {
       display: inline-block;
       width: 10px; height: 10px;
@@ -427,10 +400,8 @@
       vertical-align: middle;
     }
     @keyframes adm-spin { to { transform: rotate(360deg); } }
-
     .adm-state { text-align: center; padding: 60px 24px; color: #888; font-size: 14px; }
     .adm-state.error { color: #c0392b; }
-
     .adm-pagination {
       display: flex;
       align-items: center;
@@ -455,7 +426,6 @@
     .adm-page-btn:hover:not(:disabled) { background: #373930; color: #EDEBE4; border-color: #373930; }
     .adm-page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
     .adm-page-info { color: #888; font-size: 12px; }
-
     #adm-toast {
       position: fixed;
       bottom: 24px; right: 24px;
@@ -474,7 +444,6 @@
     #adm-toast.show  { opacity: 1; transform: translateY(0); }
     #adm-toast.ok    { background: #2d6b45; }
     #adm-toast.error { background: #a33; }
-
     .adm-save-all-bar {
       display: flex;
       align-items: center;
@@ -508,7 +477,6 @@
   </style>
 </head>
 <body>
-
   <!-- Password gate -->
   <div id="gate">
     <div class="gate-card">
@@ -520,7 +488,6 @@
       <div class="gate-error" id="gate-err"></div>
     </div>
   </div>
-
   <!-- Main app (hidden until password correct) -->
   <div id="app">
     <div class="adm-header">
@@ -581,22 +548,18 @@
       <button class="adm-btn-save-all" onclick="admSaveAll()">Save all changes</button>
     </div>
   </div>
-
   <div id="adm-toast"></div>
-
   <script>
     // ── Password ───────────────────────────────────────────────────────────────
     // Change this to whatever password you want
     const ADMIN_PASSWORD = '030219';
-
     const SESSION_KEY = 'sdb_admin_auth';
-
     function gateSubmit() {
       const pw = document.getElementById('gate-pw').value;
       const inp = document.getElementById('gate-pw');
       const err = document.getElementById('gate-err');
       if (pw === ADMIN_PASSWORD) {
-        sessionStorage.setItem(SESSION_KEY, '1');
+        try { localStorage.setItem(SESSION_KEY, '1'); } catch (e) {}
         document.getElementById('gate').style.display = 'none';
         document.getElementById('app').style.display = 'block';
         admLoad();
@@ -607,20 +570,18 @@
         setTimeout(() => { inp.classList.remove('error'); err.textContent = ''; }, 2500);
       }
     }
-
-    // Check if already authenticated this session
-    if (sessionStorage.getItem(SESSION_KEY) === '1') {
+    // Check if already authenticated on this browser
+    let admAuthed = false;
+    try { admAuthed = localStorage.getItem(SESSION_KEY) === '1'; } catch (e) {}
+    if (admAuthed) {
       document.getElementById('gate').style.display = 'none';
       document.getElementById('app').style.display = 'block';
     }
-
     // ── Config ─────────────────────────────────────────────────────────────────
     const ENDPOINT    = 'https://script.google.com/macros/s/AKfycbx6IjQ_PA67Zky5BsOZGObx8aXpEVl2gIbBlQkGdHxC7gkVbQwcX0oM9LezI2Zss0zv-w/exec';
     const EXCL_REASON = 'marked exclude in UI';
-
     let allRows = [];
     let pending = new Set();
-
     // ── Toast ──────────────────────────────────────────────────────────────────
     function toast(msg, type) {
       const el = document.getElementById('adm-toast');
@@ -629,7 +590,6 @@
       clearTimeout(el._t);
       el._t = setTimeout(() => el.className = '', 3200);
     }
-
     // ── JSONP ──────────────────────────────────────────────────────────────────
     function jsonp(params) {
       return new Promise((resolve, reject) => {
@@ -657,7 +617,6 @@
         document.head.appendChild(script);
       });
     }
-
     // ── Pay display ────────────────────────────────────────────────────────────
     function fmtPay(r, src) {
       const tryParse = v => { const n = parseFloat(String(v).replace(/[^0-9.]/g, ' ')); return n > 0 ? n : null; };
@@ -671,7 +630,6 @@
         return String(r[8] || '').slice(0, 40) || null;
       }
     }
-
     // ── Interest badge renderer ────────────────────────────────────────────────
     function renderInterestBadge(s) {
       if (s.interestScore === undefined) return '';
@@ -681,7 +639,6 @@
       const reason = String(s.interestReason || '').replace(/"/g, '&quot;').replace(/</g, '&lt;');
       return `<span class="adm-badge adm-badge-interest">${stars} ${s.interestScore}/5<span class="adm-interest-tooltip">${reason}</span></span>`;
     }
-
     // ── Build tile ─────────────────────────────────────────────────────────────
     function buildTile(s) {
       const r = s.row, src = s.source, rn = s.rowIndex, ex = s.excluded;
@@ -713,13 +670,11 @@
       const esc = v => String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
       const tid = src + '-' + rn;
       const showRaw = displayName !== rawName && rawName;
-
       // Determine if clean name/city is direct (set on this row) or inherited (from sibling)
       const hasDirectCleanName    = !!cleanName;
       const hasDirectCleanCity    = !!cleanCity;
       const hasInheritedCleanName = !hasDirectCleanName && !!s.inheritedCleanName;
       const hasInheritedCleanCity = !hasDirectCleanCity && !!s.inheritedCleanCity;
-
       return `
         <div class="adm-tile${ex ? ' excluded' : ''}" id="adm-tile-${tid}"
           data-source="${src}" data-row="${rn}"
@@ -778,12 +733,10 @@
           </div>
         </div>`;
     }
-
     // ── Compute display names for all rows (call after load or after a save) ──
     function computeDisplayNames() {
       const norm = s => String(s || '').trim().toLowerCase();
       const titleCase = s => s.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
-
       // Build: normRawName → { cleanName, cleanCity } from any row that has them set
       const nameCityMap = {};
       const cleanNameMap = {};   // normRawName → canonical clean name
@@ -805,7 +758,6 @@
         if (cleanN && !cleanNameMap[rawKey]) cleanNameMap[rawKey] = cleanN;
         if (cleanC && !cleanCityMap[rawKey]) cleanCityMap[rawKey] = cleanC;
       });
-
       allRows.forEach(s => {
         const r        = s.row, src = s.source;
         const rawName  = String(r[2] || '').trim();
@@ -813,7 +765,6 @@
         const cleanC   = String(src === 'studio' ? (r[32] || '') : (r[24] || '')).trim();
         const rawCity  = String(src === 'studio' ? (r[4] || r[5] || '') : (r[4] || '')).trim();
         const rawKey   = norm(rawName);
-
         // Use direct clean name if set, otherwise inherit from sibling — but only if cities match
         const inheritedName = cleanNameMap[rawKey];
         const inheritedCity = cleanCityMap[rawKey];
@@ -823,31 +774,25 @@
         const resolvedCity = cleanC || (citiesMatch ? inheritedCity : null) || rawCity;
         const key      = norm(resolvedName);
         const cityCount = nameCityMap[key] ? nameCityMap[key].size : 1;
-
         s.displayName = cityCount > 1 && resolvedCity
           ? resolvedName + ' ' + titleCase(resolvedCity)
           : resolvedName;
-
         // Track inherited flags for badge display
         s.inheritedCleanName = !cleanN && !!cleanNameMap[rawKey] ? cleanNameMap[rawKey] : null;
         s.inheritedCleanCity = !cleanC && !!cleanCityMap[rawKey] && cityCount <= 1 ? cleanCityMap[rawKey] : null;
       });
     }
-
     // ── Interest scoring ───────────────────────────────────────────────────────
     // Fields scored per source type:
     //   instructor: r[15]=Negotiated, r[16]=Negotiation Notes, r[19]=Other Perks, r[29]=Working Here Comments
     //   studio:     r[22]=Other Perks, r[24]=Notes
-
     // Noise words that pass length check but have no story value
     const NOISE_PATTERN = /^(no|n\/a|na|none|not sure|idk|yes|no comment|nothing|nope|good|great|fine|ok|okay|well|well!|denied|n\/a\.|-)\.?$/i;
-
     function isSubstantive(text, minLen) {
       if (!text || text.length < minLen) return false;
       if (NOISE_PATTERN.test(text.trim())) return false;
       return true;
     }
-
     function getTextToScore(s) {
       const r = s.row;
       const parts = [];
@@ -866,9 +811,7 @@
       }
       return parts.join('\n\n');
     }
-
     let scoringStatus = { total: 0, done: 0, found: 0 };
-
     function updateScoringStatusBar() {
       const bar = document.getElementById('adm-stats');
       if (!bar) return;
@@ -881,48 +824,39 @@
         bar.innerHTML = base + ` &nbsp;·&nbsp; <span style="color:#7a4f0d">✨ ${found} stor${found !== 1 ? 'ies' : 'y'} found</span>`;
       }
     }
-
     // ── Heuristic interest scorer ──────────────────────────────────────────────
     function heuristicScore(text) {
       if (!text || text.trim().length < 10) return { score: 1, reason: 'Too short to evaluate' };
-
       const t = text.trim();
       const lower = t.toLowerCase();
       let score = 1;
       const reasons = [];
-
       // ── Word / sentence structure ──
       const words     = t.split(/\s+/).filter(Boolean);
       const wordCount = words.length;
       const sentences = t.split(/[.!?]+/).map(s => s.trim()).filter(s => s.length > 3);
       const sentCount = sentences.length;
-
       // Repetition penalty — same word 3+ times
       const wordFreq = {};
       words.forEach(w => { const wl = w.toLowerCase().replace(/[^a-z]/g,''); wordFreq[wl] = (wordFreq[wl]||0)+1; });
       const maxRepeat = Math.max(...Object.values(wordFreq));
       if (maxRepeat >= 3 && wordCount < 15) return { score: 1, reason: 'Repetitive or generic' };
-
       // All caps penalty
       if (t === t.toUpperCase() && /[A-Z]/.test(t)) return { score: 1, reason: 'All caps' };
-
       // Pure filler phrases — cap at 2
       const fillerOnly = /^(great( studio| experience| place)?|love it( here)?|highly recommend|amazing|terrible|fine|ok|okay|good experience|bad experience|not great|pretty good|so good|so bad|loved it|hated it)\.?$/i;
       if (fillerOnly.test(t.trim())) return { score: 2, reason: 'Generic phrase with no detail' };
-
       // ── Base score from length + sentences ──
       if (wordCount >= 8)  { score = 2; }
       if (wordCount >= 15) { score = 2; reasons.push('substantive length'); }
       if (sentCount >= 2)  { score = Math.max(score, 2); }
       if (sentCount >= 3)  { score = Math.max(score, 3); reasons.push('multi-sentence'); }
-
       // ── Numbers (dollar amounts, percentages, durations) ──
       const hasNumber     = /\$\d+|\d+%|\d+\s*(per|\/)(class|hour|client|hr)|\d+\s*(year|month|week|day)s?|\d{2,}/i.test(t);
       const hasDollar     = /\$\d+|\d+\s*dollar|\d+\s*per\s*(class|hour|client)/i.test(t);
       const hasPercent    = /\d+\s*%|percent/i.test(t);
       if (hasNumber) { score = Math.max(score, 2); reasons.push('specific numbers'); }
       if (hasDollar) { score = Math.max(score, 3); reasons.push('dollar amount'); }
-
       // ── Negotiation outcome words ──
       const outcomeWords = [
         'raised','denied','countered','offered','declined','accepted','rejected',
@@ -934,7 +868,6 @@
       ];
       const hasOutcome = outcomeWords.some(w => lower.includes(w));
       if (hasOutcome) { score = Math.max(score, 3); reasons.push('negotiation outcome'); }
-
       // ── Power dynamic / relational language ──
       const powerWords = [
         'owner','manager','studio owner','franchise','corporate','hr',
@@ -944,7 +877,6 @@
       ];
       const hasPower = powerWords.some(w => lower.includes(w));
       if (hasPower) { score = Math.max(score, 3); reasons.push('workplace dynamic'); }
-
       // ── Comparison / contrast language ──
       const compareWords = [
         'more than','less than','same as','compared to','other studios','other instructors',
@@ -953,7 +885,6 @@
       ];
       const hasCompare = compareWords.some(w => lower.includes(w));
       if (hasCompare) { score = Math.max(score, 3); reasons.push('comparison'); }
-
       // ── Causal / progression language ──
       const causalWords = [
         'because','so they','which means','ended up','as a result','after that',
@@ -962,7 +893,6 @@
       ];
       const hasCausal = causalWords.some(w => lower.includes(w));
       if (hasCausal && wordCount >= 12) { score = Math.max(score, 3); reasons.push('narrative arc'); }
-
       // ── Emotional authenticity ──
       const emotionWords = [
         'honestly','frustrated','surprised','disappointed','relieved','proud',
@@ -971,19 +901,16 @@
       ];
       const hasEmotion = emotionWords.some(w => lower.includes(w));
       if (hasEmotion) { score = Math.max(score, 2); reasons.push('personal feeling'); }
-
       // ── Boost: dollar amount + outcome = strong story ──
       if (hasDollar && hasOutcome) {
         score = Math.max(score, 4);
         reasons.push('specific outcome with amount');
       }
-
       // ── Boost: percent + outcome ──
       if (hasPercent && hasOutcome) {
         score = Math.max(score, 4);
         reasons.push('specific % outcome');
       }
-
       // ── Boost: 3+ sentences with varied length ──
       if (sentCount >= 3) {
         const lens = sentences.map(s => s.split(/\s+/).length);
@@ -991,15 +918,12 @@
         const varied = lens.some(l => Math.abs(l - avg) > 3);
         if (varied) { score = Math.max(score, 4); reasons.push('rich narrative'); }
       }
-
       // ── Boost: long + multi-signal ──
       const signalCount = [hasNumber, hasOutcome, hasPower, hasCompare, hasCausal, hasEmotion].filter(Boolean).length;
       if (signalCount >= 3 && wordCount >= 20) { score = Math.max(score, 4); reasons.push('multi-signal'); }
       if (signalCount >= 4 && wordCount >= 30) { score = 5; reasons.push('exceptionally detailed'); }
-
       // ── Cap at 2 if very short regardless of signals ──
       if (wordCount < 8) score = Math.min(score, 2);
-
       // Build reason string
       const reasonMap = {
         1: 'Too vague or short to feature',
@@ -1008,34 +932,26 @@
         4: reasons.length ? reasons.slice(0,2).join(' + ') : 'Strong specific detail',
         5: 'Exceptionally detailed with multiple story signals'
       };
-
       return { score, reason: reasonMap[score] || 'Scored' };
     }
-
     async function scoreRow(s) {
       const text = getTextToScore(s);
       if (!text) return;
-
       const { score, reason } = heuristicScore(text);
       s.interestScore  = score;
       s.interestReason = reason;
       if (score >= 3) scoringStatus.found++;
-
       scoringStatus.done++;
       updateScoringStatusBar();
-
       // Update badge on tile if currently visible
       const tid     = s.source + '-' + s.rowIndex;
       const badgeEl = document.getElementById('adm-ibadge-' + tid);
       if (badgeEl) badgeEl.innerHTML = renderInterestBadge(s);
     }
-
     async function runInterestScoring() {
       const qualifying = allRows.filter(s => getTextToScore(s).length > 0);
       if (qualifying.length === 0) return;
-
       scoringStatus = { total: qualifying.length, done: 0, found: 0 };
-
       // Heuristic scoring is synchronous — run all at once
       qualifying.forEach(s => {
         const { score, reason } = heuristicScore(getTextToScore(s));
@@ -1044,13 +960,10 @@
         if (score >= 3) scoringStatus.found++;
         scoringStatus.done++;
       });
-
       updateScoringStatusBar();
-
       // Re-render current page to show badges
       admRender();
     }
-
     // ── Toggle details panel ───────────────────────────────────────────────────
     function admToggleExpand(tid) {
       const panel = document.getElementById('adm-details-' + tid);
@@ -1060,7 +973,6 @@
       btn.textContent = open ? 'Details ↑' : 'Details ↓';
       btn.classList.toggle('open', open);
     }
-
     // ── Open story in standalone page ──────────────────────────────────────────
     function admOpenStory(storyKey) {
       const story = (window._storyCache || {})[storyKey];
@@ -1177,7 +1089,6 @@
       w.document.write(html);
       w.document.close();
     }
-
     // ── Build details panel HTML ───────────────────────────────────────────────
     function buildDetails(r, src, s) {
       const esc = v => String(v || '').replace(/&/g,'&amp;').replace(/</g,'&lt;');
@@ -1186,9 +1097,7 @@
         ? `<div class="adm-detail-row"><span class="adm-detail-label">${label}</span><span class="adm-detail-value${highlight?' highlight':''}">${esc(v)}</span></div>`
         : '';
       const sec = (label) => `<div class="adm-detail-section">${label}</div>`;
-
       let html = '';
-
       // ── Story callout — show scored fields first if interesting ──
       if (s && typeof s.interestScore === 'number' && s.interestScore >= 3) {
         const storyFields = [];
@@ -1227,7 +1136,6 @@
           </div>`;
         }
       }
-
       if (src === 'studio') {
         // Pay
         html += sec('Compensation');
@@ -1279,18 +1187,15 @@
         html += sec('Source');
         html += row('Source',       val(17));
       }
-
       // Strip empty sections (a section with no rows after it)
       return html.replace(/<div class="adm-detail-section">[^<]+<\/div>(\s*<div class="adm-detail-section">)/g, '$1')
                  .replace(/<div class="adm-detail-section">[^<]+<\/div>\s*$/g, '');
     }
-
     // ── Dirty marker ───────────────────────────────────────────────────────────
     function admDirty(id) {
       document.getElementById(id).classList.add('dirty');
       admUpdateSaveAllBar();
     }
-
     // ── Update save all bar visibility ─────────────────────────────────────────
     function admUpdateSaveAllBar() {
       const dirtyInputs = document.querySelectorAll('#adm-grid .adm-edit-input.dirty');
@@ -1310,7 +1215,6 @@
         if (msgEl) msgEl.textContent = msg;
       });
     }
-
     // ── Save all dirty tiles on current page ───────────────────────────────────
     async function admSaveAll() {
       // Snapshot dirty tile identifiers BEFORE any DOM changes
@@ -1322,32 +1226,26 @@
         seen.add(tile.id);
         dirtyTileData.push({ src: tile.dataset.source, rn: parseInt(tile.dataset.row) });
       });
-
       if (!dirtyTileData.length) return;
-
       // Disable both save all buttons
       document.querySelectorAll('.adm-btn-save-all').forEach(b => {
         b.disabled = true;
         b.innerHTML = '<span class="adm-spinner"></span> Saving…';
       });
-
       let saved = 0, failed = 0;
       for (const { src, rn } of dirtyTileData) {
         const tid  = src + '-' + rn;
         const cnEl = document.getElementById('adm-cn-' + tid);
         const ccEl = document.getElementById('adm-cc-' + tid);
         if (!cnEl || !ccEl) continue;
-
         const params = { action: 'updateCleanFields', source: src, rowIndex: rn };
         if (cnEl.classList.contains('dirty') && cnEl.value.trim()) params.cleanName = cnEl.value.trim();
         if (ccEl.classList.contains('dirty') && ccEl.value.trim()) params.cleanCity = ccEl.value.trim();
-
         if (!params.cleanName && !params.cleanCity) {
           cnEl.classList.remove('dirty');
           ccEl.classList.remove('dirty');
           continue;
         }
-
         try {
           const d = await jsonp(params);
           if (!d.success) throw new Error(d.error || 'Unknown error');
@@ -1369,10 +1267,8 @@
           console.error('Save all error row ' + rn + ':', err.message);
         }
       }
-
       // Recompute display names once after all saves
       computeDisplayNames();
-
       // Collect tile elements to re-render BEFORE any outerHTML swaps
       const tilesToRender = [];
       document.querySelectorAll('#adm-grid .adm-tile').forEach(tileEl => {
@@ -1381,22 +1277,18 @@
       });
       // Now do all outerHTML swaps
       tilesToRender.forEach(({ el, row }) => { el.outerHTML = buildTile(row); });
-
       admUpdateSaveAllBar();
-
       if (failed > 0) {
         toast(`Saved ${saved}, failed ${failed} — check console`, 'error');
       } else {
         toast(`Saved ${saved} tile${saved !== 1 ? 's' : ''}`, 'ok');
       }
-
       // Re-query buttons after DOM changes
       document.querySelectorAll('.adm-btn-save-all').forEach(b => {
         b.disabled = false;
         b.textContent = 'Save all changes';
       });
     }
-
     // ── Save clean fields ──────────────────────────────────────────────────────
     async function admSave(source, rowIndex) {
       const tid  = source + '-' + rowIndex;
@@ -1414,18 +1306,15 @@
         if (!d.success) throw new Error(d.error || 'Unknown error');
         cnEl.classList.remove('dirty');
         ccEl.classList.remove('dirty');
-
         // Update the row data in memory
         const s = allRows.find(x => x.source === source && x.rowIndex === rowIndex);
         if (s) {
           if (source === 'studio') { s.row[31] = cnEl.value.trim(); s.row[32] = ccEl.value.trim(); }
           else                     { s.row[23] = cnEl.value.trim(); s.row[24] = ccEl.value.trim(); }
         }
-
         // Recompute display names — saving clean name/city can affect this row
         // AND any sibling rows that share the same studio name
         computeDisplayNames();
-
         // Re-render any tile currently visible on the page that shares the same
         // base studio name as the saved row (they may have had city appended/removed)
         const savedBaseName = String(s ? (source === 'studio' ? (s.row[31] || s.row[2]) : (s.row[23] || s.row[2])) : '').trim().toLowerCase();
@@ -1441,7 +1330,6 @@
             tileEl.outerHTML = buildTile(tileRow);
           }
         });
-
         toast('Saved — row ' + rowIndex, 'ok');
       } catch (err) {
         toast('Error: ' + err.message, 'error');
@@ -1451,7 +1339,6 @@
         if (newBtn) { newBtn.disabled = false; newBtn.textContent = 'Save'; }
       }
     }
-
     // ── Exclude / restore ──────────────────────────────────────────────────────
     async function admExclude(source, rowIndex, exclude) {
       const key  = source + '-' + rowIndex;
@@ -1485,12 +1372,10 @@
         pending.delete(key);
       }
     }
-
     // ── Pagination state ───────────────────────────────────────────────────────
     const PAGE_SIZE = 12;
     let currentPage = 1;
     let filteredRows = [];
-
     // ── Clear all filters ──────────────────────────────────────────────────────
     function admClearFilters() {
       document.getElementById('adm-name').value = '';
@@ -1503,7 +1388,6 @@
       document.getElementById('adm-story').value = 'all';
       admFilter();
     }
-
     // ── Filter + paginate ──────────────────────────────────────────────────────
     function admFilter() {
       const name    = document.getElementById('adm-name').value.toLowerCase().trim();
@@ -1514,11 +1398,9 @@
       const dateRng = document.getElementById('adm-date').value;
       const sortBy  = document.getElementById('adm-sort').value;
       const storyF  = document.getElementById('adm-story').value;
-
       // Show/hide clear button
       const isFiltered = name || city || src || fmt || exc !== 'all' || dateRng !== 'all' || sortBy !== 'date' || storyF !== 'all';
       document.getElementById('adm-clear-btn').style.display = isFiltered ? 'block' : 'none';
-
       // Build date boundary for the selected range (start of day in local time)
       const now = new Date();
       const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -1536,7 +1418,6 @@
       } else if (dateRng === '90days') {
         dateFrom = new Date(startOfToday); dateFrom.setDate(dateFrom.getDate() - 90);
       }
-
       filteredRows = allRows.filter(s => {
         const r       = s.row;
         const rawName = String(r[2] || '').toLowerCase();
@@ -1544,7 +1425,6 @@
           ? String(r[4] || r[5] || '').toLowerCase()
           : String(r[4] || '').toLowerCase();
         const format  = String(s.source === 'studio' ? (r[7] || '') : (r[6] || '')).toLowerCase();
-
         // Date filter
         if (dateRng !== 'all') {
           const d = s.dateVal ? new Date(s.dateVal > 40000 ? new Date(1900,0,1).getTime() + (s.dateVal > 60 ? s.dateVal-2 : s.dateVal-1)*86400000 : s.dateVal) : null;
@@ -1552,10 +1432,8 @@
           if (dateFrom && d < dateFrom) return false;
           if (dateTo   && d >= dateTo)  return false;
         }
-
         // Story filter
         if (storyF === 'stories' && (typeof s.interestScore !== 'number' || s.interestScore < 3)) return false;
-
         return (!name || rawName.includes(name))
           && (!city || rawCity.includes(city))
           && (!src  || s.source === src)
@@ -1564,27 +1442,22 @@
               || (exc === 'active'   && !s.excluded)
               || (exc === 'excluded' &&  s.excluded));
       });
-
       // Sort
       if (sortBy === 'interest') {
         filteredRows.sort((a, b) => (b.interestScore || 0) - (a.interestScore || 0));
       }
       // default 'date' sort is already applied at load time on allRows
-
       currentPage = 1;
       admRender();
     }
-
     // ── Render current page ────────────────────────────────────────────────────
     function admRender() {
       const grid  = document.getElementById('adm-grid');
       const total = filteredRows.length;
       const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
       currentPage = Math.min(currentPage, pages);
-
       const start = (currentPage - 1) * PAGE_SIZE;
       const pageRows = filteredRows.slice(start, start + PAGE_SIZE);
-
       if (total === 0) {
         grid.innerHTML = '<div class="adm-state">No results match your filters.</div>';
         document.getElementById('adm-pagination').style.display = 'none';
@@ -1596,17 +1469,14 @@
         document.getElementById('adm-page-info').textContent =
           `Page ${currentPage} of ${pages} · ${total} result${total !== 1 ? 's' : ''}`;
       }
-
       admStats(total);
       window.scrollTo({ top: 0, behavior: 'smooth' });
       admUpdateSaveAllBar();
     }
-
     function admChangePage(dir) {
       currentPage += dir;
       admRender();
     }
-
     // ── Stats ──────────────────────────────────────────────────────────────────
     function admStats(visOverride) {
       const total = allRows.length;
@@ -1630,6 +1500,38 @@
         bar.innerHTML = baseText;
       }
     }
+    // ── Deep link: jump to a specific tile from an email link ──────────────────
+    // URL format: admin.html#adm-tile-<source>-<rowIndex>
+    // e.g. admin.html#adm-tile-instructor-45
+    function admJumpToHash() {
+      const hash = location.hash.replace(/^#/, '');
+      const m = hash.match(/^adm-tile-(studio|instructor)-(\d+)$/);
+      if (!m) return;
+      const src = m[1], rn = m[2];
+
+      let idx = filteredRows.findIndex(s => s.source === src && String(s.rowIndex) === rn);
+      if (idx === -1) {
+        // Not visible under current filters (e.g. excluded) — reset filters and retry
+        admClearFilters();
+        idx = filteredRows.findIndex(s => s.source === src && String(s.rowIndex) === rn);
+        if (idx === -1) {
+          toast('Could not find that submission — it may have been deleted or the row shifted.', 'error');
+          return;
+        }
+      }
+
+      currentPage = Math.floor(idx / PAGE_SIZE) + 1;
+      admRender();
+
+      setTimeout(() => {
+        const el = document.getElementById('adm-tile-' + src + '-' + rn);
+        if (!el) return;
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.style.transition = 'box-shadow 0.3s ease';
+        el.style.boxShadow = '0 0 0 3px #b87c2a';
+        setTimeout(() => { el.style.boxShadow = ''; }, 4000);
+      }, 50);
+    }
 
     // ── Load ───────────────────────────────────────────────────────────────────
     async function admLoad() {
@@ -1637,7 +1539,6 @@
       try {
         const d = await jsonp({ action: 'getSheet' });
         if (!d.rows || !d.rows.length) { grid.innerHTML = '<div class="adm-state">No rows found.</div>'; return; }
-
         // Parse submission date for sorting — handles Excel serial numbers and date strings
         function parseDate(val) {
           if (!val) return 0;
@@ -1646,7 +1547,6 @@
           const d = new Date(val);
           return isNaN(d) ? 0 : d.getTime();
         }
-
         allRows = d.rows.map(item => ({
           source:   item.source,
           rowIndex: item.rowIndex,
@@ -1654,33 +1554,27 @@
           excluded: String(item.row[item.source === 'studio' ? 28 : 20] || '').toUpperCase() === 'Y',
           dateVal:  parseDate(item.row[0])
         }));
-
         // Drop rows with no studio name (e.g. instructors still in training)
         allRows = allRows.filter(s => String(s.row[2] || '').trim() !== '');
-
         // Sort most recent first
         allRows.sort((a, b) => b.dateVal - a.dateVal);
-
         // Compute display names (chain studios get city appended)
         computeDisplayNames();
-
         // Populate format dropdown
         const fmts = [...new Set(allRows.map(s => s.source === 'studio' ? String(s.row[7] || '') : String(s.row[6] || '')).filter(Boolean))].sort();
         const sel  = document.getElementById('adm-fmt');
         fmts.forEach(f => { const o = document.createElement('option'); o.value = f.toLowerCase(); o.textContent = f; sel.appendChild(o); });
-
         filteredRows = [...allRows];
         admRender();
-
+        admJumpToHash();
         // Start interest scoring in background (non-blocking)
         runInterestScoring();
       } catch (err) {
         grid.innerHTML = `<div class="adm-state error">Failed to load: ${err.message}</div>`;
       }
     }
-
     // Auto-load if already authenticated
-    if (sessionStorage.getItem(SESSION_KEY) === '1') admLoad();
+    if (admAuthed) admLoad();
   </script>
 </body>
 </html>
