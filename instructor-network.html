@@ -14,20 +14,15 @@
     --muted: #9A9B8A;
     --border: #D4D1C8;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   body {
     background: var(--linen);
     color: var(--olive);
     font-family: 'DM Sans', sans-serif;
     font-weight: 300;
   }
-
   main { max-width: 760px; margin: 0 auto; padding: 52px 48px; }
-
   .section { margin-bottom: 52px; }
-
   .section-label {
     font-size: 0.68rem;
     letter-spacing: 0.12em;
@@ -37,15 +32,11 @@
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
   }
-
   p { font-size: 0.95rem; line-height: 1.75; color: var(--olive); margin-bottom: 16px; }
-
   .included-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
-
   .included-card { background: white; padding: 20px 22px; border: 0.5px solid var(--border); }
   .included-card .card-title { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.04em; color: var(--olive); margin-bottom: 6px; }
   .included-card .card-desc { font-size: 0.82rem; color: var(--accent); line-height: 1.55; }
-
   .price-block {
     background: var(--olive);
     color: var(--linen);
@@ -56,10 +47,8 @@
     gap: 24px;
     flex-wrap: wrap;
   }
-
   .price-block .amount { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; }
   .price-block .price-note { font-size: 0.78rem; color: #7A7C6A; margin-top: 4px; }
-
   .cta-btn {
     display: inline-block;
     background: var(--linen);
@@ -73,9 +62,7 @@
     padding: 12px 28px;
     transition: opacity 0.2s;
   }
-
   .cta-btn:hover { opacity: 0.85; }
-
   .market-table { width: 100%; border-collapse: collapse; }
   .market-table thead tr { border-bottom: 1px solid var(--border); }
   .market-table th {
@@ -86,15 +73,12 @@
   .market-table td { padding: 13px 0; font-size: 0.9rem; border-bottom: 1px solid var(--linen-dark); color: var(--olive); }
   .market-table td:last-child { text-align: right; font-weight: 500; }
   .market-table tr:last-child td { border-bottom: none; }
-
   .region-row td {
     font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
     color: var(--muted); padding: 20px 0 6px; border-bottom: none;
   }
-
   .soon-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
   .soon-pill { font-size: 0.75rem; color: var(--muted); border: 1px solid var(--border); padding: 4px 12px; }
-
   @media (max-width: 600px) {
     main { padding: 36px 24px; }
     .included-grid { grid-template-columns: 1fr; }
@@ -109,7 +93,6 @@
   <p style="font-size:1rem;color:#A8AA99;max-width:560px;line-height:1.6;">A direct line to local instructors - for studios that need help finding reliable talent to join their teams.</p>
 </header>
 <main>
-
   <div class="section">
     <div class="section-label">Instructors by market</div>
     <p>Before you subscribe, see how many instructors are already in your market. These are active profiles in the Paige Loves Pilates talent directory — real people looking for studio work near you.</p>
@@ -123,12 +106,10 @@
       </tbody>
     </table>
   </div>
-
   <div class="section" id="soon-section" style="display:none;">
     <div class="section-label">Coming soon</div>
     <div class="soon-list" id="soon-list"></div>
   </div>
-
   <div class="section">
     <div class="section-label">What's included</div>
     <div class="included-grid">
@@ -154,76 +135,53 @@
         <div class="amount">$35 / month</div>
         <div class="price-note">Cancel anytime. Founding Long Island members keep their current rate.</div>
       </div>
-      <a class="cta-btn" href="https://buy.stripe.com/9B67sK1Px5acfYF1Ww9oc00" target="_blank">Get access</a>
+      <a class="cta-btn" href="https://buy.stripe.com/9B67sK1Px5acfYF1Ww9oc00" target="_top">Get access</a>
     </div>
   </div>
-
 </main>
-
 <script>
+// Single source of truth: this now calls the same computeMarketStatus()
+// the studio portal's market selector uses (action=marketStatus), instead of
+// keeping a separate hardcoded market list + client-side haversine math here.
+// That's what let Atlanta show as "available" on the site while the portal's
+// selector didn't have it — two lists, hand-maintained, drifted apart.
+//
+// JSONP, not fetch() — a plain fetch() to Apps Script fails with CORS once
+// this page is embedded cross-origin in a Squarespace iframe. If this page
+// was ever embedded that way with the old fetch()-based version, it was
+// silently falling back to hardcoded placeholder counts on every load.
 var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec";
-var THRESHOLD = 10;
 
-var ALL_MARKETS = [
-  { label: "Long Island",           region: "United States",           lat: 40.789,  lng: -73.135,  radius: 30, default: 82 },
-  { label: "New York City",          region: "United States",           lat: 40.713,  lng: -74.006,  radius: 15, default: 35 },
-  { label: "Chicago",                region: "United States",           lat: 41.878,  lng: -87.630,  radius: 25, default: 12 },
-  { label: "Los Angeles",            region: "United States",           lat: 34.052,  lng: -118.244, radius: 40, default: 17 },
-  { label: "San Francisco Bay Area", region: "United States",           lat: 37.774,  lng: -122.419, radius: 35, default: 9  },
-  { label: "Seattle",                region: "United States",           lat: 47.608,  lng: -122.335, radius: 25, default: 10 },
-  { label: "Atlanta",                region: "United States",           lat: 33.749,  lng: -84.388,  radius: 35, default: 8  },
-  { label: "Sydney",                 region: "Australia & New Zealand", lat: -33.869, lng: 151.208,  radius: 25, default: 31 },
-  { label: "Melbourne",              region: "Australia & New Zealand", lat: -37.814, lng: 144.963,  radius: 25, default: 32 },
-  { label: "Brisbane",               region: "Australia & New Zealand", lat: -27.470, lng: 153.026,  radius: 25, default: 22 },
-  { label: "Auckland",               region: "Australia & New Zealand", lat: -36.849, lng: 174.763,  radius: 25, default: 8  },
-];
+var REGION_BY_KEY = {
+  long_island: "United States", nyc: "United States", chicago: "United States",
+  los_angeles: "United States", sf_bay_area: "United States", seattle: "United States",
+  atlanta: "United States",
+  sydney: "Australia & New Zealand", melbourne: "Australia & New Zealand",
+  brisbane: "Australia & New Zealand", auckland: "Australia & New Zealand"
+};
 
-function haversine(lat1, lng1, lat2, lng2) {
-  var R = 3958.8;
-  var dLat = (lat2 - lat1) * Math.PI / 180;
-  var dLng = (lng2 - lng1) * Math.PI / 180;
-  var a = Math.sin(dLat/2)*Math.sin(dLat/2) +
-          Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*
-          Math.sin(dLng/2)*Math.sin(dLng/2);
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-}
-
-function fetchCount(market) {
-  var url = SCRIPT_URL + '?action=talentBrowse&lat=' + market.lat + '&lng=' + market.lng + '&radius=' + market.radius;
-  return fetch(url)
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      var count = (data.profiles || []).filter(function(p) {
-        return p.lat && p.lng && haversine(market.lat, market.lng, p.lat, p.lng) <= market.radius;
-      }).length;
-      return { market: market, count: count };
-    })
-    .catch(function() { return { market: market, count: 0 }; });
-}
-
-function renderTable(results) {
-  var live = results.filter(function(r) { return r.count >= THRESHOLD; });
-  var soon = results.filter(function(r) { return r.count < THRESHOLD; });
+function renderMarketTable(markets) {
+  var live = markets.filter(function(m) { return m.live; });
+  var soon = markets.filter(function(m) { return !m.live; });
 
   var tbody = document.getElementById('live-tbody');
   tbody.innerHTML = '';
-
   var regions = [];
-  live.forEach(function(r) {
-    if (regions.indexOf(r.market.region) === -1) regions.push(r.market.region);
+  live.forEach(function(m) {
+    var region = REGION_BY_KEY[m.key] || 'Other';
+    if (regions.indexOf(region) === -1) regions.push(region);
   });
-
   regions.forEach(function(region) {
-    var tr = document.createElement('tr');
-    tr.className = 'region-row';
-    tr.innerHTML = '<td colspan="2">' + region + '</td>';
-    tbody.appendChild(tr);
-
-    live.filter(function(r) { return r.market.region === region; }).forEach(function(r) {
-      var tr = document.createElement('tr');
-      tr.innerHTML = '<td>' + r.market.label + '</td><td>' + r.count + '</td>';
-      tbody.appendChild(tr);
-    });
+    var headerRow = document.createElement('tr');
+    headerRow.className = 'region-row';
+    headerRow.innerHTML = '<td colspan="2">' + region + '</td>';
+    tbody.appendChild(headerRow);
+    live.filter(function(m) { return (REGION_BY_KEY[m.key] || 'Other') === region; })
+        .forEach(function(m) {
+          var row = document.createElement('tr');
+          row.innerHTML = '<td>' + m.label + '</td><td>' + m.count + '</td>';
+          tbody.appendChild(row);
+        });
   });
 
   var soonSection = document.getElementById('soon-section');
@@ -231,10 +189,10 @@ function renderTable(results) {
   soonList.innerHTML = '';
   if (soon.length) {
     soonSection.style.display = '';
-    soon.forEach(function(r) {
+    soon.forEach(function(m) {
       var pill = document.createElement('span');
       pill.className = 'soon-pill';
-      pill.textContent = r.market.label;
+      pill.textContent = m.label;
       soonList.appendChild(pill);
     });
   } else {
@@ -242,10 +200,19 @@ function renderTable(results) {
   }
 }
 
-var defaults = ALL_MARKETS.map(function(m) { return { market: m, count: m.default }; });
-renderTable(defaults);
+function loadMarketStatus() {
+  var callbackName = 'marketStatusCb_' + Date.now();
+  window[callbackName] = function(data) {
+    if (data && data.success) renderMarketTable(data.markets);
+    delete window[callbackName];
+    scriptTag.remove();
+  };
+  var scriptTag = document.createElement('script');
+  scriptTag.src = SCRIPT_URL + '?action=marketStatus&callback=' + callbackName;
+  document.body.appendChild(scriptTag);
+}
 
-Promise.all(ALL_MARKETS.map(fetchCount)).then(renderTable);
+loadMarketStatus();
 </script>
 </body>
 </html>
