@@ -42,14 +42,12 @@
     margin-bottom:14px;
     display:block;
   }
-
   /* Top bar */
   .topbar{padding:22px 0;border-bottom:1px solid var(--hairline);}
   .topbar .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
   .wordmark{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:20px;}
   .wordmark span{opacity:0.55;font-weight:500;}
   .topbar a.login{font-size:14px;font-weight:500;text-decoration:none;border-bottom:1px solid var(--hairline);padding-bottom:2px;}
-
   /* Hero */
   .hero{padding:88px 0 72px;text-align:center;}
   .hero h1{font-size:44px;line-height:1.15;max-width:720px;margin:0 auto;}
@@ -69,7 +67,6 @@
   }
   .btn:hover{opacity:0.88;}
   .fine{font-size:13px;opacity:0.6;}
-
   /* Problem/solution */
   .section{padding:64px 0;}
   .section.bordered{border-top:1px solid var(--hairline);}
@@ -83,7 +80,6 @@
     line-height:1.4;
   }
   .body-copy{max-width:640px;margin:22px auto 0;text-align:center;font-size:16px;opacity:0.85;}
-
   /* Feature grid */
   .features{
     display:grid;
@@ -100,13 +96,11 @@
   }
   .feature h3{font-size:19px;font-weight:600;margin-bottom:8px;}
   .feature p{margin:0;font-size:14.5px;opacity:0.78;}
-
   /* Callout band */
   .band{background:var(--olive);color:var(--linen);padding:56px 0;}
   .band .lede{color:var(--linen);}
   .band .body-copy{color:var(--linen);opacity:0.85;}
   .band .fine{color:var(--linen);opacity:0.65;}
-
   /* Pricing card */
   .pricing{padding:72px 0;text-align:center;}
   .price-card{
@@ -124,7 +118,6 @@
   .price-list li:first-child{border-top:none;}
   .price-card .btn{margin-top:28px;width:100%;}
   .grandfather{margin-top:16px;font-size:12.5px;opacity:0.55;}
-
   /* Markets */
   .markets{padding:56px 0 72px;text-align:center;}
   .market-group{margin-top:26px;}
@@ -137,15 +130,12 @@
     font-weight:500;
   }
   .chip.soon{opacity:0.5;border-style:dashed;}
-
   /* Final CTA */
   .final{padding:80px 0;text-align:center;}
   .final h2{font-size:36px;}
   .final .sub{max-width:480px;margin:16px auto 0;font-size:15px;opacity:0.8;}
-
   footer{border-top:1px solid var(--hairline);padding:28px 0;text-align:center;font-size:13px;opacity:0.55;}
   footer a{text-decoration:underline;}
-
   @media (max-width:640px){
     .hero{padding:56px 0 48px;}
     .hero h1{font-size:32px;}
@@ -157,14 +147,12 @@
 </style>
 </head>
 <body>
-
   <div class="topbar">
     <div class="wrap">
       <div class="wordmark">Paige Loves Pilates <span>· Instructor Network</span></div>
       <a class="login" href="https://paigelovespilates.github.io/studiosalarydatabase/studio-portal.html" target="_top">Already a member? Log in →</a>
     </div>
   </div>
-
   <div class="hero">
     <div class="wrap">
       <span class="eyebrow">For Studio Owners</span>
@@ -176,14 +164,12 @@
       </div>
     </div>
   </div>
-
   <div class="section bordered">
     <div class="wrap">
       <p class="lede">A wider pool of local instructors than your studio community alone can reach.</p>
       <p class="body-copy">Browse profiles directly — certifications, experience, availability, how far they're willing to travel, whether they're looking for subs or a recurring spot on your schedule. Find someone who fits. Reach out on your own terms.</p>
     </div>
   </div>
-
   <div class="wrap">
     <div class="features">
       <div class="feature">
@@ -204,14 +190,12 @@
       </div>
     </div>
   </div>
-
   <div class="band">
     <div class="wrap">
       <p class="lede">Your membership also includes the Paige Loves Pilates Job Board.</p>
       <p class="body-copy">Post a role and it goes directly to instructors in your market via email and our broadcast channel. Every job post requires compensation details — a transparent market is better for everyone.</p>
     </div>
   </div>
-
   <div class="pricing">
     <div class="wrap">
       <div class="price-card">
@@ -227,7 +211,6 @@
       </div>
     </div>
   </div>
-
   <div class="markets">
     <div class="wrap">
       <span class="eyebrow">Where we operate</span>
@@ -243,7 +226,6 @@
       </div>
     </div>
   </div>
-
   <div class="final band">
     <div class="wrap">
       <h2>Find your next instructor.</h2>
@@ -254,13 +236,11 @@
       </div>
     </div>
   </div>
-
   <footer>
     <div class="wrap">
       &copy; Paige Loves Pilates · <a href="https://www.paigelovespilates.com" target="_top">paigelovespilates.com</a>
     </div>
   </footer>
-
   <script>
     // Markets are pulled live from the same computeMarketStatus() the studio
     // portal's market selector reads (action=marketStatus) — so this page
@@ -270,11 +250,9 @@
     // cross-origin).
     (function() {
       var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec";
-
       function renderMarkets(markets) {
         var live = markets.filter(function(m) { return m.live; });
         var soon = markets.filter(function(m) { return !m.live; });
-
         var liveEl = document.getElementById('markets-live');
         if (liveEl) {
           liveEl.innerHTML = '';
@@ -285,7 +263,6 @@
             liveEl.appendChild(chip);
           });
         }
-
         var soonGroup = document.getElementById('markets-soon-group');
         var soonEl = document.getElementById('markets-soon');
         if (soonGroup && soonEl) {
@@ -303,7 +280,6 @@
           }
         }
       }
-
       try {
         var callbackName = 'marketStatusCb_' + Date.now();
         window[callbackName] = function(data) {
@@ -319,6 +295,33 @@
       }
     })();
   </script>
-
+  <script>
+    // Reports this page's height to the parent Squarespace page so the
+    // iframe can be resized to fit content and scroll with the page's
+    // main scrollbar instead of scrolling internally. Pairs with the
+    // 'message' listener added on the Squarespace embed side, which
+    // resizes #instructornetworkFrame on receipt. Re-fires on load,
+    // window resize, and via ResizeObserver whenever content changes
+    // height after load (e.g. the market chips populating async above).
+    (function() {
+      try {
+        var TARGET_ORIGIN = 'https://www.paigelovespilates.com';
+        var FRAME_ID = 'instructornetworkFrame';
+        function sendHeight() {
+          var h = document.documentElement.scrollHeight;
+          window.parent.postMessage({ type: 'ln-resize', frameId: FRAME_ID, height: h }, TARGET_ORIGIN);
+        }
+        window.addEventListener('load', sendHeight);
+        window.addEventListener('resize', sendHeight);
+        if (window.ResizeObserver) {
+          new ResizeObserver(sendHeight).observe(document.body);
+        } else {
+          setInterval(sendHeight, 500);
+        }
+      } catch (err) {
+        // Fail quietly — worst case the iframe keeps its old height/scrollbar.
+      }
+    })();
+  </script>
 </body>
 </html>
