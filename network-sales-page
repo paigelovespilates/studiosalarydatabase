@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instructor Network — Paige Loves Pilates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --olive:#373930;
+    --linen:#EDEBE4;
+    --linen-alt:#E8E5DC;
+    --bg:#EEEDEB; /* matches Squarespace page background, per iframe convention */
+    --ink:#373930;
+    --hairline:rgba(55,57,48,0.15);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.55;
+  }
+  h1,h2,h3{
+    font-family:'Cormorant Garamond', Georgia, serif;
+    font-weight:600;
+    margin:0;
+    letter-spacing:0.01em;
+  }
+  a{color:inherit;}
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px;}
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    font-weight:700;
+    opacity:0.65;
+    margin-bottom:14px;
+    display:block;
+  }
+
+  /* Top bar */
+  .topbar{padding:22px 0;border-bottom:1px solid var(--hairline);}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .wordmark{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:20px;}
+  .wordmark span{opacity:0.55;font-weight:500;}
+  .topbar a.login{font-size:14px;font-weight:500;text-decoration:none;border-bottom:1px solid var(--hairline);padding-bottom:2px;}
+
+  /* Hero */
+  .hero{padding:88px 0 72px;text-align:center;}
+  .hero h1{font-size:44px;line-height:1.15;max-width:720px;margin:0 auto;}
+  .hero .sub{max-width:600px;margin:26px auto 0;font-size:17px;opacity:0.85;}
+  .cta-row{margin-top:38px;display:flex;flex-direction:column;align-items:center;gap:10px;}
+  .btn{
+    display:inline-block;
+    background:var(--olive);
+    color:var(--linen);
+    font-weight:700;
+    font-size:15px;
+    padding:16px 34px;
+    border-radius:2px;
+    text-decoration:none;
+    letter-spacing:0.02em;
+    transition:opacity 0.15s ease;
+  }
+  .btn:hover{opacity:0.88;}
+  .fine{font-size:13px;opacity:0.6;}
+
+  /* Problem/solution */
+  .section{padding:64px 0;}
+  .section.bordered{border-top:1px solid var(--hairline);}
+  .lede{
+    font-family:'Cormorant Garamond',serif;
+    font-size:26px;
+    font-weight:500;
+    max-width:680px;
+    margin:0 auto;
+    text-align:center;
+    line-height:1.4;
+  }
+  .body-copy{max-width:640px;margin:22px auto 0;text-align:center;font-size:16px;opacity:0.85;}
+
+  /* Feature grid */
+  .features{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0;
+    margin-top:20px;
+    border-top:1px solid var(--hairline);
+    border-left:1px solid var(--hairline);
+  }
+  .feature{
+    padding:32px;
+    border-right:1px solid var(--hairline);
+    border-bottom:1px solid var(--hairline);
+  }
+  .feature h3{font-size:19px;font-weight:600;margin-bottom:8px;}
+  .feature p{margin:0;font-size:14.5px;opacity:0.78;}
+
+  /* Callout band */
+  .band{background:var(--olive);color:var(--linen);padding:56px 0;}
+  .band .lede{color:var(--linen);}
+  .band .body-copy{color:var(--linen);opacity:0.85;}
+  .band .fine{color:var(--linen);opacity:0.65;}
+
+  /* Pricing card */
+  .pricing{padding:72px 0;text-align:center;}
+  .price-card{
+    max-width:400px;
+    margin:0 auto;
+    border:1px solid var(--hairline);
+    background:#fff;
+    padding:44px 36px;
+  }
+  .price{font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:600;line-height:1;}
+  .price sup{font-size:20px;font-weight:500;top:-1.3em;}
+  .price-sub{font-size:14px;opacity:0.65;margin-top:6px;}
+  .price-list{list-style:none;padding:0;margin:28px 0 0;text-align:left;font-size:14.5px;}
+  .price-list li{padding:9px 0;border-top:1px solid var(--hairline);}
+  .price-list li:first-child{border-top:none;}
+  .price-card .btn{margin-top:28px;width:100%;}
+  .grandfather{margin-top:16px;font-size:12.5px;opacity:0.55;}
+
+  /* Markets */
+  .markets{padding:56px 0 72px;text-align:center;}
+  .market-group{margin-top:26px;}
+  .market-group .label{font-size:12px;letter-spacing:0.14em;text-transform:uppercase;font-weight:700;opacity:0.55;display:block;margin-bottom:14px;}
+  .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;}
+  .chip{
+    border:1px solid var(--hairline);
+    padding:8px 16px;
+    font-size:13.5px;
+    font-weight:500;
+  }
+  .chip.soon{opacity:0.5;border-style:dashed;}
+
+  /* Final CTA */
+  .final{padding:80px 0;text-align:center;}
+  .final h2{font-size:36px;}
+  .final .sub{max-width:480px;margin:16px auto 0;font-size:15px;opacity:0.8;}
+
+  footer{border-top:1px solid var(--hairline);padding:28px 0;text-align:center;font-size:13px;opacity:0.55;}
+  footer a{text-decoration:underline;}
+
+  @media (max-width:640px){
+    .hero{padding:56px 0 48px;}
+    .hero h1{font-size:32px;}
+    .features{grid-template-columns:1fr;}
+    .lede{font-size:22px;}
+    .final h2{font-size:28px;}
+    .price{font-size:46px;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="wrap">
+      <div class="wordmark">Paige Loves Pilates <span>· Instructor Network</span></div>
+      <a class="login" href="https://paigelovespilates.github.io/studiosalarydatabase/studio-portal.html" target="_top">Already a member? Log in →</a>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="wrap">
+      <span class="eyebrow">For Studio Owners</span>
+      <h1>Your studio's following can only reach so far.</h1>
+      <p class="sub">When you need a new instructor, you post on your studio account, ask your current team, maybe put something on your personal page. And then you wait — hoping the right person sees it.</p>
+      <div class="cta-row">
+        <a class="btn" href="https://paige-loves-pilates-htumcq.subscribepage.io" target="_top">Join the Instructor Network</a>
+        <span class="fine">$35/month · Cancel anytime</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section bordered">
+    <div class="wrap">
+      <p class="lede">A wider pool of local instructors than your studio community alone can reach.</p>
+      <p class="body-copy">Browse profiles directly — certifications, experience, availability, how far they're willing to travel, whether they're looking for subs or a recurring spot on your schedule. Find someone who fits. Reach out on your own terms.</p>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="features">
+      <div class="feature">
+        <h3>Full market access</h3>
+        <p>Full access to instructor profiles in your market — not a preview, the whole directory.</p>
+      </div>
+      <div class="feature">
+        <h3>Unlimited job postings</h3>
+        <p>Post as many open roles as you need, whenever you need to, at no extra cost.</p>
+      </div>
+      <div class="feature">
+        <h3>Direct delivery</h3>
+        <p>Every post reaches local instructors by email — people actively looking, already engaged with this community.</p>
+      </div>
+      <div class="feature">
+        <h3>Always growing</h3>
+        <p>New instructor profiles are added regularly as the community grows in your market.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="band">
+    <div class="wrap">
+      <p class="lede">Your membership also includes the Paige Loves Pilates Job Board.</p>
+      <p class="body-copy">Post a role and it goes directly to instructors in your market via email and our broadcast channel. Every job post requires compensation details — a transparent market is better for everyone.</p>
+    </div>
+  </div>
+
+  <div class="pricing">
+    <div class="wrap">
+      <div class="price-card">
+        <div class="price"><sup>$</sup>35<span class="price-sub" style="display:block;">/month</span></div>
+        <ul class="price-list">
+          <li>Full access to instructor profiles in your market</li>
+          <li>Unlimited job board postings</li>
+          <li>Direct email delivery to local instructors</li>
+          <li>New profiles added regularly</li>
+        </ul>
+        <a class="btn" href="https://paige-loves-pilates-htumcq.subscribepage.io" target="_top">Join the Instructor Network</a>
+        <div class="grandfather">Founding Long Island members keep their current rate.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="markets">
+    <div class="wrap">
+      <span class="eyebrow">Where we operate</span>
+      <div class="market-group">
+        <span class="label">Live now</span>
+        <div class="chips" id="markets-live">
+          <span class="chip">Loading…</span>
+        </div>
+      </div>
+      <div class="market-group" id="markets-soon-group" style="display:none;">
+        <span class="label">Coming soon</span>
+        <div class="chips" id="markets-soon"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="final band">
+    <div class="wrap">
+      <h2>Find your next instructor.</h2>
+      <p class="sub">Join studios already using the Instructor Network to hire smarter.</p>
+      <div class="cta-row">
+        <a class="btn" href="https://paige-loves-pilates-htumcq.subscribepage.io" target="_top">Join the Instructor Network</a>
+        <span class="fine">Questions? Email paige@paigelovespilates.com</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      &copy; Paige Loves Pilates · <a href="https://www.paigelovespilates.com" target="_top">paigelovespilates.com</a>
+    </div>
+  </footer>
+
+  <script>
+    // Markets are pulled live from the same computeMarketStatus() the studio
+    // portal's market selector reads (action=marketStatus) — so this page
+    // can never again claim a market is open that a subscribing studio
+    // actually can't select at login. JSONP, not fetch(), since this page
+    // is meant to be iframe-embedded on Squarespace (fetch() fails CORS
+    // cross-origin).
+    (function() {
+      var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDMY7bbIgwZ-fqnecMxMgDTGSsomOGqhqGOlMYzufsSNB-9D6U3pSHPB2BOJudkKgwTw/exec";
+
+      function renderMarkets(markets) {
+        var live = markets.filter(function(m) { return m.live; });
+        var soon = markets.filter(function(m) { return !m.live; });
+
+        var liveEl = document.getElementById('markets-live');
+        if (liveEl) {
+          liveEl.innerHTML = '';
+          live.forEach(function(m) {
+            var chip = document.createElement('span');
+            chip.className = 'chip';
+            chip.textContent = m.label;
+            liveEl.appendChild(chip);
+          });
+        }
+
+        var soonGroup = document.getElementById('markets-soon-group');
+        var soonEl = document.getElementById('markets-soon');
+        if (soonGroup && soonEl) {
+          soonEl.innerHTML = '';
+          if (soon.length) {
+            soonGroup.style.display = '';
+            soon.forEach(function(m) {
+              var chip = document.createElement('span');
+              chip.className = 'chip soon';
+              chip.textContent = m.label;
+              soonEl.appendChild(chip);
+            });
+          } else {
+            soonGroup.style.display = 'none';
+          }
+        }
+      }
+
+      try {
+        var callbackName = 'marketStatusCb_' + Date.now();
+        window[callbackName] = function(data) {
+          if (data && data.success) renderMarkets(data.markets);
+          delete window[callbackName];
+          scriptTag.remove();
+        };
+        var scriptTag = document.createElement('script');
+        scriptTag.src = SCRIPT_URL + '?action=marketStatus&callback=' + callbackName;
+        document.body.appendChild(scriptTag);
+      } catch (err) {
+        // Fail quietly — worst case the "Live now" list just says "Loading…"
+      }
+    })();
+  </script>
+
+</body>
+</html>
