@@ -541,6 +541,11 @@
 
 <div id="loginGate">
   <div class="login-card">
+    <div class="login-step" id="stepChecking" style="display:none;">
+      <div class="login-eyebrow">paigelovespilates.com</div>
+      <div class="login-title">One <em>moment</em></div>
+      <p class="login-sub">Checking your access&hellip;</p>
+    </div>
     <div class="login-step" id="stepEmail">
       <div class="login-eyebrow">paigelovespilates.com</div>
       <div class="login-title">Classical Pilates<br><em>Cue Guide</em></div>
@@ -686,6 +691,16 @@ function unlockGuide() {
   });
 }
 
+// Shows one login-step div (stepChecking / stepEmail / stepCode) and hides
+// the other two. Used both by the initial session check and by the
+// send-code / back-button flows below.
+function showLoginStep(id) {
+  ['stepChecking', 'stepEmail', 'stepCode'].forEach(function(s) {
+    document.getElementById(s).style.display = (s === id) ? 'block' : 'none';
+  });
+  reportHeightToParent();
+}
+
 function setupCodeBoxes() {
   var boxes = document.querySelectorAll('.code-box');
   boxes.forEach(function(box, i) {
@@ -727,11 +742,9 @@ function sendCode() {
     btn.textContent = 'Send code';
     if (data && data.success) {
       document.getElementById('codeSentTo').textContent = 'We sent a 6-digit code to ' + email + '.';
-      document.getElementById('stepEmail').style.display = 'none';
-      document.getElementById('stepCode').style.display = 'block';
+      showLoginStep('stepCode');
       document.querySelectorAll('.code-box').forEach(function(b) { b.value = ''; });
       document.querySelectorAll('.code-box')[0].focus();
-      reportHeightToParent();
     } else {
       errEl.textContent = "We couldn't find that email on our reviewer list. Email paige@paigelovespilates.com if this seems wrong.";
     }
@@ -754,8 +767,12 @@ function verifyCode() {
     btn.textContent = 'Verify';
     if (data && data.success) {
       try {
-        localStorage.setItem('cueGuideEmail', currentEmail);
+        // deviceToken is what actually keeps you logged in on this device —
+        // it's checked against the server (and the 2-device cap) on every
+        // future visit via cueGuideCheckSession below.
+        if (data.deviceToken) localStorage.setItem('cueGuideDeviceToken', data.deviceToken);
         localStorage.setItem('cueGuideName', data.name || '');
+        localStorage.removeItem('cueGuideEmail'); // legacy key from the old client-only check — no longer used
       } catch (e) {}
       unlockGuide();
     } else {
@@ -768,9 +785,7 @@ document.getElementById('sendCodeBtn').addEventListener('click', sendCode);
 document.getElementById('verifyBtn').addEventListener('click', verifyCode);
 document.getElementById('resendBtn').addEventListener('click', function() { sendCode(); });
 document.getElementById('backBtn').addEventListener('click', function() {
-  document.getElementById('stepCode').style.display = 'none';
-  document.getElementById('stepEmail').style.display = 'block';
-  reportHeightToParent();
+  showLoginStep('stepEmail');
 });
 document.getElementById('emailInput').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') sendCode();
@@ -778,11 +793,28 @@ document.getElementById('emailInput').addEventListener('keydown', function(e) {
 
 setupCodeBoxes();
 
+// On load: if this device has a saved token, ask the server whether it's
+// still good (still on the Reviewers/Purchasers list AND still within the
+// 2-device cap for that email) before unlocking. No token → the normal
+// email/code form (already visible by default) stays put, no flash.
 (function checkSession() {
-  try {
-    var savedEmail = localStorage.getItem('cueGuideEmail');
-    if (savedEmail) unlockGuide();
-  } catch (e) {}
+  var token;
+  try { token = localStorage.getItem('cueGuideDeviceToken'); } catch (e) { token = null; }
+  if (!token) return;
+  showLoginStep('stepChecking');
+  jsonp(ENDPOINT + '?action=cueGuideCheckSession&token=' + encodeURIComponent(token), function(data) {
+    if (data && data.success) {
+      try { localStorage.setItem('cueGuideName', data.name || ''); } catch (e) {}
+      unlockGuide();
+    } else {
+      try {
+        localStorage.removeItem('cueGuideDeviceToken');
+        localStorage.removeItem('cueGuideEmail');
+        localStorage.removeItem('cueGuideName');
+      } catch (e) {}
+      showLoginStep('stepEmail');
+    }
+  });
 })();
 
 /* ---------- Cue Guide content ----------
