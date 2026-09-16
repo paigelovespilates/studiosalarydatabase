@@ -40,24 +40,13 @@
     margin: 0 0 28px;
     line-height: 1.5;
   }
-  .price-box {
-    background: var(--linen);
-    border-radius: 10px;
-    padding: 18px 20px;
-    text-align: center;
-    margin-bottom: 32px;
-  }
-  .price-box .amount {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 600;
-    font-size: 28px;
-    display: block;
-    margin-bottom: 4px;
-  }
-  .price-box .note {
-    font-size: 13px;
+  .price-line {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
     color: var(--grey);
-    line-height: 1.5;
+    text-align: center;
+    margin: 0 0 32px;
   }
   form { display: flex; flex-direction: column; gap: 18px; }
   label {
@@ -144,12 +133,10 @@
     display: none;
   }
   .status.success {
-    display: block;
     background: #e8ede4;
     color: #3d4a33;
   }
   .status.error {
-    display: block;
     background: #f3e4e0;
     color: #7a3a2c;
   }
@@ -161,11 +148,7 @@
 
   <h1>Private 1:1 Mat Pilates</h1>
   <p class="subtitle">A fully personalized mat session with me, live over Zoom — built around your body, your goals, and your schedule.</p>
-
-  <div class="price-box">
-    <span class="amount">$125 / session</span>
-    <span class="note">Payment isn't collected here — once I confirm your time, I'll follow up with payment details.</span>
-  </div>
+  <p class="price-line">$125 / session</p>
 
   <div id="form-view">
     <form id="requestForm">
