@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Private 1:1 Mat Pilates — Request a Session</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --olive: #373930;
+    --linen: #EDEBE4;
+    --grey: #918F86;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #EEEDEB; /* matches Squarespace page background when embedded */
+    font-family: 'DM Sans', sans-serif;
+    color: var(--olive);
+  }
+  .wrap {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 34px;
+    line-height: 1.15;
+    margin: 0 0 8px;
+    text-align: center;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 15px;
+    color: var(--grey);
+    margin: 0 0 28px;
+    line-height: 1.5;
+  }
+  .price-box {
+    background: var(--linen);
+    border-radius: 10px;
+    padding: 18px 20px;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .price-box .amount {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 28px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .price-box .note {
+    font-size: 13px;
+    color: var(--grey);
+    line-height: 1.5;
+  }
+  form { display: flex; flex-direction: column; gap: 18px; }
+  label {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--olive);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .req { color: #9c5b4a; }
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 12px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    border: 1px solid #d8d5cb;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--olive);
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--olive);
+  }
+  textarea { min-height: 90px; resize: vertical; }
+  .hint {
+    font-size: 12px;
+    color: var(--grey);
+    margin-top: 4px;
+  }
+  fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+  .radio-row {
+    display: flex;
+    gap: 20px;
+    margin-top: 4px;
+  }
+  .radio-row label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: none;
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 0;
+  }
+  .radio-row input { width: auto; }
+  /* honeypot field — hidden from real users, bots tend to fill every field */
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+  }
+  button {
+    margin-top: 8px;
+    background: var(--olive);
+    color: #fff;
+    border: none;
+    padding: 15px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  button:disabled { opacity: 0.6; cursor: default; }
+  button:hover:not(:disabled) { opacity: 0.9; }
+  .status {
+    margin-top: 18px;
+    padding: 16px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.6;
+    display: none;
+  }
+  .status.success {
+    display: block;
+    background: #e8ede4;
+    color: #3d4a33;
+  }
+  .status.error {
+    display: block;
+    background: #f3e4e0;
+    color: #7a3a2c;
+  }
+  #form-view.hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Private 1:1 Mat Pilates</h1>
+  <p class="subtitle">A fully personalized mat session with me, live over Zoom — built around your body, your goals, and your schedule.</p>
+
+  <div class="price-box">
+    <span class="amount">$125 / session</span>
+    <span class="note">Payment isn't collected here — once I confirm your time, I'll follow up with payment details.</span>
+  </div>
+
+  <div id="form-view">
+    <form id="requestForm">
+
+      <div>
+        <label for="name">Name <span class="req">*</span></label>
+        <input type="text" id="name" name="name" required autocomplete="name">
+      </div>
+
+      <div>
+        <label for="email">Email <span class="req">*</span></label>
+        <input type="email" id="email" name="email" required autocomplete="email">
+      </div>
+
+      <div>
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" autocomplete="tel">
+      </div>
+
+      <div>
+        <label for="timezone">Your Timezone</label>
+        <select id="timezone" name="timezone">
+          <option value="Eastern">Eastern</option>
+          <option value="Central">Central</option>
+          <option value="Mountain">Mountain</option>
+          <option value="Pacific">Pacific</option>
+          <option value="Other">Other (note it below)</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="time1">Preferred Time — Option 1 <span class="req">*</span></label>
+        <input type="text" id="time1" name="time1" required placeholder="e.g. Tues 9/23, 10:00am">
+      </div>
+
+      <div>
+        <label for="time2">Preferred Time — Option 2</label>
+        <input type="text" id="time2" name="time2" placeholder="e.g. Wed 9/24, 6:00pm">
+      </div>
+
+      <div>
+        <label for="time3">Preferred Time — Option 3</label>
+        <input type="text" id="time3" name="time3" placeholder="e.g. Thurs 9/25, 8:00am">
+      </div>
+
+      <fieldset>
+        <label>Have you trained with me before?</label>
+        <div class="radio-row">
+          <label><input type="radio" name="experience" value="Yes"> Yes</label>
+          <label><input type="radio" name="experience" value="No" checked> No</label>
+        </div>
+      </fieldset>
+
+      <div>
+        <label for="notes">Anything I should know?</label>
+        <textarea id="notes" name="notes" placeholder="Injuries, goals, experience level, what you'd like to focus on..."></textarea>
+      </div>
+
+      <!-- honeypot: real visitors never see or fill this -->
+      <div class="hp-field" aria-hidden="true">
+        <label for="website">Leave this field empty</label>
+        <input type="text" id="website" name="honeypot" tabindex="-1" autocomplete="off">
+      </div>
+
+      <button type="submit" id="submitBtn">Request My Session</button>
+      <p class="hint" style="text-align:center;">I typically confirm within 24 hours.</p>
+    </form>
+  </div>
+
+  <div id="successStatus" class="status success">
+    <strong>Got it!</strong> Thanks for reaching out — I'll review your preferred times and email you within 24 hours to confirm your session and next steps (including payment).
+  </div>
+
+  <div id="errorStatus" class="status error">
+    Something went wrong submitting your request. Please try again, or email me directly at
+    <a href="mailto:paige@paigelovespilates.com" style="color:#7a3a2c;">paige@paigelovespilates.com</a>.
+  </div>
+
+</div>
+
+<script>
+  // ── Paste your Apps Script Web App URL here after deploying (see setup steps) ──
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_lTSIstMorYS0Gh3QSljbKlY2trzOXLlLuIu2FDXHKCSE3uo6-6kSSHeZlIE0kDjCsg/exec';
+
+  const form = document.getElementById('requestForm');
+  const formView = document.getElementById('form-view');
+  const successStatus = document.getElementById('successStatus');
+  const errorStatus = document.getElementById('errorStatus');
+  const submitBtn = document.getElementById('submitBtn');
+
+  let jsonpTimeout = null;
+
+  function showSuccess() {
+    formView.classList.add('hidden');
+    errorStatus.style.display = 'none';
+    successStatus.style.display = 'block';
+  }
+
+  function showError() {
+    errorStatus.style.display = 'block';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Request My Session';
+  }
+
+  // JSONP callback — Apps Script calls this by name once it responds.
+  // Required because Apps Script endpoints don't support CORS for fetch/XHR.
+  window.handlePrivateSessionResponse = function (response) {
+    clearTimeout(jsonpTimeout);
+    if (response && response.status === 'success') {
+      showSuccess();
+    } else {
+      showError();
+    }
+  };
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    if (SCRIPT_URL.indexOf('PASTE_YOUR') === 0) {
+      alert('Setup not finished yet: paste your Apps Script Web App URL into SCRIPT_URL in this file.');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+    errorStatus.style.display = 'none';
+
+    const data = new FormData(form);
+    const params = new URLSearchParams();
+    params.set('action', 'privateSessionRequest');
+    params.set('callback', 'handlePrivateSessionResponse');
+    for (const [key, value] of data.entries()) {
+      params.set(key, value);
+    }
+
+    const script = document.createElement('script');
+    script.src = SCRIPT_URL + '?' + params.toString();
+    script.onerror = showError;
+    document.body.appendChild(script);
+
+    // Fallback in case the script tag never fires a response
+    jsonpTimeout = setTimeout(showError, 10000);
+  });
+</script>
+</body>
+</html>
