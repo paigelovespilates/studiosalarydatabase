@@ -309,6 +309,24 @@
     // Fallback in case the script tag never fires a response
     jsonpTimeout = setTimeout(showError, 10000);
   });
+
+  // ── Auto-height for the Squarespace iframe ──
+  // Tells the parent page how tall this content is, so the iframe can resize
+  // to match instead of showing its own internal scrollbar. Fires on load,
+  // on window resize, once fonts finish loading (text reflows slightly), and
+  // whenever the form/success/error content changes size (e.g. submit).
+  function postHeight() {
+    window.parent.postMessage(
+      { type: 'private-session-height', height: document.documentElement.scrollHeight },
+      '*'
+    );
+  }
+  window.addEventListener('load', postHeight);
+  window.addEventListener('resize', postHeight);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(postHeight);
+  }
+  new ResizeObserver(postHeight).observe(document.body);
 </script>
 </body>
 </html>
